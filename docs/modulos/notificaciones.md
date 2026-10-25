@@ -80,7 +80,7 @@ Cada empresa puede dar los permisos sensibles a otros roles. Los destinatarios d
 | RF-NOT-016 | El administrador con PS-215 personaliza asunto y párrafo inicial de las plantillas no obligatorias. | Fase 2 | CA-NOT-11, CA-NOT-16 |
 | RF-NOT-017 | Las plantillas solo aceptan variables permitidas del evento; una no permitida se rechaza. | v1, Etapa 1 | CA-NOT-11 |
 | RF-NOT-018 | Cada plantilla tiene vista previa con datos ficticios y versiones; el registro anota la versión usada. | Fase 2 | CA-NOT-11 |
-| RF-NOT-019 | Límites de envío por persona, por empresa y por plataforma, según el cuadro único de D-054 (RN-NOT-008 a 011). | v1, Etapa 1 | CA-NOT-08, CA-NOT-14 |
+| RF-NOT-019 | Límites de envío por persona, por empresa y por plataforma, según el cuadro único de D-054 (RN-NOT-008, RN-NOT-009, RN-NOT-010 y RN-NOT-011). | v1, Etapa 1 | CA-NOT-08, CA-NOT-14 |
 | RF-NOT-020 | Cada intento de envío por correo queda en el registro de envíos con su estado. | v1, Etapa 1 | CA-NOT-09 |
 | RF-NOT-021 | Un fallo temporal se reintenta 3 veces (5 minutos, 30 minutos, 2 horas); luego queda "Fallido". | v1, Etapa 1 | CA-NOT-10 |
 | RF-NOT-022 | Un correo con 3 rebotes definitivos seguidos se marca "no entregable", deja de recibir avisos normales y se avisa a los administradores de la empresa que lo envió. | v1, Etapa 1 | CA-NOT-10 |
@@ -245,7 +245,7 @@ No hay otras transiciones. Finales: Entregado, Rebotado, Omitido, Fallido (hasta
 | `gestion-cambios`, `gestion-problemas` | Eventos propios | Definen evento y texto con contenido mínimo; NOT entrega |
 | `reportes-tableros` | Correo de reportes programados | Servicio común; sin adjuntos; los reportes usan ventanas 30/60/90, los avisos los umbrales de NOT |
 | `integraciones-api` | Catálogo único de eventos | NOT es dueño del catálogo; INT lo reutiliza para webhooks; NOT no envía a sistemas externos |
-| `portal-autoservicio` | Campana y preferencias | Reutiliza PAN-NOT-01 y 02 |
+| `portal-autoservicio` | Campana y preferencias | Reutiliza PAN-NOT-01 y PAN-NOT-02 |
 | `entregas-devoluciones`, `onboarding-offboarding` | Avisos a Personas | Fase 2; solo con contenido mínimo y sin enlace (RN-NOT-027) |
 | Personas (D-006) | Correo de la Persona | Se resuelve al enviar; no verificado |
 
@@ -274,7 +274,7 @@ No hay otras transiciones. Finales: Entregado, Rebotado, Omitido, Fallido (hasta
 | CA-NOT-19 | **Dado** un comentario interno de un caso, **cuando** se notifica a la Persona atendida, **entonces** el aviso no contiene ni referencia su texto. | RN-NOT-003, RN-NOT-006 |
 | CA-NOT-20 | **Dado** una orden de compra `OC-000042` creada por Ana y decidida por Luis, **cuando** Luis la aprueba (o la rechaza con motivo), **entonces** Ana recibe de inmediato `compras.orden_aprobada` (o `compras.orden_rechazada`) por correo, con asunto "[Empresa Norte] ...", solo código, tipo de aviso, fecha y empresa (sin importes ni proveedor; el motivo se lee dentro de la plataforma), Luis no recibe aviso y queda un registro de envío por correo. | RF-NOT-004, RF-NOT-007, RF-NOT-013, RF-NOT-033; RN-NOT-003, RN-NOT-005; RF-ACC-021 del núcleo |
 
-**Cuándo corre cada criterio** (QA los ejecuta desde la etapa indicada): **v1, Etapa 1:** CA-NOT-03, 10, 12, 13, 14, 15, 17, 18, 19 y 08 y 09 en lo que toca al correo y a los límites. **v1, Etapa 5** (cuando existen las órdenes de compra): CA-NOT-01 y CA-NOT-20. **Fase 2, ola A:** CA-NOT-02, 04, 05, 06, 07, 11, 16 y la parte de bandeja, exportación y enmascarado de CA-NOT-08 y 09. CA-NOT-05 necesita un evento que avise a una Persona sin usuario; ninguno existe en la v1, por eso corre en Fase 2 con los eventos de entregas y altas.
+**Cuándo corre cada criterio** (QA los ejecuta desde la etapa indicada): **v1, Etapa 1:** CA-NOT-03, CA-NOT-10, CA-NOT-12, CA-NOT-13, CA-NOT-14, CA-NOT-15, CA-NOT-17, CA-NOT-18, CA-NOT-19, y CA-NOT-08 y CA-NOT-09 en lo que toca al correo y a los límites. **v1, Etapa 5** (cuando existen las órdenes de compra): CA-NOT-01 y CA-NOT-20. **Fase 2, ola A:** CA-NOT-02, CA-NOT-04, CA-NOT-05, CA-NOT-06, CA-NOT-07, CA-NOT-11, CA-NOT-16 y la parte de bandeja, exportación y enmascarado de CA-NOT-08 y CA-NOT-09. CA-NOT-05 necesita un evento que avise a una Persona sin usuario; ninguno existe en la v1, por eso corre en Fase 2 con los eventos de entregas y altas.
 
 ## 11. Casos límite
 
@@ -341,6 +341,7 @@ Resultado según D-057 y D-058: **Confirmado**, **Cambiado** o **Retirado**.
 | Archivar la bandeja significa fuera de la vista con el mismo plazo de retención | H-CUM-09 (D-061.3) |
 | Registros técnicos sin correos completos; SPF, DKIM y DMARC por DevOps | T-14; D-054.4 |
 | Supuestos con resultado (NOT-S04 cambiado, NOT-S07 provisional, NOT-S08 solo Fase 2); escalados `E-NOT-01` y `E-NOT-02` (antes NOT-E01 y NOT-E02); pantallas `PAN-NOT-nn` | D-057; D-058; D-049.4; H-AUD-22 |
-| Nuevo CA-NOT-20 (aviso de aprobación o rechazo al creador, v1); se agrega la lista de qué CA corre desde la Etapa 1, la Etapa 5 y la Fase 2; RF-NOT-007, 013 y 004 citan CA de la v1 | Revisión del plan de pruebas; RF-ACC-021; D-013.10 |
+| Todas las citas de requisitos, reglas, calidad, criterios y pantallas llevan código de módulo completo (RF-NOT-nnn, RN-NOT-nnn, RNF-NOT-nnn, CA-NOT-nn, PAN-NOT-nn); las del núcleo dicen "del núcleo" | Auditor Técnico, ronda 3 |
+| Nuevo CA-NOT-20 (aviso de aprobación o rechazo al creador, v1); se agrega la lista de qué CA corre desde la Etapa 1, la Etapa 5 y la Fase 2; RF-NOT-007, RF-NOT-013 y RF-NOT-004 citan CA de la v1 | Revisión del plan de pruebas; RF-ACC-021; D-013.10 |
 | Nuevos CA: dos empresas en el proceso programado con reloj fijado, escritura con referencias cruzadas, permiso denegado, plataforma sin contenido | D-039.6; D-063.6; H-SEG-02; H-QA-12 |
 | Se retiran de 0.1: el contador "de otras empresas" calculado por consulta conjunta, el motor de avisos sin hora única y "las consultas al registro no se auditan" | H-QA-18; H-AUD-19; H-CUM-13 |

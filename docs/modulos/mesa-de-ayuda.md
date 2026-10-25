@@ -300,7 +300,7 @@ Las envía `notificaciones`; los nombres siguen `<módulo>.<entidad>_<hecho>` (D
 | Auditoría y contadores | Sección 6; `AYU-` y `KB-` | Autor de tres tipos (D-041) |
 | `notificaciones` | Eventos de la sección 8 | AYU emite; NOT decide canal, plantilla y límites |
 | `personas-ubicaciones` | Registro de solicitudes de derechos (PS-29) | Guarda el contenido del pedido; AYU solo la referencia y el caso restringido |
-| `portal-autoservicio` (D, acordado) | Entrada del empleado | Sin casos propios: muestra "mis casos" y abre PAN-AYU-01, 02 y 14. Sus trámites son los 4 servicios iniciales |
+| `portal-autoservicio` (D, acordado) | Entrada del empleado | Sin casos propios: muestra "mis casos" y abre PAN-AYU-01, PAN-AYU-02 y PAN-AYU-14. Sus trámites son los 4 servicios iniciales |
 | `onboarding-offboarding` (D, acordado) | Tareas de alta y baja | Sus tareas son propias; pueden enlazar a un servicio de AYU con la Persona como atendida |
 | `gestion-problemas`, `gestion-cambios` (E, acordado) | Incidente, problema, cambio | El incidente es de AYU; los vínculos PRB y CAM viven en E y AYU los muestra. Un incidente pertenece a un solo problema; un problema Resuelto no cierra incidentes |
 | `cmdb-ligera` (E) | Elemento afectado | Campo opcional; la solución temporal es dato de E |
@@ -343,7 +343,7 @@ Las envía `notificaciones`; los nombres siguen `<módulo>.<entidad>_<hecho>` (D
 ## 11. Casos límite
 
 1. Un agente crea un caso por teléfono para una Persona sin usuario: se notifica solo por correo si tiene correo, con contenido mínimo y sin enlace.
-2. Se desactiva un servicio o cambian los tiempos de SLA con casos abiertos: siguen su curso sin cambios (RN-AYU-007, 018).
+2. Se desactiva un servicio o cambian los tiempos de SLA con casos abiertos: siguen su curso sin cambios (RN-AYU-007, RN-AYU-018).
 3. Un plazo vence en feriado o fuera de horario: se cuenta desde el siguiente horario hábil; el calendario es el de la empresa.
 4. La Persona intenta vincular una laptop que ya no tiene asignada: no aparece; un agente sí puede vincularla.
 5. Dos casos del mismo problema: uno se resuelve como "Duplicado" con vínculo al otro.
@@ -413,6 +413,7 @@ Resultado según D-057 y D-058: **Confirmado**, **Cambiado** o **Retirado**.
 | AYU-S01 confirmado, AYU-S03 cambiado, AYU-S07 provisional con aviso; resultado por supuesto | D-057; D-058 |
 | Volumen de RNF-AYU-002 cita RNF-010 del núcleo; RNF-AYU-005 con reloj fijable | H-AUD-24; D-038.8; H-QA-12 |
 | Nuevos CA: aislamiento por identificador interno, escritura con referencias cruzadas, dos empresas en procesos periódicos, dos Personas de la misma empresa, permiso denegado directo al servidor, reloj fijado | D-039.6, D-039.8; D-063.6; H-SEG-02; H-SEG-09; H-SEG-25f |
+| Todas las citas de requisitos, reglas, calidad, criterios y pantallas llevan código de módulo completo (RF-AYU-nnn, RN-AYU-nnn, RNF-AYU-nnn, CA-AYU-nn, PAN-AYU-nn); las del núcleo dicen "del núcleo" (RN-017, RNF-010) | Auditor Técnico, ronda 3 |
 | Se retira RN-AYU-026 (no se reutiliza el número) | Simplificación de la definición de primera respuesta |
 | Sección 3 migrada a los PS-nn del registro (PS-138 a PS-166, PS-22, PS-29, PS-20); con ello cambian celdas propuestas en 0.1: Jefatura TI ya no toma ni cambia estado; el Técnico ya no asigna, solo escala; ver resultados de encuesta solo Administrador y Jefatura; editar artículos sin Jefatura; la Persona ya no cierra su caso, solo lo reabre o cancela en Nuevo; "propio" de cola es el resolvedor de D-036.4 | Registro de permisos; D-036.4; D-037 (los módulos agregan filas) |
 | "Retirar" lo hace el autor sobre su propio comentario; ya no es un permiso de la jefatura. Redactar solo el Administrador | Registro de permisos (sección 15); H-CUM-10 |
