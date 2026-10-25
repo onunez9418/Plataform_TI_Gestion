@@ -68,7 +68,7 @@ El acceso a cifras exige **dos permisos**: el de entrar al módulo (`presupuesto
 | Exportar cifras | `reportes.exportar` (sensible, ver REP) | Sí | No (activable) | No | No | No | No |
 
 Notas
-- El **responsable de un centro de costo** no es un rol: es un usuario designado en el centro. Recibe alertas aunque no tenga `presupuesto.ver`; sin ese permiso la alerta no trae importes.
+- El **responsable de un centro de costo** no es un rol: es una **Persona** designada en el centro (S-25 del núcleo). Si esa Persona está vinculada a un Usuario, ese usuario recibe las alertas aunque no tenga `presupuesto.ver` (sin ese permiso la alerta no trae importes) y "mis centros" son los suyos. Si no está vinculada, las alertas van a Jefatura TI.
 - Todo rol nuevo parte sin permisos (D-004.5). Las reglas de separación de funciones aplican también al Administrador (D-004.8).
 - Todas las comprobaciones se hacen en el servidor (regla 6 de `CLAUDE.md`).
 
@@ -196,7 +196,7 @@ Notas
 | Periodo | empresa, año, mes, estado, cerrado por, cerrado el | Único por empresa + año + mes | Cierre |
 | Configuración de presupuesto | mes de inicio del año fiscal, umbrales, incrementos por rubro, uso de la excepción de aprobación | Una por empresa | Cambios con antes/después |
 | Alerta emitida | línea, umbral, ejecución en ese momento, destinatarios, fecha | Única por línea + umbral + rearme | Alta |
-| Centro de costo (catálogo del núcleo) | agrega: usuario responsable opcional y código externo | Único por empresa | Cambios |
+| Centro de costo (catálogo del núcleo) | el núcleo (S-25) agrega Persona responsable opcional y código externo | Único por empresa | Cambios |
 
 Todo dato lleva la empresa (regla 5 de `CLAUDE.md`). Las alertas y exportaciones no incluyen datos personales.
 
@@ -242,7 +242,7 @@ Automatismos: cada noche se actualizan comprometido y alertas (el costo de recep
 ## 9. Integración con el núcleo y con otros módulos
 
 - **Núcleo:** empresa y zona horaria; usuarios y roles; auditoría (D-018); catálogo de centros de costo y categorías; costo y moneda del activo (D-014.5); líneas de OC con impuesto por línea; recepción (D-016, D-017); estados del activo (D-012); baja y reingreso (D-009).
-- **Pedidos al núcleo (marcados [SUPUESTO] hasta confirmar):** la OC lleva **centro de costo**; el centro de costo admite **usuario responsable** y **código externo**; el costo del activo puede completarse después con permiso, motivo y auditoría (para activos del Excel).
+- **Pedidos al núcleo (confirmados por el analista del núcleo como [SUPUESTO] pendiente del Gerente de TI):** el centro de costo en la OC ya existe como campo opcional (RF-OC-007), por eso RN-PRE-014 cubre los costos sin centro; el centro de costo admite Persona responsable y código externo (S-25). Pendiente de confirmar: que el costo del activo pueda completarse después con permiso, motivo y auditoría (para activos del Excel).
 - **proveedores-contratos y garantias-mantenimiento (A)** (confirmado por mensaje): cada contrato guarda proveedor, moneda, valor del periodo sin impuesto, frecuencia, inicio, fin y centro de costo; las fechas de cobro **no se guardan, se derivan** de inicio más frecuencia. Renovaciones y adendas son filas de historial. El contrato y la renovación tienen "OC relacionada" (opcional) y la marca "costo ya registrado por OC". Garantía extendida y mantenimiento sin OS guardan costo y moneda; si hay OS, el costo vive en la OS.
 - **licencias-software, lineas-moviles, dominios-certificados (B)** (confirmado por mensaje): guardan importe sin impuesto, % de impuesto, moneda, periodicidad (mensual, anual, única), fechas de inicio y vencimiento y centro de costo, y exponen un "costo mensual equivalente". Cada registro tiene "orden de compra vinculada" (opcional): si existe, cuenta la OC (RN-PRE-013); si no, queda marcado "sin orden de compra".
 - **Órdenes de servicio (Etapa 6):** PRE lee el costo de las OS cerradas.
