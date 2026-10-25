@@ -879,7 +879,7 @@ Resumen por módulo:
 
 ## 27. Módulos adicionales (fases 2 y 3)
 
-Seis escuadrones escriben en paralelo los módulos que se suman al núcleo. Fase 2 = viene después de la versión 1 (entran con el núcleo estable); fase 3 = más adelante. Las fases son una propuesta del Analista que confirma cada escuadrón en su archivo. Los archivos se están escribiendo ahora en `docs/modulos/`; este índice solo los enumera y no repite su contenido.
+Seis escuadrones escriben en paralelo los módulos que se suman al núcleo. Fase 2 = viene después de la versión 1 (entran con el núcleo estable); fase 3 = más adelante. La fase que declara cada archivo de `docs/modulos/` manda sobre este índice; el índice se alineó con ellos el 2026-10-25 (cmdb-ligera, gestión de cambios, gestión de problemas y portal de autoservicio dicen "después de la v1" sin número de fase; se dejan en 3 como propuesta). Este índice solo enumera los módulos y no repite su contenido.
 
 | Módulo | Fase | Documento |
 |---|---|---|
@@ -887,19 +887,19 @@ Seis escuadrones escriben en paralelo los módulos que se suman al núcleo. Fase
 | Garantías y mantenimiento | 2 | ver docs/modulos/garantias-mantenimiento.md |
 | Licencias de software | 2 | ver docs/modulos/licencias-software.md |
 | Líneas móviles | 2 | ver docs/modulos/lineas-moviles.md |
-| Dominios y certificados | 3 | ver docs/modulos/dominios-certificados.md |
+| Dominios y certificados | 2 | ver docs/modulos/dominios-certificados.md |
 | Mesa de ayuda | 2 | ver docs/modulos/mesa-de-ayuda.md |
 | Notificaciones | 2 | ver docs/modulos/notificaciones.md |
-| Personas y ubicaciones | 2 | ver docs/modulos/personas-ubicaciones.md |
+| Personas y ubicaciones | Etapa 2 de la v1 (el módulo amplía lo mínimo del núcleo) | ver docs/modulos/personas-ubicaciones.md |
 | Entregas y devoluciones | 2 | ver docs/modulos/entregas-devoluciones.md |
 | Onboarding y offboarding | 2 | ver docs/modulos/onboarding-offboarding.md |
 | Portal de autoservicio | 3 | ver docs/modulos/portal-autoservicio.md |
 | Gestión de cambios | 3 | ver docs/modulos/gestion-cambios.md |
 | Gestión de problemas | 3 | ver docs/modulos/gestion-problemas.md |
 | CMDB ligera | 3 | ver docs/modulos/cmdb-ligera.md |
-| Presupuesto y costos | 3 | ver docs/modulos/presupuesto-costos.md |
-| Reportes y tableros | 3 | ver docs/modulos/reportes-tableros.md |
-| Integraciones y API | 3 | ver docs/modulos/integraciones-api.md |
+| Presupuesto y costos | 2 (después de la Etapa 5, en dos entregas) | ver docs/modulos/presupuesto-costos.md |
+| Reportes y tableros | 2 (en tres partes, desde después de la Etapa 4) | ver docs/modulos/reportes-tableros.md |
+| Integraciones y API | 2 (por partes, desde después de la Etapa 4) | ver docs/modulos/integraciones-api.md |
 
 Cruces con el núcleo, para que los escuadrones no dupliquen reglas:
 - **Personas y ubicaciones** amplía el directorio de Personas (sección 8) y las ubicaciones (RF-CAT-006); el núcleo solo trae lo mínimo.

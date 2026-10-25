@@ -315,7 +315,7 @@ Registro de decisiones tomadas por el Gerente de TI. Cada una tiene un número f
   1. **Auditoría:** 5 años.
   2. **Datos personales de una persona o usuario dado de baja:** 2 años; luego se anonimizan (el nombre y el correo se reemplazan por una referencia como "Persona dada de baja 0042"; el historial de activos se conserva).
   3. **Archivos de importación:** máximo 30 días.
-  4. **Respaldos:** mismo plazo y mismas protecciones que los datos. Al restaurar un respaldo antiguo, se aplica de nuevo la anonimización pendiente (procedimiento a definir con DevOps).
+  4. **Respaldos:** mismas protecciones que los datos; el plazo NO es igual al de los datos, ver D-032 (reemplaza lo que decía este punto).
   5. **Constancias de entrega y devoluciones:** mientras exista el activo más el plazo de auditoría.
   6. Hay un procedimiento para atender solicitudes de acceso, corrección y eliminación de datos personales; se puede exportar y anonimizar a una persona sin romper el historial.
   7. Aviso de privacidad y términos: pantalla de aceptación en el primer ingreso (versión y fecha quedan registradas). El texto lo redacta o revisa legal.
@@ -366,6 +366,48 @@ Registro de decisiones tomadas por el Gerente de TI. Cada una tiene un número f
 
 ---
 
+## Ajustes pedidos por el Auditor de Cumplimiento (revisión cruzada, antes de la Etapa 1)
+
+Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revision-cruzada/auditor-cumplimiento.md`, archivo que no existe todavía en el repositorio cuando se decidió. Las decisiones se tomaron con lo descrito en el mensaje; si el detalle del archivo contradice algo, se reabre.
+
+### D-030 · Cómo anonimizar sin tocar la auditoría que solo se agrega
+- **Pregunta:** La auditoría no se edita (D-018). ¿Cómo se anonimiza a una persona sin editarla?
+- **Decisión:**
+  1. Los datos personales (nombre, correo, área) **viven solo en los registros de Persona y de Usuario**. La auditoría y el historial de movimientos guardan únicamente el **identificador interno** de la persona, nunca su nombre ni su correo.
+  2. Cuando un cambio toca un dato personal, la auditoría registra **qué campo cambió** pero **no el valor anterior ni el nuevo** de nombre, correo o área.
+  3. **Anonimizar = sobrescribir los datos en el registro de Persona/Usuario** con una referencia ("Persona dada de baja 0042"). La auditoría no se toca y sigue siendo legible, porque apunta al identificador, que ahora muestra la referencia.
+  4. La anonimización queda como un evento más en la auditoría (quién la ordenó o que fue automática, y cuándo).
+  5. Lo que en la auditoría pueda ser dato personal indirecto (por ejemplo la dirección IP) se conserva solo hasta que venza el plazo de la auditoría (D-024.1). Al vencer, un **proceso de mantenimiento separado de la aplicación** (no un botón del administrador) archiva o elimina las entradas vencidas y deja constancia. Es el único borrado permitido sobre la auditoría.
+- **Motivo:** Separar "quién fue" (identificador, permanente) de "cómo se llama" (dato personal, anonimizable) permite cumplir las dos cosas sin excepciones a la regla de solo agregar.
+- **Recomendó:** Auditor de Cumplimiento (H-CUM-01). Decide el Gerente de TI con base en D-018.5 y D-006.
+- **Qué cambia:** Diseño de auditoría (Arquitecto, Ingeniero de Datos): nunca guardar valores de campos personales. Se actualiza D-018 y la sección "Datos personales" del documento. QA agrega una prueba: anonimizar y comprobar que la auditoría sigue completa y sin nombres.
+
+### D-031 · Un solo interruptor central para las excepciones de separación de funciones
+- **Pregunta:** D-015.4 permite una excepción por empresa. ¿Dónde se activa y quién la controla?
+- **Decisión:**
+  1. Un **único ajuste por empresa**, en un solo lugar de la configuración, "Excepciones de separación de funciones", con una casilla por cada regla exceptuable de D-015.3 (aprobar lo propio, recibir lo creado o aprobado). Todas **apagadas por defecto**.
+  2. En el código existe **una sola función** que responde si una regla está exceptuada; ninguna pantalla ni módulo consulta el ajuste por su cuenta. Así no hay excepciones escondidas.
+  3. Solo un Administrador puede cambiarlo y se pide la segunda verificación reciente. Activarlo o apagarlo queda en la auditoría con motivo obligatorio.
+  4. Cada vez que se usa la excepción, la orden muestra un aviso visible y se registra un evento en la auditoría.
+  5. El Administrador de plataforma no puede activarlo en nombre de una empresa.
+- **Motivo:** Una excepción dispersa es un hueco de control; centralizada es auditable y probable.
+- **Recomendó:** Auditor de Cumplimiento (H-CUM-02), alineado con D-015.4.
+- **Qué cambia:** Documento §5 y §9. QA prueba que, con el ajuste apagado, ninguna ruta permite la excepción, incluso llamando directamente al servidor.
+
+### D-032 · Retención de respaldos (reemplaza D-024.4)
+- **Pregunta:** ¿Los respaldos se guardan 5 años como la auditoría?
+- **Decisión (propuesta, a confirmar con legal):**
+  1. **No.** Guardar respaldos 5 años mantendría datos personales ya anonimizados y costaría mucho. Plan: respaldos diarios durante **30 días** y uno mensual durante **12 meses**.
+  2. Como el respaldo más antiguo vive hasta 12 meses, un dato anonimizado puede seguir existiendo en respaldos hasta ese plazo. Se acepta y se declara en el aviso de privacidad.
+  3. **Al restaurar** cualquier respaldo, antes de abrir el sistema se **reaplica el registro de anonimizaciones** (una lista aparte que solo guarda el identificador y la fecha, sin datos personales y que se conserva en el sistema vivo). Nadie anonimizado reaparece.
+  4. La auditoría de 5 años vive en el sistema, no depende de los respaldos.
+  5. Respaldos cifrados y sin mezclar empresas (D-029). Una prueba de restauración incluye la reaplicación de anonimizaciones.
+- **Motivo:** El respaldo existe para recuperarse de un error reciente, no para archivo histórico. Menos retención reduce costo y exposición de datos.
+- **Recomendó:** Auditor de Cumplimiento (H-CUM-04 pidió definirlo). Plazo: propuesta del Gerente de TI; DevOps estima el costo y legal confirma si 12 meses es aceptable.
+- **Qué cambia:** Reemplaza D-024.4 y ajusta D-029. Entra en el escalado como tema legal y de costo.
+
+---
+
 ## Escalado al CEO
 
 Todo lo anterior está decidido por el Gerente de TI. Solo esto llega al CEO, y solo porque implica dinero, un tema legal o algo que no se puede deshacer. Se le explica en español claro, sin jerga.
@@ -377,7 +419,7 @@ Todo lo anterior está decidido por el Gerente de TI. Solo esto llega al CEO, y 
 
 ### Legal (le pedimos que consiga una opinión legal; el equipo no la da)
 1. **Qué ley de protección de datos aplica** (según el país o países de las empresas) y si hay que registrar el banco de datos de usuarios y empleados ante la autoridad. Por ejemplo, para Perú existe una ley específica; hay que confirmarlo con un abogado.
-2. **Confirmar los plazos de D-024**: 5 años de auditoría, 2 años antes de anonimizar a una persona dada de baja, 30 días para archivos importados.
+2. **Confirmar los plazos de D-024 y D-032**: 5 años de auditoría, 2 años antes de anonimizar a una persona dada de baja, 30 días para archivos importados, respaldos diarios de 30 días y mensuales de 12 meses.
 3. **Texto del aviso de privacidad y de los términos de uso**, y si la plataforma se considera proveedor de las empresas o titular de los datos.
 4. **Si guardar datos de varias empresas en un mismo servidor, o en un servidor en otro país**, exige requisitos especiales.
 5. **Contratos con los proveedores** de alojamiento y de correo.
