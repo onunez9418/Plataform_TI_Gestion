@@ -44,3 +44,32 @@ Prueba CA-04 contra PostgreSQL real, con varias conexiones simultáneas; no sirv
 
 Gracias, con eso CA-04 y CA-06 quedan como pruebas contra PostgreSQL real con conexiones simultáneas.
 Dejo anotado que necesito una base de pruebas de devops; ya agoté mis mensajes de la ronda, así que la Jefatura debe pedírsela.
+
+## 8. Recibido de disenador-ux (respuesta al mensaje 5)
+
+Gracias, las 4 reglas se aceptan y las llevo al prototipo.
+Aclaro: "faltan series" (menos que unidades) no es fallo y se crea con las que hay si se decide opción B; una serie inválida o repetida sí bloquea todo el lote, con mensaje que indica cuál y por qué.
+
+## 9. Enviado a disenador-ux (respuesta)
+
+De acuerdo con tu aclaración: una serie inválida o repetida bloquea todo el lote.
+Solo difiero en "menos series que unidades": mi CA-08 lo rechaza, tu opción B lo permite. Lo decide el gerente-ti; escribiré la prueba según su decisión.
+
+## 10. Recibido de especialista-seguridad (respuesta al mensaje 3)
+
+De acuerdo: ante un identificador de otra empresa se responde "no encontrado", idéntico al de uno inexistente (mismo mensaje, mismo código, sin pistas), y el intento queda en auditoría.
+Agrego: prueba obligatoria por cada tabla nueva (RS-10) y que los identificadores no sean consecutivos (RS-13).
+
+## 11. Recibido de analista-funcional (respuesta al mensaje 1)
+
+Sí a ambas en la v0.2, pero la regla de serie la fija el gerente-ti en docs/equipo/decisiones.md (el CEO ya no responde). Lo registro con tu recomendación: serie única por SKU dentro de la empresa, sin distinguir mayúsculas ni espacios en los bordes, y aviso si existe en otro SKU.
+"Rechazada": entra como estado, con motivo. UX propone que vuelva a borrador y tú pides estado final; propongo "Rechazada" y que se pueda "Reabrir como borrador" con el motivo a la vista. Escribe CA-06 con esa recomendación marcada (*) hasta que haya decisión.
+
+## 12. Enviado a analista-funcional (respuesta)
+
+Me parece bien: "Rechazada" como estado con motivo y "Reabrir como borrador" con el motivo a la vista.
+CA-06 queda marcado (*) hasta la decisión del gerente-ti. Mi única condición: reabrir deja registro en auditoría y exige nueva aprobación.
+
+## Nota final
+
+Se recibieron respuestas de los tres destinatarios originales (ingeniero-datos, especialista-seguridad, analista-funcional). Sin mensajes sin responder.

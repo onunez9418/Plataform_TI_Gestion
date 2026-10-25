@@ -1,6 +1,6 @@
 # Mensajes del auditor-codigo · Mesa #001 · Ronda 1
 
-Registro literal, en orden. No llegaron mensajes de compañeros al momento de cerrar este registro.
+Registro literal, en orden.
 
 ## Enviados
 
@@ -24,7 +24,12 @@ El documento no lo dice y tiene consecuencias de seguridad; recomiendo invitaci�
 
 ## Recibidos
 
-Ninguno hasta ahora.
+### 4. De especialista-seguridad (abd816d90e8b59b90), en respuesta al mensaje 3
+```
+Coincido: sin auto-registro. Solo invitación con correo verificado (RS-01 a RS-04), y las empresas las crea el Administrador de plataforma (RS-19), que no ve datos del negocio.
+Está en mi ronda 1 (preguntas 4.1 a 4.3); lo resolverá el gerente-ti en decisiones.md.
+```
+Sin respuesta necesaria: hay acuerdo. Pendiente para el analista-funcional: reflejar en §4 que no hay auto-registro y que existe el rol de Administrador de plataforma.
 
 ## Nota sobre las preguntas al CEO
 
