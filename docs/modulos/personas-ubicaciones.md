@@ -128,6 +128,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen. Cada RF indica
 | RN-PRS-029 | Los duplicados no se fusionan en la v1: se traspasan los equipos al registro correcto (ENT) y se cesa el duplicado. |
 | RN-PRS-030 | Las solicitudes de derechos se excluyen de búsquedas, listas, reportes, exportaciones, tableros, avisos y API; las ve solo `personas.derechos_atender` (PS-29); única excepción: la propia Persona ve el estado de **su** pedido en el portal (Fase 3). La mesa de ayuda guarda solo un caso restringido con la referencia. Consultarlas queda en la auditoría (D-061.2, D-061.6). |
 | RN-PRS-031 | El motivo de cese es una lista cerrada (Salida de la empresa, Fin de contrato, Traslado, Otro) **sin texto libre** (D-034.5). |
+| RN-PRS-033 | **Si quien presenta un pedido de derechos es la única persona con `personas.derechos_atender`** (por ejemplo, el único Administrador), no lo atiende ni la propia persona ni la plataforma (el Administrador de plataforma no ve datos del negocio, RF-PLA-004). El pedido queda "En espera de persona designada"; el Administrador **designa** a otra membresía de confianza dándole `personas.derechos_atender` (con segunda verificación; es un cambio de rol de otra persona, no una autoconcesión). Si no existe esa otra persona, la plataforma solo avisa al **contacto autorizado** que la empresa registró al crearse (D-048.5) y deja constancia de que el plazo corre; no atiende ni ve el contenido. [SUPUESTO S-PRS-14] |
 | RN-PRS-032 | Las listas y fichas respetan `datos_personales.ver`: sin él se muestra `PRS-0042`, tipo y estado (tres formas de dato oculto, D-053). |
 
 ### 4.3 Requisitos de calidad
@@ -254,7 +255,7 @@ Se reutilizan la pantalla genérica **Catálogos** (con vista de árbol para ubi
 11. **Mover un Piso con 40 equipos.** Los equipos van con el Piso; el historial de cada uno conserva la ruta en texto de cuando se movió (RF-PRS-007).
 12. **Persona externa que también es empleada de otra empresa.** Son dos registros independientes (RN-PRS-007); si hay obligación legal distinta, es pregunta legal (L-13).
 13. **Cese por Jefatura TI de alguien con cuenta.** Se rechaza hasta que alguien con `usuarios.suspender` lo haga; el mensaje lo explica.
-14. **Empresa con un solo administrador.** No puede anonimizar a mano (hace falta una segunda persona con el permiso); debe asignarlo a otra persona con segunda verificación.
+14. **Empresa con un solo administrador.** No puede anonimizar a mano ni atender su propio pedido de derechos: debe designar a otra persona con `personas.derechos_atender` y segunda verificación (RN-PRS-033). Mientras no exista, el pedido queda "En espera de persona designada" y se avisa al contacto autorizado; el plazo legal sigue corriendo (E-PRS-01).
 
 ## 12. Decisiones propuestas y supuestos
 
@@ -273,7 +274,8 @@ Se reutilizan la pantalla genérica **Catálogos** (con vista de árbol para ubi
 | S-PRS-11 | [SUPUESTO] | Límites del plazo de anonimización configurable: de 1 a 5 años, fijados por la plataforma; los confirma el Gerente de TI con legal. |
 | S-PRS-12 | [SUPUESTO] | Al anonimizar se conserva el área (no es dato de contacto, D-033.2) para reportes. Cumplimiento confirma. |
 | S-PRS-13 | [SUPUESTO] | Pedir la marca "almacén de TI" al catálogo de ubicaciones del núcleo. |
-| E-PRS-01 | [ESCALAR AL CEO] | **Legal e irreversible.** Plazos de anonimización (2 años tras el cese, mayor con pendientes), de auditoría (5 años) y de respaldos (30 días y 12 meses) son provisionales (D-024, D-032, D-033). Hasta la respuesta escrita de legal no se activa nada automático. Preguntas: si el directorio exige registro ante la autoridad, si el código de empleado y el correo son datos personales en el país de cada empresa, si el nombre del acta debe anonimizarse antes (L-05, L-12), si se puede condicionar la eliminación a devolver equipos (L-06). |
+| S-PRS-14 | [SUPUESTO] | Cuando quien presenta el pedido de derechos es el único con PS-29, lo atiende una persona **designada** por el Administrador; sin ella, el pedido espera y se avisa al contacto autorizado. Motivo: D-061.2 dice "la plataforma", pero esta no ve datos del negocio. Lo confirma el Gerente de TI con Cumplimiento (hallazgo R-08). |
+| E-PRS-01 | [ESCALAR AL CEO] | **Legal e irreversible.** Plazos de anonimización (2 años tras el cese, mayor con pendientes), de auditoría (5 años) y de respaldos (30 días y 12 meses) son provisionales (D-024, D-032, D-033). Hasta la respuesta escrita de legal no se activa nada automático. Preguntas: si el directorio exige registro ante la autoridad, si el código de empleado y el correo son datos personales en el país de cada empresa, si el nombre del acta debe anonimizarse antes (L-05, L-12), si se puede condicionar la eliminación a devolver equipos (L-06); qué pasa con el plazo legal de un pedido cuando la empresa no tiene una segunda persona para atenderlo (RN-PRS-033). |
 
 ## 13. Fuera de alcance
 
@@ -309,3 +311,4 @@ Se reutilizan la pantalla genérica **Catálogos** (con vista de árbol para ubi
 | Cita D-024.4 sustituida por D-032 (caso límite 10) | D-032, H-AUD-24 |
 | Columna "Cuándo" y CA que cita el requisito; CA de aislamiento por identificador interno, de alcance propio sin Persona, de canario y de doble control | H-AUD-21, D-063.6, D-036.4, H-SEG-25f, H-QA-05 |
 | Etiqueta "Persona anonimizada 0042" | H-UX-25(d), D-049.2 |
+| RN-PRS-033: quién atiende un pedido de derechos cuando quien lo presenta es el único con el permiso (persona designada; si no hay, aviso al contacto autorizado) | Hallazgo R-08 de Cumplimiento (ronda 3), D-061.2, D-048.5, RF-PLA-004 |

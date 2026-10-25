@@ -117,9 +117,9 @@ Notas
 | RN-INT-008 | Precios y datos de Personas solo salen con `precios.ver` y `datos_personales.ver` en la clave. **IMEI y número de línea** (datos personales) solo con `datos_personales.ver`. Sin ellos esos campos no se envían. | 1 | CA-INT-02 |
 | RN-INT-009 | Ninguna clave da acceso a claves de licencia, auditoría, usuarios, roles, invitaciones ni configuración de seguridad. | 1 | CA-INT-02 |
 | RN-INT-010 | Ninguna clave aprueba, rechaza, recibe, da de baja, anula, cierra, reingresa, cesa ni desactiva Personas, ni crea o cambia proveedores. La OC creada por API queda en Borrador. | 2 | CA-INT-09 |
-| RN-INT-011 | Quien creó o rotó una clave no puede aprobar una OC creada por esa integración (D-015, D-043). | 2 | CA-INT-09 |
+| RN-INT-011 | Quien creó, rotó, **asumió o revocó** una clave no puede aprobar una OC creada por esa integración (D-015, D-043). | 2 | CA-INT-09 |
 | RN-INT-012 | Las acciones por API se auditan con autor "integración <nombre>" (tipo de autor propio) y, en escrituras, antes y después sin valores de campos personales (D-030, D-041.4). | 1 | CA-INT-21 |
-| RN-INT-013 | Las lecturas no se auditan una a una: se guarda el registro de uso (clave, día, módulo, pedidos, errores). La lectura de Personas se registra por pedido (clave, filas, filtros). Una **lectura masiva** (más de 5.000 filas por día por clave) se audita como exportación. | 1 | CA-INT-22 |
+| RN-INT-013 | Las lecturas no se auditan una a una: se guarda el registro de uso (clave, día, módulo, pedidos, errores). La lectura de Personas se registra por pedido (clave, filas y **solo el nombre de los campos filtrados, nunca el texto buscado ni valores personales**, D-030). Una **lectura masiva** (más de 5.000 filas por día por clave) se audita como exportación. | 1 | CA-INT-22 |
 | RN-INT-014 | El registro de uso se conserva 90 días y el de entregas de webhooks 30. **[SUPUESTO]** | 1 | CA-INT-11 |
 | RN-INT-015 | Límites (cuadro único de D-054): 60 pedidos por minuto y 10.000 por día por clave; 300 por minuto por empresa. El limitador vive en tablas de PostgreSQL. **[SUPUESTO]** los valores. | 1 | CA-INT-06 |
 | RN-INT-016 | Máximo 100 elementos por respuesta y 1 MB por pedido. **[SUPUESTO]** | 1 | CA-INT-06 |
@@ -202,7 +202,7 @@ Notas
 | Integración | empresa, nombre, descripción, estado, permisos, vencimiento, direcciones permitidas, creada por | Nombre único por empresa | Altas, cambios de permisos con antes/después, suspensión, revocación |
 | Clave de API | integración, identificador público, últimas 4 letras, huella, vencimiento, estado, último uso | Identificador público único y global; huella única | Creación, rotación, revocación (nunca el valor) |
 | Registro de uso | clave, día, módulo, pedidos, errores | Único por clave + día + módulo | No (técnico, 90 días; particionable) |
-| Acceso a Personas por API | clave, momento, filas, filtros | Una por pedido | Sí, resumido |
+| Acceso a Personas por API | clave, momento, filas, nombres de los campos filtrados (sin valores) | Una por pedido | Sí, resumido, sin valores personales |
 | Idempotencia | clave de idempotencia, resultado, vencimiento | Única por integración + clave | No |
 | Límite de uso | clave, ventana, contador | Por clave + ventana | No |
 | Webhook | empresa, integración, dirección, eventos, estado, **secreto cifrado** | Único por empresa + dirección + integración | Altas, cambios, pausas |
@@ -408,3 +408,4 @@ Cada criterio cita el requisito que cubre.
 | Prefijo `LSAP-` y pantallas `PAN-INT-nn`; fechas dd/mm/aaaa; "usted"; "Cliente (CEO)" | D-049, D-053 |
 | Columnas "Cuándo" y "CA"; cada CA cita lo que cubre; 26 criterios (nuevos: siete casos SSRF, lote atómico, lectura masiva, creador inactivo, módulo apagado, procesos con dos empresas, rendimiento, búsqueda de secretos) | Plan de correcciones regla 2; H-AUD-21; QA y Seguridad |
 | S-INT-08 y S-INT-09 siguen escalados por costo y por tema legal | D-058; Cumplimiento (C4) |
+| La auditoría de lecturas de Personas guarda solo los nombres de los campos filtrados; RN-INT-011 incluye a quien asume o revoca la clave | D-030; Auditor de Cumplimiento R-07 y R-12 (ronda 3) |

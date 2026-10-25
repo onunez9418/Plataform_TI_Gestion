@@ -292,7 +292,7 @@ Basado en D-006, D-033, D-034, D-040, D-041, D-058.7, D-061. Etapa 2. El módulo
 | RF-PER-002 | Datos mínimos de una Persona: nombre, tipo (Empleado, Externo, Custodio), código de empleado, puesto (tipo), área, ubicación habitual, jefe directo (visible solo con `datos_personales.ver`), fechas de ingreso y de cese, y correo (opcional). Cada campo tiene finalidad declarada. | v1, Etapa 2 | CA-016 |
 | RF-PER-003 | No se guarda documento de identidad, dirección ni teléfono personal en la v1. | v1, Etapa 2 | CA-016 |
 | RF-PER-004 | Una Persona se vincula 1 a 1 a una membresía (opcional); los datos personales viven en una tabla aparte y todo lo demás apunta a la Persona por identificador y referencia. | v1, Etapa 2 | CA-054 |
-| RF-PER-005 | Una Persona nunca se borra; se **cesa** (estado Cesada) y, pasado el plazo y con la confirmación de legal, se anonimiza (estado Anonimizada). Cesar la Persona suspende al Usuario vinculado solo si quien cesa tiene además `usuarios.suspender`. | v1, Etapa 2 | CA-052a |
+| RF-PER-005 | Una Persona nunca se borra; se **cesa** (estado Cesada) y, pasado el plazo y con la confirmación de legal, se anonimiza (estado Anonimizada). Cesar a una Persona que tiene un Usuario vinculado suspende también a ese Usuario y **exige además** el permiso `usuarios.suspender` (no basta `personas.cesar`): sin él, el cese se rechaza y nada cambia. Esto es una regla de permisos, no un bloqueo por recursos. | v1, Etapa 2 | CA-052a |
 | RF-PER-006 | **El cese nunca se bloquea por recursos.** Activos, líneas, licencias, dominios y elementos que la Persona tiene generan **pendientes de la persona** visibles en su ficha, una tarea de salida y un aviso a Jefatura TI. Los activos Asignados llevan la marca "pendiente de devolución" (no es extravío ni baja). Lo que **sí se bloquea es anonimizar** mientras haya pendientes sin cerrar (devolución, extravío o baja con motivo). | v1, Etapa 2 | CA-052a y CA-052b y CA-081b |
 | RF-PER-007 | Las órdenes abiertas de una Persona cesada se reasignan o se cancelan con motivo. | v1, Etapa 5 | CA-052d |
 | RF-PER-008 | Las Personas son de cada empresa. El mismo nombre en dos empresas son dos registros independientes. | v1, Etapa 2 | CA-001 |
@@ -652,7 +652,7 @@ Basado en D-018, D-019, D-030, D-041, D-052, D-054, D-061.6. Etapa 1: se constru
 | RF-AUD-012 | Los identificadores internos que se ven en la dirección web no son consecutivos ni adivinables. Los códigos para personas (SKU, número de orden) son aparte. | v1, Etapa 1 | CA-001 |
 | RF-AUD-013 | Cada entrada indica el **tipo de autor**, con **tres valores**: membresía (usuario), integración (programa externo con clave de API) y **sistema** (con el identificador de la regla y de quien la configuró, por ejemplo una renovación automática). | v1, Etapa 1 | CA-041 |
 | RF-AUD-014 | **Campos personales:** los datos personales (lista cerrada de la sección 18.2) viven solo en los registros de Persona y de Usuario. La auditoría y el historial guardan únicamente el **identificador interno**. Cuando un cambio toca un campo personal, la auditoría registra **qué campo cambió** pero **no el valor anterior ni el nuevo**. | v1, Etapa 1 | CA-054 |
-| RF-AUD-015 | **Anonimizar = sobrescribir** los datos en el registro de Persona o de Usuario con una referencia; la auditoría no se toca y sigue legible. La anonimización queda como un evento (quién la ordenó o que fue automática, y cuándo). | v1, Etapa 7 | CA-054 |
+| RF-AUD-015 | **Anonimizar = sobrescribir** los datos en el registro de Persona o de Usuario con una referencia; la auditoría no se toca y sigue legible. La anonimización queda como un evento (quién la ordenó o que fue automática, y cuándo). Como la anonimización manual existe desde la Etapa 2 (RF-PER-013), esto y el registro de anonimizaciones (RF-DAT-016) existen desde la Etapa 2. | v1, Etapa 2 | CA-054 |
 | RF-AUD-016 | Lo que en la auditoría pueda ser dato personal indirecto (como la IP) se conserva solo hasta que venza el plazo de la auditoría. Un **proceso de mantenimiento separado** de la aplicación (no un botón del administrador), con dos personas, archiva o elimina las entradas vencidas **por partición** a los 5 años y deja constancia; es el único borrado permitido. | v1, Etapa 7 | CA-054 |
 | RF-AUD-017 | **Dos registros:** el de plataforma y el de empresa. Todo acceso de soporte aparece en la auditoría de la empresa. | v1, Etapa 1 | CA-015b |
 | RF-AUD-018 | **Copia externa** de la auditoría: solo de agregar, inmutable y encadenada (cada archivo lleva la huella del anterior), cada hora, con verificación semanal y alerta inmediata si no coincide. Hace **detectable** una alteración por alguien con poder total. | v1, Etapa 7 | CA-040 |
@@ -706,7 +706,7 @@ Cada módulo declara aquí sus campos personales; los que no se declaran no pasa
 | Nombre, tipo, código de empleado, puesto, área, ubicación habitual, jefe directo, fechas, correo de una Persona | Personas | Saber quién tiene cada equipo | `datos_personales.ver` (jefe directo solo con ese permiso) | Mientras exista; 2 años tras el cese | Anonimizar |
 | Activos asignados e historial de asignaciones | Inventario | Saber dónde está cada equipo | `datos_personales.ver` para el nombre; todos ven la referencia | Mientras exista el activo más el plazo de auditoría | Conservar con la referencia |
 | **Copia del nombre y área en el acta de entrega** | Entregas | Constancia de lo firmado | Quien ve el acta con `datos_personales.ver` | Activo más 5 años (`retener_hasta`) | La anonimización limpia la copia al vencer `retener_hasta` (excepción declarada, 18.3) |
-| IMEI y número de línea de un celular asignado | Inventario / Líneas | Identificar equipo y línea | `datos_personales.ver` | Igual que la asignación | Se trata como dato personal hasta que legal diga (L-11) |
+| IMEI y número de línea de un celular asignado | Inventario / Líneas | Identificar equipo y línea | `datos_personales.ver` | Igual que la asignación | Se trata como dato personal hasta que legal diga (L-09) |
 | Titular persona natural de un dominio | Dominios | Quién es dueño | `datos_personales.ver` | Vida del dominio más 2 años | Anonimizar |
 | Contactos de proveedor | Proveedores | Contactar al proveedor | `proveedores.ver_contactos` | Inactivos 2 años | Anonimizar; fuera de exportaciones generales |
 | Casos y comentarios (texto libre) | Mesa de ayuda | Atender pedidos | Quien atiende y la Persona atendida | 5 años (provisional) | No se puede anonimizar de forma garantizada el texto libre; se declara en el aviso de privacidad |
@@ -730,9 +730,10 @@ Nombre, correo, código de empleado, área, puesto, jefe directo, teléfono, nú
 | RF-DAT-002 | **Auditoría: 5 años.** **[ESCALAR AL CEO]** confirmar con legal (L-04). | v1, Etapa 7 | CA-040 |
 | RF-DAT-003 | **Datos personales de una Persona o usuario dado de baja o cesado: 2 años; luego se anonimiza** (sobrescribir). **[ESCALAR AL CEO]** irreversible (I-01) y legal (L-04). | v1, Etapa 7 | CA-054 |
 | RF-DAT-004 | **Archivos de importación:** el archivo original no se guarda (RF-IMP-012). Las filas en preparación duran hasta confirmar o 7 días. | v1, Etapa 4 | CA-056 |
-| RF-DAT-005 | **Respaldos (D-032, a confirmar con legal):** diarios durante 30 días y uno mensual durante 12 meses; cifrados y sin mezclar empresas. Un dato anonimizado puede seguir en respaldos hasta 12 meses y se declara en el aviso de privacidad. Al restaurar un respaldo antes de abrir el sistema se reaplica el **registro de anonimizaciones** (lista aparte, fuera de la base que se restaura, que guarda solo el identificador y la fecha). La auditoría de 5 años vive en el sistema, no en los respaldos. **[ESCALAR AL CEO]** plazo (L-04) y costo (D2). | v1, Etapa 7 | CA-054 |
+| RF-DAT-005 | **Respaldos (D-032, a confirmar con legal):** diarios durante 30 días y uno mensual durante 12 meses; cifrados y sin mezclar empresas. Un dato anonimizado puede seguir en respaldos hasta 12 meses y se declara en el aviso de privacidad. Al restaurar un respaldo antes de abrir el sistema se reaplica el **registro de anonimizaciones** (RF-DAT-016, que existe desde la Etapa 2). La auditoría de 5 años vive en el sistema, no en los respaldos. **[ESCALAR AL CEO]** plazo (L-04) y costo (D2). | v1, Etapa 7 | CA-054 |
 | RF-DAT-006 | **Constancias de entrega y devolución:** mientras exista el activo más 5 años (regla provisional D-033). | v1, Etapa 4 | CA-046 |
-| RF-DAT-007 | Debe poder atenderse una solicitud de acceso, corrección o eliminación de datos personales y exportar y anonimizar a una persona sin romper el historial. **[ESCALAR AL CEO]** procedimiento y plazos (L-06, L-09). | v1, Etapa 7 | CA-076 |
+| RF-DAT-007 | Debe poder atenderse una solicitud de acceso, corrección o eliminación de datos personales y exportar y anonimizar a una persona sin romper el historial. **[ESCALAR AL CEO]** procedimiento y plazos (L-06). | v1, Etapa 7 | CA-076 |
+| RF-DAT-016 | **Registro de anonimizaciones:** una lista aparte que guarda solo el identificador y la fecha de cada anonimización, en un almacén propio fuera de la base que se restaura, sin rotación y replicado, para que sobreviva a una pérdida total. **Existe desde la Etapa 2, antes de la primera anonimización manual.** Al restaurar cualquier respaldo, antes de abrir el sistema se reaplica (RS-49). | v1, Etapa 2 | CA-054 |
 | RF-DAT-008 | Los datos personales no aparecen en mensajes de error ni en registros técnicos. | v1, Etapa 1 | CA-073 |
 | RF-DAT-009 | Los datos personales de una empresa nunca se muestran a otra. Un administrador solo ve de un usuario lo necesario para su empresa. | v1, Etapa 1 | CA-004 |
 | RF-DAT-010 | Ningún dato personal real en el repositorio ni en el entorno de pruebas. El Excel, la OC y la OS reales se entregan con nombres reemplazados, o se guardan en un lugar controlado fuera del repositorio. Una prueba global de QA busca un nombre "canario" en toda la base, exportaciones y correos. | v1, Etapa 0 | CA-073 |
@@ -859,6 +860,9 @@ Basado en D-053. El prototipo de la Etapa 0 muestra las **26 pantallas A** y 18 
 | Aprobar cambio | Siempre; riesgo Alto: permiso aparte y aprobador distinto del implementador |
 | Reaprobar plantilla estándar de cambios | Otra persona |
 | Publicar error conocido | Quien no lo redactó |
+| Registrar una garantía extendida con costo | No hay aprobación; si el costo comprometido supera el límite, otra persona; si no hay orden de compra, marca "sin respaldo de compra" [SUPUESTO S-33] |
+| Registrar un mantenimiento con costo sin orden de servicio | Igual que la fila anterior [SUPUESTO S-33] |
+| Corregir el costo de un activo | Permiso sensible, motivo y auditoría; si el nuevo costo, con impuesto y en moneda base, supera el límite, otra persona [SUPUESTO S-33] |
 | Aprobar solicitud de servicio con aprobación | Quien no la pidió |
 | Entregar un equipo | La autoentrega está prohibida, sin excepción |
 
@@ -953,7 +957,7 @@ Formato: Dado... cuando... entonces... Parten de los criterios de QA ajustados a
 - **CA-041 · Qué se audita** (RF-AUD-003 a 005, 008, 009, 013, 019, RF-USR-007, RF-ROL-013, RF-PLA-007). Dado un conjunto de acciones (alta de usuario, cambio de rol, aprobación, baja de activo, importación, exportación, cambio de empresa, consulta a la auditoría, lectura de 5.000 filas, acción de una regla automática), cuando se ejecutan, entonces cada una deja una entrada con quién, cuándo, empresa, tipo de autor (membresía, integración o sistema), qué cambió y motivo si aplica.
 - **CA-066 · Eventos de seguridad aparte** (RF-AUD-010). Dado un intento rechazado por empresa ajena, cuando la acción falla, entonces el evento queda en el registro de seguridad en una transacción independiente (el rechazo no lo revierte), con la empresa del actor, sin datos del objeto.
 - **CA-045 · Nada con historial se borra** (RF-AUD-011, RN-007, RF-USR-002, RF-CAT-004). Dado un SKU, activo, orden, persona, usuario o valor de catálogo con historial, cuando se intenta eliminar, entonces solo se permite desactivar, anular o dar de baja con motivo; un borrador que nunca tuvo efecto sí se puede borrar.
-- **CA-052a · El cese nunca se bloquea** (RF-PER-005, 006, 011). Dado una Persona con un activo asignado, una línea y un dominio a su cargo, cuando se la cesa con un motivo de la lista, entonces el cese se acepta, se genera la lista de pendientes en su ficha, una tarea de salida y un aviso a Jefatura TI; el Usuario vinculado se suspende solo si quien cesa tiene además `usuarios.suspender`.
+- **CA-052a · El cese nunca se bloquea** (RF-PER-005, 006, 011). Dado una Persona con un activo asignado, una línea y un dominio a su cargo, cuando se la cesa con un motivo de la lista, entonces el cese se acepta, se genera la lista de pendientes en su ficha, una tarea de salida y un aviso a Jefatura TI; si la Persona tiene un Usuario vinculado, quien cesa necesita además `usuarios.suspender` y el Usuario se suspende en el mismo acto; sin ese permiso el cese se rechaza y nada cambia.
 - **CA-052b · Anonimizar se bloquea** (RF-PER-006, 013). Dado una Persona cesada con pendientes sin cerrar, cuando se intenta anonimizarla, entonces se rechaza; solo se puede tras cerrarlos; la anonimización manual exige dos personas y vista previa.
 - **CA-052c · Baja de usuario siempre permitida** (RF-USR-001, 003, 008). Dado un usuario cuya Persona tiene activos asignados, cuando el administrador lo da de baja, entonces se acepta y sus sesiones se cortan al instante; los activos siguen a nombre de la Persona.
 - **CA-052d · Órdenes abiertas** (RF-USR-005, RF-PER-007). Dado un usuario o Persona con órdenes abiertas, cuando se da de baja o se cesa, entonces el sistema pide reasignarlas o cancelarlas con motivo.
@@ -1043,6 +1047,7 @@ D-057 resolvió los 31 supuestos de la v0.2. Los resultados:
 | ID | Supuesto | Dónde aplica |
 |---|---|---|
 | S-32 | La orden de compra lleva un número de versión que sube con cada reaprobación, para que las integraciones distingan alta, cambio y anulación (pedido por presupuesto e integraciones). | RF-OC-044 |
+| S-33 | Tres actos de dinero se suman a la tabla de RN-017: garantía extendida con costo, mantenimiento con costo sin orden de servicio, y corregir el costo de un activo (segunda persona si el costo, con impuesto y en moneda base, supera el límite). Pedido por el Auditor de Cumplimiento. | RN-017 |
 
 ## 25. Escalado al Cliente (CEO)
 
@@ -1062,9 +1067,10 @@ Solo dinero, tema legal o algo irreversible. Se le explica en español claro. Fu
 - **L-03:** texto del aviso de privacidad y de los términos de uso, y si la plataforma es proveedor de las empresas o titular de los datos.
 - **L-04:** confirmar los plazos propuestos: auditoría 5 años, anonimización a los 2 años, respaldos 30 días y 12 meses, eventos de seguridad 12 meses, casos de ayuda 5 años.
 - **L-05 y L-12:** si se puede conservar el nombre en el acta de entrega hasta el fin de su plazo y el valor probatorio de un acta firmada en papel o confirmada en pantalla.
-- **L-06 y L-09:** procedimiento y plazos para atender derechos de acceso, corrección y eliminación, y si la eliminación se condiciona a devolver equipos.
+- **L-06:** procedimiento y plazos para atender derechos de acceso, corrección y eliminación, y si la eliminación se condiciona a devolver equipos.
+- **L-09:** si son datos personales la IP, el correo escrito en intentos fallidos, el IMEI, el número de línea corporativo, el código de empleado, el titular persona natural de un dominio y los contactos de proveedor.
 - **L-07 y L-08:** si tener datos de varias empresas en un mismo servidor, o en otro país, y usar proveedores externos exige requisitos especiales, y los contratos con esos proveedores y con cada empresa.
-- **L-11:** si el número de línea y el IMEI asociado a una persona son datos personales.
+- **L-10, L-11, L-13 y L-15:** si registrar accesos de cada empleado exige aviso específico; implicancias laborales de reclamar o cobrar un equipo perdido; responsabilidad sobre datos de personas externas; y tratamiento contable de impuestos, depreciación y consolidación de monedas (consulta a contabilidad además de legal).
 - **L-14 y L-16:** el resto de las preguntas de prioridad A y la obligación y plazos de avisar una fuga de datos a la autoridad y a los afectados.
 - Aviso: si el Cliente (CEO) planea ofrecer la plataforma a empresas que no son suyas, esto cambia contratos, soporte y costos; basta con que avise si existe el plan.
 
@@ -1097,8 +1103,8 @@ Cada tabla de requisitos de este documento es la matriz: la columna **Cuándo** 
 | OC Compras y recepción | RF-OC-001 a 050 | v1, Etapa 5 (RF-OC-027 en 2, RF-OC-028 en 7) | CA-011a, CA-012 a 014, CA-018, CA-020, CA-024, CA-029 a 037, CA-045, CA-055, CA-061, CA-062, CA-070, CA-072, CA-078 |
 | OS Órdenes de servicio | RF-OS-001 a 011 | v1, Etapa 6 | CA-018, CA-044, CA-055 |
 | IMP / EXP Importación y exportación | RF-IMP-001 a 018 (012 retirado), RF-EXP-001 a 007 | v1, Etapas 2 y 4 | CA-011b, CA-038, CA-039, CA-041, CA-043, CA-056, CA-057, CA-067 |
-| AUD Auditoría | RF-AUD-001 a 019 | v1, Etapa 1 (015, 016, 018 en 7) | CA-001, CA-002, CA-011b, CA-015b, CA-040 a 042, CA-045, CA-054, CA-066 |
-| DAT Datos personales | RF-DAT-001 a 015 | v1, Etapas 0, 1, 2, 4 y 7 | CA-004, CA-016, CA-040, CA-046, CA-049, CA-053, CA-054, CA-056, CA-073, CA-074, CA-076 |
+| AUD Auditoría | RF-AUD-001 a 019 | v1, Etapa 1 (015 en 2; 016 y 018 en 7) | CA-001, CA-002, CA-011b, CA-015b, CA-040 a 042, CA-045, CA-054, CA-066 |
+| DAT Datos personales | RF-DAT-001 a 016 | v1, Etapas 0, 1, 2, 4 y 7 | CA-004, CA-016, CA-040, CA-046, CA-049, CA-053, CA-054, CA-056, CA-073, CA-074, CA-076 |
 | UX Pantallas | RF-UX-001 a 012 | v1, Etapas 1 a 6 | CA-011b, CA-024, CA-048, CA-050a y b, CA-080 |
 | RNF Calidad y continuidad | RNF-001 a 022 | v1, Etapas 0 a 7 | CA-034, CA-043, CA-046, CA-048, CA-050a y b, CA-053, CA-069, CA-073, CA-077 |
 | RS Seguridad | RS-01 a RS-50 | Las del cuadro de la sección 17 | Las de cada requisito referido |

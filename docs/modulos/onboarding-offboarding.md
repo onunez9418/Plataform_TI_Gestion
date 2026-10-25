@@ -243,7 +243,7 @@ Todo es `Fase 2`, por el motor único de NOT (una tabla de avisos, hora única d
 | S-ONB-07 | **Apagado** (D-058, E-ONB-01) | El recordatorio de salida a la Persona queda apagado hasta la opinión legal. |
 | S-ONB-08 | **Cambiado y retirado** (D-058, D-061.7) | Las líneas ya no bloquean el cese: generan pendientes; se bloquea la anonimización. |
 | S-ONB-09 | [SUPUESTO] | Si el responsable por defecto no puede actuar, la tarea va a quien inició (RN-ONB-003); no se pide al registro una celda nueva para Solicitante. |
-| E-ONB-01 | [ESCALAR AL CEO] | **Legal.** El recordatorio de salida a la Persona, que se envía a su correo, y la reclamación de equipos por la plataforma pueden tener efectos laborales. Se pide opinión legal sobre el texto antes de encenderlo (decisiones.md, "Legal", punto 3). Apagado por defecto. |
+| E-ONB-01 | [ESCALAR AL CEO] | **Legal.** El recordatorio de salida a la Persona, que se envía a su correo, y la reclamación de equipos por la plataforma pueden tener efectos laborales. Se pide opinión legal sobre el texto antes de encenderlo (L-11, D-034.6). Apagado por defecto. |
 
 ## 13. Fuera de alcance
 

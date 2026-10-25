@@ -94,7 +94,7 @@ Notas
 | RF-REP-012 | Guardar, renombrar y quitar vistas de filtros personales (hasta 20 por usuario). | A | CA-REP-15 |
 | RF-REP-013 | Exportar el reporte como se ve (.xlsx o .csv) **por la puerta única**; REP no tiene otro camino de descarga. | A | CA-REP-05, CA-REP-08 |
 | RF-REP-014 | La confirmación de la puerta muestra motivo, filas y columnas sensibles que saldrán. | A | CA-REP-06 |
-| RF-REP-015 | Cada exportación queda en la auditoría (quién, cuándo, reporte, filtros, formato, filas, columnas sensibles; sin el contenido). | A | CA-REP-06 |
+| RF-REP-015 | Cada exportación queda en la auditoría (quién, cuándo, reporte, **nombres de los campos filtrados sin sus valores**, formato, filas, columnas sensibles; sin el contenido). Un filtro por texto de una Persona nunca guarda el texto buscado (D-030). | A | CA-REP-06 |
 | RF-REP-016 | Programar el envío de un reporte (diaria, semanal o mensual, hora, destinatarios de la empresa). Jefatura TI gestiona solo las suyas. | C | CA-REP-11 |
 | RF-REP-017 | El correo programado lleva cifras clave y un enlace que exige iniciar sesión; no lleva adjuntos. | C | CA-REP-11 |
 | RF-REP-018 | Pausar, reanudar y desactivar programaciones; ver el historial de envíos. | C | CA-REP-11 |
@@ -221,7 +221,7 @@ Las exportaciones son una acción inmediata de la puerta única; su rastro es la
 | Foto mensual | empresa, mes, indicador, dimensión, valor, moneda, "tomada con retraso" | Única por empresa + mes + indicador + dimensión + moneda | Creación; nunca se edita |
 | Parámetros de reportes | días sin asignar (90), ventanas 30/60/90, ventana de fin de vida (6 meses) | Uno por empresa | Cambios con antes/después |
 | Corrida de trabajo | fecha lógica, resultado, cantidad | Única por empresa + trabajo + fecha lógica | No (registro técnico) |
-| Registro de exportación | **vive en la auditoría general**: quién, cuándo, reporte, filtros, formato, filas, columnas sensibles (sí/no) | Entrada de auditoría | Siempre |
+| Registro de exportación | **vive en la auditoría general**: quién, cuándo, reporte, nombres de los campos filtrados sin sus valores (D-030), formato, filas, columnas sensibles (sí/no) | Entrada de auditoría | Siempre |
 
 - Los reportes no guardan copia de los datos, salvo agregados y foto mensual (solo cantidades). No se guardan archivos exportados (D-022).
 - **Datos personales declarados:** ninguno por valor. Destinatarios y autores son referencias a membresías.
@@ -287,7 +287,7 @@ Cada criterio cita el requisito que cubre. Fechas día/mes/año.
 - **CA-REP-03 Tasa de asignación.** *Cubre RN-REP-034.* Dado 12 Asignado y 8 En stock, la tasa es 60 %; los En reparación y De baja no entran.
 - **CA-REP-04 Aislamiento entre empresas.** *Cubre RN-REP-001, RF-REP-002, 011, 024.* Dado dos empresas, cuando un usuario de A abre un reporte o una tarjeta, entonces ve solo datos de A; con el identificador interno de una programación de B recibe "no encontrado"; las tarjetas "mi trabajo" de un Técnico sin Persona vinculada muestran una lista vacía.
 - **CA-REP-05 Exportar sin permiso.** *Cubre RF-REP-013, RN-REP-005, 008.* Dado una Jefatura TI sin `datos.exportar`, cuando abre un reporte, entonces "Exportar" está visible y desactivado con la razón; si llama directo al servidor recibe "No tiene permiso" y el intento queda en el registro de seguridad.
-- **CA-REP-06 Auditoría de exportación.** *Cubre RF-REP-014, 015, RN-REP-007, 061.* Dado un Administrador que exporta 1.200 filas con precios, cuando confirma con su motivo, entonces la auditoría registra usuario, fecha, reporte, filtros, formato, 1.200 filas y "precios: sí", sin el contenido; si las filas fueran 5.000 o más se anota como lectura masiva; con datos personales el archivo trae la hoja "Aviso".
+- **CA-REP-06 Auditoría de exportación.** *Cubre RF-REP-014, 015, RN-REP-007, 061.* Dado un Administrador que exporta 1.200 filas con precios, cuando confirma con su motivo, entonces la auditoría registra usuario, fecha, reporte, nombres de los campos filtrados (nunca el texto buscado), formato, 1.200 filas y "precios: sí", sin el contenido; si las filas fueran 5.000 o más se anota como lectura masiva; con datos personales el archivo trae la hoja "Aviso".
 - **CA-REP-07 Columnas omitidas.** *Cubre RN-REP-003, 004, 024.* Dado un usuario con `datos.exportar` sin `precios.ver` ni `datos_personales.ver`, cuando exporta inventario, entonces el archivo no tiene precios, muestra `PRS-NNNN` en vez de nombres, no trae claves de licencia y la confirmación lo indica.
 - **CA-REP-08 Fórmulas.** *Cubre RF-REP-013, RN-REP-006.* Dado un activo con observación `=HYPERLINK("http://x")` y otra que empieza con tabulador, cuando se exporta, entonces ambas celdas son texto; un importe negativo sigue siendo número.
 - **CA-REP-09 Límites.** *Cubre RF-REP-022, RN-REP-009, 011, RNF-REP-003.* Dado un reporte de 80.000 filas, cuando se pide exportar, entonces se muestra "Máximo 50.000 filas; agregue filtros" y no se genera archivo; con 50.000 filas se genera en segundo plano con avance; un periodo de 25 meses se rechaza.
@@ -387,4 +387,5 @@ Cada criterio cita el requisito que cubre. Fechas día/mes/año.
 | Volumen citado desde RNF-010 y prueba de carga nocturna desde la Etapa 4 (RNF-REP-001) | D-057 S-19 |
 | Columnas "Cuándo" y "CA"; cada CA cita lo que cubre; 22 criterios (nuevos: fórmulas con tabulador, topes, casos restringidos, módulo apagado, copia de parámetros, procesos con dos empresas, foto con retraso, accesibilidad) | Plan de correcciones regla 2; H-AUD-21; QA y Seguridad |
 | Pantallas con ID `PAN-REP-nn`; prefijo `PRG-` reservado; "usted" y "Cliente (CEO)"; "Persona anonimizada 0042" | D-049, D-053 |
+| La auditoría de exportaciones guarda solo los nombres de los campos filtrados, sin el texto buscado (RF-REP-015, sección 6, CA-REP-06) | D-030; Auditor de Cumplimiento R-07 (ronda 3) |
 | S-REP-02, 06, 08 y 09 quedan resueltos por decisiones; S-REP-11 marcado dentro del escalado de correo; S-REP-14 nuevo | D-054, D-057, D-061.1, D-037 |

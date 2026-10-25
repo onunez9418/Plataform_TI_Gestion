@@ -241,7 +241,7 @@ Los avisos a Personas sin Usuario los define cada módulo; el portal no envía a
 10. **Reporta el extravío de un equipo ajeno.** No puede elegirlo: solo ve los suyos.
 11. **La invitación vence.** Se envía una nueva; la anterior queda Vencida.
 12. **Restaurar un respaldo antiguo.** Se revocan sesiones y enlaces y se reaplican anonimizaciones y suspensiones (D-052.4); las Personas anonimizadas no entran.
-13. **Quien pide sus datos es el único administrador.** No puede atender su propio pedido; lo atiende otra persona con PS-29 o queda esperando la designación de una.
+13. **Quien pide sus datos es el único con PS-29.** No puede atender su propio pedido ni lo atiende la plataforma (no ve datos del negocio); el pedido queda "En espera de persona designada" hasta que el Administrador designe a otra persona, y se avisa al contacto autorizado (RN-PRS-033).
 14. **Línea sin módulo LIN.** Se muestra el número como campo de la unidad del celular, con la etiqueta de qué módulo la gestiona cuando se active.
 
 ## 12. Decisiones propuestas y supuestos
