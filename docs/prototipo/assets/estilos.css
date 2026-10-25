@@ -460,6 +460,11 @@ dl { margin: 0; }
 @media (max-width: 640px) {
   .demo-bar { padding: var(--e2); gap: var(--e2); }
   .demo-bar .demo-aviso { display: none; }
+  .demo-bar .txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .demo-bar label { flex: 1 1 140px; min-width: 0; }
+  .demo-bar select { width: 100%; min-width: 0; }
+  .demo-bar .btn.chico { min-width: 40px; padding: 0 var(--e2); }
+  .demo-bar label .txt + select { margin: 0; }
   .barra { padding: 0 var(--e2); gap: var(--e2); }
   .barra .marca .texto-marca { display: none; }
   .empresa-activa { flex: 1 1 auto; min-width: 0; max-width: none; padding: 0 var(--e2); }

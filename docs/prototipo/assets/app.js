@@ -325,11 +325,11 @@ function menuNuevo() {
 function puedePedirAyuda() { return puedeAlguno(['ordenes_servicio.crear', 'ayuda.caso_crear']); }
 function demoBar() {
   return `<div class="demo-bar" role="region" aria-label="Controles del prototipo">
-    <label>Probar como: <select id="sel-rol" aria-label="Rol que se está probando">${ORDEN_ROLES.map((k) => `<option value="${k}" ${k === APP.rol ? 'selected' : ''}>${ROLES[k].nombre}</option>`).join('')}</select></label>
-    <label>Empresa: <select id="sel-empresa" ${APP.rol === 'plat' ? 'disabled title="La consola de plataforma no pertenece a ninguna empresa"' : ''} aria-label="Empresa activa">${Object.values(EMPRESAS).map((e) => `<option value="${e.id}" ${e.id === APP.empresa ? 'selected' : ''}>${e.nombre}</option>`).join('')}</select></label>
-    <button type="button" class="btn chico" data-acc="tema" aria-pressed="${APP.tema === 'oscuro'}">${icono(APP.tema === 'oscuro' ? 'sol' : 'luna')}<span>${APP.tema === 'oscuro' ? 'Modo claro' : 'Modo oscuro'}</span></button>
-    <a class="btn chico" href="#/pantallas">${icono('tabla')}<span>Lista de pantallas</span></a>
-    <a class="btn chico" href="#/guia">${icono('doc')}<span>Guía visual</span></a>
+    <label><span class="txt">Probar como:</span> <select id="sel-rol" aria-label="Rol que se está probando">${ORDEN_ROLES.map((k) => `<option value="${k}" ${k === APP.rol ? 'selected' : ''}>${ROLES[k].nombre}</option>`).join('')}</select></label>
+    <label><span class="txt">Empresa:</span> <select id="sel-empresa" ${APP.rol === 'plat' ? 'disabled title="La consola de plataforma no pertenece a ninguna empresa"' : ''} aria-label="Empresa activa">${Object.values(EMPRESAS).map((e) => `<option value="${e.id}" ${e.id === APP.empresa ? 'selected' : ''}>${e.nombre}</option>`).join('')}</select></label>
+    <button type="button" class="btn chico" data-acc="tema" aria-pressed="${APP.tema === 'oscuro'}">${icono(APP.tema === 'oscuro' ? 'sol' : 'luna')}<span class="txt">${APP.tema === 'oscuro' ? 'Modo claro' : 'Modo oscuro'}</span></button>
+    <a class="btn chico" href="#/pantallas" aria-label="Lista de pantallas">${icono('tabla')}<span class="txt">Lista de pantallas</span></a>
+    <a class="btn chico" href="#/guia" aria-label="Guía visual">${icono('doc')}<span class="txt">Guía visual</span></a>
     <span class="demo-aviso">Prototipo de la Etapa 0 · datos de ejemplo inventados · no guarda nada</span>
   </div>`;
 }
@@ -420,6 +420,7 @@ function render(conservarFoco) {
     try { contenido = def.render(q); } catch (err) { console.error('Error al dibujar', r, err); contenido = aviso('alerta', 'No pudimos dibujar esta pantalla.', 'Avise al equipo de TI con el código ERR-' + r.toUpperCase()); }
   }
   raiz.innerHTML = shell(layoutPara(def), def, r, q, contenido);
+  ajustarAltoDemo();
   document.title = `${def.titulo || 'Plataforma'} · ${APP.rol === 'plat' ? 'Consola de plataforma' : E().corto} · Prototipo`;
   APP.actual = { r, q, def };
   if (def.despues && accesoOk(def.acceso)) { try { def.despues(q); } catch (err) { console.error('Error al activar', r, err); } }
@@ -430,6 +431,11 @@ function render(conservarFoco) {
     const an = document.getElementById('anuncio'); if (an) an.textContent = (def.titulo || '') + ', ' + (APP.rol === 'plat' ? 'consola de plataforma' : E().nombre);
   }
 }
+function ajustarAltoDemo() {
+  const d = document.querySelector('.demo-bar');
+  if (d) document.documentElement.style.setProperty('--alto-demo', d.offsetHeight + 'px');
+}
+window.addEventListener('resize', ajustarAltoDemo);
 function irA(h) { if (location.hash === h) render(); else location.hash = h; }
 
 /* ---------- Eventos globales (delegación) ---------- */

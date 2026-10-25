@@ -1,9 +1,9 @@
 # Módulo: Presupuesto y costos de TI (PRE)
 
-**Versión:** 0.2 (corrección de la Oleada D, escuadrón F) · **Fecha:** 25/10/2026 · **Autor:** analista-funcional
+**Versión:** 0.3 (aplicación de D-065 a D-076, escuadrón F) · **Fecha:** 25/10/2026 · **Autor:** analista-funcional
 **Base:** `CLAUDE.md`, `docs/equipo/decisiones.md` (D-001 a D-064), `docs/equipo/plan-correcciones.md`, documento funcional v0.2.
 **Estado:** propuesta. **[SUPUESTO]** = lo confirma el Gerente de TI. **[ESCALAR AL CEO]** = dinero, legal o irreversible.
-**Leyenda de "Cuándo":** **A** = PRE-A (Fase 3, ola F; puede adelantarse si el Gerente de TI lo decide). **B** = PRE-B (Fase 3, después de PRV-B, LIC, LIN, DOM y GAR-B). **v1, Etapa N** = preparación del núcleo.
+**Leyenda de "Cuándo":** la columna usa las tres palabras del núcleo (`v1, Etapa N`, `Fase 2`, `Fase 3`). Todo PRE es **Fase 3**; la letra entre paréntesis dice la parte: **(A)** = PRE-A (ola F; puede adelantarse si el Gerente de TI lo decide), **(B)** = PRE-B (después de PRV-B, LIC, LIN, DOM y GAR-B). Las preparaciones del núcleo (`v1, Etapa N`) están en la sección 1.
 
 ---
 
@@ -80,90 +80,90 @@ Notas
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RF-PRE-001 | Crear un presupuesto de un año fiscal con nombre, moneda y líneas (centro de costo × rubro × monto anual). | A | CA-PRE-01 |
-| RF-PRE-002 | Copiar un presupuesto anterior como base, con un porcentaje general de ajuste opcional. | A | CA-PRE-21 |
-| RF-PRE-003 | Enviar el presupuesto a aprobación; lo aprueba o rechaza (con motivo) una persona distinta de quien lo creó o editó. | A | CA-PRE-02 |
-| RF-PRE-004 | Modificar un presupuesto aprobado solo con una modificación (aumento, disminución o traspaso entre líneas) con motivo y aprobación. | A | CA-PRE-02 |
-| RF-PRE-005 | Mostrar por centro de costo y rubro: original, vigente, ejecutado, comprometido, disponible y ejecución %. | A | CA-PRE-03 |
-| RF-PRE-006 | Mostrar cada cifra hasta su documento de origen, si el usuario puede ver ese documento. | A | CA-PRE-03 |
-| RF-PRE-007 | Al confirmarse una recepción de OC, escribir su costo en el libro **en la misma operación**. | A | CA-PRE-03 |
-| RF-PRE-008 | Calcular el comprometido de las OC aprobadas, emitidas o recibidas parcialmente. | A | CA-PRE-03 |
-| RF-PRE-009 | Revertir el costo cuando se revierte una recepción (D-017) y liberar el comprometido al cerrar una OC con faltante. | A | CA-PRE-04 |
-| RF-PRE-010 | Recibir el costo de las OS cerradas con costo (el costo vive en la OS). | A | CA-PRE-14 |
-| RF-PRE-011 | Un trabajo diario convierte las obligaciones recurrentes (contratos, licencias, líneas, dominios y certificados, garantías y mantenimiento) en filas del libro, con la regla de fuente única. | B | CA-PRE-14, CA-PRE-17 |
-| RF-PRE-012 | Registrar gasto manual (rubro, centro, fecha, importe sin impuesto, % de impuesto, moneda, descripción, motivo) y anularlo con otro registro. | A | CA-PRE-15 |
-| RF-PRE-013 | Reclasificar un costo a otro centro o rubro, con motivo; genera un registro contrario y uno nuevo. | A | CA-PRE-15 |
-| RF-PRE-014 | Alertar cuando la ejecución llegue a los umbrales de atención y excedido, por línea, centro y presupuesto. | A | CA-PRE-06 |
-| RF-PRE-015 | En la pantalla de aprobación de la OC (espacio reservado por RF-OC-051 del núcleo) mostrar el efecto en el presupuesto y exigir una justificación escrita si lo excede, sin segundo nivel. | A | CA-PRE-07 |
-| RF-PRE-016 | Cerrar un periodo mensual: congela ejecutado, comprometido y cuotas de depreciación de ese mes. | A | CA-PRE-09 |
-| RF-PRE-017 | Proyección de renovaciones de los próximos 12 meses por mes, rubro y moneda, desde los vencimientos y el último importe conocido. | B | CA-PRE-22 |
-| RF-PRE-018 | Porcentaje de incremento esperado por rubro para la proyección (por defecto 0 %). | B | CA-PRE-22 |
-| RF-PRE-019 | Plan de reposición: activos de equipo físico que cumplen su vida útil en 12 y 24 meses, con costo estimado igual al último precio de compra del mismo SKU o el costo original. | B | CA-PRE-22 |
-| RF-PRE-020 | Configurar por categoría de equipo físico: método (línea recta o sin depreciación), vida útil en meses y valor residual en %. Las subcategorías heredan. | B | CA-PRE-08 |
-| RF-PRE-021 | Calcular la depreciación mensual y el valor en libros referencial de cada activo con costo. | B | CA-PRE-08 |
-| RF-PRE-022 | Listar activos "sin costo" y categorías "sin parámetros". | B | CA-PRE-18 |
-| RF-PRE-023 | Mostrar totales por moneda; nunca sumar monedas distintas. | A | CA-PRE-05 |
-| RF-PRE-024 | Comparar el año fiscal con el anterior por rubro y centro, por moneda. | B | CA-PRE-05 |
-| RF-PRE-025 | Informe mensual "gastos sin respaldo de compra" (fuente propia) a quien aprueba (D-043.5). | B | CA-PRE-14 |
-| RF-PRE-026 | Exponer a REP los servicios de costos (ejecutado, comprometido, disponible, depreciación); REP no lee las tablas de PRE. | A | CA-PRE-19 |
+| RF-PRE-001 | Crear un presupuesto de un año fiscal con nombre, moneda y líneas (centro de costo × rubro × monto anual). | Fase 3 (A) | CA-PRE-01 |
+| RF-PRE-002 | Copiar un presupuesto anterior como base, con un porcentaje general de ajuste opcional. | Fase 3 (A) | CA-PRE-21 |
+| RF-PRE-003 | Enviar el presupuesto a aprobación; lo aprueba o rechaza (con motivo) una persona distinta de quien lo creó o editó. | Fase 3 (A) | CA-PRE-02 |
+| RF-PRE-004 | Modificar un presupuesto aprobado solo con una modificación (aumento, disminución o traspaso entre líneas) con motivo y aprobación. | Fase 3 (A) | CA-PRE-02 |
+| RF-PRE-005 | Mostrar por centro de costo y rubro: original, vigente, ejecutado, comprometido, disponible y ejecución %. | Fase 3 (A) | CA-PRE-03 |
+| RF-PRE-006 | Mostrar cada cifra hasta su documento de origen, si el usuario puede ver ese documento. | Fase 3 (A) | CA-PRE-03 |
+| RF-PRE-007 | Al confirmarse una recepción de OC, escribir su costo en el libro **en la misma operación**. | Fase 3 (A) | CA-PRE-03 |
+| RF-PRE-008 | Calcular el comprometido de las OC aprobadas, emitidas o recibidas parcialmente. | Fase 3 (A) | CA-PRE-03 |
+| RF-PRE-009 | Revertir el costo cuando se revierte una recepción (D-017) y liberar el comprometido al cerrar una OC con faltante. | Fase 3 (A) | CA-PRE-04 |
+| RF-PRE-010 | Recibir el costo de las OS cerradas con costo (el costo vive en la OS). | Fase 3 (A) | CA-PRE-14 |
+| RF-PRE-011 | Un trabajo diario convierte las obligaciones recurrentes (contratos, licencias, líneas, dominios y certificados, garantías y mantenimiento) en filas del libro, con la regla de fuente única. | Fase 3 (B) | CA-PRE-14, CA-PRE-17 |
+| RF-PRE-012 | Registrar gasto manual (rubro, centro, fecha, importe sin impuesto, % de impuesto, moneda, descripción, motivo) y anularlo con otro registro. | Fase 3 (A) | CA-PRE-15 |
+| RF-PRE-013 | Reclasificar un costo a otro centro o rubro, con motivo; genera un registro contrario y uno nuevo. | Fase 3 (A) | CA-PRE-15 |
+| RF-PRE-014 | Alertar cuando la ejecución llegue a los umbrales de atención y excedido, por línea, centro y presupuesto. | Fase 3 (A) | CA-PRE-06 |
+| RF-PRE-015 | En la pantalla de aprobación de la OC (espacio reservado por RF-OC-051 del núcleo) mostrar el efecto en el presupuesto y exigir una justificación escrita si lo excede, sin segundo nivel. | Fase 3 (A) | CA-PRE-07 |
+| RF-PRE-016 | Cerrar un periodo mensual: congela ejecutado, comprometido y cuotas de depreciación de ese mes. | Fase 3 (A) | CA-PRE-09 |
+| RF-PRE-017 | Proyección de renovaciones de los próximos 12 meses por mes, rubro y moneda, desde los vencimientos y el último importe conocido. | Fase 3 (B) | CA-PRE-22 |
+| RF-PRE-018 | Porcentaje de incremento esperado por rubro para la proyección (por defecto 0 %). | Fase 3 (B) | CA-PRE-22 |
+| RF-PRE-019 | Plan de reposición: activos de equipo físico que cumplen su vida útil en 12 y 24 meses, con costo estimado igual al último precio de compra del mismo SKU o el costo original. | Fase 3 (B) | CA-PRE-22 |
+| RF-PRE-020 | Configurar por categoría de equipo físico: método (línea recta o sin depreciación), vida útil en meses y valor residual en %. Las subcategorías heredan. | Fase 3 (B) | CA-PRE-08 |
+| RF-PRE-021 | Calcular la depreciación mensual y el valor en libros referencial de cada activo con costo. | Fase 3 (B) | CA-PRE-08 |
+| RF-PRE-022 | Listar activos "sin costo" y categorías "sin parámetros". | Fase 3 (B) | CA-PRE-18 |
+| RF-PRE-023 | Mostrar totales por moneda; nunca sumar monedas distintas. | Fase 3 (A) | CA-PRE-05 |
+| RF-PRE-024 | Comparar el año fiscal con el anterior por rubro y centro, por moneda. | Fase 3 (B) | CA-PRE-05 |
+| RF-PRE-025 | Informe mensual "gastos sin respaldo de compra" (fuente propia) a quien aprueba (D-043.5). | Fase 3 (B) | CA-PRE-14 |
+| RF-PRE-026 | Exponer a REP los servicios de costos (ejecutado, comprometido, disponible, depreciación); REP no lee las tablas de PRE. | Fase 3 (A) | CA-PRE-19 |
 
 ### 4.2 Reglas de negocio
 
 | ID | Regla | Cuándo | CA |
 |---|---|---|---|
-| RN-PRE-001 | Un presupuesto tiene una sola moneda (código de 3 letras, D-014) y todas sus líneas la usan. | A | CA-PRE-01 |
-| RN-PRE-002 | Solo hay un presupuesto aprobado por empresa, año fiscal y moneda. | A | CA-PRE-01 |
-| RN-PRE-003 | Un costo se compara solo con el presupuesto de su moneda; sin él aparece como "Gasto sin presupuesto en <moneda>". | A | CA-PRE-05 |
-| RN-PRE-004 | No hay conversión de monedas. Con varias monedas se muestra un bloque por moneda y **no existe total general**. | A | CA-PRE-05 |
-| RN-PRE-005 | **Definición única (D-043.1):** no aprueba quien creó o editó el documento desde la última aprobación. Aplica a todos los roles, incluido el Administrador. | A | CA-PRE-02 |
-| RN-PRE-006 | La única excepción es la casilla "presupuestos" del interruptor central de la empresa (D-031, D-043.2): apagada por defecto, vence a los 90 días, la consulta una sola función. Con ella se muestra aviso visible y cada uso queda en la auditoría. PRE no tiene excepción propia. | A | CA-PRE-16 |
-| RN-PRE-007 | Aprobar un presupuesto o modificación: **siempre** otra persona. Gasto manual y reclasificación: otra persona solo si el importe total, con impuesto, en moneda base **supera estrictamente** el límite (RN-017); en moneda distinta de la base, siempre. Anular un gasto: siempre otra persona que quien lo registró. Todo mediante `requiereSegundaPersona(acto, monto, moneda)`. | A | CA-PRE-15 |
-| RN-PRE-008 | Un presupuesto aprobado no se edita; se modifica con una modificación aprobada y el original se conserva. | A | CA-PRE-02 |
-| RN-PRE-009 | El libro no se edita ni se borra (D-019). Las correcciones son registros contrarios con motivo. | A | CA-PRE-04 |
-| RN-PRE-010 | El costo presupuestario se mide **sin impuesto**. Si el impuesto es costo lo decide contabilidad (**[ESCALAR AL CEO]**, S-PRE-02). | A | CA-PRE-03 |
-| RN-PRE-011 | Ejecutado de una OC = cantidad recibida confirmada × precio unitario sin impuesto, en la fecha de la recepción. | A | CA-PRE-03 |
-| RN-PRE-012 | Una OC en Borrador, Pendiente de aprobación, Rechazada o Anulada no es comprometido. | A | CA-PRE-03 |
-| RN-PRE-013 | **Libro único con fuente única (D-044.3).** Precedencia: orden de compra > contrato de proveedor > registro propio del módulo. El libro toma el costo propio solo si no hay OC ni contrato. La clave de origen única (origen, identificador, tipo de hecho) impide duplicar. Si después se vincula una OC o contrato a un costo propio, se reclasifica la fuente con un registro contrario y uno nuevo. | A / B | CA-PRE-14 |
-| RN-PRE-014 | Un costo sin centro de costo va a "Sin centro de costo" y avisa a Jefatura TI. | A | CA-PRE-15 |
-| RN-PRE-015 | El costo se imputa al mes de su fecha. Si ese mes está cerrado, va al primer mes abierto con la marca "imputado por cierre". | A | CA-PRE-09 |
-| RN-PRE-016 | Un periodo cerrado no se reabre; las correcciones entran al mes abierto con motivo. | A | CA-PRE-09 |
-| RN-PRE-017 | Los umbrales los fija la empresa (por defecto 80 % atención y 100 % excedido; excedido no menor que atención). | A | CA-PRE-06 |
-| RN-PRE-018 | Cada umbral avisa una sola vez por línea mientras se mantenga superado; se rearma si baja. | A | CA-PRE-06 |
-| RN-PRE-019 | La alerta es informativa y no bloquea compras ni recepciones. | A | CA-PRE-07 |
-| RN-PRE-020 | Cuota mensual = (costo − valor residual) ÷ vida útil en meses, redondeada a los decimales de la moneda (mitad hacia arriba); la última cuota absorbe la diferencia. | B | CA-PRE-08 |
-| RN-PRE-021 | Valor residual = costo × % residual de la categoría (0 % a 90 %). | B | CA-PRE-08 |
-| RN-PRE-022 | La depreciación empieza el mes siguiente a la recepción y termina al cumplir la vida útil o en el mes de baja o extravío. | B | CA-PRE-13 |
-| RN-PRE-023 | "Extraviado o robado" y "De baja" detienen la depreciación; el reingreso (D-009) la reanuda con los meses pendientes. "Pendiente de devolución" (D-034) no la detiene. | B | CA-PRE-13 |
-| RN-PRE-024 | Cada activo guarda al ingresar una **copia de sus parámetros** (vida útil, residual, método). Cambiar la categoría solo afecta a activos nuevos. REP lee esa copia. | B | CA-PRE-08 |
-| RN-PRE-025 | Reevaluar la vida útil de activos existentes es una acción aparte, con motivo y `presupuesto.configurar`; vale desde el siguiente mes abierto. | B | CA-PRE-09 |
-| RN-PRE-026 | Solo se deprecia la naturaleza **"equipo físico"** con serie (D-045). Licencias, servicios y SKU por cantidad no se deprecian; su compra es gasto del periodo. | B | CA-PRE-18 |
-| RN-PRE-027 | Un activo sin costo no se deprecia y aparece en "sin costo". Un costo cero se marca "costo cero" y sí se deprecia. | B | CA-PRE-18 |
-| RN-PRE-028 | Toda cifra de depreciación o proyección lleva la leyenda "Referencial de gestión; no sustituye la contabilidad". | B | CA-PRE-08 |
-| RN-PRE-029 | Un centro de costo desactivado conserva líneas e historial; los costos nuevos van a "Sin centro de costo". | A | CA-PRE-15 |
-| RN-PRE-030 | Un identificador de otra empresa responde "no encontrado". Ningún cálculo mezcla empresas. | A | CA-PRE-10 |
-| RN-PRE-031 | La depreciación se **calcula al leer** con la copia de parámetros y se **guarda solo al cerrar el mes** (D-044.9). | B | CA-PRE-09 |
-| RN-PRE-032 | Costo del activo = subtotal de la línea sin impuesto ÷ cantidad, con 4 decimales (D-044.7). Corregirlo exige `activos.corregir_costo`, con motivo; los meses cerrados no cambian. | B | CA-PRE-23 |
-| RN-PRE-033 | No se cambia la moneda base de la empresa con presupuestos aprobados (D-044.8). | A | CA-PRE-20 |
-| RN-PRE-034 | Todo trabajo de PRE es idempotente, recuperable (procesa los días pendientes en orden), corre empresa por empresa con la empresa fijada, salta empresas suspendidas, calcula "hoy" con la zona de la empresa y deja registro de cada corrida (D-038.4). Sus escrituras llevan autor "sistema" con la regla que lo ordenó. | A / B | CA-PRE-17 |
-| RN-PRE-035 | Lo que protege la integridad (escribir el costo de una recepción) corre síncrono en la misma transacción; avisos y alertas corren asíncronos por la cola (D-038.5). | A | CA-PRE-03 |
-| RN-PRE-036 | Si el módulo se apaga en una empresa, se oculta sin borrar datos y la API responde "no encontrado" (D-037 fila 12). | A | CA-PRE-11 |
-| RN-PRE-037 | Descripciones y motivos son texto libre: el validador común rechaza claves y patrones peligrosos y avisa al escribir que no se pongan datos personales. La auditoría no guarda su valor (D-030.6). | A | CA-PRE-24 |
-| RN-PRE-038 | Las cifras se exportan solo por la puerta única del núcleo (`datos.exportar`). Los importes negativos de los registros contrarios siguen siendo números en el archivo. | A | CA-PRE-25 |
-| RN-PRE-039 | Prefijos: `PPT-` (presupuesto), `MPR-` (modificación) y `GMA-` (gasto manual), con mínimo 6 dígitos, correlativo por empresa, sin reutilizarse (D-007.8, D-049). **[SUPUESTO]** pedido al registro de prefijos. | A | CA-PRE-01 |
-| RN-PRE-040 | Si la Persona responsable de un centro de costo cesa, se crea un pendiente informativo en su ficha; el cese no se bloquea (D-061.7). | A | CA-PRE-26 |
+| RN-PRE-001 | Un presupuesto tiene una sola moneda (código de 3 letras, D-014) y todas sus líneas la usan. | Fase 3 (A) | CA-PRE-01 |
+| RN-PRE-002 | Solo hay un presupuesto aprobado por empresa, año fiscal y moneda. | Fase 3 (A) | CA-PRE-01 |
+| RN-PRE-003 | Un costo se compara solo con el presupuesto de su moneda; sin él aparece como "Gasto sin presupuesto en <moneda>". | Fase 3 (A) | CA-PRE-05 |
+| RN-PRE-004 | No hay conversión de monedas. Con varias monedas se muestra un bloque por moneda y **no existe total general**. | Fase 3 (A) | CA-PRE-05 |
+| RN-PRE-005 | **Definición única (D-043.1):** no aprueba quien creó o editó el documento desde la última aprobación. Aplica a todos los roles, incluido el Administrador. | Fase 3 (A) | CA-PRE-02 |
+| RN-PRE-006 | La única excepción es la casilla "presupuestos" del interruptor central de la empresa (D-031, D-043.2): apagada por defecto, vence a los 90 días, la consulta una sola función. Con ella se muestra aviso visible y cada uso queda en la auditoría. PRE no tiene excepción propia. | Fase 3 (A) | CA-PRE-16 |
+| RN-PRE-007 | Aprobar un presupuesto o modificación: **siempre** otra persona. Gasto manual y reclasificación: otra persona solo si el importe total, con impuesto, en moneda base **supera estrictamente** el límite (RN-017); en moneda distinta de la base, siempre. Anular un gasto: siempre otra persona que quien lo registró. Todo mediante `requiereSegundaPersona(acto, monto, moneda)`. | Fase 3 (A) | CA-PRE-15 |
+| RN-PRE-008 | Un presupuesto aprobado no se edita; se modifica con una modificación aprobada y el original se conserva. | Fase 3 (A) | CA-PRE-02 |
+| RN-PRE-009 | El libro no se edita ni se borra (D-019). Las correcciones son registros contrarios con motivo. | Fase 3 (A) | CA-PRE-04 |
+| RN-PRE-010 | El costo presupuestario se mide **sin impuesto**. Si el impuesto es costo lo decide contabilidad (**[ESCALAR AL CEO]**, S-PRE-02). | Fase 3 (A) | CA-PRE-03 |
+| RN-PRE-011 | Ejecutado de una OC = cantidad recibida confirmada × precio unitario sin impuesto, en la fecha de la recepción. | Fase 3 (A) | CA-PRE-03 |
+| RN-PRE-012 | Una OC en Borrador, Pendiente de aprobación, Rechazada o Anulada no es comprometido. | Fase 3 (A) | CA-PRE-03 |
+| RN-PRE-013 | **Libro único con fuente única (D-044.3).** Precedencia: orden de compra > contrato de proveedor > registro propio del módulo. El libro toma el costo propio solo si no hay OC ni contrato. La clave de origen única (origen, identificador, tipo de hecho) impide duplicar. Si después se vincula una OC o contrato a un costo propio, se reclasifica la fuente con un registro contrario y uno nuevo. | Fase 3 (A y B) | CA-PRE-14 |
+| RN-PRE-014 | Un costo sin centro de costo va a "Sin centro de costo" y avisa a Jefatura TI. | Fase 3 (A) | CA-PRE-15 |
+| RN-PRE-015 | El costo se imputa al mes de su fecha. Si ese mes está cerrado, va al primer mes abierto con la marca "imputado por cierre". | Fase 3 (A) | CA-PRE-09 |
+| RN-PRE-016 | Un periodo cerrado no se reabre; las correcciones entran al mes abierto con motivo. | Fase 3 (A) | CA-PRE-09 |
+| RN-PRE-017 | Los umbrales los fija la empresa (por defecto 80 % atención y 100 % excedido; excedido no menor que atención). | Fase 3 (A) | CA-PRE-06 |
+| RN-PRE-018 | Cada umbral avisa una sola vez por línea mientras se mantenga superado; se rearma si baja. | Fase 3 (A) | CA-PRE-06 |
+| RN-PRE-019 | La alerta es informativa y no bloquea compras ni recepciones. | Fase 3 (A) | CA-PRE-07 |
+| RN-PRE-020 | Cuota mensual = (costo − valor residual) ÷ vida útil en meses, redondeada a los decimales de la moneda (mitad hacia arriba); la última cuota absorbe la diferencia. | Fase 3 (B) | CA-PRE-08 |
+| RN-PRE-021 | Valor residual = costo × % residual de la categoría (0 % a 90 %). | Fase 3 (B) | CA-PRE-08 |
+| RN-PRE-022 | La depreciación empieza el mes siguiente a la recepción y termina al cumplir la vida útil o en el mes de baja o extravío. | Fase 3 (B) | CA-PRE-13 |
+| RN-PRE-023 | "Extraviado o robado" y "De baja" detienen la depreciación; el reingreso (D-009) la reanuda con los meses pendientes. "Pendiente de devolución" (D-034) no la detiene. | Fase 3 (B) | CA-PRE-13 |
+| RN-PRE-024 | Cada activo guarda al ingresar una **copia de sus parámetros** (vida útil, residual, método). Cambiar la categoría solo afecta a activos nuevos. REP lee esa copia. | Fase 3 (B) | CA-PRE-08 |
+| RN-PRE-025 | Reevaluar la vida útil de activos existentes es una acción aparte, con motivo y `presupuesto.configurar`; vale desde el siguiente mes abierto. | Fase 3 (B) | CA-PRE-09 |
+| RN-PRE-026 | Solo se deprecia la naturaleza **"equipo físico"** con serie (D-045). Licencias, servicios y SKU por cantidad no se deprecian; su compra es gasto del periodo. | Fase 3 (B) | CA-PRE-18 |
+| RN-PRE-027 | Un activo sin costo no se deprecia y aparece en "sin costo". Un costo cero se marca "costo cero" y sí se deprecia. | Fase 3 (B) | CA-PRE-18 |
+| RN-PRE-028 | Toda cifra de depreciación o proyección lleva la leyenda "Referencial de gestión; no sustituye la contabilidad". | Fase 3 (B) | CA-PRE-08 |
+| RN-PRE-029 | Un centro de costo desactivado conserva líneas e historial; los costos nuevos van a "Sin centro de costo". | Fase 3 (A) | CA-PRE-15 |
+| RN-PRE-030 | Un identificador de otra empresa responde "no encontrado". Ningún cálculo mezcla empresas. | Fase 3 (A) | CA-PRE-10 |
+| RN-PRE-031 | La depreciación se **calcula al leer** con la copia de parámetros y se **guarda solo al cerrar el mes** (D-044.9). | Fase 3 (B) | CA-PRE-09 |
+| RN-PRE-032 | Costo del activo = subtotal de la línea sin impuesto ÷ cantidad, con 4 decimales (D-044.7). Corregirlo exige `activos.corregir_costo`, con motivo; los meses cerrados no cambian. | Fase 3 (B) | CA-PRE-23 |
+| RN-PRE-033 | No se cambia la moneda base de la empresa con presupuestos aprobados (D-044.8). | Fase 3 (A) | CA-PRE-20 |
+| RN-PRE-034 | Todo trabajo de PRE es idempotente, recuperable (procesa los días pendientes en orden), corre empresa por empresa con la empresa fijada, salta empresas suspendidas, calcula "hoy" con la zona de la empresa y deja registro de cada corrida (D-038.4). Sus escrituras llevan autor "sistema" con la regla que lo ordenó. | Fase 3 (A y B) | CA-PRE-17 |
+| RN-PRE-035 | Lo que protege la integridad (escribir el costo de una recepción) corre síncrono en la misma transacción; avisos y alertas corren asíncronos por la cola (D-038.5). | Fase 3 (A) | CA-PRE-03 |
+| RN-PRE-036 | Si el módulo se apaga en una empresa, se oculta sin borrar datos y la API responde "no encontrado" (D-037 fila 12). | Fase 3 (A) | CA-PRE-11 |
+| RN-PRE-037 | Descripciones y motivos son texto libre: el validador común rechaza claves y patrones peligrosos y avisa al escribir que no se pongan datos personales. La auditoría no guarda su valor (D-030.6). | Fase 3 (A) | CA-PRE-24 |
+| RN-PRE-038 | Las cifras se exportan solo por la puerta única del núcleo (`datos.exportar`). Los importes negativos de los registros contrarios siguen siendo números en el archivo. | Fase 3 (A) | CA-PRE-25 |
+| RN-PRE-039 | Prefijos: `PPT-` (presupuesto), `MPR-` (modificación) y `GMA-` (gasto manual), con mínimo 6 dígitos, correlativo por empresa, sin reutilizarse (D-007.8, D-049). **[SUPUESTO]** pedido al registro de prefijos. | Fase 3 (A) | CA-PRE-01 |
+| RN-PRE-040 | Si la Persona responsable de un centro de costo cesa, se crea un pendiente informativo en su ficha; el cese no se bloquea (D-061.7). | Fase 3 (A) | CA-PRE-26 |
 
 ### 4.3 Calidad medible
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RNF-PRE-001 | Con el volumen de referencia de RNF-010, la pantalla de ejecución carga en 3 s o menos (percentil 95). La prueba de carga corre en integración nocturna. | A | CA-PRE-19 |
-| RNF-PRE-002 | Una recepción confirmada se refleja en la ejecución al terminar la operación (misma transacción). | A | CA-PRE-03 |
-| RNF-PRE-003 | La alerta de umbral sale en 5 minutos o menos. | A | CA-PRE-06 |
-| RNF-PRE-004 | El cierre mensual corre en el trabajador con barra de avance, nunca dentro de la petición, y con el volumen de RNF-010 termina en 60 s o menos. | A | CA-PRE-09 |
-| RNF-PRE-005 | Importes decimales exactos de 4 decimales; se muestran con los decimales de la moneda. Formato de número y fecha (dd/mm/aaaa) según D-049.8. | A | CA-PRE-08 |
-| RNF-PRE-006 | La suma de las cuotas de un activo es exactamente costo menos residual (prueba con 1.000 casos). | B | CA-PRE-08 |
-| RNF-PRE-007 | Cada cifra se reconstruye sumando sus registros del libro (diferencia cero). | A | CA-PRE-03 |
-| RNF-PRE-008 | Aislamiento por módulo con identificador interno; el trabajo diario se prueba con dos empresas. | A | CA-PRE-10, CA-PRE-17 |
+| RNF-PRE-001 | Con el volumen de referencia de RNF-010, la pantalla de ejecución carga en 3 s o menos (percentil 95). La prueba de carga corre en integración nocturna. | Fase 3 (A) | CA-PRE-19 |
+| RNF-PRE-002 | Una recepción confirmada se refleja en la ejecución al terminar la operación (misma transacción). | Fase 3 (A) | CA-PRE-03 |
+| RNF-PRE-003 | La alerta de umbral sale en 5 minutos o menos. | Fase 3 (A) | CA-PRE-06 |
+| RNF-PRE-004 | El cierre mensual corre en el trabajador con barra de avance, nunca dentro de la petición, y con el volumen de RNF-010 termina en 60 s o menos. | Fase 3 (A) | CA-PRE-09 |
+| RNF-PRE-005 | Importes decimales exactos de 4 decimales; se muestran con los decimales de la moneda. Formato de número y fecha (dd/mm/aaaa) según D-049.8. | Fase 3 (A) | CA-PRE-08 |
+| RNF-PRE-006 | La suma de las cuotas de un activo es exactamente costo menos residual (prueba con 1.000 casos). | Fase 3 (B) | CA-PRE-08 |
+| RNF-PRE-007 | Cada cifra se reconstruye sumando sus registros del libro (diferencia cero). | Fase 3 (A) | CA-PRE-03 |
+| RNF-PRE-008 | Aislamiento por módulo con identificador interno; el trabajo diario se prueba con dos empresas. | Fase 3 (A) | CA-PRE-10, CA-PRE-17 |
 
 ---
 

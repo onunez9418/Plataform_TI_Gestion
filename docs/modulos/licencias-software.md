@@ -1,6 +1,6 @@
 # Módulo: Licencias de software (LIC)
 
-**Versión:** 0.2 · **Autor:** Analista de Negocio, escuadrón B · **Estado:** corregido tras la revisión cruzada (plan de correcciones, Mesa #002); pendiente de verificación del Auditor Técnico, QA, Seguridad y Cumplimiento
+**Versión:** 0.3 · **Autor:** Analista de Negocio, escuadrón B · **Estado:** aplicadas D-065 a D-076 (plan de aplicación); pendiente de verificación del Auditor Técnico, QA, Seguridad y Cumplimiento
 **Base:** decisiones D-001 a D-064 (`docs/equipo/decisiones.md`), en especial D-030, D-031, D-035, D-036, D-037, D-038, D-043, D-044, D-045, D-049, D-050, D-056, D-058, D-061, D-062 y D-063.
 **Fase:** Fase 2, ola B (D-056). Cada fila de requisito indica "Cuándo" y el criterio que lo cubre.
 
@@ -61,7 +61,7 @@ Nombres técnicos con el formato `<módulo>.<acción>` (D-036). Cada módulo agr
 | Ver costos | `precios.ver` (PS-23) | T | T | - | - | - | - | - |
 | Ver a qué Persona está asignado cada puesto | `datos_personales.ver` (PS-22) | T | T | T | - | - | - | - |
 | Crear y editar contratos de licencia (borrador y datos) | `licencias.crear_editar` (PS-83) | T | - | T | - | - | - | - |
-| Confirmar (activar) un contrato de licencia | `contratos.activar` (PS-76) | T | T | - | - | - | - | - |
+| Confirmar (activar) un contrato de licencia (**sensible**: 2F, A, No; D-068) | `contratos.activar` (PS-76) | T | T | - | - | - | - | - |
 | Renovar un contrato (renovación automática: acción del "sistema") | `contratos.renovar` (PS-77) | T | T | - | - | - | - | - |
 | Terminar o anular contrato | `contratos.terminar_anular` (PS-78) | T | T | - | - | - | - | - |
 | Asignar y liberar puestos | `licencias.asignar` (PS-86) | T | - | T | - | - | - | - |
@@ -126,7 +126,7 @@ Controles de los permisos sensibles (D-036.5, D-048): `licencias.ver_clave` llev
 | RN-LIC-015 | **Clave:** campo de tipo secreto, cifrado en columna aparte (nunca dentro del JSON de campos), no se busca. Se muestra enmascarada solo con los últimos 4 caracteres cuando tiene 16 o más; si es más corta, menos. Nunca aparece en el historial (dice "clave cambiada"), auditoría, exportaciones (**ni siquiera enmascarada**), importaciones, reportes, tableros, API, webhooks, correos, portal ni registros técnicos (D-035.2). |
 | RN-LIC-016 | **Revelar la clave** exige `licencias.ver_clave` y reautenticación reciente (10 minutos). Cada revelación queda en la auditoría sin el valor (la copia al portapapeles no se puede auditar desde el navegador, por eso solo se audita la revelación), con tope de 20 por usuario por hora (al superarlo se avisa a los administradores). La clave se oculta sola a los 30 segundos, con aviso previo y posibilidad de extender. |
 | RN-LIC-017 | La serie de una unidad de licencia es un identificador visible y **no puede contener una clave**: el validador común de texto libre revisa también la serie de las categorías de naturaleza "licencia" y rechaza patrones de clave (por ejemplo `XXXXX-XXXXX-XXXXX`) con el aviso "Esto parece una clave: escríbala en el campo de clave" (D-063.2, D-035). Los campos de unidad "puestos" y "clave" se definen en la categoría (D-005). La unidad de licencia **no** es un activo asignable ni recibe garantía, mantenimiento ni depreciación (D-045). |
-| RN-LIC-018 | **Segunda persona (RN-017 del núcleo):** confirmar un contrato exige a otra persona **si el importe total comprometido, con impuesto, en la moneda base supera estrictamente el límite** de la empresa; en otra moneda siempre. No confirma quien creó o editó el contrato desde la última confirmación. Aplica al Administrador. La excepción es solo la casilla «licencias» del interruptor único de la empresa (D-031, D-043): este módulo no tiene excepción propia. Se consulta la función única `requiereSegundaPersona(acto, monto, moneda)`. |
+| RN-LIC-018 | **Segunda persona (RN-017 del núcleo):** confirmar un contrato exige a otra persona **si el importe total comprometido, con impuesto, en la moneda base supera estrictamente el límite** de la empresa; en otra moneda siempre. No confirma quien creó o editó el contrato desde la última confirmación. Aplica al Administrador. Confirmar el contrato usa PS-76 `contratos.activar` (sensible: 2F, A, No; D-068, D-069). La excepción es solo la casilla «licencias» del interruptor único de la empresa (D-031, D-043, D-066): este módulo no tiene excepción propia. Se consulta la función única `requiereSegundaPersona(acto, monto, moneda)`. |
 | RN-LIC-019 | Un contrato Vigente solo admite editar: responsable, centro de costo y notas. Puestos, fechas y costo no se editan: para más puestos se crea **otro contrato** ("Ampliación"). Un error de digitación se corrige con motivo, auditado. |
 | RN-LIC-020 | Al renovar con menos puestos que los asignados, primero hay que liberar la diferencia; no se descartan asignaciones en silencio. |
 | RN-LIC-021 | **Costo:** patrón compartido (D-044.1): importe sin impuesto (4 decimales exactos), % de impuesto, moneda de 3 letras, periodicidad, inicio, fin, centro de costo y `fuente_costo` ∈ {propia, orden de compra, contrato}. Una moneda por contrato, sin conversión. El costo mensual equivalente lo calcula la función única de costos. |
@@ -304,7 +304,7 @@ Resultado de cada supuesto según D-057 y D-058 (confirmado, cambiado o retirado
 | SUP-LIC-13 | Módulo activable por empresa. | **Confirmado** (D-037 fila 12). |
 | SUP-LIC-14 | Los avisos pasan por Notificaciones. | **Confirmado** (D-062.3); sin tabla ni proceso propios. |
 | SUP-LIC-15 | El contrato de licencia es extensión del contrato de proveedor (nuevo). | **Decidido** (D-044.4); desaparece `CLI-`. |
-| SUP-LIC-16 | La importación usa claves naturales: proveedor + producto + inicio + fin (propuesta para Datos). | **Pendiente de confirmar** por el Ingeniero de Datos; importar solo crea (D-050.2). |
+| SUP-LIC-16 | La importación usa claves naturales: proveedor + producto + inicio + fin (propuesta para Datos). | **Aceptado (D-070).** Clave natural: número de contrato si existe; si no, proveedor + producto + inicio + fin, con índice único parcial que excluye lo anulado; importar solo crea (D-050.2). |
 
 **[ESCALAR AL CEO] E-LIC-01 (tema legal, no urgente).** El panel se llama "cuadre de puestos" y no "cumplimiento legal": es una comparación interna que no sustituye la auditoría de un fabricante. Si la empresa piensa usarlo como evidencia ante un fabricante, conviene un texto de descargo revisado por un abogado (L-12 de Cumplimiento). Mientras tanto se muestra: "Cuadre interno de puestos, no sustituye una auditoría del fabricante".
 
@@ -339,4 +339,5 @@ Resultado de cada supuesto según D-057 y D-058 (confirmado, cambiado o retirado
 | Descargo legal del cuadre de puestos como E-LIC-01; el panel se llama "cuadre de puestos". | H-CUM, L-12 |
 | Pruebas nuevas: procesos con dos empresas y reloj fijable (CA-LIC-13), borde exacto del límite (CA-LIC-11), escritura con referencias cruzadas (CA-LIC-19), aislamiento por identificador interno y con el rol de la aplicación (CA-LIC-18), secretos de prueba propios (RNF-LIC-004). | D-039.6, D-063.6, D-038.8; QA y Seguridad |
 | Solo se audita la revelación de la clave (la copia no es auditable desde el navegador); el validador común revisa también la serie de las categorías de naturaleza "licencia" para que no lleve una clave pegada (RN-LIC-016, RN-LIC-017, CA-LIC-20). | Revisión de Seguridad; D-063.2, D-035 |
+| Versión 0.3. SUP-LIC-16 pasa a "Aceptado (D-070)" con índice único parcial; confirmar el contrato de licencia con PS-76 (sensible, D-068) y la casilla «licencias» (D-066); terminar o anular con PS-78 (D-069); el validador de texto libre alcanza también a la serie (R-09 de D-075, ya en RN-LIC-017 y CA-LIC-20). | D-066, D-068, D-069, D-070, D-075; plan de aplicación (fila LIC) |
 | Supuestos resueltos uno a uno (tabla de la sección 12); prefijos `PAN-LIC-nn`; vocabulario "Cliente (CEO)", Persona Cesada, "usted". | D-057, D-058, D-049 |

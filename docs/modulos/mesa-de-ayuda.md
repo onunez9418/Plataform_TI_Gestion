@@ -1,6 +1,6 @@
 # Módulo: Mesa de ayuda (slug `mesa-de-ayuda`, sigla AYU)
 
-**Versión:** 0.2 (corregida tras la Mesa #002; ver sección 14). **Base:** decisiones D-001 a D-064 (`docs/equipo/decisiones.md`), `docs/equipo/plan-correcciones.md` y documento funcional del núcleo.
+**Versión:** 0.3 (aplica D-066, D-071 y D-075; ver sección 14). **Base:** decisiones D-001 a D-076 (`docs/equipo/decisiones.md`), `docs/equipo/plan-correcciones.md` y documento funcional del núcleo.
 **Cuándo:** **Fase 2, ola C** (D-056). **Convenciones:** [SUPUESTO] = propuesta del módulo con su resultado en la sección 12. [ESCALAR AL CEO] = dinero, tema legal o algo irreversible. Los permisos son los del registro único `docs/registro-permisos.md` (PS-nn, D-036); este módulo no inventa permisos.
 
 ## 1. Propósito, alcance y fase
@@ -147,12 +147,12 @@ Notas de lectura de la matriz:
 | RN-AYU-003 | Matriz fija: Alto+Alta=P1; Alto+Media=P2; Alto+Baja=P3; Medio+Alta=P2; Medio+Media=P3; Medio+Baja=P4; Bajo+Alta=P3; Bajo+Media=P4; Bajo+Baja=P4. |
 | RN-AYU-004 | La Persona atendida responde dos preguntas simples (a quién afecta, cuánto le impide trabajar); el sistema calcula la prioridad. Un caso P1 avisa de inmediato a la cola. |
 | RN-AYU-005 | Todo cambio de prioridad, tipo o cola por un agente lleva motivo y queda en la línea de tiempo. |
-| RN-AYU-006 | El reloj del SLA corre solo dentro del calendario de la empresa y se detiene en "Pendiente de aprobación", "En espera del solicitante" y "En espera de tercero". |
+| RN-AYU-006 | El reloj del SLA corre solo dentro del calendario de la empresa y se detiene en "Pendiente de aprobación", "En espera de la persona atendida" y "En espera de tercero". |
 | RN-AYU-007 | Los tiempos se fijan al crear el caso; cambiar la política no altera casos abiertos. Cambiar prioridad o tipo recalcula desde la fecha de creación. |
 | RN-AYU-008 | Un caso Resuelto se reabre hasta 7 días hábiles después; el reloj de resolución continúa con lo ya consumido. Después se crea un caso "seguimiento de". |
 | RN-AYU-009 | Los comentarios internos nunca se muestran ni se envían a quien no tenga PS-140, ni en notificaciones, ni en exportaciones, ni por la API. |
 | RN-AYU-010 | Un caso no se resuelve si tiene órdenes de servicio abiertas vinculadas; primero se cierran o cancelan. Abrir o cerrar una orden no cambia sola el estado del caso ni del activo (D-027). |
-| RN-AYU-011 | Para un pedido con aprobación rige la **regla única RN-017** del núcleo y el servicio único de doble control (D-043): aprueba quien no lo pidió ni lo creó ni editó su formulario desde la última aprobación. La única excepción es la casilla "mesa de ayuda" del interruptor único de la empresa (D-031, vence a los 90 días, aviso visible y auditoría de cada uso). AYU no tiene excepción propia. |
+| RN-AYU-011 | Para un pedido con aprobación rige la **regla única RN-017** del núcleo y el servicio único de doble control (D-043): aprueba quien no lo pidió ni lo creó ni editó su formulario desde la última aprobación. La única excepción es la casilla «mesa de ayuda» (una de las ocho del mapa de D-066, que exceptúa solo aprobar un pedido de servicio con aprobación quien no lo pidió) del interruptor único de la empresa (D-031, vence a los 90 días, aviso visible y auditoría de cada uso). AYU no tiene excepción propia. |
 | RN-AYU-012 | Un caso Cerrado no se reabre: se crea otro vinculado. Un caso Cancelado o Rechazado tampoco. |
 | RN-AYU-013 | Nada con historial se borra: casos se cancelan o cierran, servicios y colas se desactivan, artículos se archivan (D-019). |
 | RN-AYU-014 | No se vinculan activos De baja a casos nuevos; los casos históricos los conservan. |
@@ -160,14 +160,14 @@ Notas de lectura de la matriz:
 | RN-AYU-016 | Si un agente se suspende o se da de baja, sus casos abiertos vuelven a su cola sin responsable y se avisa a la cola. |
 | RN-AYU-017 | Tomar un caso es una actualización condicional con el estado esperado: si dos agentes lo toman a la vez, uno gana y el otro ve "ya fue tomado por otra persona". |
 | RN-AYU-018 | Un servicio inactivo no se usa en casos nuevos; los existentes lo conservan. Una cola con casos abiertos no se desactiva hasta reasignarlos. Los 4 servicios iniciales no se borran. |
-| RN-AYU-019 | En "En espera del solicitante" se recuerda a los 2 días hábiles y se resuelve solo a los 5 con código "Sin respuesta". Ambos plazos son configurables. |
+| RN-AYU-019 | En "En espera de la persona atendida" se recuerda a los 2 días hábiles y se resuelve solo a los 5 con código "Sin respuesta". Ambos plazos son configurables. |
 | RN-AYU-020 | El escalamiento automático solo avisa; no reasigna ni cambia prioridad. |
 | RN-AYU-021 | Un caso duplicado se resuelve con código "Duplicado" y vínculo al principal; su SLA cuenta como cumplido. |
 | RN-AYU-022 | Encuesta: una por caso, solo de la Persona atendida con usuario, válida 7 días, no editable. Los promedios por agente se muestran con 5 respuestas o más. |
 | RN-AYU-023 | Un artículo Publicado no se modifica: editarlo crea un borrador de la versión siguiente y la publicada sigue visible hasta publicar la nueva. |
 | RN-AYU-024 | Artículos "solo para agentes" no aparecen a otros roles en lectura, sugerencias ni búsquedas. No hay base de conocimiento compartida entre empresas. |
 | RN-AYU-025 | Todo texto se trata como texto, nunca como código (RS-42). Un **validador común** rechaza bloques de clave privada y patrones de claves conocidas en todo texto libre (D-063.2). Los artículos y soluciones aceptan texto simple o un formato limitado con etiquetas permitidas; los enlaces externos son solo `https`, con aviso de salida y sin vista previa. Asunto máximo 150 caracteres, comentario 5.000. Los formularios avisan "no escriba contraseñas ni datos personales innecesarios". Retirar (el autor oculta su comentario) y redactar (PS-153) son operaciones distintas (D-061.5). |
-| RN-AYU-027 | Un caso restringido es invisible por lista, búsqueda global, exportación, reportes, tableros, API, webhooks, avisos y SLA, también para quien tenga PS-139 con alcance T. No se vincula a problemas ni cambios ni cuenta en la sugerencia "3 o más parecidos". Quien presenta el pedido no lo atiende; un Administrador no atiende un pedido sobre sí mismo. No genera eventos de AYU: el aviso a quien atiende sale del registro de derechos de Personas. |
+| RN-AYU-027 | Un caso restringido es invisible por lista, búsqueda global, exportación, reportes, tableros, API, webhooks, avisos y SLA, también para quien tenga PS-139 con alcance T. No se vincula a problemas ni cambios ni cuenta en la sugerencia "3 o más parecidos". Quien presenta el pedido no lo atiende; un Administrador no atiende un pedido sobre sí mismo. Si quien lo presenta es la única persona con PS-29, el pedido queda "En espera de persona designada" hasta que el Administrador designe a otra con PS-29 (suplente de derechos); el caso y las demás condiciones (recordatorios cada 3 días, aviso al contacto autorizado a los 5 días, rescate) siguen la regla RN-PRS-033 de `personas-ubicaciones` (D-071.1). No genera eventos de AYU: el aviso a quien atiende sale del registro de derechos de Personas. |
 | RN-AYU-028 | Todo proceso periódico de AYU (recordatorios, resolución por espera, cierre automático, avisos de SLA, revisión de artículos) es **idempotente** (correrlo dos veces no duplica), **recuperable** (al arrancar procesa los días pendientes en orden y no pierde avisos), corre empresa por empresa con la empresa fijada dentro de la transacción, salta empresas suspendidas, calcula "hoy" con la zona de la empresa y registra cada corrida (D-038.4). |
 | RN-AYU-029 | Los correos de AYU llevan solo tipo de aviso, código (`AYU-000123`, `PRS-0042`), fecha y nombre de la empresa. Nunca asunto, texto de comentarios, nombres de terceros ni enlaces de acción a una Persona sin usuario o a una dirección no verificada (D-061.4). |
 | RN-AYU-030 | Las acciones automáticas (cierre, resolución por espera, marcas de SLA) se registran con autor "sistema", el identificador de la regla y de quien la configuró (D-041.4). |
@@ -195,7 +195,7 @@ Retirada: RN-AYU-026 (tiempo de primera respuesta en llamadas) no se reutiliza; 
 
 ## 5. Estados y transiciones
 
-**Caso.** Estados: Pendiente de aprobación, Nuevo, En atención, En espera del solicitante, En espera de tercero, Resuelto, Cerrado, Cancelado, Rechazado. "Asignado" no es estado: es un dato (responsable).
+**Caso.** Estados: Pendiente de aprobación, Nuevo, En atención, En espera de la persona atendida, En espera de tercero, Resuelto, Cerrado, Cancelado, Rechazado. "Asignado" no es estado: es un dato (responsable).
 
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
@@ -204,10 +204,10 @@ Retirada: RN-AYU-026 (tiempo de primera respuesta en llamadas) no se reutiliza; 
 | Pendiente de aprobación | Nuevo | PS-154, distinta persona (RN-AYU-011) | El reloj arranca aquí |
 | Pendiente de aprobación | Rechazado | Igual | Motivo obligatorio; final |
 | Nuevo | En atención | Agente al tomar o ser asignado | Automático |
-| En atención | En espera del solicitante / de tercero | Agente con PS-145 | Motivo; pausa reloj |
+| En atención | En espera de la persona atendida / de tercero | Agente con PS-145 | Motivo; pausa reloj |
 | En espera (cualquiera) | En atención | Agente, o automático si la Persona atendida comenta | Reanuda reloj |
 | En atención | Resuelto | Agente con PS-145 | Solución y código; RN-AYU-010 |
-| En espera del solicitante | Resuelto | Sistema | RN-AYU-019 |
+| En espera de la persona atendida | Resuelto | Sistema | RN-AYU-019 |
 | Resuelto | En atención | Persona atendida (propio) o agente (PS-150) | RN-AYU-008; motivo |
 | Resuelto | Cerrado | Agente (PS-148) o sistema | Plazo de cierre (3 días hábiles por defecto) |
 | Nuevo, En atención, En espera | Cancelado | Administrador o Técnico (PS-149); la Persona atendida (propio) solo en Nuevo | Motivo obligatorio; final |
@@ -271,7 +271,7 @@ Las envía `notificaciones`; los nombres siguen `<módulo>.<entidad>_<hecho>` (D
 | `ayuda.caso_critico_creado` | Caso P1 | Cola y su responsable; Jefatura TI | "Caso crítico AYU-000123 sin atender." Inmediato, no se agrupa |
 | `ayuda.caso_asignado` | Cambia el responsable | Nuevo responsable; Persona atendida | "Su caso fue asignado a un agente." Sin nombre del agente |
 | `ayuda.comentario_publicado` | Comentario público | La otra parte | "Hay una respuesta nueva en AYU-000123." |
-| `ayuda.caso_espera_solicitante` | Pasa a espera del solicitante | Persona atendida | "Necesitamos más información." |
+| `ayuda.caso_espera_persona_atendida` | Pasa a "En espera de la persona atendida" | Persona atendida | "Necesitamos más información." |
 | `ayuda.caso_recordatorio_enviado` | RN-AYU-019 | Persona atendida | "Sigue pendiente su respuesta." |
 | `ayuda.caso_resuelto` | Pasa a Resuelto | Persona atendida | "Su caso fue resuelto. Puede calificar y reabrirlo hasta el [dd/mm/aaaa]." |
 | `ayuda.caso_cerrado` | Pasa a Cerrado | Persona atendida | "Su caso fue cerrado." (también lo consume `integraciones-api`) |
@@ -316,7 +316,7 @@ Las envía `notificaciones`; los nombres siguen `<módulo>.<entidad>_<hecho>` (D
 | CA-AYU-02 | **Dado** una Persona sin usuario pero con correo, **cuando** un agente con PS-22 registra su caso por teléfono (un Almacén o Solicitante no puede elegir a otra Persona), **entonces** el caso queda a nombre de ella con canal "teléfono" y el correo que recibe lleva solo tipo de aviso, `AYU-000002`, fecha y empresa, sin asunto ni enlace; sin correo, no se envía nada. | RF-AYU-002; RN-AYU-002, RN-AYU-029 |
 | CA-AYU-03 | **Dado** impacto "toda la empresa" y urgencia "no puedo trabajar", **cuando** se crea el caso, **entonces** es P1 y la cola recibe el aviso inmediato. | RF-AYU-005; RN-AYU-004 |
 | CA-AYU-04 | **Dado** un caso P2 con primera respuesta de 60 minutos hábiles, creado a las 16:30 con horario de 09:00 a 17:00, y el reloj de la plataforma fijado, **cuando** el agente responde a las 09:20 del día hábil siguiente, **entonces** figura "Cumplida" (30 + 20 minutos); con un feriado en medio, el cálculo lo salta. | RF-AYU-016, RF-AYU-017, RF-AYU-018; RN-AYU-006, RN-AYU-007; RNF-AYU-005 |
-| CA-AYU-05 | **Dado** un caso En atención, **cuando** pasa a "En espera del solicitante" y la Persona comenta, **entonces** el reloj se detuvo en la espera, el caso vuelve a En atención y una transición no permitida por la tabla se rechaza en el servidor. | RF-AYU-015; RN-AYU-006 |
+| CA-AYU-05 | **Dado** un caso En atención, **cuando** pasa a "En espera de la persona atendida" y la Persona comenta, **entonces** el reloj se detuvo en la espera, el caso vuelve a En atención y una transición no permitida por la tabla se rechaza en el servidor. | RF-AYU-015; RN-AYU-006 |
 | CA-AYU-06 | **Dado** un comentario interno, **cuando** la Persona atendida abre el caso, lo pide por la API o recibe una notificación, **entonces** no ve ese texto y el servidor no se lo envía. | RF-AYU-013; RN-AYU-009; RNF-AYU-007 |
 | CA-AYU-07 | **Dado** un pedido con aprobación y la casilla "mesa de ayuda" apagada, **cuando** quien lo pidió, lo creó o editó su formulario intenta aprobarlo (también llamando directo al servidor y aunque sea Administrador), **entonces** se rechaza; **cuando** otra persona con permiso aprueba, **entonces** pasa a Nuevo y el reloj arranca. | RF-AYU-009; RN-AYU-011 |
 | CA-AYU-08 | **Dado** una empresa de una sola persona de TI, **cuando** un Administrador activa la casilla "mesa de ayuda" con motivo, **entonces** puede aprobar lo suyo con aviso visible en el caso y entrada de auditoría; **cuando** pasan 90 días sin renovarla, **entonces** la excepción deja de funcionar. | RF-AYU-009; RN-AYU-011 |
@@ -391,6 +391,7 @@ Resultado según D-057 y D-058: **Confirmado**, **Cambiado** o **Retirado**.
 
 | Cambio | Decisión o hallazgo |
 |---|---|
+| Versión 0.3: la casilla se nombra «mesa de ayuda» según el mapa de D-066 (cubre solo la aprobación de pedidos con aprobación; la publicación de artículos cita la misma casilla); RN-AYU-027 cita RN-PRS-033 y el estado "En espera de persona designada" del pedido de derechos; el estado "En espera del solicitante" pasa a "En espera de la persona atendida" y el evento a `ayuda.caso_espera_persona_atendida` | D-066; D-071.1; D-075 (N-AUD-06, R-08) |
 | Versión 0.1 a 0.2; fase "Fase 2, ola C"; columnas "Cuándo" y "CA" por requisito; cada CA cita lo que cubre | Plan de correcciones (fila Mesa de ayuda, punto 12); H-AUD-21; D-056 |
 | "Solicitud de servicio" pasa a "Pedido de servicio"; "solicitante del caso" a "Persona atendida" ("Pedido por"); SLA queda para plazos internos | D-049.6 y D-049.7; H-AUD-11; H-QA-22 |
 | Nueva columna "Empleado (portal)" con alcance propio y resultado vacío sin Persona vinculada | D-037 fila 11; H-AUD-17; D-036.4 |

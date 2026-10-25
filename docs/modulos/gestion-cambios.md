@@ -1,6 +1,6 @@
 # Módulo: Gestión de cambios (`gestion-cambios`, sigla CAM)
 
-**Versión:** 0.2 (corrección tras la revisión cruzada, Oleada D; escuadrón E)
+**Versión:** 0.3 (aplica D-065 a D-076; sobre la v0.2 de la revisión cruzada; escuadrón E)
 **Cuándo se construye:** Fase 3, ola E, después de `cmdb-ligera` y antes de `gestion-problemas`. No entra a la v1 (D-056).
 **Se apoya en:** `docs/equipo/decisiones.md` (D-001 a D-064), `docs/equipo/plan-correcciones.md` y el núcleo `docs/documento-funcional.md`.
 **Marcas:** [SUPUESTO] = decisión propuesta por el analista; el resultado de cada uno está en la sección 12. [ESCALAR AL CEO] = solo dinero, tema legal o algo irreversible.
@@ -59,7 +59,7 @@ Nombres y valores según `docs/registro-permisos.md` (D-036); este módulo no ca
 | Aprobar o rechazar riesgo Bajo o Medio, y reaprobar plantillas | `cambios.aprobar` | PS-172 | Sí | Sí | No | No | No | No |
 | Aprobar o rechazar riesgo Alto y urgentes | `cambios.aprobar_alto` | PS-173 | Sí | Sí | No | No | No | No |
 | Iniciar y registrar el resultado | `cambios.implementar` | PS-174 | Sí | No | Sí | No | No | No |
-| Cerrar con revisión posterior (no lo cierra quien lo implementó, salvo la casilla "cambios") | `cambios.cerrar` | PS-175 | Sí | Sí | Sí | No | No | No |
+| Cerrar con revisión posterior (no lo cierra quien lo implementó, salvo la casilla «cambios») | `cambios.cerrar` | PS-175 | Sí | Sí | Sí | No | No | No |
 | Cancelar | `cambios.cancelar` | PS-176 | Todo | Propio | Propio | No | No | No |
 | Crear y editar plantillas | `cambios.gestionar_plantillas` | PS-177 | Sí | No | No | No | No | No |
 | Gestionar ventanas y congelamientos | `cambios.gestionar_ventanas` | PS-178 | Sí | No | No | No | No | No |
@@ -67,7 +67,7 @@ Nombres y valores según `docs/registro-permisos.md` (D-036); este módulo no ca
 | Redactar por seguridad un comentario (sensible) | `cambios.redactar` | PS-221 | Sí | No | No | No | No | No |
 | Exportar a Excel | `datos.exportar` (sensible) | PS-20 | Sí | No | No | No | No | No |
 
-Notas: (1) Todo se comprueba en el servidor. (2) Pedir, aprobar e implementar son permisos distintos; las reglas de segunda persona valen para todos los roles, incluido el Administrador. (3) Todo rol nuevo parte sin permisos. (4) Quien aprueba debe poder ver los elementos afectados (`cmdb.ver`). (5) `cambios.cerrar` lleva la condición "No": quien implementó no cierra el cambio, salvo la casilla "cambios"; el Gerente de TI debe confirmarlo.
+Notas: (1) Todo se comprueba en el servidor. (2) Pedir, aprobar e implementar son permisos distintos; las reglas de segunda persona valen para todos los roles, incluido el Administrador. (3) Todo rol nuevo parte sin permisos. (4) Quien aprueba debe poder ver los elementos afectados (`cmdb.ver`). (5) `cambios.cerrar` lleva la condición "No": quien implementó no cierra el cambio, salvo la casilla «cambios»; el Gerente de TI debe confirmarlo.
 
 ## 4. Requisitos
 
@@ -105,7 +105,7 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 | RN-CAM-001 | No aprueba ni rechaza un cambio quien lo creó o editó desde la última aprobación (definición única, D-043.1). Vale para todos los roles. | Fase 3 | CA-CAM-02 |
 | RN-CAM-002 | En riesgo Alto, el aprobador tampoco es el responsable de implementación. | Fase 3 | CA-CAM-03 |
 | RN-CAM-003 | Nadie reaprueba una plantilla que creó o editó (acto "Reaprobar plantilla estándar", RN-017 del núcleo). | Fase 3 | CA-CAM-11 |
-| RN-CAM-004 | **Retirada** (excepción propia de cambios). Se usa la casilla "cambios" del interruptor único (RN-CAM-024). | n/a | n/a |
+| RN-CAM-004 | **Retirada** (excepción propia de cambios). Se usa la casilla «cambios» del interruptor único (RN-CAM-024). | n/a | n/a |
 | RN-CAM-005 | Estándar nace Aprobado desde una plantilla Vigente; Normal exige un aprobador; Urgente exige un aprobador con `cambios.aprobar_alto`. Aprobar un cambio exige siempre a otra persona (tabla de actos, RN-017 del núcleo). | Fase 3 | CA-CAM-05 |
 | RN-CAM-006 | Riesgo = impacto por probabilidad. Impacto Bajo: Bajo, Bajo, Medio (probabilidad Baja, Media, Alta). Impacto Medio: Bajo, Medio, Alto. Impacto Alto: Medio, Alto, Alto. | Fase 3 | CA-CAM-01 |
 | RN-CAM-007 | Normal de riesgo Bajo o Medio: `cambios.aprobar`. Riesgo Alto: `cambios.aprobar_alto`. Un solo nivel (D-023). | Fase 3 | CA-CAM-03 |
@@ -125,7 +125,7 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 | RN-CAM-021 | Todo cambio de estado guarda quién, cuándo y motivo (obligatorio en rechazo, cancelación y reversa). | Fase 3 | CA-CAM-01, CA-CAM-13 |
 | RN-CAM-022 | Un elemento De baja no se agrega a un cambio nuevo. | Fase 3 | CA-CAM-04 |
 | RN-CAM-023 | Fechas en la zona de la empresa; se guardan en hora universal (D-021.4). | Fase 3 | CA-CAM-15 |
-| RN-CAM-024 | La casilla "cambios" del interruptor único (D-043.2) está apagada por defecto, vence a los 90 días y la activa un Administrador con reautenticación (y la confirma otro si hay dos). Encendida permite que quien creó o editó apruebe (RN-CAM-001, RN-CAM-002, RN-CAM-003); nunca exime del permiso. Cada uso muestra un aviso en el cambio y queda en la auditoría. | Fase 3 | CA-CAM-12, CA-CAM-17 |
+| RN-CAM-024 | La casilla «cambios» del interruptor único (D-043.2) está apagada por defecto, vence a los 90 días y la activa un Administrador con reautenticación (y la confirma otro si hay dos). Encendida permite que quien creó o editó apruebe (RN-CAM-001, RN-CAM-002, RN-CAM-003); nunca exime del permiso. Cada uso muestra un aviso en el cambio y queda en la auditoría. | Fase 3 | CA-CAM-12, CA-CAM-17 |
 | RN-CAM-025 | Un cambio solo se vincula con elementos, casos, problemas y proveedores de su empresa; la base lo impone con clave compuesta (D-039). | Fase 3 | CA-CAM-04 |
 | RN-CAM-026 | En el calendario, el título se muestra solo a quien puede ver el cambio; los demás ven "Cambio programado" (D-063.5). | Fase 3 | CA-CAM-14 |
 | RN-CAM-027 | La auditoría guarda "el campo X cambió" para motivos, planes, comentarios y notas (texto libre); las Personas solo por `PRS-NNNN`. El texto vive en el historial del módulo (D-030). | Fase 3 | CA-CAM-19 |
@@ -205,7 +205,7 @@ Unicidad: (empresa, número); (empresa, nombre de plantilla); no se repite un el
 | PAN-CAM-08 | Revisión posterior | Cuatro preguntas y cierre. | Jefatura TI |
 | PAN-CAM-09 | Plantillas estándar | Crear (Administrador); aprobar y suspender (Jefatura TI). | Administrador |
 | PAN-CAM-10 | Ventanas y congelamientos | Alta y desactivación. | Administrador |
-| PAN-CAM-11 | Configuración de cambios | Plazos de aviso. La casilla "cambios" está en la pantalla única de excepciones del núcleo. | Administrador |
+| PAN-CAM-11 | Configuración de cambios | Plazos de aviso. La casilla «cambios» está en la pantalla única de excepciones del núcleo. | Administrador |
 
 ## 8. Notificaciones y automatismos
 
@@ -224,7 +224,7 @@ Todos los avisos usan el motor y la tabla únicos de Notificaciones (D-062.3). A
 | Marca Vencido | Quien pidió y el responsable | "CAM-000012 no se ejecutó en su fecha." |
 | Revisión posterior pendiente, día 3 y día 7 | Con `cambios.cerrar` y quien pidió | "CAM-000012 espera su revisión posterior." |
 | Plantilla Suspendida | Con `cambios.aprobar` | "Una plantilla se suspendió porque falló un cambio." |
-| Uso de la casilla "cambios" | Administradores | "Se aprobó CAM-000014 con la excepción activa." |
+| Uso de la casilla «cambios» | Administradores | "Se aprobó CAM-000014 con la excepción activa." |
 
 **Procesos automáticos (D-038.4).** (1) *Avisos diarios*: a la hora configurada de la empresa (08:00), "hoy" en su zona; registran cada aviso en la tabla única, lo que los hace idempotentes; al reiniciar procesan los días pendientes. (2) *Recordatorio de urgentes*: cada 5 minutos, mismas reglas. (3) *Suspensión de plantilla*: no es un proceso; ocurre en la misma operación que registra el resultado. La marca "Vencido" no la cambia ningún proceso; se calcula al leer.
 
@@ -248,7 +248,7 @@ Cada criterio indica el requisito que cubre.
 
 **CA-CAM-01** (RF-CAM-001, RF-CAM-002, RF-CAM-006, RF-CAM-012, RF-CAM-019, RN-CAM-006, RN-CAM-010, RN-CAM-021, RNF-CAM-006, RNF-CAM-008). Dado un Técnico con `cambios.pedir` y un Jefatura TI con `cambios.aprobar`, cuando el Técnico completa y envía un cambio de riesgo Medio, Jefatura lo aprueba, el Técnico lo inicia en su horario y registra "Exitoso", y otra persona con `cambios.cerrar` lo cierra, entonces recorre Borrador, Pendiente, Aprobado, En implementación, Implementado y Cerrado, cada paso en la línea de tiempo y la auditoría, y el aviso al aprobador sale en menos de 1 minuto.
 
-**CA-CAM-02** (RN-CAM-001, RNF-CAM-004). Dado un Administrador que creó CAM-000020, cuando intenta aprobarlo por pantalla o directo al servidor con la casilla "cambios" apagada, entonces el servidor responde "No puede aprobar un cambio que usted creó o editó" y sigue Pendiente. Igual si otra persona aprobó y luego este lo editó.
+**CA-CAM-02** (RN-CAM-001, RNF-CAM-004). Dado un Administrador que creó CAM-000020, cuando intenta aprobarlo por pantalla o directo al servidor con la casilla «cambios» apagada, entonces el servidor responde "No puede aprobar un cambio que usted creó o editó" y sigue Pendiente. Igual si otra persona aprobó y luego este lo editó.
 
 **CA-CAM-03** (RN-CAM-002, RN-CAM-007, RF-CAM-018, RNF-CAM-001; permiso denegado). Dado un cambio de riesgo Alto y un usuario con `cambios.aprobar` pero sin `cambios.aprobar_alto`, cuando intenta aprobarlo, entonces el servidor responde "No tiene permiso para aprobar cambios de riesgo Alto" y queda el intento en la auditoría; con el permiso, si es el responsable de implementación, también se rechaza.
 
@@ -268,7 +268,7 @@ Cada criterio indica el requisito que cubre.
 
 **CA-CAM-11** (RF-CAM-005, RN-CAM-003, RN-CAM-018). Dado un estándar con resultado Fallido, cuando se registra, entonces su plantilla pasa a Suspendida en la misma operación y no se ofrece al crear estándares hasta que otra persona con `cambios.aprobar` la reapruebe; quien la creó no puede reaprobarla.
 
-**CA-CAM-12** (RN-CAM-024, RNF-CAM-007). Dado que el Administrador, único con permisos, activó la casilla "cambios", cuando aprueba su propio cambio normal, entonces se permite, el cambio muestra el aviso y la auditoría registra el uso; con la casilla apagada se rechaza.
+**CA-CAM-12** (RN-CAM-024, RNF-CAM-007). Dado que el Administrador, único con permisos, activó la casilla «cambios», cuando aprueba su propio cambio normal, entonces se permite, el cambio muestra el aviso y la auditoría registra el uso; con la casilla apagada se rechaza.
 
 **CA-CAM-13** (RF-CAM-007, RF-CAM-008, RN-CAM-019, RN-CAM-020, RN-CAM-021). Dado un cambio Pendiente, cuando el aprobador rechaza sin motivo, entonces no se permite; con motivo pasa a Rechazado y quien pidió recibe el aviso; un Cerrado no ofrece "reabrir".
 
@@ -278,7 +278,7 @@ Cada criterio indica el requisito que cubre.
 
 **CA-CAM-16** (RNF-CAM-010). Dado dos empresas con cambios que inician mañana, cuando se dispara dos veces el proceso diario de avisos, entonces cada aviso, registro y destinatario queda en su empresa y la segunda corrida no duplica nada.
 
-**CA-CAM-17** (RN-CAM-024, RNF-CAM-004). Dado que la casilla "cambios" venció a los 90 días, cuando alguien intenta aprobar lo propio llamando al servidor, entonces se rechaza como con la casilla apagada.
+**CA-CAM-17** (RN-CAM-024, RNF-CAM-004). Dado que la casilla «cambios» venció a los 90 días, cuando alguien intenta aprobar lo propio llamando al servidor, entonces se rechaza como con la casilla apagada.
 
 **CA-CAM-18** (RF-CAM-012, RN-CAM-012). Dado un cambio con inicio planificado a las 22:00, cuando el responsable lo inicia a las 21:59, entonces se rechaza; a las 22:00 se permite; a la hora del fin planificado más un minuto, se rechaza.
 
@@ -300,7 +300,7 @@ Cada criterio indica el requisito que cubre.
 | ID | Tipo | Propuesta | Resultado |
 |---|---|---|---|
 | S-CAM-01 | [SUPUESTO] | Un nivel de aprobación; riesgo Alto con permiso aparte. | Aceptado (D-058, D-043). |
-| S-CAM-02 | [SUPUESTO] | Excepción propia de una persona de TI (antes RN-CAM-004). | **Rechazado**: casilla "cambios" del interruptor único (D-043, D-058). |
+| S-CAM-02 | [SUPUESTO] | Excepción propia de una persona de TI (antes RN-CAM-004). | **Rechazado**: casilla «cambios» del interruptor único (D-043, D-058). |
 | S-CAM-03 | [SUPUESTO] | Los urgentes también se aprueban antes. | Aceptado. |
 | S-CAM-04 | [SUPUESTO] | Estándar nace Aprobado; la plantilla se suspende si falla. | Aceptado. |
 | S-CAM-05 | [SUPUESTO] | Aprobador de riesgo Alto distinto del implementador. | Aceptado y mantenido (plan CAM 5). |
@@ -329,7 +329,7 @@ Cada criterio indica el requisito que cubre.
 
 | Cambio | Decisión o hallazgo |
 |---|---|
-| RN-CAM-004 retirada; casilla "cambios" del interruptor único (vence a 90 días, segundo administrador); RN-CAM-024 | D-031.6, D-043.2, D-058 (6), H-AUD-07, H-ARQ-10 |
+| RN-CAM-004 retirada; casilla «cambios» del interruptor único (vence a 90 días, segundo administrador); RN-CAM-024 | D-031.6, D-043.2, D-058 (6), H-AUD-07, H-ARQ-10 |
 | Definición única de creador o editor (RN-CAM-001) y tabla de actos de RN-017 del núcleo | D-043.1 y 4 |
 | "Solicitante" pasa a "Pedido por" / "quien pide"; permiso `cambios.solicitar` pasa a `cambios.pedir` | D-049.6 |
 | Calendario: título solo a quien ve el cambio (RN-CAM-026) | D-063.5, H-SEG-25d |
