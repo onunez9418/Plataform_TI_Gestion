@@ -1,138 +1,140 @@
 # Módulo: Portal de autoservicio (POR)
 
-**Versión:** 0.1 (borrador del Analista de Negocio, Oleada B, Escuadrón D)
+**Versión:** 0.2 (corregida tras la revisión cruzada, Mesa #002; Oleada D, Escuadrón D)
 **Sigla de requisitos:** POR
-**Fuente de verdad:** `docs/documento-funcional.md` y `docs/equipo/decisiones.md`. Aplican D-001 y D-002 (acceso solo por invitación), D-004 (alcance "propio"), D-006 (Persona distinta de Usuario), D-021.5 (otra empresa = "no encontrado"), D-024 (datos personales).
-**Marcas:** **[SUPUESTO]** = propuesta mía que confirma el Gerente de TI. **[ESCALAR AL CEO]** = solo dinero, tema legal o algo irreversible.
+**Fuente de verdad:** `docs/documento-funcional.md` y `docs/equipo/decisiones.md`. Aplican D-001 y D-002 (acceso por invitación), D-036 y D-037 (permisos y plantilla "Empleado (portal)"), D-039.8 (aislamiento entre Personas), D-053 (Pedir ayuda, tono), D-054 (topes), D-058 (supuestos), D-061.2 (derechos), D-063.5.
+**Marcas:** **[SUPUESTO]** = propuesta mía que confirma el Gerente de TI. **[ESCALAR AL CEO]** = solo dinero, tema legal o algo irreversible. "Cuándo": `Fase 3, ola D` (D-056.3).
 
 ---
 
 ## 1. Propósito, alcance y fase
 
-**Propósito.** Que un empleado vea por sí mismo qué equipos, líneas y licencias tiene a su nombre y pueda pedir ayuda a TI sin llamar ni escribir correos: reportar un problema, avisar de un extravío, solicitar un equipo, pedir una devolución y consultar sus propios datos. Reduce las consultas "¿qué laptop tengo?" y mejora la información que TI recibe.
+**Propósito.** Que un empleado vea por sí mismo qué equipos, líneas y licencias tiene a su nombre y pueda pedir ayuda a TI sin llamar ni escribir correos: reportar un problema o un extravío, solicitar un equipo, pedir una devolución y consultar sus datos. En todo el módulo se trata al empleado de "usted".
 
-**Fase.** **Después de la versión 1.** Depende de Personas y vínculo con Usuarios (Etapa 2), de actas (Etapa 4) y de la mesa de ayuda (módulo AYU). "Confirmar recepción" es una aceptación en pantalla y D-023.2 la deja fuera de la versión 1; se especifica aquí para la fase posterior del portal.
+**Cuándo.** **Fase 3, ola D** (después de la mesa de ayuda; D-056). **En la v1 no hay portal**: las columnas "Empleado (portal)" del registro de permisos son informativas (D-037 fila 11). Depende de AYU, ENT y Personas. La aceptación en pantalla ("confirmar recepción") es de esta fase y queda fuera de la v1 (D-023.2).
 
-**Entra**
-1. Invitación de Personas al portal y vínculo Persona-Usuario al aceptar.
-2. Inicio con resumen: mis equipos, líneas, licencias, casos y pendientes.
-3. Detalle de mis equipos y mis actas (con PDF reimprimible).
-4. Puerta hacia la mesa de ayuda: reportar problema, reportar extravío o robo, solicitar equipo, pedir devolución, pedir mis datos personales.
-5. Confirmar recepción de un equipo (fase posterior).
-6. Reglas de lo que la Persona ve y de lo que nunca ve.
-
-**No entra:** ver sección 13. El portal **no tiene casos propios**: los casos y su flujo viven en AYU; el portal solo es la puerta y la vista de lo propio (acordado con el Escuadrón C).
+**Entra:** invitación de Personas al portal y vínculo Persona-membresía; **Mi espacio** (equipos, líneas, licencias, actas, casos, pendientes); el botón **"Pedir ayuda"** que abre el catálogo de la mesa de ayuda; "Mis datos y derechos"; confirmar recepción; reglas de lo que la Persona ve y nunca ve.
+**No entra:** ver sección 13. El portal **no tiene casos propios**: los casos y su flujo viven en AYU; el portal es la puerta y la vista de lo propio.
 
 ## 2. Glosario del módulo
 
 | Término | Significado |
 |---|---|
-| **Portal** | Parte de la plataforma que ve cada empleado, limitada a lo que le pertenece. |
-| **Alcance "propio"** | Regla del servidor: cada consulta se limita a la Persona vinculada al Usuario que entró (D-004.3). |
-| **Empleado (portal)** | Plantilla de rol con solo permisos propios (propuesta S-PER-01). |
-| **Vínculo** | Unión entre una Persona y un Usuario (módulo PER). En el portal nace al aceptar la invitación. |
-| **Caso** | Solicitud o problema registrado en la mesa de ayuda (módulo AYU). |
-| **Servicio semilla** | Tipo de caso que la plataforma trae de fábrica y la empresa solo puede desactivar, no borrar. |
-| **Acuse de recepción** | Confirmación en pantalla de que la Persona recibió un equipo (fase posterior). No es firma. |
-| **Equipo solicitable** | Categoría de artículo que la empresa permite pedir desde el portal (por ejemplo, Mouse, Teclado, Laptop). |
+| **Portal** | Parte de la misma plataforma que ve cada empleado, limitada a lo que le pertenece (S-POR-02). |
+| **Alcance "propio"** | Regla del servidor: cada consulta se limita a la Persona vinculada a la membresía que entró (D-036.4). |
+| **Empleado (portal)** | Séptima plantilla de rol, de **lista cerrada** (ver sección 3). |
+| **Vínculo** | Unión 1 a 1 entre una Persona y una membresía de la misma empresa (PRS). Nace al aceptar la invitación. |
+| **Caso** | Solicitud o problema registrado en la mesa de ayuda (AYU). |
+| **Servicio semilla** | Tipo de caso que la plataforma trae y la empresa solo puede desactivar: Reportar problema, Reportar extravío, Solicitar equipo, Pedir mis datos personales. |
+| **Acuse de recepción** | Confirmación en pantalla de que la Persona recibió un equipo. Informativa, no es firma. |
+| **Mi espacio** | Página con pestañas (equipos, líneas, licencias, actas, casos, pendientes), principal del portal (DS-07). |
+| **Pedir ayuda** | Botón único que abre el catálogo de casos (DS-01). |
 
 ## 3. Roles y permisos
 
-| Acción | Permiso | Admin | Jefatura TI | Técnico | Almacén | Solicitante | Solo lectura | Empleado (portal) |
-|---|---|---|---|---|---|---|---|---|
-| Entrar al portal (si hay Persona vinculada) | `portal.acceder` | Propio | Propio | Propio | Propio | Propio | Propio | Propio |
-| Ver mis equipos, líneas, licencias y actas | `portal.ver_propio` | Propio | Propio | Propio | Propio | Propio | Propio | Propio |
-| Abrir casos (problema, extravío, solicitar equipo, devolución) | `portal.solicitar` | Propio | Propio | Propio | Propio | Propio | No | Propio |
-| Pedir mis datos personales | `portal.pedir_datos` | Propio | Propio | Propio | Propio | Propio | Propio | Propio |
-| Confirmar recepción (fase posterior) | `portal.confirmar_recepcion` | Propio | Propio | Propio | Propio | Propio | No | Propio |
-| Invitar Personas al portal | `portal.invitar`* | Sí | No | No | No | No | No | No |
-| Configurar el portal (secciones, equipos solicitables, texto) | `portal.configurar` | Sí | No | No | No | No | No | No |
+Solo nombres del registro `docs/registro-permisos.md`. Todo se comprueba en el servidor. Como en la v1 no hay portal, la columna "Empleado (portal)" es informativa hasta la Fase 3.
+
+| Acción | PS | Permiso | Empleado (portal) | Otros roles |
+|---|---|---|---|---|
+| Entrar al portal (con Persona vinculada) | PS-204 | `portal.acceder` | Propio | No: usan la plataforma completa |
+| Ver mis equipos, líneas, licencias, actas y casos (nunca el nombre del jefe) | PS-205 | `portal.ver_propio` | Propio | No |
+| Solicitar equipo o servicio (crea un caso) | PS-206 | `portal.solicitar` | Propio | No |
+| Pedir mis datos (entrada en el registro de derechos) | PS-207 | `portal.pedir_datos` | Propio | No |
+| Confirmar recepción (Fase 3) | PS-208 | `portal.confirmar_recepcion` | Propio | No |
+| Invitar Personas al portal | PS-209 | `portal.invitar` | No | Administrador |
+| Configurar el portal | PS-210 | `portal.configurar` | No | Administrador |
+
+**Lista cerrada de la plantilla "Empleado (portal)"** (todo lo demás denegado, D-037 fila 11): PS-204 a PS-208; `personas.ver` PS-24 (propio); `ayuda.caso_crear` PS-138, `ayuda.caso_ver` PS-139, `ayuda.caso_comentar_publico` PS-141, `ayuda.caso_cancelar` PS-149, `ayuda.caso_reabrir` PS-150 y `ayuda.encuesta_responder` PS-155 (todos propio); `ayuda.catalogo_ver` PS-158 y `ayuda.conocimiento_ver` PS-162; `notificaciones.bandeja_usar` PS-211 y `notificaciones.preferencias_propias` PS-212 (propio).
 
 Notas:
-- Todos los roles ven su portal porque un técnico también es una Persona con laptop. Solo se ve **lo propio**, nunca lo de otros, aunque el rol tenga permisos amplios en el resto de la plataforma.
-- `portal.invitar`* es sensible: envía correos y concede acceso. No se puede invitar con un rol que tenga más permisos que el invitador (D-002.3).
-- "Solo lectura" ve lo suyo pero no abre casos (es un rol de consulta).
-- La plantilla "Empleado (portal)" es propuesta del módulo PER; el núcleo la acepta como [SUPUESTO S-27] pendiente del Gerente de TI.
-- Los permisos se comprueban en el servidor. Ocultar un botón no basta (regla 6 de CLAUDE.md).
+- El resto de los roles (Técnico, Jefatura, etc.) ven sus propios equipos como cualquier Persona vinculada con "Mi espacio" desde el menú de usuario (DS-07); no usan los permisos `portal.*`.
+- Tiene "ver lo propio" sin `datos_personales.ver`: ve sus datos porque son los suyos; nunca los de otra Persona.
+- Quien invita no puede dar un rol con más permisos que el suyo (D-002.3). `portal.invitar` lleva control de tope por hora.
+- Un Usuario con alcance "propio" y **sin Persona vinculada** ve una lista vacía, nunca un error (D-036.4).
 
 ## 4. Requisitos
 
+Los RN y RNF rigen desde el "Cuándo" del requisito que protegen (`Fase 3`).
+
 ### 4.1 Requisitos funcionales
 
-| ID | Requisito | Fase |
-|---|---|---|
-| RF-POR-001 | Pantalla de inicio con resumen: cantidad de equipos, líneas y licencias; casos abiertos; pendientes (préstamo por vencer, acta sin firma, recepción por confirmar). | Posterior |
-| RF-POR-002 | "Mis equipos": lista y detalle de los activos asignados a la Persona con los datos de la tabla 4.4. | Posterior |
-| RF-POR-003 | "Mis líneas": líneas móviles a su nombre (número, operador, equipo asociado). Sin costos. | Posterior |
-| RF-POR-004 | "Mis licencias": productos de software asignados a su nombre. Nunca claves. Solo si el módulo de licencias asigna puestos a Personas (S-POR-04). | Posterior |
-| RF-POR-005 | "Mis actas": lista y PDF reimprimible de sus actas de entrega y devolución. | Posterior |
-| RF-POR-006 | "Mis casos": lista y detalle de sus casos de la mesa de ayuda, con solo comentarios públicos. Abre las pantallas AYU-01, AYU-02 y AYU-14. | Posterior |
-| RF-POR-007 | Reportar un problema con un equipo propio: elegir el equipo de su lista, describir y enviar. Crea un caso. | Posterior |
-| RF-POR-008 | Reportar extravío o robo de un equipo propio. Crea un caso urgente y avisa a TI; no cambia el estado del equipo (RN-POR-008). | Posterior |
-| RF-POR-009 | Solicitar un equipo o accesorio: elegir una categoría solicitable, motivo, urgencia y fecha deseada. Crea un caso del servicio "Solicitar equipo". **No crea una orden de compra.** | Posterior |
-| RF-POR-010 | Pedir devolver o cambiar un equipo propio ("ya no lo uso", "se me malogró"). Crea un caso. | Posterior |
-| RF-POR-011 | "Mis datos": ver los datos propios que guarda la plataforma (nombre, correo, área, sede, jefe directo, equipos) y pedir copia, corrección o eliminación. Crea un caso en una cola restringida al Administrador (D-024.6). | Posterior |
-| RF-POR-012 | Confirmar recepción de un equipo recién entregado ("Lo recibí" o "Tengo un reparo", con texto). Registra fecha, hora y Usuario. | Fase posterior del portal |
-| RF-POR-013 | Invitar Personas al portal desde la ficha de la Persona o desde una selección en la lista (invitación masiva). La invitación va al correo de la Persona. | Posterior |
-| RF-POR-014 | Al aceptar la invitación, el vínculo Persona-Usuario se crea solo y la Persona entra con rol "Empleado (portal)". | Posterior |
-| RF-POR-015 | Configuración: activar o desactivar secciones (líneas, licencias), elegir las categorías solicitables y un texto de bienvenida de hasta 500 caracteres. | Posterior |
-| RF-POR-016 | Buscador de artículos de ayuda de la mesa de ayuda (base de conocimiento) desde el inicio. | Posterior |
-| RF-POR-017 | Primer ingreso: pantalla de aceptación del aviso de privacidad con versión y fecha registradas (D-024.7). | Posterior |
+| ID | Requisito | Cuándo | CA |
+|---|---|---|---|
+| RF-POR-001 | **Mi espacio**: resumen y pestañas Equipos, Líneas, Licencias, Actas, Casos y Pendientes (préstamo por vencer, recepción por confirmar). | Fase 3 | CA-POR-01 |
+| RF-POR-002 | Equipos: lista y detalle de los activos asignados a la Persona con los datos de la tabla 4.4. | Fase 3 | CA-POR-01, 05 |
+| RF-POR-003 | Líneas: líneas móviles a su nombre (número, operador, equipo asociado), sin costos. Con LIN activo vienen de ese módulo; sin LIN, el número es el campo de la unidad del celular (D-042). | Fase 3 | CA-POR-01 |
+| RF-POR-004 | Licencias: productos de software asignados a su nombre; nunca claves. Solo si el módulo de licencias asigna puestos a Personas (S-POR-04). | Fase 3 | CA-POR-06 |
+| RF-POR-005 | Actas: lista y PDF reimprimible de sus actas de entrega y devolución. | Fase 3 | CA-POR-01 |
+| RF-POR-006 | Casos: lista y detalle de sus casos de AYU, solo con comentarios públicos. Abre AYU-01, AYU-02 y AYU-14. | Fase 3 | CA-POR-04 |
+| RF-POR-007 | Botón **"Pedir ayuda"**: abre el catálogo de casos de AYU. "Reportar un problema" se prellena con el equipo elegido de su lista. | Fase 3 | CA-POR-04 |
+| RF-POR-008 | Reportar extravío o robo de un equipo propio: crea un caso urgente en AYU y avisa a TI; **no cambia el estado del equipo**. | Fase 3 | CA-POR-11 |
+| RF-POR-009 | Solicitar un equipo o accesorio: categoría solicitable, motivo, urgencia y fecha deseada. Crea un caso del servicio "Solicitar equipo", **no una orden de compra**. | Fase 3 | CA-POR-10 |
+| RF-POR-010 | Pedir devolver o cambiar un equipo propio. Crea un caso. | Fase 3 | CA-POR-10 |
+| RF-POR-011 | **Mis datos y derechos**: ver los datos propios (nombre, correo, área, sede; **sin el nombre del jefe**) y pedir copia, corrección o eliminación. El pedido entra al registro de solicitudes de derechos de PRS (PS-29); AYU guarda solo un caso restringido con la referencia. La Persona ve el estado de **su** pedido. | Fase 3 | CA-POR-12 |
+| RF-POR-012 | Confirmar recepción de un equipo entregado: "Lo recibí" o "Tengo un reparo" (texto). Registra fecha, hora y membresía. Acuse informativo (ENT-B). | Fase 3 | CA-POR-14 |
+| RF-POR-013 | Invitar Personas al portal desde el directorio de Personas, **por persona**: cada resultado se informa y un error no frena al resto. | Fase 3 | CA-POR-07, 16 |
+| RF-POR-014 | Al aceptar la invitación, el vínculo Persona-membresía se crea solo y la Persona entra con la plantilla "Empleado (portal)". | Fase 3 | CA-POR-07, 08 |
+| RF-POR-015 | Configuración: activar o desactivar secciones (Líneas, Licencias), elegir las categorías solicitables y un texto de bienvenida de hasta 500 caracteres. | Fase 3 | CA-POR-10 |
+| RF-POR-016 | Buscador de artículos de ayuda de AYU desde Mi espacio. | Fase 3 | CA-POR-04 |
+| RF-POR-017 | Primer ingreso: aceptación del aviso de privacidad de la empresa; se vuelve a pedir cuando cambia la versión, con versión y fecha registradas (D-061.8). | Fase 3 | CA-POR-07 |
 
 ### 4.2 Reglas de negocio
 
 | ID | Regla |
 |---|---|
-| RN-POR-001 | El portal solo muestra datos de la Persona vinculada al Usuario que entró. El servidor filtra por Persona y por empresa en cada consulta. |
-| RN-POR-002 | Un identificador de equipo, acta, caso o Persona que no sea del usuario responde "no encontrado", igual que uno inexistente. Nunca "no tienes permiso", que revelaría que existe. |
-| RN-POR-003 | Un Usuario sin Persona vinculada ve una pantalla que dice "Tu cuenta aún no está vinculada a una Persona. Pide a TI que te vincule." y nada más. |
-| RN-POR-004 | Si la Persona está Cesada, el acceso al portal se suspende al instante (RN-PER-011). |
-| RN-POR-005 | La invitación al portal sigue las reglas de D-002.3: vence a los 7 días, sirve una vez, queda ligada al correo y se puede cancelar. Lleva la Persona elegida. |
-| RN-POR-006 | Solo se invita a una Persona Activa que tenga correo. Si no tiene correo, primero se edita la Persona. |
-| RN-POR-007 | El vínculo creado por invitación exige que el correo verificado del que acepta sea el de la invitación. No se vincula nunca por coincidencia de nombre. |
-| RN-POR-008 | Reportar un extravío desde el portal abre un caso y avisa a TI. El estado del activo cambia solo cuando TI lo confirma en ENT. |
-| RN-POR-009 | "Solicitar equipo" crea un caso. Convertirlo en compra, entrega desde stock o rechazo lo decide TI con las reglas de los módulos de compras y entregas. |
-| RN-POR-010 | Solo se pueden elegir para reportes y devoluciones equipos que estén asignados a esa Persona. |
-| RN-POR-011 | **Nunca** se muestran al empleado: precios y costos de compra, proveedor, orden de compra de origen, claves de licencia (ni enmascaradas), datos de otras Personas, notas internas de técnicos, comentarios internos de casos, auditoría, stock, ni campos que la empresa no marcó como visibles. |
-| RN-POR-012 | Un equipo asignado a varias Personas no existe (RN-ENT-003). Un equipo compartido pertenece a un Custodio; solo el Custodio lo ve en su portal. |
-| RN-POR-013 | El empleado ve solo los comentarios marcados como públicos en sus casos. |
-| RN-POR-014 | Confirmar recepción es un acuse informativo, no reemplaza la firma en papel del acta ni tiene el valor legal de una firma (fase posterior, E-POR-02). |
-| RN-POR-015 | Un acuse registrado no se edita ni se borra. Una corrección se hace con un acuse nuevo. |
-| RN-POR-016 | Las invitaciones masivas tienen un tope de 200 por día y por empresa (S-POR-06). |
-| RN-POR-017 | Todo dato lleva la empresa. Si el Usuario pertenece a dos empresas, el portal muestra solo la empresa activa y su Persona en ella. |
-| RN-POR-018 | El portal no permite modificar datos de equipos, Personas ni estados. Toda acción del empleado se convierte en un caso o en un acuse. |
+| RN-POR-001 | El portal solo muestra datos de la Persona vinculada. Usa **consultas dedicadas que reciben la Persona de la sesión**, no los listados generales (D-039.8). |
+| RN-POR-002 | Un identificador de equipo, acta, caso o Persona que no sea del usuario responde "no encontrado", sea de otra empresa **o de otra Persona de la misma empresa**. Nunca "no tiene permiso" (D-053). |
+| RN-POR-003 | Un Usuario sin Persona vinculada ve "Su cuenta aún no está vinculada a una Persona. Pida a TI que la vincule." y nada más. |
+| RN-POR-004 | Si la Persona cesa, su membresía queda suspendida y el acceso termina al instante (RN-PRS-011). |
+| RN-POR-005 | La invitación sigue D-002.3 y D-054.4: texto fijo sin campos libres, vence a los 7 días, un solo uso, ligada al correo, cancelable; **nunca dice si el correo ya tiene cuenta**; la empresa se suma a la cuenta solo cuando la persona abre y acepta, y se le avisa que se le sumó una empresa. |
+| RN-POR-006 | Solo se invita a una Persona Activa que tenga correo. Sin correo, primero se edita la Persona. |
+| RN-POR-007 | El vínculo exige que el correo verificado de quien acepta sea el de la invitación; nunca se vincula por nombre. |
+| RN-POR-008 | Reportar un extravío abre un caso; el estado del activo cambia solo cuando TI lo confirma con "Cambiar estado". ENT no duplica el reporte. |
+| RN-POR-009 | "Solicitar equipo" crea un caso. **TI decide** si sale de stock (entrega con ENT) o se compra, y en ese caso crea la orden de compra en Borrador con las reglas de compras. |
+| RN-POR-010 | Solo se pueden elegir para reportes y devoluciones equipos asignados a esa Persona. |
+| RN-POR-011 | **Nunca** se muestran: precios, costos, proveedor, orden de compra, fecha de compra, claves de licencia (ni enmascaradas), datos de otras Personas (incluido el nombre del jefe, D-063.5), notas y comentarios internos, nombre del técnico que analizó, auditoría, stock, órdenes de compra o servicio, ni campos no incluidos en la tabla 4.4. |
+| RN-POR-012 | Un equipo compartido pertenece a un Custodio; solo el Custodio lo ve en su portal. |
+| RN-POR-013 | El empleado ve solo comentarios públicos de sus casos. |
+| RN-POR-014 | El acuse de recepción es informativo: no reemplaza la firma en papel ni tiene valor legal declarado (E-POR-02). |
+| RN-POR-015 | Un acuse no se edita ni se borra; una corrección es un acuse nuevo. |
+| RN-POR-016 | Invitaciones: **100 por empresa por día y 20 por administrador por hora** (D-054.2). La plataforma puede subir el tope de una empresa por un periodo corto para la campaña inicial (PS-04). La pantalla dice que el envío es por persona. |
+| RN-POR-017 | La empresa activa va en la dirección (D-046). Con dos empresas, el portal muestra solo la Persona de la empresa activa. |
+| RN-POR-018 | El portal no modifica datos de equipos, Personas ni estados: toda acción del empleado se convierte en un caso, un pedido de derechos o un acuse. |
 | RN-POR-019 | Un mensaje de error del portal no contiene datos de otra Persona ni detalles internos (D-021.7). |
+| RN-POR-020 | Pedidos de datos personales: quien presenta el pedido no lo atiende; la copia se entrega por descarga única con vencimiento, nunca por correo; el pedido es invisible para listas, búsquedas, reportes, exportaciones, API y avisos de quien no tiene PS-29, salvo la propia Persona que ve su estado (D-061.2). |
+| RN-POR-021 | Todo texto y botón usa "usted"; el botón único es "Pedir ayuda" (DS-01, DS-09). |
+| RN-POR-022 | La respuesta de cada ruta del portal incluye únicamente los campos de la tabla 4.4; una prueba compara los campos devueltos con esa lista. |
 
 ### 4.3 Requisitos de calidad
 
 | ID | Requisito medible |
 |---|---|
-| RNF-POR-001 | La pantalla de inicio carga en menos de 2 segundos (p95) con 4G y una Persona con 20 equipos. |
-| RNF-POR-002 | Todo el portal es utilizable en pantalla de 360 px de ancho, con teclado y con lector de pantalla; cumple contraste AA; el estado se indica con texto además del color (D-021.1). |
-| RNF-POR-003 | Prueba automática de 100 intentos de pedir equipos, actas y casos de otra Persona por identificador: 100 respuestas "no encontrado" y 0 datos filtrados. |
-| RNF-POR-004 | Una invitación masiva de 200 Personas termina en menos de 60 segundos y cada fallo de envío se informa. |
+| RNF-POR-001 | Mi espacio carga en menos de 2 segundos (p95) con 4G y una Persona con 20 equipos. |
+| RNF-POR-002 | Todo el portal es utilizable a 360 px, con teclado y lector de pantalla, con contraste AA, objetivos táctiles de 44 px y estado en texto; casos propios, buscar y ver ficha son tareas de celular (DS-11). |
+| RNF-POR-003 | Para **cada ruta del portal**, una prueba automática con dos Personas de la misma empresa y con dos empresas: 100 intentos de pedir equipos, actas y casos ajenos dan 100 respuestas "no encontrado" y 0 datos filtrados (D-039.8, H-SEG-09). |
+| RNF-POR-004 | Con el tope subido para la campaña, una selección de 200 Personas se procesa en menos de 60 segundos y cada resultado se informa por persona; con los topes por defecto, lo que exceda queda "En espera" y se informa. |
 | RNF-POR-005 | El 100 % de invitaciones, vínculos, acuses y cambios de configuración queda en la auditoría en la misma operación (D-018.2). |
-| RNF-POR-006 | Un empleado completa "reportar problema" en 3 pasos o menos y menos de 90 segundos. |
-| RNF-POR-007 | Cada tabla nueva del módulo tiene prueba de aislamiento entre empresas (D-025). |
-| RNF-POR-008 | La respuesta de cada endpoint del portal incluye únicamente los campos de la tabla 4.4; una prueba compara los campos devueltos con esa lista. |
+| RNF-POR-006 | Un empleado completa "Reportar un problema" en 3 pasos o menos y menos de 90 segundos. |
+| RNF-POR-007 | Cada tabla nueva tiene prueba de aislamiento con `app_empresa` y por identificador interno (D-039, D-063.6). |
+| RNF-POR-008 | Una prueba compara los campos de cada respuesta del portal con la lista de la tabla 4.4 (RN-POR-022). |
 
 ### 4.4 Qué ve la Persona y qué nunca
 
 | Dato | La Persona lo ve |
 |---|---|
-| Artículo, marca, modelo, categoría del equipo | Sí |
-| Número de serie y, si el equipo es celular, IMEI y número de línea | Sí (son de su equipo) |
+| Artículo, marca, modelo y categoría del equipo | Sí |
+| Número de serie; en un celular, IMEI y número de línea (según el módulo activo, RF-POR-003) | Sí (son de su equipo) |
 | Fecha de entrega, condición al entregar, accesorios, fecha de devolución prevista | Sí |
-| Estado del equipo (Asignado, En reparación) | Sí |
-| Ubicación del equipo (sede, piso, sala) | Sí |
+| Estado del equipo (Asignado, En reparación) y ubicación (sede, piso, sala) | Sí |
 | Fecha de fin de garantía | Sí |
-| Sus actas en PDF | Sí |
-| Su nombre, correo, área, sede y su propio jefe directo (solo el nombre del jefe) | Sí |
+| Sus actas en PDF con su propio nombre | Sí |
+| Su nombre, correo, área y sede | Sí |
+| El nombre de su jefe directo | **Nunca** (D-063.5) |
 | Número y operador de su línea; producto de su licencia | Sí |
 | Precio, costo, proveedor, orden de compra, fecha de compra | **Nunca** |
 | Clave de licencia (ni enmascarada), contraseñas | **Nunca** |
-| Datos de otras Personas, compañeros, subordinados, quién tuvo antes el equipo | **Nunca** |
-| Notas internas, comentarios internos, nombre del técnico que hizo el análisis | **Nunca** |
+| Datos de otras Personas: compañeros, subordinados, quién tuvo antes el equipo | **Nunca** |
+| Notas y comentarios internos, nombre del técnico que analizó | **Nunca** |
 | Auditoría, stock, órdenes de compra y de servicio, reportes, otras empresas | **Nunca** |
 
 ## 5. Estados y transiciones
@@ -142,129 +144,151 @@ Notas:
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
 | Sin acceso | Invitada | `portal.invitar` | Persona Activa con correo |
-| Invitada | Con acceso | La Persona | Acepta antes de 7 días; correo verificado |
-| Invitada | Sin acceso | Administrador o vencimiento | Invitación cancelada o vencida |
+| Invitada | Con acceso | La Persona | Acepta antes de 7 días con el correo verificado |
+| Invitada | Sin acceso | Administrador o vencimiento | Cancelada o vencida |
 | Con acceso | Suspendida | Sistema | Persona Cesada o membresía suspendida |
 | Suspendida | Con acceso | Administrador | Persona reactivada y membresía reactivada a mano |
 
-**Acuse de recepción** (fase posterior)
-
-| Desde | Hacia | Quién | Condición |
-|---|---|---|---|
-| Pendiente | Confirmada | La Persona | Acta de entrega Registrada a su nombre |
-| Pendiente | Con reparo | La Persona | Texto del reparo; avisa a TI |
-| Con reparo | Confirmada | La Persona | Después de que TI resolvió |
-
-Los **casos** (estados, transiciones y responsables) los define AYU. El portal los muestra tal cual, con textos simples para el empleado.
+**Acuse de recepción:** Pendiente a Confirmada, o a Con reparo (texto; avisa a TI); Con reparo a Confirmada tras resolverse. Los **casos** (estados, transiciones, plazos) los define AYU; el portal los muestra con textos simples. El **pedido de derechos** tiene los estados del registro de PRS.
 
 ## 6. Datos
 
-**Configuración del portal.** Empresa; sección Líneas visible (sí/no); sección Licencias visible (sí/no); categorías solicitables (lista de categorías); texto de bienvenida (hasta 500 caracteres); quién y cuándo lo cambió.
+**Configuración del portal.** Empresa; secciones visibles (Líneas, Licencias); categorías solicitables; texto de bienvenida (500 caracteres); quién y cuándo lo cambió; versión.
+**Invitación al portal.** La invitación del núcleo con referencia a la Persona; estados Pendiente, Aceptada, Vencida, Cancelada.
+**Acuse de recepción.** Empresa; acta de entrega; Persona; membresía; resultado (Confirmada, Con reparo); texto del reparo; versión del texto mostrado; fecha y hora; no se edita.
 
-**Invitación al portal.** Es la invitación del núcleo (D-002.3) con una referencia a la Persona invitada. Estados: Pendiente, Aceptada, Vencida, Cancelada.
+**Datos personales declarados por este módulo (D-061.3)**
 
-**Acuse de recepción (fase posterior).** Empresa; acta de entrega; Persona; Usuario; resultado (Confirmada, Con reparo); texto del reparo; versión del texto mostrado; fecha y hora; desde dónde (IP, si se puede). Único por acta y resultado; no se edita.
+| Dato | Finalidad | Quién lo ve | Plazo y rutina |
+|---|---|---|---|
+| Acuse (membresía, fecha y hora, desde dónde) | Constancia informativa | La Persona; `datos_personales.ver` | Plazo del acta; la dirección IP, 12 meses (D-030.7, provisional) |
+| Reparo (texto libre) | Avisar a TI | TI | Plazo del acta; texto libre no anonimizable de forma garantizada |
+| Pedido de datos | Cumplir derechos | PS-29 y la propia Persona (estado) | Plazo de la auditoría (provisional); vive en el registro de PRS |
+| Invitación (correo) | Dar acceso | `portal.invitar` | Se borra al vencer o aceptar |
 
-**Qué se audita (D-018.4):** invitaciones (enviadas, aceptadas, canceladas), vínculos creados, cambios de configuración, acuses, pedidos de datos personales (el hecho, no el contenido). No se guardan en la auditoría los textos de los reportes del empleado: viven en el caso de AYU.
+**Qué se audita (D-018.4):** invitaciones enviadas, aceptadas y canceladas, vínculos, acuses, pedidos de datos (el hecho, no el contenido) y cambios de configuración. No se guardan los textos de reportes: viven en el caso de AYU.
 
 ## 7. Pantallas necesarias
 
-| Pantalla | Propósito | Rol principal |
-|---|---|---|
-| Inicio del portal | Resumen y pendientes | Empleado |
-| Mis equipos y detalle | Ver lo asignado | Empleado |
-| Mis líneas y licencias | Ver lo asignado | Empleado |
-| Mis actas | Ver y reimprimir | Empleado |
-| Mis casos | Ver y seguir (abre AYU-01, AYU-02, AYU-14) | Empleado |
-| Reportar problema o extravío | Formularios cortos prellenados | Empleado |
-| Solicitar equipo | Elegir categoría y motivo | Empleado |
-| Mis datos | Ver datos propios y pedir copia, corrección o eliminación | Empleado |
-| Confirmar recepción | "Lo recibí" o "Tengo un reparo" (fase posterior) | Empleado |
-| Invitar al portal | Elegir Personas y enviar | Administrador |
-| Configuración del portal | Secciones, equipos solicitables, bienvenida | Administrador |
-| Aceptación del aviso de privacidad | Primer ingreso | Empleado |
+Se reutilizan el catálogo y las pantallas de casos de AYU (AYU-01, AYU-02, AYU-14), el directorio de Personas (para invitar), el aviso de privacidad del primer ingreso del núcleo y el diálogo de motivo (D-053).
+
+| ID | Pantalla | Propósito | Rol principal |
+|---|---|---|---|
+| PAN-POR-01 | Mi espacio (pestañas) | Ver lo propio y los pendientes; botón "Pedir ayuda" | Empleado |
+| PAN-POR-02 | Mis datos y derechos | Ver datos propios y pedir copia, corrección o eliminación | Empleado |
+| PAN-POR-03 | Configuración del portal | Secciones, categorías solicitables, bienvenida | Administrador |
+
+La confirmación de recepción es un diálogo de Mi espacio; la invitación es una acción del directorio de Personas.
 
 ## 8. Notificaciones y automatismos
 
+Todo es `Fase 2` o posterior y sale por el motor único de NOT; en la v1 solo hay invitación, acceso y aprobación (D-061.4). La invitación es texto fijo. Contenido mínimo para quien no tiene Usuario.
+
 | Cuándo | A quién | Qué dice |
 |---|---|---|
-| Se envía la invitación | Correo de la Persona | "[Empresa] te invita a su portal de TI para que veas tus equipos y pidas ayuda. El enlace vence en 7 días." |
-| Falta 2 días para vencer una invitación | Quien invitó | "N invitaciones vencen en 2 días." |
-| Se acepta la invitación | Quien invitó | "[P-0042] ya tiene acceso al portal." |
-| El empleado envía un caso | El empleado | Confirmación y número del caso (la envía AYU). |
-| El empleado reporta un extravío | Técnicos y Jefatura TI | "[P-0042] reportó extravío de [artículo]." (la envía ENT). |
-| Pedido de datos personales | Administrador | "Hay un pedido de [copia, corrección o eliminación] de [P-0042]." (la envía AYU). |
-| Equipo entregado (fase posterior) | Persona con acceso | "Recibiste [artículo]. Confírmalo en el portal." |
-| Reparo en un acuse | Técnico que entregó | "[P-0042] tiene un reparo sobre [artículo]: [texto]." |
+| Se envía la invitación | Correo de la Persona | "[Empresa] le invita a su portal de TI. El enlace vence en 7 días." (texto fijo) |
+| Se suma una empresa a una cuenta | El usuario | "Se le sumó la empresa [Empresa]." |
+| Faltan 2 días para vencer invitaciones | Quien invitó | "N invitaciones vencen en 2 días." |
+| Se acepta la invitación | Quien invitó | "PRS-0042 ya tiene acceso al portal." |
+| El empleado envía un caso | El empleado | Confirmación y número del caso (la envía AYU; el solicitante siempre la recibe). |
+| Reporte de extravío | Técnicos y Jefatura TI | "PRS-0042 reportó un extravío." (la envía AYU) |
+| Pedido de datos | Administradores con PS-29 que no presentaron el pedido | "Hay un pedido de [tipo] de PRS-0042." |
+| Reparo en un acuse | Técnico que entregó | "PRS-0042 tiene un reparo sobre el acta ACT-E-000123." |
 
-Los avisos a Personas sin Usuario los define cada módulo (ENT, ONB). El portal no envía avisos a quien no tiene acceso.
+Los avisos a Personas sin Usuario los define cada módulo; el portal no envía avisos a quien no tiene acceso.
 
 ## 9. Integración con el núcleo y con otros módulos
 
-- **Núcleo.** Invitaciones y ciclo de vida del Usuario (D-002), roles y alcance "propio" (D-004), auditoría, aviso de privacidad (D-024.7).
-- **PER.** Vínculo Persona-Usuario (RN-PER-017) y suspensión al cesar (RN-PER-011).
-- **ENT.** Equipos asignados, actas, extravíos y acuse de recepción; el portal solo lee y abre casos.
-- **Mesa de ayuda (AYU).** Servicios semilla acordados con el Escuadrón C: "Reportar problema", "Reportar extravío", "Solicitar equipo" y "Pedir mis datos personales". La empresa puede desactivarlos, no borrarlos. El último va a una cola restringida al Administrador.
-- **Licencias y líneas móviles.** Aportan las asignaciones a la Persona (si las hay).
+- **Núcleo.** Invitaciones y ciclo de vida (D-002), roles y alcance propio (D-036), empresa en la dirección (D-046), aviso de privacidad (RF-ACC), auditoría.
+- **PRS.** Vínculo (RN-PRS-017), suspensión al cesar y registro de solicitudes de derechos (PS-29).
+- **ENT.** Equipos y actas propios; el portal lee y abre casos; el acuse se apoya en ENT-B.
+- **Mesa de ayuda (AYU).** Servicios semilla acordados con el Escuadrón C: Reportar problema, Reportar extravío, Solicitar equipo, Pedir mis datos personales (esta última, caso restringido sin contenido, sin plazos ni avisos de AYU). La empresa puede desactivarlos, no borrarlos.
+- **Licencias y líneas.** Aportan sus asignaciones a la Persona.
+- **Compras (Etapa 5).** Un caso "Solicitar equipo" puede dar origen a una OC en Borrador creada por TI; el portal no compra.
+- **ONB.** El portal no muestra procesos de ingreso ni salida.
 - **Notificaciones.** Entrega de todos los avisos.
-- **Compras (Etapa 5).** Un caso "Solicitar equipo" puede dar origen a una orden de compra, creada por TI con sus aprobaciones; el portal no compra.
-- **ONB.** El portal no muestra procesos de ingreso o salida.
 
 ## 10. Criterios de aceptación
 
-- **CA-POR-01.** Dada Ana con 2 equipos asignados y Luis con 1, cuando Ana entra al portal, entonces ve exactamente sus 2 equipos y ninguno de Luis.
-- **CA-POR-02 (aislamiento).** Dado un equipo de la empresa A, cuando un empleado de la empresa B pide su detalle por identificador, entonces responde "no encontrado" y no hay diferencia con un identificador inexistente.
-- **CA-POR-03 (permiso denegado).** Dado un Usuario con rol "Empleado (portal)", cuando llama directamente al servidor para listar todos los activos, crear una orden de compra o ver la auditoría, entonces se rechaza y no cambia nada.
-- **CA-POR-04.** Dado un equipo con precio y proveedor, cuando su Persona abre el detalle, entonces la respuesta no contiene precio, proveedor ni orden de compra (RNF-POR-008).
-- **CA-POR-05.** Dado un Usuario con una licencia asignada, cuando abre "Mis licencias", entonces ve el nombre del producto y nunca la clave, ni enmascarada.
-- **CA-POR-06.** Dada la Persona Ana con correo `ana@x.com` y Activa, cuando el administrador la invita y ella acepta con ese correo, entonces queda vinculada, con rol Empleado (portal), y la invitación no sirve una segunda vez.
-- **CA-POR-07.** Dada una invitación a `ana@x.com` abierta con la cuenta `otra@y.com`, cuando se intenta aceptar, entonces se rechaza y no se crea vínculo.
-- **CA-POR-08.** Dada una Persona que se cesa, cuando intenta entrar al portal con una sesión abierta, entonces la sesión termina al instante y no ve nada.
-- **CA-POR-09.** Dado un empleado que solicita un "Teclado", cuando envía el formulario, entonces se crea un caso del servicio "Solicitar equipo" y no se crea ninguna orden de compra.
-- **CA-POR-10.** Dado un empleado que reporta robo de su celular, cuando envía el reporte, entonces se crea un caso urgente, TI recibe el aviso y el celular sigue "Asignado" hasta que un técnico lo confirme.
-- **CA-POR-11.** Dado un empleado con un Usuario sin Persona vinculada, cuando entra al portal, entonces ve el mensaje de cuenta no vinculada y ningún dato.
-- **CA-POR-12.** Dado el pedido "Eliminar mis datos" de un empleado, cuando lo envía, entonces el caso solo lo ve el Administrador (y el empleado en "Mis casos") y no lo ven técnicos ni Jefatura TI.
-- **CA-POR-13 (fase posterior).** Dada un acta de entrega Registrada, cuando la Persona pulsa "Lo recibí", entonces se guarda fecha, hora y Usuario, el acta sigue pendiente de firma en papel y el acuse no se puede editar.
+- **CA-POR-01** (RF-POR-001, 002, 003, 005; RN-POR-001). Dada Ana con 2 equipos y Luis con 1, cuando Ana abre Mi espacio, entonces ve exactamente sus 2 equipos y ninguno de Luis.
+- **CA-POR-02 (aislamiento entre empresas)** (RN-POR-002; RNF-POR-007). Dado un equipo de la empresa A, cuando un empleado de B pide su detalle por **identificador interno**, entonces responde "no encontrado", igual que un identificador inexistente.
+- **CA-POR-03 (aislamiento entre Personas)** (RN-POR-001, 002; RNF-POR-003). Dadas Ana y Luis de la misma empresa, cuando Ana pide por identificador un equipo, un acta o un caso de Luis, en **cada ruta del portal**, entonces responde "no encontrado" y no revela que existe.
+- **CA-POR-04 (permiso denegado)** (RF-POR-006, 007, 016; RN-POR-018). Dado un Usuario "Empleado (portal)", cuando llama directamente al servidor para listar todos los activos, crear una orden de compra, ver la auditoría o los precios, entonces se rechaza y no cambia nada.
+- **CA-POR-05** (RF-POR-002; RN-POR-011, 022; RNF-POR-008). Dado un equipo con precio y proveedor, cuando su Persona abre el detalle, entonces la respuesta no contiene precio, proveedor, orden de compra ni fecha de compra, y sus campos coinciden con la tabla 4.4.
+- **CA-POR-06** (RF-POR-004; RN-POR-011). Dada una licencia asignada, cuando la Persona abre Licencias, entonces ve el producto y nunca la clave, ni enmascarada.
+- **CA-POR-07** (RF-POR-013, 014, 017; RN-POR-005, 007). Dada Ana Activa con correo, cuando el administrador la invita y ella acepta con ese correo, entonces queda vinculada con la plantilla Empleado (portal), la invitación no sirve otra vez, y el texto de la invitación es el fijo.
+- **CA-POR-08** (RF-POR-014; RN-POR-007). Dada una invitación a `ana@x.com` abierta con la cuenta `otra@y.com`, cuando se intenta aceptar, entonces se rechaza y no se crea vínculo; y una invitación a un correo que ya tiene cuenta se ve igual que a uno nuevo.
+- **CA-POR-09** (RN-POR-004). Dada una Persona que se cesa, cuando intenta usar una sesión abierta, entonces la sesión termina al instante.
+- **CA-POR-10** (RF-POR-009, 010, 015; RN-POR-009). Dado un empleado que solicita un teclado, cuando envía el formulario, entonces se crea un caso del servicio "Solicitar equipo" y no se crea ninguna orden de compra; si TI decide comprar, crea la OC en Borrador.
+- **CA-POR-11** (RF-POR-008; RN-POR-008). Dado un empleado que reporta el robo de su celular, cuando envía el reporte, entonces se crea un caso urgente, TI recibe el aviso y el celular sigue Asignado hasta que un técnico lo confirme.
+- **CA-POR-12** (RF-POR-011; RN-POR-020). Dado el pedido "Eliminar mis datos", cuando se envía, entonces entra al registro de PS-29, el caso de AYU guarda solo la referencia, ningún Técnico, Jefatura TI ni Solo lectura lo encuentra por lista, búsqueda, exportación, reporte, API ni aviso, quien presentó el pedido no puede atenderlo, y la propia Persona ve su estado.
+- **CA-POR-13** (RN-POR-003). Dado un Usuario sin Persona vinculada, cuando entra, entonces ve el mensaje de cuenta no vinculada y ningún dato.
+- **CA-POR-14 (Fase 3)** (RF-POR-012; RN-POR-014, 015). Dado un acta registrada, cuando la Persona pulsa "Lo recibí", entonces se guarda fecha, hora y membresía, el acta sigue pendiente de firma en papel y el acuse no se puede editar.
+- **CA-POR-15** (RF-POR-011; RN-POR-011). Dada una Persona con jefe directo, cuando abre "Mis datos y derechos", entonces no ve el nombre de su jefe.
+- **CA-POR-16** (RF-POR-013; RN-POR-016). Dadas 5 invitaciones con 2 correos mal escritos, cuando se envían, entonces 3 salen, 2 se informan con su motivo y ninguna frena a las otras; superado el tope diario, las restantes quedan "En espera".
 
 ## 11. Casos límite
 
-1. **Correo de la invitación llega a otra persona.** La invitación está ligada al correo; para usarla hay que verificar ese correo. El administrador puede cancelarla.
-2. **Usuario en dos empresas.** Cambia de empresa activa y ve otra Persona y otros equipos, sin arrastrar datos en pantalla (D-025).
-3. **Persona sin correo.** No se puede invitar. TI sigue operando sus entregas.
-4. **Persona con 60 equipos (custodio).** La lista pagina y permite buscar.
-5. **Equipo en reparación.** Se sigue viendo con ese estado; el empleado puede reportar nuevo problema sobre otro equipo.
-6. **El empleado cambia de área.** El portal muestra el área nueva; las actas conservan la copia antigua.
-7. **El jefe pide ver los equipos de su gente.** No está en el portal inicial (S-POR-07); lo hace TI.
-8. **Un técnico quiere ver el portal de otra Persona "como ella".** No existe suplantación.
-9. **Se desactiva "Solicitar equipo".** Desaparece del portal; los casos ya abiertos siguen.
-10. **Empleado reporta extravío de un equipo que no tiene.** No puede elegirlo: solo ve los suyos.
-11. **La invitación vence sin aceptarse.** Se puede reenviar una nueva; la anterior queda Vencida.
-12. **Restaurar un respaldo antiguo.** Las Personas anonimizadas pierden el acceso al portal (el Usuario se desvincula en la anonimización).
+1. **El correo de la invitación llega a otra persona.** La invitación está ligada al correo verificado; el administrador la puede cancelar.
+2. **Usuario en dos empresas.** Cambia de empresa en la dirección y ve otra Persona y otros equipos, sin arrastrar datos (D-046).
+3. **Persona sin correo.** No se puede invitar; TI sigue operando sus entregas.
+4. **Persona con 60 equipos (custodio).** La lista pagina (50 por defecto) y permite buscar.
+5. **Equipo en reparación.** Se sigue viendo con ese estado; puede reportar otro equipo.
+6. **Cambia de área.** El portal muestra el área nueva; las actas conservan la copia antigua.
+7. **El jefe pide ver los equipos de su gente.** No existe en el portal (S-POR-07); lo hace TI.
+8. **Suplantación de un técnico "como" la Persona.** No existe.
+9. **Se desactiva "Solicitar equipo".** Desaparece del catálogo; los casos abiertos siguen.
+10. **Reporta el extravío de un equipo ajeno.** No puede elegirlo: solo ve los suyos.
+11. **La invitación vence.** Se envía una nueva; la anterior queda Vencida.
+12. **Restaurar un respaldo antiguo.** Se revocan sesiones y enlaces y se reaplican anonimizaciones y suspensiones (D-052.4); las Personas anonimizadas no entran.
+13. **Quien pide sus datos es el único administrador.** No puede atender su propio pedido; lo atiende otra persona con PS-29 o queda esperando la designación de una.
+14. **Línea sin módulo LIN.** Se muestra el número como campo de la unidad del celular, con la etiqueta de qué módulo la gestiona cuando se active.
 
 ## 12. Decisiones propuestas y supuestos
 
-| ID | Tipo | Propuesta y motivo |
+| ID | Estado | Propuesta y resultado |
 |---|---|---|
-| S-POR-01 | [SUPUESTO] | El portal va después de la versión 1. Motivo: D-023.1 no lo incluye y depende de la mesa de ayuda. |
-| S-POR-02 | [SUPUESTO] | Es la misma plataforma con alcance "propio", no una aplicación aparte. Lo confirma el Arquitecto. |
-| S-POR-03 | [SUPUESTO] | "Solicitar equipo" crea un caso de la mesa de ayuda, no una orden de compra. Motivo: el empleado no compra; TI decide si sale de stock o se compra. |
-| S-POR-04 | [SUPUESTO] | "Mis licencias" se muestra solo cuando el módulo de licencias asigna puestos a Personas (lo define LIC); si una empresa no los asigna, la sección queda vacía y se puede ocultar. |
-| S-POR-05 | [SUPUESTO] | Confirmar recepción es un acuse informativo y convive con el acta en papel. No es firma. |
-| S-POR-06 | [SUPUESTO] | Tope de 200 invitaciones por día y por empresa. Motivo: control de costo de correo y abuso. Lo ajusta DevOps. |
-| S-POR-07 | [SUPUESTO] | El jefe directo no ve a su equipo en el portal inicial. Motivo: mostraría datos personales de terceros; se evalúa después. |
-| S-POR-08 | [SUPUESTO] | La plantilla "Empleado (portal)" (S-27 del núcleo) es el rol por defecto de las invitaciones. |
-| S-POR-09 | [SUPUESTO] | El campo "visible para el empleado" por campo personalizado no existe en la versión inicial: el portal muestra solo el conjunto fijo de la tabla 4.4. |
-| E-POR-01 | [ESCALAR AL CEO] | **Dinero.** Invitar a cientos de empleados y enviar avisos multiplica el uso del servicio de correo (escalado "Dinero", punto 1 de decisiones.md). DevOps debe dar el costo según el número de empleados antes de activar el portal. |
-| E-POR-02 | [ESCALAR AL CEO] | **Legal.** (a) Qué valor tiene el acuse en pantalla; (b) texto del aviso de privacidad para empleados y canal de derechos de acceso, corrección y eliminación (D-024.6); (c) si hay que informar a cada empleado antes de guardar sus datos. Se pide opinión legal; hasta entonces el acuse es solo informativo. |
+| S-POR-01 | **Cambiado** (D-056) | Fase 3, ola D (antes "Posterior"). |
+| S-POR-02 | Aceptado (D-058) | Misma plataforma con alcance "propio". |
+| S-POR-03 | Aceptado (D-058) | "Solicitar equipo" crea un caso; TI decide si sale de stock o se compra y crea la OC en Borrador. |
+| S-POR-04 | Aceptado (diseño) | "Licencias" aparece cuando LIC asigna puestos a Personas. |
+| S-POR-05 | Aceptado (diseño) | El acuse es informativo y convive con el papel. |
+| S-POR-06 | **Cambiado** (D-054) | Invitaciones: 100 por empresa por día y 20 por administrador por hora; por persona; la plataforma sube el tope para la campaña. |
+| S-POR-07 | Aceptado (diseño) | El jefe directo no ve a su equipo en el portal inicial. |
+| S-POR-08 | **Decidido** (D-037 fila 11, S-27) | Plantilla "Empleado (portal)" de lista cerrada. |
+| S-POR-09 | Aceptado (diseño) | El portal muestra solo el conjunto fijo de la tabla 4.4. |
+| S-POR-10 | **Decidido** (D-058, D-063.5) | El nombre del jefe directo no se muestra en el portal. |
+| E-POR-01 | [ESCALAR AL CEO] | **Dinero.** Invitar a cientos de empleados y enviar avisos multiplica el uso del servicio de correo (escalado "Dinero", punto 1). DevOps da el costo por número de empleados antes de activar el portal. |
+| E-POR-02 | [ESCALAR AL CEO] | **Legal.** (a) El valor del acuse en pantalla; (b) el texto del aviso de privacidad para empleados y el canal de derechos (D-024.6, D-061.8); (c) si hay que informar a cada empleado antes de guardar sus datos. Hasta entonces el acuse es solo informativo. |
 
 ## 13. Fuera de alcance
 
 - Vista del jefe directo sobre los equipos de su gente.
 - Compras, aprobaciones de compra o precios desde el portal.
-- Aprobación de solicitudes por el jefe directo (la define AYU si hace falta).
-- Aplicación móvil nativa (queda fuera, documento v0.1 §2).
-- Inicio de sesión con Google o Microsoft (D-002).
+- Aprobación de solicitudes por el jefe (la define AYU).
+- Aplicación móvil nativa (documento v0.1, §2).
+- Ingreso con Google o Microsoft para empleados (D-002; INT-3).
 - Autoservicio de licencias (instalar, pedir clave).
-- Firma manuscrita o electrónica del acta (ENT, D-022).
-- Chat en vivo, encuestas de satisfacción y base de conocimiento propia (viven en AYU).
-- Ver o descargar facturas, garantías completas o documentos de compra.
+- Firma manuscrita o electrónica del acta (D-022).
+- Chat en vivo, encuestas propias y base de conocimiento propia (viven en AYU).
+- Facturas, garantías completas o documentos de compra.
+- Portal en la v1.
+
+## 14. Historial de cambios
+
+| Cambio en la v0.2 | Decisión o hallazgo que lo motiva |
+|---|---|
+| Fase 3, ola D; "en la v1 no hay portal"; columna "Cuándo" y CA que cita el requisito | D-056.3, D-037 fila 11, H-AUD-08, H-AUD-21 |
+| Plantilla "Empleado (portal)" de lista cerrada con sus PS-nn; permisos migrados al registro | D-037 fila 11, D-036, registro de permisos, H-SEG-08(4), H-AUD-17 |
+| Aislamiento entre Personas: consultas dedicadas y prueba por ruta con dos Personas de la misma empresa; CA nuevo | D-039.8, H-SEG-09, N-19 |
+| El nombre del jefe no se muestra | D-058, D-063.5, H-SEG-25(e) |
+| Invitaciones por persona; tope 100 por día y 20 por hora, la plataforma lo sube; texto fijo, no revela si el correo existe | D-050.11, D-054.2 y 4, DS-08, H-SEG-15, H-QA-14, H-UX-10 |
+| "Pedir mis datos": entrada en el registro de PS-29, caso restringido sin contenido, invisible por todas las vías, la Persona ve su estado; otro administrador atiende | D-061.2, H-CUM-11, H-SEG-10, H-QA-13 |
+| Extravío = caso de AYU; no cambia el estado del activo; ENT no duplica | H-AUD-19, H-AUD-11 |
+| "Solicitar equipo" crea un caso; TI decide y crea la OC en Borrador | D-058, H-AUD-11, H-UX-01 |
+| Número de línea según el módulo activo (LIN o campo del celular) | D-042, H-AUD-13 |
+| Tono "usted" y botón "Pedir ayuda"; "Mi espacio" con pestañas | D-053 (DS-01, DS-07, DS-09), H-UX-24, H-UX-11 |
+| Pantallas con ID `PAN-POR`, reutilizando AYU y el directorio de Personas | D-053, H-UX-12, H-UX-25(f) |
+| Datos personales del módulo declarados; aviso de privacidad con reaceptación | D-061.3, D-061.8, H-CUM-09, H-CUM-12 |
+| Aislamiento probado por identificador interno | D-063.6, H-SEG-25f |
+| Aceptación en pantalla marcada como Fase 3 (acuse informativo) | D-023.2, D-056.4 |

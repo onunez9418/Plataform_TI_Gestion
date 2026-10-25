@@ -156,16 +156,16 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | PS-74 | `contratos.ver` | Ver contratos de proveedor y de licencia (importes con `precios.ver`) | | todo | | Fase 2 | T | T | T | - | - | T | - |
 | PS-75 | `contratos.crear_editar` | Crear y editar contratos (el de licencia es extensión 1 a 1) | | todo | A | Fase 2 | T | - | - | - | - | - | - |
-| PS-76 | `contratos.activar` | Activar, y confirmar un contrato de licencia, si supera el límite lo hace otra persona | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
+| PS-76 | `contratos.activar` | Activar un contrato de proveedor o confirmar un contrato de licencia (misma entidad `CTR-`); si supera el límite lo hace otra persona | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
 | PS-77 | `contratos.renovar` | Renovar (la renovación automática es una acción del "sistema" con la persona que aprobó) | | todo | A | Fase 2 | T | T | - | - | - | - | - |
-| PS-78 | `contratos.terminar_anular` | Terminar o anular un contrato (motivo) | | todo | A | Fase 2 | T | T | - | - | - | - | - |
+| PS-78 | `contratos.terminar_anular` | Terminar o anular un contrato de proveedor o de licencia (motivo); terminar uno de licencia libera sus puestos como pendiente | | todo | A | Fase 2 | T | T | - | - | - | - | - |
 | PS-79 | `contratos.gestionar_compromisos` | Gestionar el compromiso de servicio del proveedor | | todo | A | Fase 2 | T | T | - | - | - | - | - |
 | PS-80 | `contratos.gestionar_referencias` | Gestionar documentos de referencia de un contrato | | todo | A | Fase 2 | T | T | T | - | - | - | - |
 | PS-81 | `contratos.recibir_avisos` | Recibir avisos de vencimiento de contratos | | todo o propio | | Fase 2 | T | T | P | - | - | - | - |
 | PS-82 | `licencias.ver` | Ver licencias y puestos | | todo | | Fase 2 | T | T | T | - | - | T | - |
 | PS-83 | `licencias.crear_editar` | Crear y editar licencias | | todo | A | Fase 2 | T | - | T | - | - | - | - |
-| PS-84 | `licencias.confirmar` | Confirmar un contrato de licencia (si supera el límite, otra persona) | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
-| PS-85 | `licencias.cancelar` | Cancelar una licencia (libera los puestos como pendiente) | | todo | A | Fase 2 | T | T | - | - | - | - | - |
+| PS-84 | Retirado (2026-10-25) | Era `licencias.confirmar`. El contrato de licencia es una extensión 1 a 1 del contrato de proveedor (D-044.4): se confirma con PS-76 `contratos.activar` | | | | | | | | | | | |
+| PS-85 | Retirado (2026-10-25) | Era `licencias.cancelar`. Se termina o anula con PS-78 `contratos.terminar_anular` (D-049 usa "Terminar"); los puestos se liberan como pendiente | | | | | | | | | | | |
 | PS-86 | `licencias.asignar` | Asignar y liberar puestos | | todo | A | Fase 2 | T | - | T | - | - | - | - |
 | PS-87 | `licencias.configurar` | Configurar el módulo de licencias | | todo | A | Fase 2 | T | - | - | - | - | - | - |
 | PS-88 | `licencias.ver_clave` | Ver la clave completa de una licencia (reautenticación, 20 por hora, se oculta a los 30 segundos) | S | todo | 2F R A T | Fase 2 | T | - | - | - | - | - | - |
@@ -182,6 +182,13 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-99 | `dominios.baja` | Dar de baja un dominio o certificado | | todo | A | Fase 2 | T | - | - | - | - | - | - |
 | PS-100 | `dominios.cambiar_titular` | Cambiar el titular de un dominio (reautenticación reciente) | S | todo | 2F R A | Fase 2 | T | - | - | - | - | - | - |
 | PS-101 | `dominios.configurar` | Configurar el módulo de dominios | | todo | A | Fase 2 | T | - | - | - | - | - | - |
+| PS-223 | `licencias.registrar_uso` | Registrar el uso real de una licencia (para el cumplimiento) | | todo | A | Fase 2 | T | - | T | - | - | - | - |
+| PS-224 | `lineas.confirmar_costo` | Confirmar el costo de una línea (si supera el límite, otra persona) | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
+| PS-225 | `lineas.migrar` | Ejecutar el asistente de migración del número de línea desde el campo del celular (todo o nada, deshacible) | S | todo | 2F R A | Fase 2 | T | - | - | - | - | - | - |
+| PS-226 | `lineas.recibir_avisos` | Recibir avisos de líneas (permanencia, vencimientos) | | todo o propio | | Fase 2 | T | T | T | - | - | - | - |
+| PS-227 | `dominios.registrar_renovacion` | Registrar la renovación de un dominio o certificado | | todo | A | Fase 2 | T | T | T | - | - | - | - |
+| PS-228 | `dominios.confirmar_costo` | Confirmar el costo de un dominio o certificado (si supera el límite, otra persona) | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
+| PS-229 | `dominios.recibir_avisos` | Recibir avisos de dominios y certificados por vencer | | todo o propio | | Fase 2 | T | T | T | - | - | - | - |
 
 ## 9. Garantías, mantenimiento, presupuesto, reportes e integraciones
 
@@ -244,7 +251,7 @@ Los casos con derechos de datos usan `personas.derechos_atender` (PS-29): quedan
 | PS-148 | `ayuda.caso_cerrar` | Cerrar un caso resuelto | | todo | A | T | - | T | - | - | - | - |
 | PS-149 | `ayuda.caso_cancelar` | Cancelar un caso en curso | | todo o propio | A | T | - | T | P | P | - | P |
 | PS-150 | `ayuda.caso_reabrir` | Reabrir un caso | | todo o propio | A | T | - | T | - | P | - | P |
-| PS-151 | `ayuda.caso_vincular` | Vincular un caso con activo, cambio o problema | | todo | A | T | - | T | - | - | - | - |
+| PS-151 | `ayuda.caso_vincular` | Vincular un caso con activos, otros casos, órdenes de servicio, órdenes de compra (solo referencia) y artículos (SKU); además cambios y problemas cuando esos módulos estén activos | | todo | A | T | - | T | - | - | - | - |
 | PS-152 | `ayuda.caso_crear_orden_servicio` | Crear la orden de servicio desde el caso | | todo | A | T | - | T | - | - | - | - |
 | PS-153 | `ayuda.caso_redactar` | Redactar por seguridad un comentario (reemplaza el texto por `[REDACTADO]`; motivo) | S | todo | 2F A | T | - | - | - | - | - | - |
 | PS-154 | `ayuda.solicitud_aprobar` | Aprobar una solicitud con aprobación (quien no la pidió) | | todo | A No | T | T | - | - | - | - | - |

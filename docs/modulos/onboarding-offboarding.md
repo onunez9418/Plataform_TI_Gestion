@@ -95,7 +95,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen (todo el módul
 | RN-ONB-011 | Los plazos se cuentan en días corridos; la empresa puede optar por su calendario compartido (zona, horario, feriados, D-062.4). |
 | RN-ONB-012 | No se inicia un ingreso ni una salida para una Persona Cesada o Anonimizada. |
 | RN-ONB-013 | La recontratación se hace reactivando a la Persona (PRS) y luego iniciando un ingreso nuevo. |
-| RN-ONB-014 | Los puestos de licencia se liberan solos al cesar la Persona (RN-LIC-010); "Recuperar licencias" se marca sola. Antes del cese puede liberarlos el técnico desde licencias. |
+| RN-ONB-014 | Los puestos de licencia se liberan solos al cesar la Persona (RN-LIC-011); "Recuperar licencias" se marca sola. Antes del cese puede liberarlos el técnico desde licencias. |
 | RN-ONB-015 | Las tareas de accesos externos (correo corporativo, VPN, CRM) son manuales: la plataforma no entra a esos sistemas. |
 | RN-ONB-016 | Una Persona sin tipo de puesto usa la plantilla General. |
 | RN-ONB-017 | Todo lleva la empresa; un proceso o plantilla de otra empresa responde "no encontrado" (D-021.5). |
@@ -191,7 +191,7 @@ Todo es `Fase 2`, por el motor único de NOT (una tabla de avisos, hora única d
 - **PRS.** Tipo de puesto, fechas, cese (que no se bloquea) y suspensión de la membresía (RN-PRS-011).
 - **ENT-A.** Las tareas "Entregar equipo" y "Devolver equipo" abren el asistente con la Persona cargada y se completan solas.
 - **Registro de módulo (D-038.6).** El panel consulta los "pendientes de la persona" que declaran Inventario, Líneas (LIN), Licencias (LIC), Dominios (DOM), CMDB (CMD), Cambios (CAM) y Problemas (PRB); ninguno bloquea el cese, todos bloquean la anonimización.
-- **Licencias.** Liberan los puestos al cesar (RN-LIC-010). **Dominios y CMDB:** "responsable inactivo".
+- **Licencias.** Liberan los puestos al cesar (RN-LIC-011). **Dominios y CMDB:** "responsable inactivo".
 - **Mesa de ayuda.** Una tarea puede enlazar un servicio del catálogo de AYU con la Persona como solicitante; el flujo del caso es de AYU.
 - **Usuarios.** "Suspender acceso" usa la suspensión del núcleo.
 - **Notificaciones.** Entrega todos los avisos.
@@ -236,7 +236,7 @@ Todo es `Fase 2`, por el motor único de NOT (una tabla de avisos, hora única d
 |---|---|---|
 | S-ONB-01 | Aceptado (D-056) | Módulo de Fase 2, ola C; solo el cese (sin bloqueo) es de la v1 y vive en PRS. |
 | S-ONB-02 | Aceptado (diseño) | Plazos en días corridos, con calendario de empresa opcional (D-062.4). |
-| S-ONB-03 | Aceptado (D-058) | Los puestos de licencia se liberan al cesar (RN-LIC-010). |
+| S-ONB-03 | Aceptado (D-058) | Los puestos de licencia se liberan al cesar (RN-LIC-011). |
 | S-ONB-04 | Aceptado (diseño) | Dos plantillas de ejemplo sembradas. |
 | S-ONB-05 | Aceptado (diseño) | Sin procesos masivos en la versión inicial. |
 | S-ONB-06 | Aceptado (diseño) | El empleado no ve su proceso en el portal. |
