@@ -56,8 +56,8 @@ Nombres y valores según `docs/registro-permisos.md` (D-036); este módulo no ca
 | Pedir cambio normal o urgente | `cambios.pedir` | PS-169 | Sí | Sí | Sí | No | No | No |
 | Pedir cambio estándar desde plantilla | `cambios.pedir_estandar` | PS-170 | Sí | No | Sí | No | No | No |
 | Editar (en Borrador o Rechazado) | `cambios.editar` | PS-171 | Todo | Propio | Propio | No | No | No |
-| Aprobar o rechazar riesgo Bajo o Medio, y reaprobar plantillas | `cambios.aprobar` | PS-172 | Sí | Sí | No | No | No | No |
-| Aprobar o rechazar riesgo Alto y urgentes | `cambios.aprobar_alto` | PS-173 | Sí | Sí | No | No | No | No |
+| Aprobar o rechazar riesgo Bajo o Medio, y reaprobar plantillas (sensible: 2F, A, No; D-068) | `cambios.aprobar` | PS-172 | Sí | Sí | No | No | No | No |
+| Aprobar o rechazar riesgo Alto y urgentes (sensible: 2F, A, No; D-068) | `cambios.aprobar_alto` | PS-173 | Sí | Sí | No | No | No | No |
 | Iniciar y registrar el resultado | `cambios.implementar` | PS-174 | Sí | No | Sí | No | No | No |
 | Cerrar con revisión posterior (no lo cierra quien lo implementó, salvo la casilla «cambios») | `cambios.cerrar` | PS-175 | Sí | Sí | Sí | No | No | No |
 | Cancelar | `cambios.cancelar` | PS-176 | Todo | Propio | Propio | No | No | No |
@@ -67,7 +67,7 @@ Nombres y valores según `docs/registro-permisos.md` (D-036); este módulo no ca
 | Redactar por seguridad un comentario (sensible) | `cambios.redactar` | PS-221 | Sí | No | No | No | No | No |
 | Exportar a Excel | `datos.exportar` (sensible) | PS-20 | Sí | No | No | No | No | No |
 
-Notas: (1) Todo se comprueba en el servidor. (2) Pedir, aprobar e implementar son permisos distintos; las reglas de segunda persona valen para todos los roles, incluido el Administrador. (3) Todo rol nuevo parte sin permisos. (4) Quien aprueba debe poder ver los elementos afectados (`cmdb.ver`). (5) `cambios.cerrar` lleva la condición "No": quien implementó no cierra el cambio, salvo la casilla «cambios»; el Gerente de TI debe confirmarlo.
+Notas: (1) Todo se comprueba en el servidor. (2) Pedir, aprobar e implementar son permisos distintos; las reglas de segunda persona valen para todos los roles, incluido el Administrador. (3) Todo rol nuevo parte sin permisos. (4) Quien aprueba debe poder ver los elementos afectados (`cmdb.ver`). (5) `cambios.cerrar` (PS-175) lleva el control "No" confirmado en D-067: no lo cierra quien lo implementó (el responsable de implementación registrado en el cambio), salvo la casilla «cambios» del interruptor único (D-066). (6) Como PS-172 y PS-173 son sensibles, quien los tenga debe usar segunda verificación (también Jefatura TI) y cada uso queda en la auditoría.
 
 ## 4. Requisitos
 
@@ -125,12 +125,13 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 | RN-CAM-021 | Todo cambio de estado guarda quién, cuándo y motivo (obligatorio en rechazo, cancelación y reversa). | Fase 3 | CA-CAM-01, CA-CAM-13 |
 | RN-CAM-022 | Un elemento De baja no se agrega a un cambio nuevo. | Fase 3 | CA-CAM-04 |
 | RN-CAM-023 | Fechas en la zona de la empresa; se guardan en hora universal (D-021.4). | Fase 3 | CA-CAM-15 |
-| RN-CAM-024 | La casilla «cambios» del interruptor único (D-043.2) está apagada por defecto, vence a los 90 días y la activa un Administrador con reautenticación (y la confirma otro si hay dos). Encendida permite que quien creó o editó apruebe (RN-CAM-001, RN-CAM-002, RN-CAM-003); nunca exime del permiso. Cada uso muestra un aviso en el cambio y queda en la auditoría. | Fase 3 | CA-CAM-12, CA-CAM-17 |
+| RN-CAM-024 | La casilla «cambios» del interruptor único (D-043.2; mapa de D-066 y RF-OC-026 del núcleo: aprobar un cambio, reaprobar una plantilla estándar y cerrar un cambio quien lo implementó) está apagada por defecto, vence a los 90 días y la activa un Administrador con reautenticación (y la confirma otro si hay dos). Encendida permite que quien creó o editó apruebe (RN-CAM-001, RN-CAM-002, RN-CAM-003); nunca exime del permiso. Cada uso muestra un aviso en el cambio y queda en la auditoría. | Fase 3 | CA-CAM-12, CA-CAM-17 |
 | RN-CAM-025 | Un cambio solo se vincula con elementos, casos, problemas y proveedores de su empresa; la base lo impone con clave compuesta (D-039). | Fase 3 | CA-CAM-04 |
 | RN-CAM-026 | En el calendario, el título se muestra solo a quien puede ver el cambio; los demás ven "Cambio programado" (D-063.5). | Fase 3 | CA-CAM-14 |
 | RN-CAM-027 | La auditoría guarda "el campo X cambió" para motivos, planes, comentarios y notas (texto libre); las Personas solo por `PRS-NNNN`. El texto vive en el historial del módulo (D-030). | Fase 3 | CA-CAM-19 |
 | RN-CAM-028 | Todo texto pasa por el validador común (rechaza claves privadas y patrones de claves) y advierte no escribir datos personales ni claves (D-063.2). | Fase 3 | CA-CAM-19 |
 | RN-CAM-029 | Redactar por seguridad reemplaza el texto por `[REDACTADO]` y registra quién, cuándo y por qué, sin el texto (D-061.5). | Fase 3 | CA-CAM-19 |
+| RN-CAM-030 | No cierra un cambio quien lo implementó (el responsable de implementación registrado), salvo la casilla «cambios» encendida (D-067, D-066). | Fase 3 | CA-CAM-20 |
 
 ### 4.3 De calidad medible
 
@@ -284,6 +285,8 @@ Cada criterio indica el requisito que cubre.
 
 **CA-CAM-19** (RF-CAM-017, RN-CAM-027, RN-CAM-028, RN-CAM-029). Dado un comentario con un dato personal, cuando el Administrador lo redacta por seguridad, entonces el texto pasa a `[REDACTADO]`, la auditoría registra quién, cuándo y por qué sin el texto; un plan con un bloque de clave privada se rechaza al guardar.
 
+**CA-CAM-20** (RN-CAM-030, RN-CAM-024, RNF-CAM-004; permiso denegado). Dado un Técnico que es el responsable de implementación de CAM-000030, cuando intenta cerrarlo estando Implementado, por pantalla o directo al servidor, entonces el servidor responde "No puede cerrar un cambio que usted implementó" y sigue Implementado; otra persona con `cambios.cerrar` sí puede; con la casilla «cambios» encendida y vigente se permite, con aviso y auditoría.
+
 ## 11. Casos límite
 
 1. Dos aprobadores deciden a la vez: el segundo recibe "este cambio ya fue decidido".
@@ -347,4 +350,5 @@ Cada criterio indica el requisito que cubre.
 | Columna "Empleado (portal)": no aplica; Almacén sin cambios | D-037.11 |
 | Columna Cuándo y CA por requisito; criterios citan su requisito; fase Fase 3, ola E, después de CMD | plan sección 0 (2), H-AUD-21, D-056 |
 | Pruebas nuevas: dos empresas, escritura cruzada, reloj fijable, borde exacto, casilla vencida (CA-CAM-04, CA-CAM-15 a CA-CAM-18) | D-039.6, D-043.6, D-063.6, QA y Seguridad |
+| v0.3: PS-175 cita D-067 y la casilla «cambios» (RN-CAM-030, CA-CAM-20); PS-172 y PS-173 marcados sensibles; nombre de casilla «cambios» como en el mapa de D-066 y RF-OC-026; "En espera de la persona atendida" no aplica (este módulo no tiene ese estado) | D-066, D-067, D-068, N-AUD-06 (D-075), plan-aplicacion fila E |
 | Todas las citas escritas completas: CA-CAM-nn en la columna CA, y RF-, RN- y RNF-CAM-nnn sin abreviar | Auditor Técnico, ronda 3 |

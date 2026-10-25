@@ -1,9 +1,9 @@
 # Módulo: Integraciones y API (INT)
 
-**Versión:** 0.2 (corrección de la Oleada D, escuadrón F) · **Fecha:** 25/10/2026 · **Autor:** analista-funcional
+**Versión:** 0.3 (aplicación de D-065 a D-076, escuadrón F) · **Fecha:** 25/10/2026 · **Autor:** analista-funcional
 **Base:** `CLAUDE.md`, `docs/equipo/decisiones.md` (D-001 a D-064), `docs/equipo/plan-correcciones.md`, `docs/registro-permisos.md`, documento funcional v0.2.
 **Estado:** propuesta. **[SUPUESTO]** = lo confirma el Gerente de TI. **[ESCALAR AL CEO]** = dinero, legal o irreversible.
-**Leyenda de "Cuándo":** **1** = INT-1, **2** = INT-2, **3** = INT-3 (todas Fase 3, ola F). INT-2 necesita las Etapas 5 y 6; INT-1 solo el núcleo.
+**Leyenda de "Cuándo":** la columna usa las tres palabras del núcleo (`v1, Etapa N`, `Fase 2`, `Fase 3`). Todo INT es **Fase 3, ola F**; entre paréntesis va la parte: **(INT-1)**, **(INT-2)**, **(INT-3)**. INT-2 necesita las Etapas 5 y 6; INT-1 solo el núcleo.
 
 ---
 
@@ -55,7 +55,7 @@ Solo nombres y PS-nn de `docs/registro-permisos.md`. Los alcances de una clave s
 | Dar a una clave permisos de lectura masiva (`activos.ver`, etc.) | PS-133 y tener `datos.exportar` (PS-20) | Sí | No | No | No | No | No |
 | Dar a una clave `datos_personales.ver` o `precios.ver` | PS-133 y tener ese mismo permiso (PS-22, PS-23) | Sí | No | No | No | No | No |
 | Ver uso y registros de las claves | `integraciones.ver_uso` (PS-134) | Sí | No | No | No | No | No |
-| Administrar webhooks | `integraciones.administrar_webhooks` (PS-135) | Sí | No | No | No | No | No |
+| Administrar webhooks | `integraciones.administrar_webhooks` (PS-135; sensible, reautenticación reciente y auditoría de cada uso, D-068) | Sí | No | No | No | No | No |
 | Generar el lote de exportación SAP | `integraciones.sap_exportar` (PS-220) y `datos.exportar` (PS-20) | Sí | No | No | No | No | No |
 | Cargar maestros SAP | `datos.importar` (PS-21) y `proveedores.crear_editar` (PS-37) | Sí | No | No | No | No | No |
 | Mantener equivalencias con SAP | `integraciones.sap_equivalencias` (PS-136; sensible) | Sí | No | No | No | No | No |
@@ -76,99 +76,99 @@ Notas
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RF-INT-001 | Crear una integración con nombre, descripción, permisos, vencimiento y direcciones de red permitidas opcionales. | 1 | CA-INT-01 |
-| RF-INT-002 | Mostrar la clave completa una sola vez; después, su identificador público y las últimas 4 letras. | 1 | CA-INT-01 |
-| RF-INT-003 | Rotar una clave: la nueva y la anterior conviven hasta 7 días (o menos si se elige). | 1 | CA-INT-07 |
-| RF-INT-004 | Revocar una clave con efecto inmediato y motivo. | 1 | CA-INT-07 |
-| RF-INT-005 | Mostrar por clave: último uso, direcciones, pedidos del día y errores. | 1 | CA-INT-06 |
-| RF-INT-006 | API de lectura de activos, SKU, ubicaciones, catálogos, categorías y campos personalizados, con filtros y páginas. | 1 | CA-INT-02, CA-INT-03 |
-| RF-INT-007 | API de lectura de Personas, OC, recepciones, OS, proveedores y centros de costo. | 2 | CA-INT-02 |
-| RF-INT-008 | API de escritura limitada: Personas (crear y editar, nunca cesar), SKU, valores de catálogo (nunca proveedores), OC en Borrador, OS y solicitudes de mesa de ayuda. | 2 | CA-INT-09, CA-INT-17 |
-| RF-INT-009 | Escrituras con clave de idempotencia; repetirlas devuelve el resultado original. | 2 | CA-INT-08 |
-| RF-INT-010 | Escritura por lote (hasta 100 elementos), todo o nada. | 2 | CA-INT-08 |
-| RF-INT-011 | Límites de uso, con respuesta que indica la espera. | 1 | CA-INT-06 |
-| RF-INT-012 | Publicar la documentación de la API y el registro de cambios por versión. | 1 | CA-INT-18 |
-| RF-INT-013 | Registrar webhooks con dirección segura, eventos y secreto de firma. | 2 | CA-INT-11, CA-INT-12 |
-| RF-INT-014 | Enviar eventos firmados, con reintentos, desde un componente aislado; pausar el webhook que falla de forma sostenida. | 2 | CA-INT-11 |
-| RF-INT-015 | Mostrar las entregas (estado, código de respuesta y duración, nunca el cuerpo de la respuesta) y reenviar una. | 2 | CA-INT-11 |
-| RF-INT-016 | Mantener equivalencias externas con SAP: proveedor, centro de costo, material (SKU), centro y almacén (ubicación), unidad e indicador de impuesto. | 2 | CA-INT-14 |
-| RF-INT-017 | Cargar maestros de SAP con el asistente único "Importar datos" (tipo "maestros de SAP"). | 2 | CA-INT-19 |
-| RF-INT-018 | Generar el archivo de OC para SAP de las órdenes pendientes, con vista previa de las que no se pueden exportar y por qué. | 2 | CA-INT-13, CA-INT-14 |
-| RF-INT-019 | Registrar cada lote y permitir volver a descargarlo idéntico mientras se conserve su copia. | 2 | CA-INT-13 |
-| RF-INT-020 | Registrar el número de documento SAP en la OC (referencia externa), a mano o por la API. | 2 | CA-INT-15 |
-| RF-INT-021 | Mostrar el estado de exportación de cada OC: No exportada, Exportada, Exportada con cambios pendientes, Confirmada por SAP. | 2 | CA-INT-15 |
-| RF-INT-022 | Elegir los métodos de ingreso de la empresa sin quitar nunca el enlace por correo a los administradores. | 3 | CA-INT-16 |
-| RF-INT-023 | Iniciar sesión con Microsoft o Google solo si la cuenta externa fue vinculada antes a un usuario existente. | 3 | CA-INT-16 |
-| RF-INT-024 | Avisar a los administradores de vencimientos de claves, webhooks pausados, uso anormal y claves en revisión. | 1 | CA-INT-20 |
-| RF-INT-025 | Suspender claves y webhooks cuando la empresa se suspende. | 1 | CA-INT-07 |
-| RF-INT-026 | Revisar el alcance de las claves de un usuario cuando cambia su rol. | 1 | CA-INT-05 |
+| RF-INT-001 | Crear una integración con nombre, descripción, permisos, vencimiento y direcciones de red permitidas opcionales. | Fase 3 (INT-1) | CA-INT-01 |
+| RF-INT-002 | Mostrar la clave completa una sola vez; después, su identificador público y las últimas 4 letras. | Fase 3 (INT-1) | CA-INT-01 |
+| RF-INT-003 | Rotar una clave: la nueva y la anterior conviven hasta 7 días (o menos si se elige). | Fase 3 (INT-1) | CA-INT-07 |
+| RF-INT-004 | Revocar una clave con efecto inmediato y motivo. | Fase 3 (INT-1) | CA-INT-07 |
+| RF-INT-005 | Mostrar por clave: último uso, direcciones, pedidos del día y errores. | Fase 3 (INT-1) | CA-INT-06 |
+| RF-INT-006 | API de lectura de activos, SKU, ubicaciones, catálogos, categorías y campos personalizados, con filtros y páginas. | Fase 3 (INT-1) | CA-INT-02, CA-INT-03 |
+| RF-INT-007 | API de lectura de Personas, OC, recepciones, OS, proveedores y centros de costo. | Fase 3 (INT-2) | CA-INT-02 |
+| RF-INT-008 | API de escritura limitada: Personas (crear y editar, nunca cesar), SKU, valores de catálogo (nunca proveedores), OC en Borrador, OS y solicitudes de mesa de ayuda. | Fase 3 (INT-2) | CA-INT-09, CA-INT-17 |
+| RF-INT-009 | Escrituras con clave de idempotencia; repetirlas devuelve el resultado original. | Fase 3 (INT-2) | CA-INT-08 |
+| RF-INT-010 | Escritura por lote (hasta 100 elementos), todo o nada. | Fase 3 (INT-2) | CA-INT-08 |
+| RF-INT-011 | Límites de uso, con respuesta que indica la espera. | Fase 3 (INT-1) | CA-INT-06 |
+| RF-INT-012 | Publicar la documentación de la API y el registro de cambios por versión. | Fase 3 (INT-1) | CA-INT-18 |
+| RF-INT-013 | Registrar webhooks con dirección segura, eventos y secreto de firma. | Fase 3 (INT-2) | CA-INT-11, CA-INT-12 |
+| RF-INT-014 | Enviar eventos firmados, con reintentos, desde un componente aislado; pausar el webhook que falla de forma sostenida. | Fase 3 (INT-2) | CA-INT-11 |
+| RF-INT-015 | Mostrar las entregas (estado, código de respuesta y duración, nunca el cuerpo de la respuesta) y reenviar una. | Fase 3 (INT-2) | CA-INT-11 |
+| RF-INT-016 | Mantener equivalencias externas con SAP: proveedor, centro de costo, material (SKU), centro y almacén (ubicación), unidad e indicador de impuesto. | Fase 3 (INT-2) | CA-INT-14 |
+| RF-INT-017 | Cargar maestros de SAP con el asistente único "Importar datos" (tipo "maestros de SAP"). | Fase 3 (INT-2) | CA-INT-19 |
+| RF-INT-018 | Generar el archivo de OC para SAP de las órdenes pendientes, con vista previa de las que no se pueden exportar y por qué. | Fase 3 (INT-2) | CA-INT-13, CA-INT-14 |
+| RF-INT-019 | Registrar cada lote y permitir volver a descargarlo idéntico mientras se conserve su copia. | Fase 3 (INT-2) | CA-INT-13 |
+| RF-INT-020 | Registrar el número de documento SAP en la OC (referencia externa), a mano o por la API. | Fase 3 (INT-2) | CA-INT-15 |
+| RF-INT-021 | Mostrar el estado de exportación de cada OC: No exportada, Exportada, Exportada con cambios pendientes, Confirmada por SAP. | Fase 3 (INT-2) | CA-INT-15 |
+| RF-INT-022 | Elegir los métodos de ingreso de la empresa sin quitar nunca el enlace por correo a los administradores. | Fase 3 (INT-3) | CA-INT-16 |
+| RF-INT-023 | Iniciar sesión con Microsoft o Google solo si la cuenta externa fue vinculada antes a un usuario existente. | Fase 3 (INT-3) | CA-INT-16 |
+| RF-INT-024 | Avisar a los administradores de vencimientos de claves, webhooks pausados, uso anormal y claves en revisión. | Fase 3 (INT-1) | CA-INT-20 |
+| RF-INT-025 | Suspender claves y webhooks cuando la empresa se suspende. | Fase 3 (INT-1) | CA-INT-07 |
+| RF-INT-026 | Revisar el alcance de las claves de un usuario cuando cambia su rol. | Fase 3 (INT-1) | CA-INT-05 |
 
 ### 4.2 Reglas de negocio
 
 | ID | Regla | Cuándo | CA |
 |---|---|---|---|
-| RN-INT-001 | Cada clave pertenece a una sola empresa y todo pedido filtra por ella. Un identificador de otra empresa responde "No encontrado". | 1 | CA-INT-03 |
-| RN-INT-002 | La clave se guarda como **huella de alta entropía** (al menos 128 bits), nunca en claro; si se pierde, se rota. Cada clave tiene un identificador público propio. Viaja solo en una cabecera, nunca en la dirección. | 1 | CA-INT-01 |
-| RN-INT-003 | La clave lleva un prefijo común reconocible para detectores de secretos; el bloqueo y el registro usan el identificador público, no el prefijo. | 1 | CA-INT-10 |
-| RN-INT-004 | Vencimiento obligatorio: máximo 365 días, por defecto 180. **[SUPUESTO]** | 1 | CA-INT-07 |
-| RN-INT-005 | Solo conexión cifrada; un pedido sin cifrar se rechaza. | 1 | CA-INT-18 |
-| RN-INT-006 | Con direcciones de red permitidas, un pedido desde otra dirección se rechaza y cuenta como fallo. | 1 | CA-INT-10 |
-| RN-INT-007 | Los permisos de una clave son un subconjunto del registro, con alcance "todo". La escritura no incluye la lectura; se da aparte. | 1 | CA-INT-02 |
-| RN-INT-008 | Precios y datos de Personas solo salen con `precios.ver` y `datos_personales.ver` en la clave. **IMEI y número de línea** (datos personales) solo con `datos_personales.ver`. Sin ellos esos campos no se envían. | 1 | CA-INT-02 |
-| RN-INT-009 | Ninguna clave da acceso a claves de licencia, auditoría, usuarios, roles, invitaciones ni configuración de seguridad. | 1 | CA-INT-02 |
-| RN-INT-010 | Ninguna clave aprueba, rechaza, recibe, da de baja, anula, cierra, reingresa, cesa ni desactiva Personas, ni crea o cambia proveedores. La OC creada por API queda en Borrador. | 2 | CA-INT-09 |
-| RN-INT-011 | Quien creó, rotó, **asumió o revocó** una clave no puede aprobar una OC creada por esa integración (D-015, D-043). | 2 | CA-INT-09 |
-| RN-INT-012 | Las acciones por API se auditan con autor "integración <nombre>" (tipo de autor propio) y, en escrituras, antes y después sin valores de campos personales (D-030, D-041.4). | 1 | CA-INT-21 |
-| RN-INT-013 | Las lecturas no se auditan una a una: se guarda el registro de uso (clave, día, módulo, pedidos, errores). La lectura de Personas se registra por pedido (clave, filas y **solo el nombre de los campos filtrados, nunca el texto buscado ni valores personales**, D-030). Una **lectura masiva** (más de 5.000 filas por día por clave) se audita como exportación. | 1 | CA-INT-22 |
-| RN-INT-014 | El registro de uso se conserva 90 días y el de entregas de webhooks 30. **[SUPUESTO]** | 1 | CA-INT-11 |
-| RN-INT-015 | Límites (cuadro único de D-054): 60 pedidos por minuto y 10.000 por día por clave; 300 por minuto por empresa. El limitador vive en tablas de PostgreSQL. **[SUPUESTO]** los valores. | 1 | CA-INT-06 |
-| RN-INT-016 | Máximo 100 elementos por respuesta y 1 MB por pedido. **[SUPUESTO]** | 1 | CA-INT-06 |
-| RN-INT-017 | Tras 20 autenticaciones fallidas en 10 minutos con un mismo identificador público, esa clave se bloquea 15 minutos y se avisa a los administradores. | 1 | CA-INT-10 |
-| RN-INT-018 | Los errores no revelan si una clave existe, ni detalles internos, ni datos de otras empresas. | 1 | CA-INT-10 |
-| RN-INT-019 | Dentro de una versión de la API solo se agregan campos o funciones; nunca se quitan ni cambia su significado. | 1 | CA-INT-18 |
-| RN-INT-020 | Una versión se anuncia como retirada con 12 meses de aviso; conviven como máximo 2. **[SUPUESTO]** | 1 | CA-INT-18 |
-| RN-INT-021 | Crear, rotar o revocar claves exige reautenticación reciente (10 minutos) y segunda verificación (PS-133 es sensible). | 1 | CA-INT-04 |
-| RN-INT-022 | Si el creador de una clave deja de ser usuario activo, la integración pasa a **"en revisión"** y se avisa a los administradores; si nadie la asume en **7 días**, se suspende. Cuando el creador cambia de rol, se revisa el alcance de sus claves. | 1 | CA-INT-20 |
-| RN-INT-023 | **Anti-SSRF (D-047.2):** la dirección de un webhook se valida al registrarla **y en cada envío**; se resuelve el nombre en el envío y se fija la dirección obtenida; se bloquean loopback, redes privadas, 169.254.x.x y sus equivalentes IPv6; solo puerto 443 con conexión cifrada; **no se siguen redirecciones**; hay tope de tiempo (10 s) y de tamaño; no se muestra el cuerpo de la respuesta. | 2 | CA-INT-12 |
-| RN-INT-024 | El aviso lleva solo: evento, número de evento, fecha, empresa, tipo e identificador del elemento. Nunca precios, datos personales ni claves. Un caso restringido de derechos de datos nunca emite eventos. | 2 | CA-INT-11 |
-| RN-INT-025 | **El secreto del webhook se guarda cifrado** (llave derivada por empresa, D-048.4), se muestra una sola vez y se rota con traslape. Cada aviso va firmado con él más la fecha; el receptor rechaza avisos de más de 5 minutos. | 2 | CA-INT-11 |
-| RN-INT-026 | Entrega "al menos una vez": puede haber repetidos; el receptor usa el número de evento. No se garantiza el orden. | 2 | CA-INT-11 |
-| RN-INT-027 | Reintentos tras fallo: 1 minuto, 5 minutos, 30 minutos, 2 horas y 12 horas; agotados, el aviso queda Descartado y puede reenviarse a mano. | 2 | CA-INT-11 |
-| RN-INT-028 | Si todos los avisos de un webhook fallan durante 24 horas seguidas, pasa a Pausado automático y se avisa a los administradores. | 2 | CA-INT-11 |
-| RN-INT-029 | Solo se envían eventos de módulos para los que la integración dueña tiene permiso de lectura y que estén activos en la empresa. | 2 | CA-INT-23 |
-| RN-INT-030 | Máximo 10 webhooks por empresa y 64 KB por aviso. **[SUPUESTO]** | 2 | CA-INT-11 |
-| RN-INT-031 | El ingreso con Microsoft o Google nunca crea usuarios ni empresas (D-001). Una cuenta sin vincular recibe el mismo mensaje genérico de cualquier acceso fallido. | 3 | CA-INT-16 |
-| RN-INT-032 | La cuenta externa se vincula **una sola vez por el identificador inmutable del proveedor**, no por el correo, desde una sesión ya iniciada o una invitación (D-054.5). | 3 | CA-INT-16 |
-| RN-INT-033 | La segunda verificación de quien tiene permisos sensibles sigue exigiéndose con Microsoft o Google, y los administradores conservan el enlace por correo. | 3 | CA-INT-16 |
-| RN-INT-034 | La plataforma no abre conexión hacia SAP; la frontera son archivos y la API. | 2 | CA-INT-13 |
-| RN-INT-035 | Una OC solo se exporta desde Aprobada en adelante; nunca en Borrador, Pendiente o Rechazada. | 2 | CA-INT-13 |
-| RN-INT-036 | La OC solo se exporta si todos sus datos tienen equivalencia; si falta una queda "pendiente de equivalencia" y se lista. | 2 | CA-INT-14 |
-| RN-INT-037 | Cada línea lleva tipo de registro ALTA, CAMBIO (nueva versión tras reaprobación) o ANULACION, y el **número de versión de la OC**. SAP puede ignorar repetidos por orden + versión. | 2 | CA-INT-15 |
-| RN-INT-038 | Exportar a SAP no cambia el estado de la OC en la plataforma, solo su estado de exportación. | 2 | CA-INT-13 |
-| RN-INT-039 | La carga de maestros sigue el marco D-050: **solo crea**, rechaza el mismo archivo por su huella, trata una fila existente como error de esa fila y no guarda el archivo. Cambiar o bloquear un maestro ya cargado se hace en la pantalla de equivalencias o por la API (permiso PS-136). Nunca borra datos. | 2 | CA-INT-19 |
-| RN-INT-040 | La carga no crea proveedores ni SKU sola: los valores nuevos se listan para que los apruebe quien tenga `proveedores.crear_editar` (D-063.6, D-050.1). | 2 | CA-INT-19 |
-| RN-INT-041 | Generar un lote SAP o una lectura masiva por API pasa por la **puerta única de exportación** (motivo, topes de D-054, hoja "Aviso") y queda en la auditoría. | 2 | CA-INT-13, CA-INT-22 |
-| RN-INT-042 | Importes con decimales exactos, una moneda por OC, sin conversión (D-014). El impuesto de cada línea y el total siguen el redondeo de D-044.7. | 2 | CA-INT-13 |
-| RN-INT-043 | Los archivos de SAP identifican a quien creó y aprobó con un **código interno de usuario**, no con nombre ni correo (D-058). | 2 | CA-INT-13 |
-| RN-INT-044 | El lote guarda una copia de las líneas exportadas; es dato guardado y se conserva el plazo de la auditoría (D-050.6). | 2 | CA-INT-13 |
-| RN-INT-045 | Si el módulo de una API está apagado en la empresa, la API responde "No encontrado" (D-037 fila 12). | 1 | CA-INT-23 |
-| RN-INT-046 | Textos libres recibidos por API pasan por el validador común de claves y patrones peligrosos (D-063.2). | 2 | CA-INT-17 |
-| RN-INT-047 | Las claves de idempotencia valen 24 horas en una tabla con vencimiento. **[SUPUESTO]** | 2 | CA-INT-08 |
-| RN-INT-048 | Todo proceso de INT (vencimiento de claves, pausas, limpieza, reintentos) es idempotente y recuperable, corre empresa por empresa con "hoy" de cada una, salta empresas suspendidas y deja registro de corrida; escribe con autor "sistema" (D-038.4). | 1 | CA-INT-24 |
-| RN-INT-049 | Prefijo `LSAP-` (mínimo 6 dígitos, correlativo por empresa) para lotes. **[SUPUESTO]** | 2 | CA-INT-13 |
+| RN-INT-001 | Cada clave pertenece a una sola empresa y todo pedido filtra por ella. Un identificador de otra empresa responde "No encontrado". | Fase 3 (INT-1) | CA-INT-03 |
+| RN-INT-002 | La clave se guarda como **huella de alta entropía** (al menos 128 bits), nunca en claro; si se pierde, se rota. Cada clave tiene un identificador público propio. Viaja solo en una cabecera, nunca en la dirección. | Fase 3 (INT-1) | CA-INT-01 |
+| RN-INT-003 | La clave lleva un prefijo común reconocible para detectores de secretos; el bloqueo y el registro usan el identificador público, no el prefijo. | Fase 3 (INT-1) | CA-INT-10 |
+| RN-INT-004 | Vencimiento obligatorio: máximo 365 días, por defecto 180. **[SUPUESTO]** | Fase 3 (INT-1) | CA-INT-07 |
+| RN-INT-005 | Solo conexión cifrada; un pedido sin cifrar se rechaza. | Fase 3 (INT-1) | CA-INT-18 |
+| RN-INT-006 | Con direcciones de red permitidas, un pedido desde otra dirección se rechaza y cuenta como fallo. | Fase 3 (INT-1) | CA-INT-10 |
+| RN-INT-007 | Los permisos de una clave son un subconjunto del registro, con alcance "todo". La escritura no incluye la lectura; se da aparte. | Fase 3 (INT-1) | CA-INT-02 |
+| RN-INT-008 | Precios y datos de Personas solo salen con `precios.ver` y `datos_personales.ver` en la clave. **IMEI y número de línea** (datos personales) solo con `datos_personales.ver`. Sin ellos esos campos no se envían. | Fase 3 (INT-1) | CA-INT-02 |
+| RN-INT-009 | Ninguna clave da acceso a claves de licencia, auditoría, usuarios, roles, invitaciones ni configuración de seguridad. | Fase 3 (INT-1) | CA-INT-02 |
+| RN-INT-010 | Ninguna clave aprueba, rechaza, recibe, da de baja, anula, cierra, reingresa, cesa ni desactiva Personas, ni crea o cambia proveedores. La OC creada por API queda en Borrador. | Fase 3 (INT-2) | CA-INT-09 |
+| RN-INT-011 | Quien creó, rotó, **asumió o revocó** una clave no puede aprobar una OC creada por esa integración (D-015, D-043). | Fase 3 (INT-2) | CA-INT-09 |
+| RN-INT-012 | Las acciones por API se auditan con autor "integración <nombre>" (tipo de autor propio) y, en escrituras, antes y después sin valores de campos personales (D-030, D-041.4). | Fase 3 (INT-1) | CA-INT-21 |
+| RN-INT-013 | Las lecturas no se auditan una a una: se guarda el registro de uso (clave, día, módulo, pedidos, errores). La lectura de Personas se registra por pedido (clave, filas y **solo el nombre de los campos filtrados, nunca el texto buscado ni valores personales**, D-030). Una **lectura masiva** (más de 5.000 filas por día por clave) se audita como exportación. | Fase 3 (INT-1) | CA-INT-22 |
+| RN-INT-014 | El registro de uso se conserva 90 días y el de entregas de webhooks 30. **[SUPUESTO]** | Fase 3 (INT-1) | CA-INT-11 |
+| RN-INT-015 | Límites (cuadro único de D-054): 60 pedidos por minuto y 10.000 por día por clave; 300 por minuto por empresa. El limitador vive en tablas de PostgreSQL. **[SUPUESTO]** los valores. | Fase 3 (INT-1) | CA-INT-06 |
+| RN-INT-016 | Máximo 100 elementos por respuesta y 1 MB por pedido. **[SUPUESTO]** | Fase 3 (INT-1) | CA-INT-06 |
+| RN-INT-017 | Tras 20 autenticaciones fallidas en 10 minutos con un mismo identificador público, esa clave se bloquea 15 minutos y se avisa a los administradores. | Fase 3 (INT-1) | CA-INT-10 |
+| RN-INT-018 | Los errores no revelan si una clave existe, ni detalles internos, ni datos de otras empresas. | Fase 3 (INT-1) | CA-INT-10 |
+| RN-INT-019 | Dentro de una versión de la API solo se agregan campos o funciones; nunca se quitan ni cambia su significado. | Fase 3 (INT-1) | CA-INT-18 |
+| RN-INT-020 | Una versión se anuncia como retirada con 12 meses de aviso; conviven como máximo 2. **[SUPUESTO]** | Fase 3 (INT-1) | CA-INT-18 |
+| RN-INT-021 | Crear, rotar o revocar claves exige reautenticación reciente (10 minutos) y segunda verificación (PS-133 es sensible). | Fase 3 (INT-1) | CA-INT-04 |
+| RN-INT-022 | Si el creador de una clave deja de ser usuario activo, la integración pasa a **"en revisión"** y se avisa a los administradores; si nadie la asume en **7 días**, se suspende. Cuando el creador cambia de rol, se revisa el alcance de sus claves. | Fase 3 (INT-1) | CA-INT-20 |
+| RN-INT-023 | **Anti-SSRF (D-047.2):** la dirección de un webhook se valida al registrarla **y en cada envío**; se resuelve el nombre en el envío y se fija la dirección obtenida; se bloquean loopback, redes privadas, 169.254.x.x y sus equivalentes IPv6; solo puerto 443 con conexión cifrada; **no se siguen redirecciones**; hay tope de tiempo (10 s) y de tamaño; no se muestra el cuerpo de la respuesta. | Fase 3 (INT-2) | CA-INT-12 |
+| RN-INT-024 | El aviso lleva solo: evento, número de evento, fecha, empresa, tipo e identificador del elemento. Nunca precios, datos personales ni claves. Un caso restringido de derechos de datos nunca emite eventos. | Fase 3 (INT-2) | CA-INT-11 |
+| RN-INT-025 | **El secreto del webhook se guarda cifrado** (llave derivada por empresa, D-048.4), se muestra una sola vez y se rota con traslape. Cada aviso va firmado con él más la fecha; el receptor rechaza avisos de más de 5 minutos. | Fase 3 (INT-2) | CA-INT-11 |
+| RN-INT-026 | Entrega "al menos una vez": puede haber repetidos; el receptor usa el número de evento. No se garantiza el orden. | Fase 3 (INT-2) | CA-INT-11 |
+| RN-INT-027 | Reintentos tras fallo: 1 minuto, 5 minutos, 30 minutos, 2 horas y 12 horas; agotados, el aviso queda Descartado y puede reenviarse a mano. | Fase 3 (INT-2) | CA-INT-11 |
+| RN-INT-028 | Si todos los avisos de un webhook fallan durante 24 horas seguidas, pasa a Pausado automático y se avisa a los administradores. | Fase 3 (INT-2) | CA-INT-11 |
+| RN-INT-029 | Solo se envían eventos de módulos para los que la integración dueña tiene permiso de lectura y que estén activos en la empresa. | Fase 3 (INT-2) | CA-INT-23 |
+| RN-INT-030 | Máximo 10 webhooks por empresa y 64 KB por aviso. **[SUPUESTO]** | Fase 3 (INT-2) | CA-INT-11 |
+| RN-INT-031 | El ingreso con Microsoft o Google nunca crea usuarios ni empresas (D-001). Una cuenta sin vincular recibe el mismo mensaje genérico de cualquier acceso fallido. | Fase 3 (INT-3) | CA-INT-16 |
+| RN-INT-032 | La cuenta externa se vincula **una sola vez por el identificador inmutable del proveedor**, no por el correo, desde una sesión ya iniciada o una invitación (D-054.5). | Fase 3 (INT-3) | CA-INT-16 |
+| RN-INT-033 | La segunda verificación de quien tiene permisos sensibles sigue exigiéndose con Microsoft o Google, y los administradores conservan el enlace por correo. | Fase 3 (INT-3) | CA-INT-16 |
+| RN-INT-034 | La plataforma no abre conexión hacia SAP; la frontera son archivos y la API. | Fase 3 (INT-2) | CA-INT-13 |
+| RN-INT-035 | Una OC solo se exporta desde Aprobada en adelante; nunca en Borrador, Pendiente o Rechazada. | Fase 3 (INT-2) | CA-INT-13 |
+| RN-INT-036 | La OC solo se exporta si todos sus datos tienen equivalencia; si falta una queda "pendiente de equivalencia" y se lista. | Fase 3 (INT-2) | CA-INT-14 |
+| RN-INT-037 | Cada línea lleva tipo de registro ALTA, CAMBIO (nueva versión tras reaprobación) o ANULACION, y el **número de versión de la OC**. SAP puede ignorar repetidos por orden + versión. | Fase 3 (INT-2) | CA-INT-15 |
+| RN-INT-038 | Exportar a SAP no cambia el estado de la OC en la plataforma, solo su estado de exportación. | Fase 3 (INT-2) | CA-INT-13 |
+| RN-INT-039 | La carga de maestros sigue el marco D-050: **solo crea**, rechaza el mismo archivo por su huella, trata una fila existente como error de esa fila y no guarda el archivo. Cambiar o bloquear un maestro ya cargado se hace en la pantalla de equivalencias o por la API (permiso PS-136). Nunca borra datos. | Fase 3 (INT-2) | CA-INT-19 |
+| RN-INT-040 | La carga no crea proveedores ni SKU sola: los valores nuevos se listan para que los apruebe quien tenga `proveedores.crear_editar` (D-063.6, D-050.1). | Fase 3 (INT-2) | CA-INT-19 |
+| RN-INT-041 | Generar un lote SAP o una lectura masiva por API pasa por la **puerta única de exportación** (motivo, topes de D-054, hoja "Aviso") y queda en la auditoría. | Fase 3 (INT-2) | CA-INT-13, CA-INT-22 |
+| RN-INT-042 | Importes con decimales exactos, una moneda por OC, sin conversión (D-014). El impuesto de cada línea y el total siguen el redondeo de D-044.7. | Fase 3 (INT-2) | CA-INT-13 |
+| RN-INT-043 | Los archivos de SAP identifican a quien creó y aprobó con un **código interno de usuario**, no con nombre ni correo (D-058). | Fase 3 (INT-2) | CA-INT-13 |
+| RN-INT-044 | El lote guarda una copia de las líneas exportadas; es dato guardado y se conserva el plazo de la auditoría (D-050.6). | Fase 3 (INT-2) | CA-INT-13 |
+| RN-INT-045 | Si el módulo de una API está apagado en la empresa, la API responde "No encontrado" (D-037 fila 12). | Fase 3 (INT-1) | CA-INT-23 |
+| RN-INT-046 | Textos libres recibidos por API pasan por el validador común de claves y patrones peligrosos (D-063.2). | Fase 3 (INT-2) | CA-INT-17 |
+| RN-INT-047 | Las claves de idempotencia valen 24 horas en una tabla con vencimiento. **[SUPUESTO]** | Fase 3 (INT-2) | CA-INT-08 |
+| RN-INT-048 | Todo proceso de INT (vencimiento de claves, pausas, limpieza, reintentos) es idempotente y recuperable, corre empresa por empresa con "hoy" de cada una, salta empresas suspendidas y deja registro de corrida; escribe con autor "sistema" (D-038.4). | Fase 3 (INT-1) | CA-INT-24 |
+| RN-INT-049 | Prefijo `LSAP-` (mínimo 6 dígitos, correlativo por empresa) para lotes. **[SUPUESTO]** | Fase 3 (INT-2) | CA-INT-13 |
 
 ### 4.3 Calidad medible
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RNF-INT-001 | Con el volumen de referencia de RNF-010, una lectura simple responde en 500 ms o menos (percentil 95); se mide en la prueba de carga nocturna. | 1 | CA-INT-25 |
-| RNF-INT-002 | Revocar una clave surte efecto en 10 segundos o menos. | 1 | CA-INT-07 |
-| RNF-INT-003 | Un aviso de webhook sale en 30 segundos o menos desde el evento, si el receptor responde. | 2 | CA-INT-11 |
-| RNF-INT-004 | Un lote de 5.000 líneas se genera en 60 segundos o menos, en segundo plano con avance. | 2 | CA-INT-13 |
-| RNF-INT-005 | Ninguna clave ni secreto aparece en registros, auditoría, errores, exportaciones ni respaldos en claro (prueba automática de búsqueda). | 1 | CA-INT-26 |
-| RNF-INT-006 | Pruebas de aislamiento por módulo con identificador interno, también para escritura por lote, y con los procesos de INT ejecutados con dos empresas (D-039.6). | 1 | CA-INT-03, CA-INT-24 |
-| RNF-INT-007 | La documentación coincide con las rutas publicadas (prueba automática). | 1 | CA-INT-18 |
-| RNF-INT-008 | Las pruebas de contrato de v1 fallan si se quita o cambia un campo publicado. | 1 | CA-INT-18 |
+| RNF-INT-001 | Con el volumen de referencia de RNF-010, una lectura simple responde en 500 ms o menos (percentil 95); se mide en la prueba de carga nocturna. | Fase 3 (INT-1) | CA-INT-25 |
+| RNF-INT-002 | Revocar una clave surte efecto en 10 segundos o menos. | Fase 3 (INT-1) | CA-INT-07 |
+| RNF-INT-003 | Un aviso de webhook sale en 30 segundos o menos desde el evento, si el receptor responde. | Fase 3 (INT-2) | CA-INT-11 |
+| RNF-INT-004 | Un lote de 5.000 líneas se genera en 60 segundos o menos, en segundo plano con avance. | Fase 3 (INT-2) | CA-INT-13 |
+| RNF-INT-005 | Ninguna clave ni secreto aparece en registros, auditoría, errores, exportaciones ni respaldos en claro (prueba automática de búsqueda). | Fase 3 (INT-1) | CA-INT-26 |
+| RNF-INT-006 | Pruebas de aislamiento por módulo con identificador interno, también para escritura por lote, y con los procesos de INT ejecutados con dos empresas (D-039.6). | Fase 3 (INT-1) | CA-INT-03, CA-INT-24 |
+| RNF-INT-007 | La documentación coincide con las rutas publicadas (prueba automática). | Fase 3 (INT-1) | CA-INT-18 |
+| RNF-INT-008 | Las pruebas de contrato de v1 fallan si se quita o cambia un campo publicado. | Fase 3 (INT-1) | CA-INT-18 |
 
 ---
 
@@ -408,4 +408,5 @@ Cada criterio cita el requisito que cubre.
 | Prefijo `LSAP-` y pantallas `PAN-INT-nn`; fechas dd/mm/aaaa; "usted"; "Cliente (CEO)" | D-049, D-053 |
 | Columnas "Cuándo" y "CA"; cada CA cita lo que cubre; 26 criterios (nuevos: siete casos SSRF, lote atómico, lectura masiva, creador inactivo, módulo apagado, procesos con dos empresas, rendimiento, búsqueda de secretos) | Plan de correcciones regla 2; H-AUD-21; QA y Seguridad |
 | S-INT-08 y S-INT-09 siguen escalados por costo y por tema legal | D-058; Cumplimiento (C4) |
+| **v0.3:** PS-135 `integraciones.administrar_webhooks` pasa a sensible con reautenticación reciente; "Cuándo" con las tres palabras (`Fase 3 (INT-1)`, `(INT-2)`, `(INT-3)`); confirmado el evento único `inventario.activo_estado_cambiado` | D-068, D-075 (N-AUD-06); `docs/equipo/plan-aplicacion.md` |
 | La auditoría de lecturas de Personas guarda solo los nombres de los campos filtrados; RN-INT-011 incluye a quien asume o revoca la clave | D-030; Auditor de Cumplimiento R-07 y R-12 (ronda 3) |

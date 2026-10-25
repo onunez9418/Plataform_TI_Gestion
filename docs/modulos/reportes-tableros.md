@@ -1,9 +1,9 @@
 # Módulo: Reportes y tableros (REP)
 
-**Versión:** 0.2 (corrección de la Oleada D, escuadrón F) · **Fecha:** 25/10/2026 · **Autor:** analista-funcional
+**Versión:** 0.3 (aplicación de D-065 a D-076, escuadrón F) · **Fecha:** 25/10/2026 · **Autor:** analista-funcional
 **Base:** `CLAUDE.md`, `docs/equipo/decisiones.md` (D-001 a D-064), `docs/equipo/plan-correcciones.md`, `docs/registro-permisos.md`, documento funcional v0.2.
 **Estado:** propuesta. **[SUPUESTO]** = lo confirma el Gerente de TI. **[ESCALAR AL CEO]** = dinero, legal o irreversible.
-**Leyenda de "Cuándo":** **A** = REP-A, **B** = REP-B, **C** = REP-C (todas Fase 3, ola F; REP-A puede adelantarse si el Gerente de TI lo decide).
+**Leyenda de "Cuándo":** la columna usa las tres palabras del núcleo (`v1, Etapa N`, `Fase 2`, `Fase 3`). Todo REP es **Fase 3, ola F**; la letra entre paréntesis dice la parte: **(A)** = REP-A (puede adelantarse si el Gerente de TI lo decide), **(B)** = REP-B, **(C)** = REP-C.
 
 ---
 
@@ -80,81 +80,81 @@ Notas
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RF-REP-001 | Tablero de Jefatura: órdenes por aprobar, ejecución del presupuesto, garantías y vencimientos próximos, SLA, cumplimiento de licencias, activos en fin de vida útil. | B | CA-REP-12 |
-| RF-REP-002 | Tablero de Técnico: mis OS y casos abiertos, SLA por vencer, activos en reparación, tiempo medio de reparación. Se integra a "Mi trabajo". | A | CA-REP-04 |
-| RF-REP-003 | Tablero de Almacén: recepciones pendientes, SKU bajo el mínimo, activos En stock sin asignar hace mucho, traslados del mes. | A | CA-REP-01 |
-| RF-REP-004 | Cada tarjeta abre la lista que la compone con el mismo filtro. | A | CA-REP-01 |
-| RF-REP-005 | Reporte de inventario: activos por estado, categoría, ubicación y marca; stock por cantidad por SKU y ubicación. | A | CA-REP-01 |
-| RF-REP-006 | Reporte de ciclo de vida: antigüedad por tramos, fin de vida útil, tiempo en reparación, bajas del periodo. | A | CA-REP-14 |
-| RF-REP-007 | Reporte de garantías y vencimientos sobre la **pantalla única de Vencimientos** (DS-07), con ventanas de 30, 60 y 90 días; no hay otro calendario. | A | CA-REP-02 |
-| RF-REP-008 | Reporte de costos con las definiciones y los servicios de PRE. | B | CA-REP-12 |
-| RF-REP-009 | Reporte de SLA: cumplimiento de respuesta y resolución, tiempo medio, casos vencidos, por categoría y técnico. | C | CA-REP-10 |
-| RF-REP-010 | Reporte de cumplimiento de licencias con los estados de licencias-software. | C | CA-REP-13 |
-| RF-REP-011 | Filtros comunes: periodo, ubicación, categoría, estado, centro de costo, proveedor, marca. | A | CA-REP-04 |
-| RF-REP-012 | Guardar, renombrar y quitar vistas de filtros personales (hasta 20 por usuario). | A | CA-REP-15 |
-| RF-REP-013 | Exportar el reporte como se ve (.xlsx o .csv) **por la puerta única**; REP no tiene otro camino de descarga. | A | CA-REP-05, CA-REP-08 |
-| RF-REP-014 | La confirmación de la puerta muestra motivo, filas y columnas sensibles que saldrán. | A | CA-REP-06 |
-| RF-REP-015 | Cada exportación queda en la auditoría (quién, cuándo, reporte, **nombres de los campos filtrados sin sus valores**, formato, filas, columnas sensibles; sin el contenido). Un filtro por texto de una Persona nunca guarda el texto buscado (D-030). | A | CA-REP-06 |
-| RF-REP-016 | Programar el envío de un reporte (diaria, semanal o mensual, hora, destinatarios de la empresa). Jefatura TI gestiona solo las suyas. | C | CA-REP-11 |
-| RF-REP-017 | El correo programado lleva cifras clave y un enlace que exige iniciar sesión; no lleva adjuntos. | C | CA-REP-11 |
-| RF-REP-018 | Pausar, reanudar y desactivar programaciones; ver el historial de envíos. | C | CA-REP-11 |
-| RF-REP-019 | Guardar la foto mensual y mostrar la evolución de 24 meses. | B | CA-REP-16 |
-| RF-REP-020 | Mostrar fecha de corte y la definición de cada indicador. | A | CA-REP-01 |
-| RF-REP-021 | Mostrar el dinero en bloques por moneda, sin total general (D-014, D-049.8). | B | CA-REP-12 |
-| RF-REP-022 | Avisar con mensaje claro cuando un reporte supera el límite de filas y sugerir filtros. | A | CA-REP-09 |
-| RF-REP-023 | Un trabajador en segundo plano precalcula los agregados de los tableros y registra la fecha de corte; las listas de detalle se consultan en vivo. | A | CA-REP-01, CA-REP-17 |
-| RF-REP-024 | Los tableros aportan tarjetas al Inicio por tarjetas (máximo seis visibles, una principal por rol). | A | CA-REP-04 |
+| RF-REP-001 | Tablero de Jefatura: órdenes por aprobar, ejecución del presupuesto, garantías y vencimientos próximos, SLA, cumplimiento de licencias, activos en fin de vida útil. | Fase 3 (B) | CA-REP-12 |
+| RF-REP-002 | Tablero de Técnico: mis OS y casos abiertos, SLA por vencer, activos en reparación, tiempo medio de reparación. Se integra a "Mi trabajo". | Fase 3 (A) | CA-REP-04 |
+| RF-REP-003 | Tablero de Almacén: recepciones pendientes, SKU bajo el mínimo, activos En stock sin asignar hace mucho, traslados del mes. | Fase 3 (A) | CA-REP-01 |
+| RF-REP-004 | Cada tarjeta abre la lista que la compone con el mismo filtro. | Fase 3 (A) | CA-REP-01 |
+| RF-REP-005 | Reporte de inventario: activos por estado, categoría, ubicación y marca; stock por cantidad por SKU y ubicación. | Fase 3 (A) | CA-REP-01 |
+| RF-REP-006 | Reporte de ciclo de vida: antigüedad por tramos, fin de vida útil, tiempo en reparación, bajas del periodo. | Fase 3 (A) | CA-REP-14 |
+| RF-REP-007 | Reporte de garantías y vencimientos sobre la **pantalla única de Vencimientos** (DS-07), con ventanas de 30, 60 y 90 días; no hay otro calendario. | Fase 3 (A) | CA-REP-02 |
+| RF-REP-008 | Reporte de costos con las definiciones y los servicios de PRE. | Fase 3 (B) | CA-REP-12 |
+| RF-REP-009 | Reporte de SLA: cumplimiento de respuesta y resolución, tiempo medio, casos vencidos, por categoría y técnico. | Fase 3 (C) | CA-REP-10 |
+| RF-REP-010 | Reporte de cumplimiento de licencias con los estados de licencias-software. | Fase 3 (C) | CA-REP-13 |
+| RF-REP-011 | Filtros comunes: periodo, ubicación, categoría, estado, centro de costo, proveedor, marca. | Fase 3 (A) | CA-REP-04 |
+| RF-REP-012 | Guardar, renombrar y quitar vistas de filtros personales (hasta 20 por usuario). | Fase 3 (A) | CA-REP-15 |
+| RF-REP-013 | Exportar el reporte como se ve (.xlsx o .csv) **por la puerta única**; REP no tiene otro camino de descarga. | Fase 3 (A) | CA-REP-05, CA-REP-08 |
+| RF-REP-014 | La confirmación de la puerta muestra motivo, filas y columnas sensibles que saldrán. | Fase 3 (A) | CA-REP-06 |
+| RF-REP-015 | Cada exportación queda en la auditoría (quién, cuándo, reporte, **nombres de los campos filtrados sin sus valores**, formato, filas, columnas sensibles; sin el contenido). Un filtro por texto de una Persona nunca guarda el texto buscado (D-030). | Fase 3 (A) | CA-REP-06 |
+| RF-REP-016 | Programar el envío de un reporte (diaria, semanal o mensual, hora, destinatarios de la empresa). Jefatura TI gestiona solo las suyas. | Fase 3 (C) | CA-REP-11 |
+| RF-REP-017 | El correo programado lleva cifras clave y un enlace que exige iniciar sesión; no lleva adjuntos. | Fase 3 (C) | CA-REP-11 |
+| RF-REP-018 | Pausar, reanudar y desactivar programaciones; ver el historial de envíos. | Fase 3 (C) | CA-REP-11 |
+| RF-REP-019 | Guardar la foto mensual y mostrar la evolución de 24 meses. | Fase 3 (B) | CA-REP-16 |
+| RF-REP-020 | Mostrar fecha de corte y la definición de cada indicador. | Fase 3 (A) | CA-REP-01 |
+| RF-REP-021 | Mostrar el dinero en bloques por moneda, sin total general (D-014, D-049.8). | Fase 3 (B) | CA-REP-12 |
+| RF-REP-022 | Avisar con mensaje claro cuando un reporte supera el límite de filas y sugerir filtros. | Fase 3 (A) | CA-REP-09 |
+| RF-REP-023 | Un trabajador en segundo plano precalcula los agregados de los tableros y registra la fecha de corte; las listas de detalle se consultan en vivo. | Fase 3 (A) | CA-REP-01, CA-REP-17 |
+| RF-REP-024 | Los tableros aportan tarjetas al Inicio por tarjetas (máximo seis visibles, una principal por rol). | Fase 3 (A) | CA-REP-04 |
 
 ### 4.2 Reglas de negocio
 
 | ID | Regla | Cuándo | CA |
 |---|---|---|---|
-| RN-REP-001 | Todo reporte filtra por la empresa de la sesión. Un identificador de otra empresa responde "no encontrado". | A | CA-REP-04 |
-| RN-REP-002 | Un reporte nunca muestra más de lo que el módulo de origen permitiría ver al mismo usuario. | A | CA-REP-18 |
-| RN-REP-003 | Las columnas de precios se omiten sin `precios.ver` y los nombres de Personas se sustituyen por `PRS-NNNN` sin `datos_personales.ver`. | A | CA-REP-07 |
-| RN-REP-004 | Las claves de licencia nunca aparecen en reportes ni exportaciones, ni enmascaradas (D-035.2). IMEI y número de línea se tratan como datos personales. | A | CA-REP-07 |
-| RN-REP-005 | Exportar exige `datos.exportar` además de poder ver el reporte; por defecto solo el Administrador. | A | CA-REP-05 |
-| RN-REP-006 | Solo las celdas **de texto** que empiezan con `=`, `+`, `-`, `@`, tabulador o retorno se escriben como texto; las celdas numéricas, incluidos importes negativos, siguen siendo números (D-050.8). | A | CA-REP-08 |
-| RN-REP-007 | Toda exportación queda en la auditoría aunque falle; se guardan los datos de la acción, no el contenido. El archivo con datos personales lleva una hoja "Aviso" (quién, cuándo, que contiene datos personales). | A | CA-REP-06 |
-| RN-REP-008 | Si el usuario pierde el permiso o su membresía, deja de descargar al instante; lo ya descargado no se puede retirar. | A | CA-REP-05 |
-| RN-REP-009 | Máximo 50.000 filas por exportación; el reporte en pantalla muestra páginas de **50** por defecto (selector 25, 50, 100) y hasta 10.000 filas consultables. | A | CA-REP-09 |
-| RN-REP-010 | Topes de la puerta (D-054): 10 exportaciones por usuario por hora y 100 por empresa por día; alerta a administradores si un usuario pasa de 5 por hora. | A | CA-REP-19 |
-| RN-REP-011 | El periodo máximo por consulta es 24 meses. **[SUPUESTO]** | A | CA-REP-09 |
-| RN-REP-012 | Los destinatarios de una programación son usuarios activos de la misma empresa; no se admiten correos externos. **[SUPUESTO]** | C | CA-REP-11 |
-| RN-REP-013 | En cada envío se comprueba otra vez el permiso del destinatario; si ya no lo tiene se lo omite y se avisa a quien creó la programación. | C | CA-REP-11 |
-| RN-REP-014 | El correo programado tiene contenido mínimo (D-061.4): cantidades y estados, sin nombres, series, IMEI, importes ni datos personales; los detalles se ven al abrir el enlace con permiso. | C | CA-REP-11 |
-| RN-REP-015 | Máximo 20 programaciones activas por empresa y 10 destinatarios por programación. **[SUPUESTO]** | C | CA-REP-11 |
-| RN-REP-016 | Si quien creó una programación deja de ser usuario activo o pierde `reportes.programar`, la programación se pausa y se avisa a los administradores. | C | CA-REP-11 |
-| RN-REP-017 | Una programación mensual con día 29, 30 o 31 se envía el último día del mes cuando el mes es más corto. | C | CA-REP-11 |
-| RN-REP-018 | Los reportes muestran datos actuales. La evolución histórica sale solo de la foto mensual, desde la activación del módulo. **[SUPUESTO]** | B | CA-REP-16 |
-| RN-REP-019 | La foto mensual la toma el trabajador en el primer ciclo posterior al fin del mes en la zona horaria de la empresa; si estuvo caído, la toma al volver y la marca "tomada con retraso" con su fecha de corte real. No se modifica después. | B | CA-REP-16 |
-| RN-REP-020 | Las fechas de garantía y vencimiento son fechas de calendario sin hora; el día de vencimiento cuenta como vigente. Se muestran día/mes/año. | A | CA-REP-02 |
-| RN-REP-021 | El reporte de costos llama a los servicios de PRE; no recalcula ejecutado, comprometido ni disponible ni lee sus tablas. | B | CA-REP-12 |
-| RN-REP-022 | En SLA, REP cuenta los resultados de mesa-de-ayuda (cumplió respuesta y cumplió resolución: sí, no o no aplica) llamando a sus servicios; no recalcula relojes, horarios ni pausas. | C | CA-REP-10 |
-| RN-REP-023 | Una cifra sin dato base se excluye del promedio y se muestra aparte como "sin dato: N". | A | CA-REP-14 |
-| RN-REP-024 | Los tableros no incluyen datos personales: cantidades, estados y listas con identificadores de activo. | A | CA-REP-07 |
-| RN-REP-025 | Una vista guardada solo la ve quien la creó y solo guarda filtros. | A | CA-REP-15 |
-| RN-REP-026 | Cada indicador se define **una sola vez** como un filtro reutilizable; la cifra y la lista que abre salen del mismo filtro (por construcción coinciden). | A | CA-REP-01 |
-| RN-REP-027 | La tarjeta muestra el agregado precalculado y su fecha de corte; la lista abre en vivo y muestra su propia hora. Tras cada precálculo, cifra y lista coinciden (diferencia cero). El botón "Actualizar" tiene tope de uno cada 5 minutos por usuario. **[SUPUESTO]** | A | CA-REP-17 |
-| RN-REP-028 | Los **casos restringidos** (derechos de datos) no cuentan en ningún indicador ni lista, ni en el SLA (D-061.2). | C | CA-REP-20 |
-| RN-REP-029 | Solo la naturaleza "equipo físico" cuenta como activo vigente; licencias y servicios se informan en sus reportes (D-045). | A | CA-REP-14 |
-| RN-REP-059 | Los trabajos de REP (precálculo, foto mensual, envíos) son idempotentes, recuperables (procesan los días pendientes en orden), corren empresa por empresa con "hoy" de cada una, saltan empresas suspendidas y registran cada corrida; escriben con autor "sistema" (D-038.4). | A | CA-REP-17 |
-| RN-REP-060 | Si un módulo está apagado en la empresa, sus reportes y tarjetas no aparecen y la API responde "no encontrado". | A | CA-REP-21 |
-| RN-REP-061 | Una lectura de 5.000 filas o más en una operación se audita como lectura masiva (D-061.6). | A | CA-REP-06 |
-| RN-REP-062 | Prefijo `PRG-` (mínimo 6 dígitos, correlativo por empresa) para programaciones; reservado en la tabla de prefijos. | C | CA-REP-11 |
+| RN-REP-001 | Todo reporte filtra por la empresa de la sesión. Un identificador de otra empresa responde "no encontrado". | Fase 3 (A) | CA-REP-04 |
+| RN-REP-002 | Un reporte nunca muestra más de lo que el módulo de origen permitiría ver al mismo usuario. | Fase 3 (A) | CA-REP-18 |
+| RN-REP-003 | Las columnas de precios se omiten sin `precios.ver` y los nombres de Personas se sustituyen por `PRS-NNNN` sin `datos_personales.ver`. | Fase 3 (A) | CA-REP-07 |
+| RN-REP-004 | Las claves de licencia nunca aparecen en reportes ni exportaciones, ni enmascaradas (D-035.2). IMEI y número de línea se tratan como datos personales. | Fase 3 (A) | CA-REP-07 |
+| RN-REP-005 | Exportar exige `datos.exportar` además de poder ver el reporte; por defecto solo el Administrador. | Fase 3 (A) | CA-REP-05 |
+| RN-REP-006 | Solo las celdas **de texto** que empiezan con `=`, `+`, `-`, `@`, tabulador o retorno se escriben como texto; las celdas numéricas, incluidos importes negativos, siguen siendo números (D-050.8). | Fase 3 (A) | CA-REP-08 |
+| RN-REP-007 | Toda exportación queda en la auditoría aunque falle; se guardan los datos de la acción, no el contenido. El archivo con datos personales lleva una hoja "Aviso" (quién, cuándo, que contiene datos personales). | Fase 3 (A) | CA-REP-06 |
+| RN-REP-008 | Si el usuario pierde el permiso o su membresía, deja de descargar al instante; lo ya descargado no se puede retirar. | Fase 3 (A) | CA-REP-05 |
+| RN-REP-009 | Máximo 50.000 filas por exportación; el reporte en pantalla muestra páginas de **50** por defecto (selector 25, 50, 100) y hasta 10.000 filas consultables. | Fase 3 (A) | CA-REP-09 |
+| RN-REP-010 | Topes de la puerta (D-054): 10 exportaciones por usuario por hora y 100 por empresa por día; alerta a administradores si un usuario pasa de 5 por hora. | Fase 3 (A) | CA-REP-19 |
+| RN-REP-011 | El periodo máximo por consulta es 24 meses. **[SUPUESTO]** | Fase 3 (A) | CA-REP-09 |
+| RN-REP-012 | Los destinatarios de una programación son usuarios activos de la misma empresa; no se admiten correos externos. **[SUPUESTO]** | Fase 3 (C) | CA-REP-11 |
+| RN-REP-013 | En cada envío se comprueba otra vez el permiso del destinatario; si ya no lo tiene se lo omite y se avisa a quien creó la programación. | Fase 3 (C) | CA-REP-11 |
+| RN-REP-014 | El correo programado tiene contenido mínimo (D-061.4): cantidades y estados, sin nombres, series, IMEI, importes ni datos personales; los detalles se ven al abrir el enlace con permiso. | Fase 3 (C) | CA-REP-11 |
+| RN-REP-015 | Máximo 20 programaciones activas por empresa y 10 destinatarios por programación. **[SUPUESTO]** | Fase 3 (C) | CA-REP-11 |
+| RN-REP-016 | Si quien creó una programación deja de ser usuario activo o pierde `reportes.programar`, la programación se pausa y se avisa a los administradores. | Fase 3 (C) | CA-REP-11 |
+| RN-REP-017 | Una programación mensual con día 29, 30 o 31 se envía el último día del mes cuando el mes es más corto. | Fase 3 (C) | CA-REP-11 |
+| RN-REP-018 | Los reportes muestran datos actuales. La evolución histórica sale solo de la foto mensual, desde la activación del módulo. **[SUPUESTO]** | Fase 3 (B) | CA-REP-16 |
+| RN-REP-019 | La foto mensual la toma el trabajador en el primer ciclo posterior al fin del mes en la zona horaria de la empresa; si estuvo caído, la toma al volver y la marca "tomada con retraso" con su fecha de corte real. No se modifica después. | Fase 3 (B) | CA-REP-16 |
+| RN-REP-020 | Las fechas de garantía y vencimiento son fechas de calendario sin hora; el día de vencimiento cuenta como vigente. Se muestran día/mes/año. | Fase 3 (A) | CA-REP-02 |
+| RN-REP-021 | El reporte de costos llama a los servicios de PRE; no recalcula ejecutado, comprometido ni disponible ni lee sus tablas. | Fase 3 (B) | CA-REP-12 |
+| RN-REP-022 | En SLA, REP cuenta los resultados de mesa-de-ayuda (cumplió respuesta y cumplió resolución: sí, no o no aplica) llamando a sus servicios; no recalcula relojes, horarios ni pausas. | Fase 3 (C) | CA-REP-10 |
+| RN-REP-023 | Una cifra sin dato base se excluye del promedio y se muestra aparte como "sin dato: N". | Fase 3 (A) | CA-REP-14 |
+| RN-REP-024 | Los tableros no incluyen datos personales: cantidades, estados y listas con identificadores de activo. | Fase 3 (A) | CA-REP-07 |
+| RN-REP-025 | Una vista guardada solo la ve quien la creó y solo guarda filtros. | Fase 3 (A) | CA-REP-15 |
+| RN-REP-026 | Cada indicador se define **una sola vez** como un filtro reutilizable; la cifra y la lista que abre salen del mismo filtro (por construcción coinciden). | Fase 3 (A) | CA-REP-01 |
+| RN-REP-027 | La tarjeta muestra el agregado precalculado y su fecha de corte; la lista abre en vivo y muestra su propia hora. Tras cada precálculo, cifra y lista coinciden (diferencia cero). El botón "Actualizar" tiene tope de uno cada 5 minutos por usuario. **[SUPUESTO]** | Fase 3 (A) | CA-REP-17 |
+| RN-REP-028 | Los **casos restringidos** (derechos de datos) no cuentan en ningún indicador ni lista, ni en el SLA (D-061.2). | Fase 3 (C) | CA-REP-20 |
+| RN-REP-029 | Solo la naturaleza "equipo físico" cuenta como activo vigente; licencias y servicios se informan en sus reportes (D-045). | Fase 3 (A) | CA-REP-14 |
+| RN-REP-059 | Los trabajos de REP (precálculo, foto mensual, envíos) son idempotentes, recuperables (procesan los días pendientes en orden), corren empresa por empresa con "hoy" de cada una, saltan empresas suspendidas y registran cada corrida; escriben con autor "sistema" (D-038.4). | Fase 3 (A) | CA-REP-17 |
+| RN-REP-060 | Si un módulo está apagado en la empresa, sus reportes y tarjetas no aparecen y la API responde "no encontrado". | Fase 3 (A) | CA-REP-21 |
+| RN-REP-061 | Una lectura de 5.000 filas o más en una operación se audita como lectura masiva (D-061.6). | Fase 3 (A) | CA-REP-06 |
+| RN-REP-062 | Prefijo `PRG-` (mínimo 6 dígitos, correlativo por empresa) para programaciones; reservado en la tabla de prefijos. | Fase 3 (C) | CA-REP-11 |
 
 ### 4.3 Calidad medible
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RNF-REP-001 | Con el volumen de referencia (RNF-010 del núcleo), un tablero carga en 3 s o menos (percentil 95). La prueba de carga corre en integración nocturna desde la Etapa 4. | A | CA-REP-17 |
-| RNF-REP-002 | Un reporte con filtros muestra su primera página en 5 s o menos con ese volumen. | A | CA-REP-17 |
-| RNF-REP-003 | Una exportación de 50.000 filas termina en 60 s o menos, en segundo plano con barra de avance (D-038.7). | A | CA-REP-09 |
-| RNF-REP-004 | Tras cada precálculo, la cifra de una tarjeta coincide con su lista (diferencia cero). | A | CA-REP-01 |
-| RNF-REP-005 | El correo programado sale en menos de 10 minutos desde la hora fijada. | C | CA-REP-11 |
-| RNF-REP-006 | Teclado completo, texto además del color, contraste AA y uso a 360 px (D-053). | A | CA-REP-22 |
-| RNF-REP-007 | Un reporte pesado no vuelve más lenta la operación diaria (se mide en la prueba de carga de QA). | A | CA-REP-17 |
-| RNF-REP-008 | Cada indicador tiene al menos una prueba automática con datos conocidos y resultado esperado. | A | CA-REP-01 a 03 |
+| RNF-REP-001 | Con el volumen de referencia (RNF-010 del núcleo), un tablero carga en 3 s o menos (percentil 95). La prueba de carga corre en integración nocturna desde la Etapa 4. | Fase 3 (A) | CA-REP-17 |
+| RNF-REP-002 | Un reporte con filtros muestra su primera página en 5 s o menos con ese volumen. | Fase 3 (A) | CA-REP-17 |
+| RNF-REP-003 | Una exportación de 50.000 filas termina en 60 s o menos, en segundo plano con barra de avance (D-038.7). | Fase 3 (A) | CA-REP-09 |
+| RNF-REP-004 | Tras cada precálculo, la cifra de una tarjeta coincide con su lista (diferencia cero). | Fase 3 (A) | CA-REP-01 |
+| RNF-REP-005 | El correo programado sale en menos de 10 minutos desde la hora fijada. | Fase 3 (C) | CA-REP-11 |
+| RNF-REP-006 | Teclado completo, texto además del color, contraste AA y uso a 360 px (D-053). | Fase 3 (A) | CA-REP-22 |
+| RNF-REP-007 | Un reporte pesado no vuelve más lenta la operación diaria (se mide en la prueba de carga de QA). | Fase 3 (A) | CA-REP-17 |
+| RNF-REP-008 | Cada indicador tiene al menos una prueba automática con datos conocidos y resultado esperado. | Fase 3 (A) | CA-REP-01 a 03 |
 
 ### 4.4 Catálogo de indicadores (definición en palabras)
 
@@ -162,35 +162,35 @@ Notas
 
 | ID | Indicador | Fórmula en palabras | Cuándo | CA |
 |---|---|---|---|---|
-| RN-REP-030 | Activos vigentes | Cantidad de activos de equipo físico en En stock, Asignado o En reparación. | A | CA-REP-01 |
-| RN-REP-031 | Activos por estado | Cantidad en cada uno de los cinco estados de D-012. | A | CA-REP-01 |
-| RN-REP-032 | Stock por SKU | Suma de los saldos de todas las ubicaciones del SKU por cantidad. | A | — |
-| RN-REP-033 | SKU bajo el mínimo | SKU por cantidad con stock mínimo definido (mayor que cero) y stock total menor que ese mínimo. Solo es un dato del SKU (S-26), sin avisos propios. | A | — |
-| RN-REP-034 | Tasa de asignación | Activos Asignado entre (En stock + Asignado), en porcentaje. | A | CA-REP-03 |
-| RN-REP-035 | En stock sin asignar | Activos En stock con última salida o ingreso de hace más de 90 días (configurable). | A | — |
-| RN-REP-036 | Pendientes de completar | Activos o SKU con campos obligatorios sin llenar (D-005). | A | — |
-| RN-REP-037 | Antigüedad promedio | Promedio, en meses, de (hoy menos fecha de compra) de los activos vigentes con fecha de compra. | A | CA-REP-14 |
-| RN-REP-038 | Tramos de antigüedad | Activos vigentes con 0 a 12, más de 12 a 24, más de 24 a 36, más de 36 a 48 y más de 48 meses. | A | — |
-| RN-REP-039 | En fin de vida útil | Activos vigentes cuya antigüedad es mayor o igual a la vida útil de **la copia de parámetros que PRE guardó en el activo al ingresar**. Sin copia, "sin parámetro: N". | B | CA-REP-14 |
-| RN-REP-040 | Cerca del fin de vida útil | Activos vigentes que cumplen su vida útil en los próximos 6 meses. | B | CA-REP-14 |
-| RN-REP-041 | Tiempo medio en reparación | Promedio de días entre entrada y salida de En reparación, de las reparaciones terminadas en el periodo; las abiertas aparte. | A | — |
-| RN-REP-042 | Bajas del periodo | Activos que pasaron a De baja o Extraviado o robado en el periodo, por motivo. | A | — |
-| RN-REP-043 | Garantías por vencer | Activos vigentes con fin de garantía entre hoy y hoy + 30, 60 o 90 días (inclusive). | A | CA-REP-02 |
-| RN-REP-044 | Garantías vencidas | Activos vigentes con fin de garantía anterior a hoy; los sin garantía, aparte. | A | — |
-| RN-REP-045 | Vencimientos próximos | Contratos, licencias, líneas, dominios y certificados con vencimiento entre hoy y hoy + 30, 60 o 90 días, por tipo. La vigencia se calcula al leer (D-062.2). | A | — |
-| RN-REP-046 | Vencidos sin renovar | Elementos de la regla anterior con vencimiento anterior a hoy y sin renovación registrada. | A | — |
-| RN-REP-047 | OC por estado | Cantidad e importe (por moneda) de OC en cada estado de D-013. | B | CA-REP-12 |
-| RN-REP-048 | Tiempo medio de aprobación | Promedio de horas entre el paso a Pendiente de aprobación y la aprobación o rechazo, de las órdenes resueltas en el periodo. | B | — |
-| RN-REP-049 | Tiempo medio de entrega | Promedio de días entre Emitida y la primera recepción confirmada, de las órdenes con recepción en el periodo. | B | — |
-| RN-REP-050 | Ejecutado, comprometido, disponible, ejecución % | Como los define PRE, siempre por moneda. | B | CA-REP-12 |
-| RN-REP-051 | Compras por proveedor | Valor recibido sin impuesto en el periodo por proveedor y moneda. | B | — |
-| RN-REP-052 | Casos abiertos | Casos no resueltos ni cerrados a la fecha de corte, sin los restringidos. | C | CA-REP-20 |
-| RN-REP-053 | Cumplimiento SLA de respuesta | Casos con "cumplió respuesta = sí" entre los de "sí" o "no" cuya meta cayó en el periodo; se excluyen "no aplica" y los aún dentro de plazo. | C | CA-REP-10 |
-| RN-REP-054 | Cumplimiento SLA de resolución | Igual, con "cumplió resolución". | C | CA-REP-10 |
-| RN-REP-055 | Tiempo medio de resolución | Promedio de horas, medidas como las mide mesa-de-ayuda, entre creación y resolución de los casos resueltos en el periodo. | C | — |
-| RN-REP-056 | Casos vencidos abiertos | Casos abiertos con meta de respuesta o resolución ya pasada. | C | — |
-| RN-REP-057 | Cumplimiento de licencias | Por producto, el estado que informa licencias-software: En regla, Déficit (faltan puestos), Excedente (sobran) o Sin verificar (sin dato de uso reciente). Muestra puestos adquiridos vigentes, asignados y en uso con la fecha del último dato. No es una auditoría de licencias. | C | CA-REP-13 |
-| RN-REP-058 | Licencias en riesgo | Productos en Déficit o Sin verificar. | C | CA-REP-13 |
+| RN-REP-030 | Activos vigentes | Cantidad de activos de equipo físico en En stock, Asignado o En reparación. | Fase 3 (A) | CA-REP-01 |
+| RN-REP-031 | Activos por estado | Cantidad en cada uno de los cinco estados de D-012. | Fase 3 (A) | CA-REP-01 |
+| RN-REP-032 | Stock por SKU | Suma de los saldos de todas las ubicaciones del SKU por cantidad. | Fase 3 (A) | — |
+| RN-REP-033 | SKU bajo el mínimo | SKU por cantidad con stock mínimo definido (mayor que cero) y stock total menor que ese mínimo. Solo es un dato del SKU (S-26), sin avisos propios. | Fase 3 (A) | — |
+| RN-REP-034 | Tasa de asignación | Activos Asignado entre (En stock + Asignado), en porcentaje. | Fase 3 (A) | CA-REP-03 |
+| RN-REP-035 | En stock sin asignar | Activos En stock con última salida o ingreso de hace más de 90 días (configurable). | Fase 3 (A) | — |
+| RN-REP-036 | Pendientes de completar | Activos o SKU con campos obligatorios sin llenar (D-005). | Fase 3 (A) | — |
+| RN-REP-037 | Antigüedad promedio | Promedio, en meses, de (hoy menos fecha de compra) de los activos vigentes con fecha de compra. | Fase 3 (A) | CA-REP-14 |
+| RN-REP-038 | Tramos de antigüedad | Activos vigentes con 0 a 12, más de 12 a 24, más de 24 a 36, más de 36 a 48 y más de 48 meses. | Fase 3 (A) | — |
+| RN-REP-039 | En fin de vida útil | Activos vigentes cuya antigüedad es mayor o igual a la vida útil de **la copia de parámetros que PRE guardó en el activo al ingresar**. Sin copia, "sin parámetro: N". | Fase 3 (B) | CA-REP-14 |
+| RN-REP-040 | Cerca del fin de vida útil | Activos vigentes que cumplen su vida útil en los próximos 6 meses. | Fase 3 (B) | CA-REP-14 |
+| RN-REP-041 | Tiempo medio en reparación | Promedio de días entre entrada y salida de En reparación, de las reparaciones terminadas en el periodo; las abiertas aparte. | Fase 3 (A) | — |
+| RN-REP-042 | Bajas del periodo | Activos que pasaron a De baja o Extraviado o robado en el periodo, por motivo. | Fase 3 (A) | — |
+| RN-REP-043 | Garantías por vencer | Activos vigentes con fin de garantía entre hoy y hoy + 30, 60 o 90 días (inclusive). | Fase 3 (A) | CA-REP-02 |
+| RN-REP-044 | Garantías vencidas | Activos vigentes con fin de garantía anterior a hoy; los sin garantía, aparte. | Fase 3 (A) | — |
+| RN-REP-045 | Vencimientos próximos | Contratos, licencias, líneas, dominios y certificados con vencimiento entre hoy y hoy + 30, 60 o 90 días, por tipo. La vigencia se calcula al leer (D-062.2). | Fase 3 (A) | — |
+| RN-REP-046 | Vencidos sin renovar | Elementos de la regla anterior con vencimiento anterior a hoy y sin renovación registrada. | Fase 3 (A) | — |
+| RN-REP-047 | OC por estado | Cantidad e importe (por moneda) de OC en cada estado de D-013. | Fase 3 (B) | CA-REP-12 |
+| RN-REP-048 | Tiempo medio de aprobación | Promedio de horas entre el paso a Pendiente de aprobación y la aprobación o rechazo, de las órdenes resueltas en el periodo. | Fase 3 (B) | — |
+| RN-REP-049 | Tiempo medio de entrega | Promedio de días entre Emitida y la primera recepción confirmada, de las órdenes con recepción en el periodo. | Fase 3 (B) | — |
+| RN-REP-050 | Ejecutado, comprometido, disponible, ejecución % | Como los define PRE, siempre por moneda. | Fase 3 (B) | CA-REP-12 |
+| RN-REP-051 | Compras por proveedor | Valor recibido sin impuesto en el periodo por proveedor y moneda. | Fase 3 (B) | — |
+| RN-REP-052 | Casos abiertos | Casos no resueltos ni cerrados a la fecha de corte, sin los restringidos. | Fase 3 (C) | CA-REP-20 |
+| RN-REP-053 | Cumplimiento SLA de respuesta | Casos con "cumplió respuesta = sí" entre los de "sí" o "no" cuya meta cayó en el periodo; se excluyen "no aplica" y los aún dentro de plazo. | Fase 3 (C) | CA-REP-10 |
+| RN-REP-054 | Cumplimiento SLA de resolución | Igual, con "cumplió resolución". | Fase 3 (C) | CA-REP-10 |
+| RN-REP-055 | Tiempo medio de resolución | Promedio de horas, medidas como las mide mesa-de-ayuda, entre creación y resolución de los casos resueltos en el periodo. | Fase 3 (C) | — |
+| RN-REP-056 | Casos vencidos abiertos | Casos abiertos con meta de respuesta o resolución ya pasada. | Fase 3 (C) | — |
+| RN-REP-057 | Cumplimiento de licencias | Por producto, el estado que informa licencias-software: En regla, Déficit (faltan puestos), Excedente (sobran) o Sin verificar (sin dato de uso reciente). Muestra puestos adquiridos vigentes, asignados y en uso con la fecha del último dato. No es una auditoría de licencias. | Fase 3 (C) | CA-REP-13 |
+| RN-REP-058 | Licencias en riesgo | Productos en Déficit o Sin verificar. | Fase 3 (C) | CA-REP-13 |
 
 ---
 
@@ -388,5 +388,6 @@ Cada criterio cita el requisito que cubre. Fechas día/mes/año.
 | Se corrigen las citas de RNF-008 y RNF-010 sin código de módulo: ahora dicen "del núcleo"; la celda de `reportes.programar` se escribe "T" (Administrador) y "P" (Jefatura TI) como en el registro | N-AUD-01 y N-AUD-04 de la ronda 3 del Auditor Técnico |
 | Columnas "Cuándo" y "CA"; cada CA cita lo que cubre; 22 criterios (nuevos: fórmulas con tabulador, topes, casos restringidos, módulo apagado, copia de parámetros, procesos con dos empresas, foto con retraso, accesibilidad) | Plan de correcciones regla 2; H-AUD-21; QA y Seguridad |
 | Pantallas con ID `PAN-REP-nn`; prefijo `PRG-` reservado; "usted" y "Cliente (CEO)"; "Persona anonimizada 0042" | D-049, D-053 |
+| **v0.3:** "Cuándo" con las tres palabras (`Fase 3 (A)`, `(B)`, `(C)`); los filtros de la auditoría ya no guardan valores personales | D-075 (N-AUD-06, unificar "Cuándo"); D-030; `docs/equipo/plan-aplicacion.md` |
 | La auditoría de exportaciones guarda solo los nombres de los campos filtrados, sin el texto buscado (RF-REP-015, sección 6, CA-REP-06) | D-030; Auditor de Cumplimiento R-07 (ronda 3) |
 | S-REP-02, 06, 08 y 09 quedan resueltos por decisiones; S-REP-11 marcado dentro del escalado de correo; S-REP-14 nuevo | D-054, D-057, D-061.1, D-037 |

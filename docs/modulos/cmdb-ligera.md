@@ -1,6 +1,6 @@
 # Módulo: CMDB ligera (`cmdb-ligera`, sigla CMD)
 
-**Versión:** 0.2 (corrección tras la revisión cruzada, Oleada D; escuadrón E)
+**Versión:** 0.3 (aplica D-065 a D-076; sobre la v0.2 de la revisión cruzada; escuadrón E)
 **Cuándo se construye:** Fase 3, ola E (primero de la ola: CMD, luego CAM, luego PRB). No entra a la v1 (D-056).
 **Se apoya en:** `docs/equipo/decisiones.md` (D-001 a D-064), `docs/equipo/plan-correcciones.md` y el núcleo `docs/documento-funcional.md`.
 **Marcas:** [SUPUESTO] = decisión propuesta por el analista; el resultado de cada uno está en la sección 12. [ESCALAR AL CEO] = solo dinero, tema legal o algo irreversible.
@@ -123,7 +123,7 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10 que 
 | RN-CMD-026 | Un EC se materializa al crearle una relación manual o completarle un dato propio. Lo hace un gancho en la misma operación y el mismo bloqueo de la base que el origen; un reconciliador nocturno corrige diferencias, sin aviso. | Fase 3 | CA-CMD-11 |
 | RN-CMD-027 | La CMDB identifica cada EC de origen por su identificador interno estable, no por su código ni nombre. Cada módulo origen lo ofrece (sección 9). | Fase 3 | CA-CMD-05 |
 | RN-CMD-028 | La auditoría guarda "el campo X cambió" para notas, descripciones y motivos (texto libre) y el identificador de las Personas, nunca nombres (D-030). | Fase 3 | CA-CMD-18 |
-| RN-CMD-029 | Cada consulta de impacto que muestre 100 o más nombres de Personas, y toda exportación, deja una entrada de auditoría con el EC y la cantidad, sin los nombres. | Fase 3 | CA-CMD-19 |
+| RN-CMD-029 | Cada consulta de impacto que muestre 100 o más nombres de Personas (umbral configurable por la plataforma, D-071.4), y toda exportación, deja una entrada de auditoría con el EC y la cantidad, sin los nombres. | Fase 3 | CA-CMD-19 |
 | RN-CMD-030 | Las notas y descripciones pasan por el validador común de texto libre (rechaza claves privadas y patrones de claves) y advierten no escribir datos personales (D-063.2). | Fase 3 | CA-CMD-20 |
 
 ### 4.3 De calidad medible
@@ -201,7 +201,7 @@ Los avisos usan el motor y la tabla únicos de Notificaciones (D-062.3). A una P
 
 | Con | Qué se intercambia | Dueño del dato |
 |---|---|---|
-| Inventario (Etapa 4) | Lee activos con serie de naturaleza "equipo físico" y sus asignaciones. Pide: identificador interno estable y un evento `inventario.activo_dado_de_baja`. | Inventario |
+| Inventario (Etapa 4) | Lee activos con serie de naturaleza "equipo físico" y sus asignaciones. Pide: identificador interno estable y el evento único `inventario.activo_estado_cambiado` (con el nuevo estado y la causa; la baja es un valor, no otro evento; N-AUD-06). La CMDB marca De baja al EC cuando el nuevo estado es De baja o Extraviado o robado, y lo reactiva con el reingreso. | Inventario |
 | `personas-ubicaciones` | Lee Personas; la baja o cese avisa para el pendiente de la Persona. | Personas |
 | `licencias-software` | Lee contratos (el EC es el contrato) y puestos asignados. | Licencias |
 | `lineas-moviles`, `dominios-certificados` | Leen líneas, dominios y certificados; el vencimiento se consulta, no se copia. "Servicio que depende" de un dominio es la relación de esta CMDB. | Líneas, Dominios |
@@ -236,7 +236,7 @@ Cada criterio indica el requisito que cubre.
 
 **CA-CMD-10** (RF-CMD-012, RN-CMD-014, RN-CMD-021). Dado "A depende de B", cuando se crea "B depende de A", entonces se guarda con aviso "dependencia circular", aparece en calidad y el impacto de A termina sin repetir elementos.
 
-**CA-CMD-11** (RF-CMD-005, RN-CMD-026). Dado un activo materializado, cuando el Técnico lo da de baja, entonces en la misma operación su EC queda De baja; si la operación falla, no queda nada a medias; y el reconciliador de la noche no encuentra diferencias.
+**CA-CMD-11** (RF-CMD-005, RN-CMD-026). Dado un activo materializado, cuando el Técnico lo da de baja (evento `inventario.activo_estado_cambiado` con estado De baja), entonces en la misma operación su EC queda De baja; si la operación falla, no queda nada a medias; y el reconciliador de la noche no encuentra diferencias.
 
 **CA-CMD-12** (RF-CMD-007, RN-CMD-003). Dado un EC de origen, cuando el Técnico intenta cambiar su serie desde la CMDB, entonces no existe el campo; criticidad y notas sí se pueden completar.
 
@@ -285,8 +285,8 @@ Cada criterio indica el requisito que cubre.
 | S-CMD-08 | [SUPUESTO] | Criticidad de 3 niveles, igual a Cambios. | Aceptado (D-058). |
 | S-CMD-09 | [SUPUESTO] | Permiso de datos personales con otro nombre. | Resuelto: `datos_personales.ver` (D-036). |
 | S-CMD-10 | [SUPUESTO] | Importar Servicios con reglas propias. | Ajustado: marco único (D-050). |
-| S-CMD-11 | [SUPUESTO] | Un EC de origen se materializa al relacionarlo o completarle datos propios. | Nuevo; pendiente de visto bueno del Gerente de TI. |
-| S-CMD-12 | [SUPUESTO] | Se audita toda consulta de impacto con 100 o más nombres. | Nuevo; pendiente (D-061.6 fija 5.000 para lecturas masivas generales). |
+| S-CMD-11 | [SUPUESTO] | Un EC de origen se materializa al relacionarlo o completarle datos propios. | **Aceptado** (D-071.3; coherente con D-062.1). |
+| S-CMD-12 | [SUPUESTO] | Se audita toda consulta de impacto con 100 o más nombres. | **Aceptado con umbral propio** (D-071.4): 100 nombres de Personas, configurable por la plataforma; la lectura masiva general de 5.000 filas (D-061.6) se mantiene. |
 | S-CMD-13 | [SUPUESTO] | El EC de una licencia es el contrato; la unidad no es EC. | Aceptado (D-062, D-045). |
 
 **[ESCALAR AL CEO]:** ninguno. Sin dinero, tema legal nuevo ni acciones irreversibles; la retención de nombres sigue en D-024 y D-033, ya escaladas.
@@ -329,4 +329,5 @@ Cada criterio indica el requisito que cubre.
 | Columna Cuándo y CA por requisito; criterios citan su requisito; IDs PAN-CMD y S-CMD | plan sección 0 (2), D-049.4, H-AUD-21 |
 | Pruebas: dos empresas, escritura con referencia cruzada, por identificador interno, reloj fijable (CA-CMD-05, CA-CMD-13, CA-CMD-21) | D-039.6, D-063.6, QA y Seguridad |
 | Fase: Fase 3, ola E, primero de la ola | D-056 |
+| v0.3: S-CMD-11 y S-CMD-12 "Aceptado (D-071)", umbral de 100 nombres de Personas configurable por la plataforma; la baja del activo usa el evento único `inventario.activo_estado_cambiado` | D-071.3 y 4, N-AUD-06 (D-075), plan-aplicacion fila E |
 | Todas las citas escritas completas: CA-CMD-nn en la columna CA, y RF-, RN- y RNF-CMD-nnn sin abreviar | Auditor Técnico, ronda 3 |

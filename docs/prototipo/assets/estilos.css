@@ -127,6 +127,8 @@ small, .chica { font-size: var(--f-chica); }
 .saltar { position: absolute; left: -999px; top: 8px; background: var(--c-superficie); color: var(--c-texto); padding: var(--e3) var(--e4); border: 2px solid var(--c-foco); z-index: 1000; border-radius: var(--radio); }
 .saltar:focus { left: 8px; }
 
+svg { width: 1.1em; height: 1.1em; vertical-align: -0.15em; flex: none; }
+
 /* ---------- 3. Estructura de la pantalla ---------- */
 .demo-bar {
   position: sticky; top: 0; z-index: 60; min-height: var(--alto-demo);
@@ -346,6 +348,8 @@ table.tabla { width: 100%; border-collapse: collapse; font-size: var(--f-chica);
 /* cabecera fija de ficha */
 .cab-ficha { background: var(--c-superficie); border: 1px solid var(--c-borde); border-radius: var(--radio); padding: var(--e4); margin-bottom: var(--e4); display: grid; gap: var(--e3); }
 .cab-ficha .datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--e3) var(--e4); }
+.rejilla.ancha > .pila > .tarjeta .lista-datos { grid-template-columns: 1fr; gap: 0; }
+.rejilla.ancha > .pila > .tarjeta .lista-datos dd { margin-bottom: var(--e2); }
 .dato dt { font-size: var(--f-mini); color: var(--c-texto-suave); }
 .dato dd { margin: 0; font-weight: 600; }
 dl { margin: 0; }

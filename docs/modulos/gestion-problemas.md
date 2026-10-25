@@ -1,6 +1,6 @@
 # Módulo: Gestión de problemas (`gestion-problemas`, sigla PRB)
 
-**Versión:** 0.2 (corrección tras la revisión cruzada, Oleada D; escuadrón E)
+**Versión:** 0.3 (aplica D-065 a D-076; sobre la v0.2 de la revisión cruzada; escuadrón E)
 **Cuándo se construye:** Fase 3, ola E, después de `mesa-de-ayuda`, `cmdb-ligera` y `gestion-cambios`. No entra a la v1 (D-056).
 **Se apoya en:** `docs/equipo/decisiones.md` (D-001 a D-064), `docs/equipo/plan-correcciones.md` y el núcleo `docs/documento-funcional.md`.
 **Marcas:** [SUPUESTO] = decisión propuesta por el analista; el resultado de cada uno está en la sección 12. [ESCALAR AL CEO] = solo dinero, tema legal o algo irreversible.
@@ -49,7 +49,7 @@ Nombres y valores según `docs/registro-permisos.md` (D-036); este módulo no ca
 | Acción | Permiso | PS | Admin. | Jefatura TI | Técnico | Almacén | Solicitante | Solo lectura |
 |---|---|---|---|---|---|---|---|---|
 | Ver problemas | `problemas.ver` | PS-180 | Sí | Sí | Sí | No | No | Sí |
-| Ver errores conocidos publicados (solo la solución temporal) | `problemas.ver_errores_conocidos` | PS-181 | Sí | Sí | Sí | Sí | Sí | Sí |
+| Ver errores conocidos publicados (solo el resumen para usuarios) | `problemas.ver_errores_conocidos` | PS-181 | Sí | Sí | Sí | Sí | Sí | Sí |
 | Crear un problema | `problemas.crear` | PS-182 | Sí | Sí | Sí | No | No | No |
 | Editar, analizar y asignar responsable | `problemas.editar` | PS-183 | Sí | Sí | Sí | No | No | No |
 | Vincular y desvincular incidentes, cambios y elementos | `problemas.vincular` | PS-184 | Sí | Sí | Sí | No | No | No |
@@ -61,7 +61,7 @@ Nombres y valores según `docs/registro-permisos.md` (D-036); este módulo no ca
 | Redactar por seguridad un texto (sensible) | `problemas.redactar` | PS-222 | Sí | No | No | No | No | No |
 | Exportar a Excel | `datos.exportar` (sensible) | PS-20 | Sí | No | No | No | No | No |
 
-Notas: (1) Todo se comprueba en el servidor. (2) Vincular un incidente exige además poder verlo según la mesa de ayuda. (3) Publicar es un permiso aparte: su texto llega a mucha gente y puede indicar acciones sobre equipos. (4) Como Almacén y Solicitante ven los errores conocidos publicados, la solución temporal se escribe en lenguaje claro y sin detalles internos (RN-PRB-016).
+Notas: (1) Todo se comprueba en el servidor. (2) Vincular un incidente exige además poder verlo según la mesa de ayuda. (3) Publicar es un permiso aparte: su texto llega a mucha gente y puede indicar acciones sobre equipos. (4) Como Almacén y Solicitante ven los errores conocidos publicados, ven solo el resumen para usuarios (claro y sin detalles internos, RN-PRB-016); el detalle técnico lo ven solo los roles con `problemas.ver` (RN-PRB-021, D-071.2).
 
 ## 4. Requisitos
 
@@ -79,7 +79,7 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 | RF-PRB-006 | Bitácora de análisis: autor, fecha y texto; solo se agrega. | Fase 3 | CA-PRB-05 |
 | RF-PRB-007 | Registrar la causa raíz (texto) y su categoría. | Fase 3 | CA-PRB-05 |
 | RF-PRB-008 | Pasar a Error conocido exige causa raíz, categoría y solución temporal (o la declaración "no hay solución temporal posible"). | Fase 3 | CA-PRB-05 |
-| RF-PRB-009 | Publicar el error conocido: se muestra como texto de lectura en el formulario de la mesa de ayuda cuando el caso indica un elemento vinculado o una categoría igual. | Fase 3 | CA-PRB-06 |
+| RF-PRB-009 | Publicar el error conocido: su resumen para usuarios se muestra como texto de lectura en el formulario de la mesa de ayuda cuando el caso indica un elemento vinculado o una categoría igual. | Fase 3 | CA-PRB-06 |
 | RF-PRB-010 | Vincular cambios como solución definitiva y mostrar su estado. | Fase 3 | CA-PRB-07 |
 | RF-PRB-011 | Resolver indicando la solución definitiva aplicada. | Fase 3 | CA-PRB-07, CA-PRB-08 |
 | RF-PRB-012 | Cerrar tras el periodo de observación. | Fase 3 | CA-PRB-09 |
@@ -102,18 +102,19 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 | RN-PRB-006 | Resolver exige (a) un cambio vinculado Cerrado con resultado Exitoso o Exitoso con observaciones, o (b) un motivo escrito de por qué no hace falta cambio. | Fase 3 | CA-PRB-07, CA-PRB-08 |
 | RN-PRB-007 | Resolver un problema no cierra ni modifica los incidentes vinculados. | Fase 3 | CA-PRB-07 |
 | RN-PRB-008 | Cerrar exige haber pasado el periodo de observación (14 días corridos desde Resuelto, ajustable) sin incidentes nuevos, o un motivo de cierre anticipado. | Fase 3 | CA-PRB-09 |
-| RN-PRB-009 | Publicar una solución temporal exige a una persona que no la redactó ni editó desde la última publicación (acto "Publicar error conocido", RN-017 del núcleo). Con la casilla "problemas" del interruptor único encendida (apagada por defecto, vence a los 90 días) puede publicarla quien la redactó; cada uso queda en el aviso y la auditoría. No existe excepción propia del módulo. | Fase 3 | CA-PRB-06, CA-PRB-13 |
+| RN-PRB-009 | Publicar una solución temporal exige a una persona que no la redactó ni editó desde la última publicación (acto "Publicar error conocido", RN-017 del núcleo). Con la casilla «problemas» del interruptor único encendida (apagada por defecto, vence a los 90 días) puede publicarla quien la redactó; cada uso queda en el aviso y la auditoría. No existe excepción propia del módulo. | Fase 3 | CA-PRB-06, CA-PRB-13 |
 | RN-PRB-010 | Cerrado y Descartado no se reabren; si ocurre otra vez se registra una reaparición. | Fase 3 | CA-PRB-11 |
 | RN-PRB-011 | Con incidentes nuevos y el problema Resuelto, el responsable puede devolverlo a En análisis con motivo. | Fase 3 | CA-PRB-09 |
 | RN-PRB-012 | Al descartar se desvinculan los incidentes (quedan libres) y se conserva el historial. | Fase 3 | CA-PRB-12 |
 | RN-PRB-013 | Un problema no se borra (D-019); un borrador sin incidentes ni análisis lo puede borrar quien lo creó. | Fase 3 | CA-PRB-12 |
 | RN-PRB-014 | Todo cambio de estado guarda quién, cuándo y motivo (obligatorio al descartar, cerrar antes de tiempo y desactivar un error conocido). | Fase 3 | CA-PRB-12 |
 | RN-PRB-015 | El responsable es una Persona con Usuario vinculado activo y con `problemas.editar`. | Fase 3 | CA-PRB-15 |
-| RN-PRB-016 | Los textos pasan por el validador común (rechaza bloques de clave privada y patrones de claves) y advierten no escribir claves ni datos personales; la solución temporal se redacta sin detalles internos porque la ven más roles (D-063.2). | Fase 3 | CA-PRB-14 |
+| RN-PRB-016 | Los textos pasan por el validador común (rechaza bloques de clave privada y patrones de claves) y advierten no escribir claves ni datos personales; el resumen para usuarios se redacta sin detalles internos porque lo ven más roles (D-063.2, D-071.2). | Fase 3 | CA-PRB-14 |
 | RN-PRB-017 | La sugerencia cuenta solo incidentes de la misma empresa, con el umbral configurado (3 en 30 días por defecto), y no cuenta casos restringidos de derechos de datos. | Fase 3 | CA-PRB-10 |
 | RN-PRB-018 | Los casos restringidos de derechos de datos no se pueden vincular a un problema (D-061.2). | Fase 3 | CA-PRB-03 |
 | RN-PRB-019 | La auditoría guarda "el campo X cambió" para síntoma, causa raíz, solución temporal, análisis, comentarios y motivos (texto libre); las Personas solo por `PRS-NNNN`. El texto vive en el historial del módulo (D-030). | Fase 3 | CA-PRB-14 |
 | RN-PRB-020 | Redactar por seguridad reemplaza el texto por `[REDACTADO]` y registra quién, cuándo y por qué, sin el texto (D-061.5). | Fase 3 | CA-PRB-14 |
+| RN-PRB-021 | Cada error conocido tiene dos textos: un **resumen para usuarios** (lo ven todos los roles con `problemas.ver_errores_conocidos` y el formulario de la mesa de ayuda; sin datos internos; pasa por el validador común; lo publica una segunda persona) y un **detalle técnico** (solo roles con `problemas.ver`). La mesa de ayuda recibe únicamente el resumen. Publicar exige ambos textos. | Fase 3 | CA-PRB-17 |
 
 ### 4.3 De calidad medible
 
@@ -175,7 +176,7 @@ Unicidad: (empresa, número); un vínculo vigente por incidente; un cambio o ele
 | PAN-PRB-03 | Nuevo problema | Alta, con opción de partir de incidentes elegidos. | Técnico |
 | PAN-PRB-04 | Sugerencias de problemas | Grupos de incidentes parecidos; Crear problema o Descartar sugerencia. | Jefatura TI |
 | PAN-PRB-05 | Análisis | Bitácora, causa raíz y categoría. | Técnico |
-| PAN-PRB-06 | Base de errores conocidos | Lista consultable con la solución temporal. | Técnico |
+| PAN-PRB-06 | Base de errores conocidos | Lista consultable con el resumen para usuarios y, con `problemas.ver`, el detalle técnico. | Técnico |
 | PAN-PRB-07 | Resolver o cerrar | Formularios cortos con las condiciones de RN-PRB-006 y RN-PRB-008 (bloque común de decisión). | Técnico / Jefatura TI |
 | PAN-PRB-08 | Configuración de problemas | Umbral, ventana y periodo de observación. | Administrador |
 
@@ -193,7 +194,7 @@ Los avisos usan el motor y la tabla únicos de Notificaciones (D-062.3). Sin nom
 | El cambio vinculado termina Revertido o Fallido | Responsable | "CAM-000012 no funcionó. PRB-000007 sigue abierto." |
 | Termina el periodo de observación | Responsable y Jefatura TI | "Pasaron 14 días de PRB-000007 sin incidentes nuevos. Puede cerrarlo." |
 | El responsable es cesado | Jefatura TI | "PRB-000007 quedó sin responsable activo." |
-| Uso de la casilla "problemas" | Administradores | "Se publicó una solución sin segunda persona (excepción activa)." |
+| Uso de la casilla «problemas» | Administradores | "Se publicó una solución sin segunda persona (excepción activa)." |
 
 La sugerencia "Posible problema" se muestra en la tarjeta de inicio de Jefatura TI sin correo.
 
@@ -204,7 +205,7 @@ La sugerencia "Posible problema" se muestra en la tarjeta de inicio de Jefatura 
 | Con | Qué se intercambia | Dueño del dato |
 |---|---|---|
 | Núcleo | Usuarios, roles, permisos, empresa activa, auditoría, contadores, interruptor único de excepciones, servicio de doble control. | Núcleo |
-| `mesa-de-ayuda` | El incidente es de la mesa y se referencia por identificador interno (D-039.7). Los vínculos viven aquí; la mesa los muestra en solo lectura. Un incidente, un problema. La mesa agrega el elemento afectado opcional, muestra la sugerencia que calcula este módulo y el texto de la solución temporal del error conocido vigente. Resolver no cierra incidentes. Los casos restringidos no se vinculan ni cuentan. | Mesa (incidente), Problemas (vínculo, sugerencia, error conocido) |
+| `mesa-de-ayuda` | El incidente es de la mesa y se referencia por identificador interno (D-039.7). Los vínculos viven aquí; la mesa los muestra en solo lectura. Un incidente, un problema. La mesa agrega el elemento afectado opcional, muestra la sugerencia que calcula este módulo y el resumen para usuarios del error conocido vigente (nunca el detalle técnico). Resolver no cierra incidentes. Los casos restringidos no se vinculan ni cuentan. | Mesa (incidente), Problemas (vínculo, sugerencia, error conocido) |
 | `gestion-cambios` | El cambio es la solución definitiva; el vínculo vive aquí y el cambio lo muestra. | Cambios (cambio), Problemas (vínculo) |
 | `cmdb-ligera` | Elegir elementos afectados; la ficha del elemento lista problemas abiertos y errores conocidos; la criticidad alimenta la prioridad sugerida. | CMDB (elementos), Problemas (vínculo) |
 | `notificaciones` | Entrega de los avisos; eventos `problemas.error_conocido_publicado` y similares en el catálogo único. | Notificaciones |
@@ -239,13 +240,15 @@ Cada criterio indica el requisito que cubre.
 
 **CA-PRB-12** (RF-PRB-013, RN-PRB-012, RN-PRB-013, RN-PRB-014). Dado un problema con 2 incidentes, cuando Jefatura lo descarta sin motivo, entonces se impide; con motivo los incidentes quedan libres y el historial se conserva.
 
-**CA-PRB-13** (RN-PRB-009). Dado que un Administrador único activó la casilla "problemas", cuando publica una solución que él redactó, entonces se permite con aviso y auditoría; con la casilla apagada o vencida (90 días) se rechaza, incluso llamando al servidor.
+**CA-PRB-13** (RN-PRB-009). Dado que un Administrador único activó la casilla «problemas», cuando publica una solución que él redactó, entonces se permite con aviso y auditoría; con la casilla apagada o vencida (90 días) se rechaza, incluso llamando al servidor.
 
 **CA-PRB-14** (RF-PRB-017, RN-PRB-016, RN-PRB-019, RN-PRB-020, RNF-PRB-005). Dado un comentario con un dato personal, cuando el Administrador lo redacta por seguridad, entonces queda `[REDACTADO]` y la auditoría dice quién, cuándo y por qué, sin el texto; un texto con un bloque de clave privada se rechaza al guardar; al cambiar la causa raíz la auditoría dice "causa raíz cambió" sin el valor.
 
 **CA-PRB-15** (RN-PRB-015). Dado un responsable cesado, cuando se cesa a la Persona, entonces el cese se permite, el problema aparece en sus pendientes, avisa a Jefatura y no se avanza de estado hasta reasignar; no se puede anonimizar mientras tanto.
 
 **CA-PRB-16** (RNF-PRB-008). Dado dos empresas con problemas Resueltos hace 14 días, cuando se dispara dos veces el proceso diario con el reloj fijado, entonces cada aviso queda en su empresa y la segunda corrida no duplica nada.
+
+**CA-PRB-17** (RN-PRB-021, RF-PRB-009; permiso denegado). Dado un error conocido Vigente con resumen y detalle técnico, cuando un usuario Almacén (sin `problemas.ver`) abre la base de errores conocidos, la mesa de ayuda o pide el detalle directo al servidor, entonces ve solo el resumen y el servidor responde "No tiene permiso para esta acción" al pedir el detalle; un Técnico con `problemas.ver` ve los dos textos. Intentar publicar sin resumen se impide.
 
 ## 11. Casos límite
 
@@ -268,13 +271,13 @@ Cada criterio indica el requisito que cubre.
 | S-PRB-03 | [SUPUESTO] | Resolver no cierra incidentes. | Aceptado; confirmado por la mesa de ayuda. |
 | S-PRB-04 | [SUPUESTO] | Umbral de sugerencia 3 incidentes en 30 días. | Aceptado. |
 | S-PRB-05 | [SUPUESTO] | Observación de 14 días corridos. | Aceptado (D-062.4). |
-| S-PRB-06 | [SUPUESTO] | Dos personas para publicar una solución temporal. | Aceptado como acto de RN-017 del núcleo (D-043); sin excepción propia: casilla "problemas". |
+| S-PRB-06 | [SUPUESTO] | Dos personas para publicar una solución temporal. | Aceptado como acto de RN-017 del núcleo (D-043); sin excepción propia: casilla «problemas». |
 | S-PRB-07 | [SUPUESTO] | Categorías de causa: lista cerrada de 7. | Aceptado. |
 | S-PRB-08 | [SUPUESTO] | Cerrado no se reabre (como D-027). | Aceptado. |
 | S-PRB-09 | [SUPUESTO] | Sin método formal de análisis; basta la bitácora. | Aceptado. |
 | S-PRB-10 | [SUPUESTO] | Posterior a mesa de ayuda, CMDB y cambios. | Resuelto: Fase 3, ola E (D-056). |
 | S-PRB-11 | [SUPUESTO] | La sugerencia se calcula al leer y se ve en la tarjeta de inicio. | Nuevo; pendiente de visto bueno. |
-| S-PRB-12 | [SUPUESTO] | Los errores conocidos publicados los ven todos los roles con `problemas.ver_errores_conocidos` (incluye Almacén y Solicitante, por el registro). | Nuevo; pendiente de visto bueno. |
+| S-PRB-12 | [SUPUESTO] | Los errores conocidos publicados los ven todos los roles con `problemas.ver_errores_conocidos` (incluye Almacén y Solicitante, por el registro). | **Aceptado con condición** (D-071.2): dos textos, resumen para usuarios y detalle técnico solo para `problemas.ver` (RN-PRB-021). |
 
 **[ESCALAR AL CEO]:** ninguno.
 
@@ -292,7 +295,7 @@ Cada criterio indica el requisito que cubre.
 
 | Cambio | Decisión o hallazgo |
 |---|---|
-| Sin excepción propia: la casilla "problemas" del interruptor único para publicar (RN-PRB-009) | D-031.6, D-043.2, H-ARQ-10 |
+| Sin excepción propia: la casilla «problemas» del interruptor único para publicar (RN-PRB-009) | D-031.6, D-043.2, H-ARQ-10 |
 | Validador común de texto libre y operación "redactar por seguridad" (RN-PRB-016, RN-PRB-020; `problemas.redactar`) | D-063.2, D-061.5 |
 | `problemas.exportar` pasa a `datos.exportar`; permisos con PS-nn y celdas del registro (PS-180 a PS-189, PS-222, PS-20) | D-036, D-037 fila 1, registro de permisos |
 | Resolver sin Jefatura TI y ver errores conocidos para Almacén y Solicitante, según el registro (S-PRB-12) | registro de permisos |
@@ -309,4 +312,5 @@ Cada criterio indica el requisito que cubre.
 | Columna "Empleado (portal)": no aplica | D-037.11 |
 | Columna Cuándo y CA por requisito; criterios citan su requisito; fase Fase 3, ola E | plan sección 0 (2), H-AUD-21, D-056 |
 | Pruebas nuevas: dos empresas, escritura cruzada, reloj fijable, casilla vencida (CA-PRB-03, CA-PRB-13, CA-PRB-16) | D-039.6, D-043.6, D-063.6, QA y Seguridad |
+| v0.3: S-PRB-12 "Aceptado con condición": dos textos, resumen para usuarios y detalle técnico (RN-PRB-021, CA-PRB-17); nombre de casilla «problemas» como en el mapa de D-066 y RF-OC-026 | D-071.2, D-066, N-AUD-06 (D-075), plan-aplicacion fila E |
 | Todas las citas escritas completas: CA-PRB-nn en la columna CA, y RF-, RN- y RNF-PRB-nnn sin abreviar | Auditor Técnico, ronda 3 |

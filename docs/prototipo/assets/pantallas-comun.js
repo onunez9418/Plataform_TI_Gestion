@@ -421,7 +421,7 @@ ruta('guia', { id: 'PR-00', titulo: 'Guía visual y componentes', render() {
 
   <h2 id="g-estados" style="margin-top:24px">1. Siete familias de color de estado</h2>
   <p>Regla de oro: <strong>todo estado lleva texto y un icono</strong>; el color solo lo refuerza. Así se entiende aunque no se distingan los colores.</p>
-  ${tabla({ cols: [{ t: 'Familia', k: (f) => chip(ejemplo[f[1]], f[1]) }, { t: 'Cuándo se usa', k: (f) => f[2] }, { t: 'Ejemplos de estados', k: (f) => f[3] }, { t: 'Contraste del texto (claro / oscuro)', k: (f) => `${f[4]} / ${f[5]} (mínimo exigido 4,5)` }], filas: fam })}
+  ${tabla({ cols: [{ t: 'Familia', k: (f) => `<strong>${f[0]}</strong><br>${chip(ejemplo[f[1]], f[1])}` }, { t: 'Cuándo se usa', k: (f) => f[2] }, { t: 'Ejemplos de estados', k: (f) => f[3] }, { t: 'Contraste del texto (claro / oscuro)', k: (f) => `${f[4]} / ${f[5]} (mínimo exigido 4,5)` }], filas: fam })}
   <h3 style="margin-top:16px">Estado guardado y etiqueta calculada</h3>
   <p>Un <strong>estado guardado</strong> lo cambia una persona: <span>${chip('Aprobada')}</span>. Una <strong>etiqueta calculada</strong> se actualiza sola por la fecha y no se puede cambiar a mano: tiene borde discontinuo y un reloj. ${chipGarantia('12/11/2026')} ${chipGarantia('14/03/2027')} ${chipCalc('Atrasado 9 días', 'alerta')}</p>
   <h3>Los 5 estados de un activo</h3><p class="fila">${['En stock', 'Asignado', 'En reparación', 'Extraviado o robado', 'De baja'].map((e) => chip(e)).join('')}</p>
