@@ -108,7 +108,7 @@ Notas:
 | RN-PER-009 | Nadie registra el cese, el vínculo ni la anonimización de su propia Persona. |
 | RN-PER-010 | Al cesar, las órdenes y solicitudes abiertas de la Persona se reasignan a otro Usuario o se cancelan con motivo (D-006). El asistente no deja terminar con alguna sin resolver. |
 | RN-PER-011 | **[SUPUESTO]** (S-PER-04) Al cesar, el Usuario vinculado queda suspendido en esa empresa y se cortan sus sesiones (D-002.6). Si fuera el último administrador activo, el cese se bloquea (D-004.7). |
-| RN-PER-012 | **[SUPUESTO]** (S-PER-05) Las líneas móviles asignadas a la Persona también bloquean el cese. Las licencias asignadas solo generan una tarea de recuperación en ONB, no bloquean. |
+| RN-PER-012 | **[SUPUESTO]** (S-PER-05, acordado con los Escuadrones B y E) Las líneas móviles Activas o Suspendidas a cargo de la Persona también bloquean el cese. Los puestos de licencia se liberan solos al cesar (con motivo "Baja de la persona"). Ser responsable de un dominio, certificado o elemento de la CMDB no bloquea: queda "responsable inactivo" y ONB crea una tarea. |
 | RN-PER-013 | Una Persona cesada no puede recibir activos, ser jefe directo, custodio o responsable de área. Sigue apareciendo en el historial. |
 | RN-PER-014 | El jefe directo debe ser una Persona Activa de la misma empresa, distinta de sí misma, y no puede formar ciclos (A jefe de B, B jefe de A). |
 | RN-PER-015 | Si un jefe directo cesa, sus dependientes quedan "sin jefe directo" y se avisa al administrador. No se bloquea el cese. |
@@ -189,7 +189,7 @@ Notas:
 
 | Cuándo | A quién | Qué dice |
 |---|---|---|
-| Se vincula un Usuario con una Persona | Correo de la Persona y administradores | "Tu cuenta quedó vinculada a la Persona P-0042 de [empresa]. Si no lo esperabas, avisa a TI." |
+| Se vincula un Usuario con una Persona (evento enviado también a la Persona sin Usuario, a su correo, sin enlaces de acción) | Correo de la Persona y administradores | "Tu cuenta quedó vinculada a la Persona P-0042 de [empresa]. Si no lo esperabas, avisa a TI." |
 | Se cesa una Persona con Usuario vinculado | Administradores | "El acceso de [Persona] quedó suspendido por cese." |
 | Un jefe directo cesa | Administradores | "N personas quedaron sin jefe directo." |
 | Falta 30 días para poder anonimizar | Administradores | "Hay N Personas elegibles para anonimizar desde [fecha]." (solo aviso) |

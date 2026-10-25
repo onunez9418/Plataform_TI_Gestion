@@ -95,7 +95,7 @@ Notas:
 | RN-ONB-011 | Los plazos se cuentan en días corridos (S-ONB-02). |
 | RN-ONB-012 | No se inicia un ingreso ni una salida para una Persona Cesada o Anonimizada. |
 | RN-ONB-013 | La recontratación de una Persona cesada se hace reactivándola (PER) y luego iniciando un ingreso nuevo. |
-| RN-ONB-014 | Una tarea de licencias se completa a mano en la versión inicial. Si el módulo de licencias libera los puestos al cesar la Persona, la tarea se marca sola (S-ONB-03). |
+| RN-ONB-014 | Los puestos de licencia se liberan solos al cesar la Persona (RN-LIC-010). La tarea "Recuperar licencias" se marca sola al ocurrir; antes del cese se completa a mano tras liberar los puestos desde el módulo de licencias (S-ONB-03). |
 | RN-ONB-015 | Una tarea de accesos externos (correo corporativo, VPN, sistema de ventas) es manual: la plataforma no entra a esos sistemas. |
 | RN-ONB-016 | Una Persona sin tipo de puesto usa la plantilla General. |
 | RN-ONB-017 | Todo dato lleva la empresa; un proceso o plantilla de otra empresa responde "no encontrado" (D-021.5). |
@@ -224,7 +224,7 @@ Eventos que se envían a una Persona **sin Usuario**: solo el recordatorio de sa
 |---|---|---|
 | S-ONB-01 | [SUPUESTO] | El módulo es posterior a la versión 1; solo el bloqueo del cese es de la versión 1. Motivo: depende de PER y ENT, y D-023 no lo lista en la versión 1. |
 | S-ONB-02 | [SUPUESTO] | Plazos en días corridos, sin calendario de feriados. Motivo: simple y suficiente; un calendario se puede sumar después. |
-| S-ONB-03 | [SUPUESTO] | Las licencias se recuperan a mano hasta que el módulo de licencias libere puestos al cesar. Se confirma con el Escuadrón B. |
+| S-ONB-03 | [SUPUESTO] | Los puestos de licencia se liberan al cesar (lo define el módulo de licencias en RN-LIC-010); durante la salida el técnico puede liberarlos antes. Acordado con el Escuadrón B. |
 | S-ONB-04 | [SUPUESTO] | Se siembran dos plantillas de ejemplo por empresa. Motivo: el administrador no empieza de cero. |
 | S-ONB-05 | [SUPUESTO] | Sin procesos masivos en la versión inicial. |
 | S-ONB-06 | [SUPUESTO] | El empleado no ve su proceso de ingreso o salida en el portal. Motivo: contiene tareas internas de TI. |
