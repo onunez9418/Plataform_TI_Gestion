@@ -60,14 +60,14 @@ Nombres con el formato `<módulo>.<acción>` (D-036); los módulos agregan filas
 | Dar de baja | `lineas.baja` (PS-94) | T | - | T | - | - | - | - |
 | **Reingreso** (sensible) | `lineas.reingreso` (PS-95) | T | T | - | - | - | - | - |
 | Planes, cambios de cargo, **cargo especial** y configuración del módulo | `lineas.administrar_planes` (PS-96) | T | - | - | - | - | - | - |
-| Confirmar el costo cuando supera el límite | `lineas.confirmar_costo` (nuevo) | T | T | - | - | - | - | - |
-| Migrar números desde los celulares (sensible) | `lineas.migrar` (nuevo) | T | - | - | - | - | - | - |
+| Confirmar el costo cuando supera el límite | `lineas.confirmar_costo` (PS-224) | T | T | - | - | - | - | - |
+| Migrar números desde los celulares (sensible) | `lineas.migrar` (PS-225) | T | - | - | - | - | - | - |
 | Importar (permiso único; módulo "lineas") | `datos.importar` (PS-21) | T | - | - | - | - | - | - |
 | Exportar (permiso único; módulo "lineas") | `datos.exportar` (PS-20) | T | - | - | - | - | - | - |
-| Recibir avisos del módulo | `lineas.recibir_avisos` (nuevo) | T | T | T | - | - | - | - |
+| Recibir avisos del módulo | `lineas.recibir_avisos` (PS-226) | T | T | T | - | - | - | - |
 | Ver auditoría | `auditoria.ver` (PS-18) | T | T | - | - | - | - | - |
 
-"Mis líneas" lo cubre el portal con `portal.ver_propio` (PS-205, Fase 3; Empleado: P); el Solicitante no tiene acceso a este módulo por defecto. Los permisos marcados "nuevo" están pedidos al Analista (sección 14 del registro).
+"Mis líneas" lo cubre el portal con `portal.ver_propio` (PS-205, Fase 3; Empleado: P); el Solicitante no tiene acceso a este módulo por defecto. Los permisos PS-224, PS-225 y PS-226 se agregaron al registro a pedido de este módulo.
 
 Controles (D-036.5, D-048): `lineas.reingreso` y `lineas.migrar` llevan reautenticación reciente (R), segundo factor (2F) y auditoría de cada uso (A); `datos.exportar` y `datos.importar`, R, 2F, A y los topes del núcleo. Jefatura TI no exporta ni importa salvo que el administrador se lo active. Quien fija precios (`lineas.administrar_planes`) no es quien opera por defecto. Todo se comprueba en el servidor. Un rol nuevo parte sin permisos. Sin `datos_personales.ver` el número se ve enmascarado (`+51 ••• ••• 321`) y la Persona como `PRS-0042` (D-037 fila 7).
 
@@ -321,7 +321,7 @@ Resultado de cada supuesto según D-042, D-057 y D-058.
 | El cese de la Persona no se bloquea por líneas: pendientes de la persona, "responsable inactivo", tarea y aviso; se bloquea anonimizar. Se retiró el bloqueo de RN-LIN-009 y se cambió SUP-LIN-07 y CA-LIN-05. | D-061.7, D-034, D-058; H-CUM-15 |
 | El cargo especial exige `lineas.administrar_planes`. | D-043.5; H-CUM-03 |
 | Segunda persona: costo comprometido sobre el límite lo confirma otra persona (RN-017, "supera" estricto); casilla «contratos» del interruptor único; marca "Sin respaldo de compra"; se retiró SUP-LIN-10 anterior. Costo comprometido definido como supuesto SUP-LIN-14. | D-043, D-031; H-CUM-02, H-QA-09 |
-| Permisos migrados a los PS-nn del registro (`docs/registro-permisos.md`); `datos.exportar` (PS-20) y `datos.importar` (PS-21) únicos (se retiraron `lineas.exportar` y `lineas.importar`); Jefatura TI sin exportar; `datos_personales.ver`; `lineas.reingreso` sensible (Administrador y Jefatura TI según el registro); baja y planes según el registro (Jefatura TI ya no da de baja ni fija planes); "Mis líneas" pasa al portal; columna "Empleado (portal)". Pedidos al Analista: `lineas.confirmar_costo`, `lineas.migrar`, `lineas.recibir_avisos`. | D-036, D-037 filas 1, 7, 11; H-SEG-07, H-SEG-08; registro de permisos |
+| Permisos migrados a los PS-nn del registro (`docs/registro-permisos.md`); `datos.exportar` (PS-20) y `datos.importar` (PS-21) únicos (se retiraron `lineas.exportar` y `lineas.importar`); Jefatura TI sin exportar; `datos_personales.ver`; `lineas.reingreso` sensible (Administrador y Jefatura TI según el registro); baja y planes según el registro (Jefatura TI ya no da de baja ni fija planes); "Mis líneas" pasa al portal; columna "Empleado (portal)". Se agregaron `lineas.confirmar_costo` (PS-224), `lineas.migrar` (PS-225) y `lineas.recibir_avisos` (PS-226). | D-036, D-037 filas 1, 7, 11; H-SEG-07, H-SEG-08; registro de permisos |
 | El número de línea es dato personal hasta que legal diga (L-09): la auditoría no guarda su valor, se ve enmascarado, la API lo limita. | D-030.6, D-063.4; H-CUM-01 |
 | Patrón de costo común con `fuente_costo`; totales por moneda, nunca un total general; libro único en `presupuesto-costos`. | D-044.1 a 3, D-049.8 |
 | Permanencia calculada al leer; avisos por el motor único de Notificaciones con umbrales por defecto (se retiraron 60/30/15 propios y los recordatorios semanales); el módulo no tiene procesos propios; se retiró la desasociación nocturna. | D-062.2, D-062.3, D-058 fila 3, D-038.4 |

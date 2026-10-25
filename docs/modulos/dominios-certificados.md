@@ -57,17 +57,17 @@ Los módulos agregan filas al registro único, no cambian celdas del núcleo (D-
 | Ver costos | `precios.ver` (PS-23) | T | T | P | - | P | - | no aplica |
 | Ver titular persona natural y nombres de responsables | `datos_personales.ver` (PS-22) | T | T | T | - | - | - | no aplica |
 | Crear y editar (incluye cambiar responsable o suplente) | `dominios.crear_editar` (PS-98) | T | - | T | - | - | - | no aplica |
-| Registrar una renovación | `dominios.registrar_renovacion` (nuevo) | T | T | T | - | - | - | no aplica |
-| Confirmar un costo que supera el límite | `dominios.confirmar_costo` (nuevo) | T | T | - | - | - | - | no aplica |
+| Registrar una renovación | `dominios.registrar_renovacion` (PS-227) | T | T | T | - | - | - | no aplica |
+| Confirmar un costo que supera el límite | `dominios.confirmar_costo` (PS-228) | T | T | - | - | - | - | no aplica |
 | Dar de baja un dominio, o dar de baja o revocar un certificado | `dominios.baja` (PS-99) | T | - | - | - | - | - | no aplica |
 | **Cambiar el titular** (sensible) | `dominios.cambiar_titular` (PS-100) | T | - | - | - | - | - | no aplica |
 | Configurar el módulo | `dominios.configurar` (PS-101) | T | - | - | - | - | - | no aplica |
-| Recibir avisos de vencimiento | `dominios.recibir_avisos` (nuevo) | T | T | T | - | - | - | no aplica |
+| Recibir avisos de vencimiento | `dominios.recibir_avisos` (PS-229) | T | T | T | - | - | - | no aplica |
 | Exportar (permiso único; módulo "dominios") | `datos.exportar` (PS-20) | T | - | - | - | - | - | no aplica |
 | Importar (permiso único; módulo "dominios") | `datos.importar` (PS-21) | T | - | - | - | - | - | no aplica |
 | Ver auditoría | `auditoria.ver` (PS-18) | T | T | - | - | - | - | no aplica |
 
-Controles (D-036.5, D-048): `dominios.cambiar_titular` lleva segundo factor (2F), **reautenticación reciente (R)** y auditoría de cada uso (A); `datos.exportar` y `datos.importar`, 2F, R, A y los topes del núcleo. Jefatura TI no exporta ni importa salvo que el administrador se lo active. Cambiar el titular puede hacer perder el control del dominio, por eso es un permiso aparte de editar. Todo se comprueba en el servidor. Un rol nuevo parte sin permisos. Los permisos marcados "nuevo" están pedidos al Analista (sección 14 del registro) y recibirán su PS-nn.
+Controles (D-036.5, D-048): `dominios.cambiar_titular` lleva segundo factor (2F), **reautenticación reciente (R)** y auditoría de cada uso (A); `datos.exportar` y `datos.importar`, 2F, R, A y los topes del núcleo. Jefatura TI no exporta ni importa salvo que el administrador se lo active. Cambiar el titular puede hacer perder el control del dominio, por eso es un permiso aparte de editar. Todo se comprueba en el servidor. Un rol nuevo parte sin permisos. Los permisos PS-227, PS-228 y PS-229 se agregaron al registro a pedido de este módulo.
 
 ## 4. Requisitos
 

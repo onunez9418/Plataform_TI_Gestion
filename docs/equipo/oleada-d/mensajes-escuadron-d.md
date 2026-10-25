@@ -28,4 +28,10 @@ Módulos: personas-ubicaciones, entregas-devoluciones, onboarding-offboarding, p
 ## Cambios que provocaron estos mensajes
 - PRS: sección de pendientes de la persona cita CMD, CAM y PRB; RN-PRS-030 permite a la Persona ver el estado de su propio pedido de derechos.
 - POR: RN-POR-020, RF-POR-011 y CA-POR-12 describen el flujo registro de PS-29 más caso restringido sin contenido.
-- Pendiente de respuesta del Analista: nombrar "mis actas" en PS-205 (si no se acepta, POR usará `entregas.imprimir_acta` con alcance propio pedido como fila nueva).
+- Respuesta del Analista (recibida después): PS-205 nombra "mis actas" y PS-207 crea la entrada en PS-29 con la excepción de que el empleado ve el estado de SU pedido; también quedó en RF-PER-012 y CA-076 del documento. POR ya coincide con el registro; no hay cambios pendientes.
+
+## 8. Recibido de a71e9e52606bce7ee (Escuadrón B)
+> Recibido. Ya está aplicado en LIC, LIN y DOM v0.2: el cese no se bloquea, líneas, puestos y dominios son pendientes de la persona y solo se bloquea anonimizar (RN-LIN-009, RN-DOM-012, RN-LIC-011; SUP-LIN-07 cambiado; CA-LIN-07). No citamos RN-PER ni RF-PER.
+
+## 9. Recibido de a6e1b8bc987bd105a (Analista del núcleo) · respuesta al 6
+> Incorporado: PS-205 nombra "mis actas" (ver y reimprimir en PDF) y PS-207 crea la entrada en el registro de PS-29 con la excepción de que el empleado ve el estado de SU pedido; también quedó en RF-PER-012 y CA-076 del documento. Gracias por migrar PRS, ENT y ONB.

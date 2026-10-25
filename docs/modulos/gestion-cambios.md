@@ -59,7 +59,7 @@ Nombres y valores según `docs/registro-permisos.md` (D-036); este módulo no ca
 | Aprobar o rechazar riesgo Bajo o Medio, y reaprobar plantillas | `cambios.aprobar` | PS-172 | Sí | Sí | No | No | No | No |
 | Aprobar o rechazar riesgo Alto y urgentes | `cambios.aprobar_alto` | PS-173 | Sí | Sí | No | No | No | No |
 | Iniciar y registrar el resultado | `cambios.implementar` | PS-174 | Sí | No | Sí | No | No | No |
-| Cerrar con revisión posterior | `cambios.cerrar` | PS-175 | Sí | No | Sí | No | No | No |
+| Cerrar con revisión posterior (no lo cierra quien lo implementó, salvo la casilla "cambios") | `cambios.cerrar` | PS-175 | Sí | Sí | Sí | No | No | No |
 | Cancelar | `cambios.cancelar` | PS-176 | Todo | Propio | Propio | No | No | No |
 | Crear y editar plantillas | `cambios.gestionar_plantillas` | PS-177 | Sí | No | No | No | No | No |
 | Gestionar ventanas y congelamientos | `cambios.gestionar_ventanas` | PS-178 | Sí | No | No | No | No | No |
@@ -67,7 +67,7 @@ Nombres y valores según `docs/registro-permisos.md` (D-036); este módulo no ca
 | Redactar por seguridad un comentario (sensible) | `cambios.redactar` | PS-221 | Sí | No | No | No | No | No |
 | Exportar a Excel | `datos.exportar` (sensible) | PS-20 | Sí | No | No | No | No | No |
 
-Notas: (1) Todo se comprueba en el servidor. (2) Pedir, aprobar e implementar son permisos distintos; las reglas de segunda persona valen para todos los roles, incluido el Administrador. (3) Todo rol nuevo parte sin permisos. (4) Quien aprueba debe poder ver los elementos afectados (`cmdb.ver`). (5) Se pidió al Analista que Jefatura TI reciba también `cambios.cerrar` (quien revisa no debería ser quien implementó); hasta decidirlo manda el registro.
+Notas: (1) Todo se comprueba en el servidor. (2) Pedir, aprobar e implementar son permisos distintos; las reglas de segunda persona valen para todos los roles, incluido el Administrador. (3) Todo rol nuevo parte sin permisos. (4) Quien aprueba debe poder ver los elementos afectados (`cmdb.ver`). (5) `cambios.cerrar` lleva la condición "No": quien implementó no cierra el cambio, salvo la casilla "cambios"; el Gerente de TI debe confirmarlo.
 
 ## 4. Requisitos
 
@@ -166,7 +166,7 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 | Aprobado | En implementación | Responsable (`cambios.implementar`) | RN-CAM-012 |
 | Aprobado | Cancelado | `cambios.cancelar` | Motivo; RN-CAM-015 |
 | En implementación | Implementado | Responsable (`cambios.implementar`) | Resultado, horas reales y notas |
-| Implementado | Cerrado | `cambios.cerrar` | Revisión posterior si es obligatoria; si no, un comentario |
+| Implementado | Cerrado | `cambios.cerrar`, otra persona que quien implementó | Revisión posterior si es obligatoria; si no, un comentario |
 
 Ninguna otra transición. Cerrado y Cancelado son finales. Un resultado mal registrado lo corrige `cambios.cerrar` en Implementado, con motivo y valor anterior en el historial.
 
@@ -202,7 +202,7 @@ Unicidad: (empresa, número); (empresa, nombre de plantilla); no se repite un el
 | PAN-CAM-05 | Decisión de aprobación | Riesgo, elementos, choques; Aprobar y Rechazar con motivo (bloque común de decisión). | Jefatura TI |
 | PAN-CAM-06 | Calendario | Mes, semana y día con cambios, ventanas y congelamientos. | Todos |
 | PAN-CAM-07 | Mi trabajo de cambios | Lo que debo implementar; aparece en "Mi trabajo" del Técnico (D-053). | Técnico |
-| PAN-CAM-08 | Revisión posterior | Cuatro preguntas y cierre. | Técnico / Administrador |
+| PAN-CAM-08 | Revisión posterior | Cuatro preguntas y cierre. | Jefatura TI |
 | PAN-CAM-09 | Plantillas estándar | Crear (Administrador); aprobar y suspender (Jefatura TI). | Administrador |
 | PAN-CAM-10 | Ventanas y congelamientos | Alta y desactivación. | Administrador |
 | PAN-CAM-11 | Configuración de cambios | Plazos de aviso. La casilla "cambios" está en la pantalla única de excepciones del núcleo. | Administrador |

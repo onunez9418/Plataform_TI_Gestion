@@ -60,7 +60,7 @@ Nombres y valores según `docs/registro-permisos.md` (D-036); este módulo no ca
 | Importar Servicios y relaciones | `datos.importar` (sensible) | PS-21 | Sí | No | No | No | No | No |
 | Exportar a Excel | `datos.exportar` (sensible) | PS-20 | Sí | No | No | No | No | No |
 
-Notas: (1) Todo se comprueba en el servidor. (2) Importar y exportar pasan por el marco y la puerta únicos del núcleo (D-050, D-061.1); este módulo no exporta ni importa por su cuenta. (3) "Solo lo propio" significa "EC de los que soy responsable"; ningún rol inicial lo usa. (4) `cmdb.reconciliar` (PS-196) no se usa: el reconciliador es automático; se pidió retirarlo del registro.
+Notas: (1) Todo se comprueba en el servidor. (2) Importar y exportar pasan por el marco y la puerta únicos del núcleo (D-050, D-061.1); este módulo no exporta ni importa por su cuenta. (3) "Solo lo propio" significa "EC de los que soy responsable"; ningún rol inicial lo usa. (4) `cmdb.reconciliar` (PS-196) quedó Retirado en el registro: el reconciliador es automático.
 
 ## 4. Requisitos
 

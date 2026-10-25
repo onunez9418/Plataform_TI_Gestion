@@ -61,11 +61,11 @@ Nombres técnicos con el formato `<módulo>.<acción>` (D-036). Cada módulo agr
 | Ver costos | `precios.ver` (PS-23) | T | T | P | - | P | - | - |
 | Ver a qué Persona está asignado cada puesto | `datos_personales.ver` (PS-22) | T | T | T | - | - | - | - |
 | Crear y editar contratos de licencia (borrador y datos) | `licencias.crear_editar` (PS-83) | T | - | T | - | - | - | - |
-| Confirmar un contrato de licencia | `licencias.confirmar` (PS-84)* | T | T | - | - | - | - | - |
+| Confirmar (activar) un contrato de licencia | `contratos.activar` (PS-76) | T | T | - | - | - | - | - |
 | Renovar un contrato (renovación automática: acción del "sistema") | `contratos.renovar` (PS-77) | T | T | - | - | - | - | - |
-| Terminar contrato (en el registro: cancelar) | `licencias.cancelar` (PS-85)* | T | T | - | - | - | - | - |
+| Terminar o anular contrato | `contratos.terminar_anular` (PS-78) | T | T | - | - | - | - | - |
 | Asignar y liberar puestos | `licencias.asignar` (PS-86) | T | - | T | - | - | - | - |
-| Informar puestos en uso | `licencias.registrar_uso` (nuevo) | T | - | T | - | - | - | - |
+| Informar puestos en uso | `licencias.registrar_uso` (PS-223) | T | - | T | - | - | - | - |
 | **Ver clave completa** (sensible) | `licencias.ver_clave` (PS-88) | T | - | - | - | - | - | - |
 | **Escribir o cambiar una clave** (sensible) | `licencias.editar_clave` (PS-89) | T | - | - | - | - | - | - |
 | Importar (permiso único; módulo "licencias") | `datos.importar` (PS-21) | T | - | - | - | - | - | - |
@@ -74,7 +74,7 @@ Nombres técnicos con el formato `<módulo>.<acción>` (D-036). Cada módulo agr
 | Recibir avisos de vencimiento del contrato | `contratos.recibir_avisos` (PS-81) | T | T | P | - | - | - | - |
 | Ver auditoría | `auditoria.ver` (PS-18) | T | T | - | - | - | - | - |
 
-Los PS-nn son los de `docs/registro-permisos.md`. T = todo, P = lo propio, - = no puede. "Mis licencias" lo cubre el portal con `portal.ver_propio` (PS-205, Fase 3; Empleado: P); el Solicitante no tiene acceso a este módulo por defecto. El Técnico solo ve la clave si la empresa le da `licencias.ver_clave` (opción, no viene activada, D-035.4). \* PS-84 y PS-85 se solapan con PS-76 `contratos.activar` y PS-78 `contratos.terminar_anular`, porque el contrato de licencia es un contrato `CTR-`; pedido al Analista unificarlos. `licencias.registrar_uso` está pedido (sección 14 del registro).
+Los PS-nn son los de `docs/registro-permisos.md`. T = todo, P = lo propio, - = no puede. "Mis licencias" lo cubre el portal con `portal.ver_propio` (PS-205, Fase 3; Empleado: P); el Solicitante no tiene acceso a este módulo por defecto. El Técnico solo ve la clave si la empresa le da `licencias.ver_clave` (opción, no viene activada, D-035.4). Como el contrato de licencia es un contrato `CTR-` (D-044.4), confirmarlo es PS-76 `contratos.activar` y terminarlo o anularlo es PS-78 `contratos.terminar_anular`; PS-84 y PS-85 quedaron retirados del registro.
 Controles de los permisos sensibles (D-036.5, D-048): `licencias.ver_clave` lleva reautenticación reciente (R), segundo factor (2F), auditoría de cada uso (A) y tope de 20 por usuario por hora (T). `licencias.editar_clave` lleva R, 2F y A. `datos.exportar` y `datos.importar` llevan R, 2F, A y los topes del núcleo. Todo se comprueba en el servidor (CLAUDE.md regla 6). Un rol nuevo parte sin permisos. Jefatura TI no exporta ni importa salvo que el administrador se lo active.
 
 ## 4. Requisitos
@@ -160,12 +160,12 @@ Estados visibles (los mismos de todo contrato, D-049.5): **Borrador, Programado,
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
 | (nuevo) | Borrador | `licencias.crear_editar` | Datos mínimos |
-| Borrador | Programado o Vigente | `licencias.confirmar`; si supera el límite, otra persona (RN-LIC-018) | Según la fecha de inicio |
+| Borrador | Programado o Vigente | `contratos.activar` (PS-76); si supera el límite, otra persona (RN-LIC-018) | Según la fecha de inicio |
 | Borrador | (borrado) | quien lo creó | Nunca confirmado |
 | Programado | Vigente | Calculado | Llega la fecha de inicio |
 | Vigente | Vencido | Calculado | Pasa la fecha de fin |
-| Programado, Vigente, Vencido | Terminado | `licencias.cancelar` | Motivo obligatorio |
-| Borrador, Programado | Anulado | `licencias.cancelar` | Motivo obligatorio; documento emitido por error |
+| Programado, Vigente, Vencido | Terminado | `contratos.terminar_anular` (PS-78) | Motivo obligatorio |
+| Borrador, Programado | Anulado | `contratos.terminar_anular` (PS-78) | Motivo obligatorio; documento emitido por error |
 
 Terminado y Anulado son finales. No hay otras transiciones.
 
@@ -327,7 +327,7 @@ Resultado de cada supuesto según D-057 y D-058 (confirmado, cambiado o retirado
 | Segunda persona con la regla única RN-017 (supera estrictamente el límite); se retiró RN-LIC-016, RN-LIC-017 y RN-LIC-018 anteriores (preparar/confirmar propio, OC y aprobador); casilla «licencias» del interruptor único; sin excepción propia. | D-043, D-031; H-QA-09, H-ARQ-10, H-AUD |
 | Puestos guardados al confirmar, restricción `puestos_asignados <= puestos`, bloqueo de fila, único (contrato, Persona) y (contrato, activo), campo "puestos" no editable con contrato vigente; en SKU por cantidad el contrato es la fuente. | D-044.6; H-DAT-06 |
 | Naturaleza "licencia": sin garantía, mantenimiento ni depreciación; el elemento de CMDB es el contrato. | D-045, D-062.1; H-ARQ-06, H-AUD-12 |
-| Permisos migrados a los PS-nn del registro (`docs/registro-permisos.md`); `licencias.ver_clave` solo Administrador (Técnico opcional); `datos.exportar` (PS-20) y `datos.importar` (PS-21) únicos; se retiraron `licencias.exportar`, `licencias.importar` y `licencias.recibir_avisos` (se usa `contratos.recibir_avisos`, PS-81); Jefatura TI sin exportar; "Mis licencias" pasa al portal (`portal.ver_propio`); columna "Empleado (portal)". Pedidos al Analista: `licencias.registrar_uso` y unificar PS-76/PS-84 y PS-78/PS-85. | D-036, D-037 filas 1, 2, 7, 11; H-SEG-07, H-SEG-08; registro de permisos |
+| Permisos migrados a los PS-nn del registro (`docs/registro-permisos.md`); `licencias.ver_clave` solo Administrador (Técnico opcional); `datos.exportar` (PS-20) y `datos.importar` (PS-21) únicos; se retiraron `licencias.exportar`, `licencias.importar` y `licencias.recibir_avisos` (se usa `contratos.recibir_avisos`, PS-81); Jefatura TI sin exportar; "Mis licencias" pasa al portal (`portal.ver_propio`); columna "Empleado (portal)". Se agregó `licencias.registrar_uso` (PS-223); confirmar y terminar un contrato de licencia usan PS-76 y PS-78 (PS-84 y PS-85 retirados). | D-036, D-037 filas 1, 2, 7, 11; H-SEG-07, H-SEG-08; registro de permisos |
 | Vigencia calculada al leer; se retiraron el proceso nocturno de cambio de estado y el RNF de "1 hora"; avisos por el motor único de Notificaciones, sin tabla propia, hora única. | D-062.2, D-062.3, D-058 fila 3 |
 | La sección 8 declara que no hay procesos propios; idempotencia, recuperación y "hoy" por empresa son los de Notificaciones. Se retiró la liberación nocturna: es un evento síncrono. | D-038.4, D-038.5 |
 | Liberar puestos al cesar o dar de baja el equipo como pendiente de la persona; el cese no se bloquea; la anonimización se bloquea con puestos abiertos. | D-061.7, D-034, D-033.3 |
