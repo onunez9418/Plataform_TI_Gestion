@@ -862,13 +862,13 @@ Resumen por módulo:
 | USR Usuarios | RF-USR-001 a 008 | 1 (4 y 5 en dos reglas) | CA-008, CA-045, CA-052 |
 | ROL Roles y permisos | RF-ROL-001 a 014 | 1 | CA-008 a 012, CA-041, CA-047 |
 | PER Personas | RF-PER-001 a 010 | 2 (4 y 5 en dos reglas) | CA-001, CA-011, CA-016, CA-038, CA-045, CA-052 |
-| CAT Catálogos y campos | RF-CAT-001 a 022 | 2 | CA-001, CA-017 a 021, CA-032, CA-045, CA-048 |
-| SKU Maestro de artículos | RF-SKU-001 a 015 | 3 (RF-SKU-014 en 4) | CA-017 a 023, CA-032, CA-042, CA-048 |
+| CAT Catálogos y campos | RF-CAT-001 a 024 | 2 | CA-001, CA-017 a 021, CA-032, CA-045, CA-048 |
+| SKU Maestro de artículos | RF-SKU-001 a 016 | 3 (RF-SKU-014 en 4) | CA-017 a 023, CA-032, CA-042, CA-048 |
 | INV Inventario | RF-INV-001 a 023 | 4 (RF-INV-012 en 6) | CA-023 a 028, CA-032, CA-036, CA-038, CA-044, CA-046 |
-| OC Compras y recepción | RF-OC-001 a 041 | 5 (RF-OC-027 en 1, RF-OC-028 en 7) | CA-011 a 014, CA-018, CA-020, CA-024, CA-029 a 037, CA-045 |
+| OC Compras y recepción | RF-OC-001 a 042 | 5 (RF-OC-027 en 1, RF-OC-028 en 7) | CA-011 a 014, CA-018, CA-020, CA-024, CA-029 a 037, CA-045 |
 | OS Órdenes de servicio | RF-OS-001 a 009 | 6 | CA-018, CA-044 |
 | IMP Importación | RF-IMP-001 a 014 | 4 (RF-IMP-014 en 0) | CA-011, CA-038, CA-039 |
-| AUD Auditoría | RF-AUD-001 a 012 | 1 | CA-001, CA-002, CA-011, CA-040 a 042, CA-045 |
+| AUD Auditoría | RF-AUD-001 a 013 | 1 | CA-001, CA-002, CA-011, CA-040 a 042, CA-045 |
 | DAT Datos personales | RF-DAT-001 a 010 | 0, 1, 4 y 7 | CA-004, CA-038, CA-039, CA-040, CA-046, CA-052 |
 | RNF Calidad y continuidad | RNF-001 a 018 | 0 a 7 | CA-034, CA-039, CA-043, CA-046, CA-048, CA-050, CA-053 |
 | RS Seguridad | RS-01 a RS-44 | Las del cuadro de la sección 17 | Las de cada requisito referido |

@@ -57,6 +57,24 @@ Registro literal y en orden. Formato: de, para, texto. Los mensajes recibidos se
 > Sí, me sirve el compromiso, con tres condiciones.
 > (1) Lo predeterminado es todo o nada; importar solo las válidas exige que el usuario lo acepte de forma explícita tras ver la vista previa. (2) Las filas válidas se guardan en una sola transacción (nunca fila por fila) y las rechazadas se devuelven en un archivo con el motivo, listo para corregir y recargar. (3) El lote queda registrado (quién, cuándo, archivo, filas cargadas y rechazadas) y se puede deshacer completo mientras no tenga movimientos posteriores.
 
+## Ronda 2 (redacción de la v0.2)
+
+## 15. Recibido de a3b3666dfed8a47ee (escuadrón presupuesto-costos)
+> ¿Pueden entrar al núcleo v0.2 estos campos? (1) OC con centro de costo y "referencia externa" (nº documento SAP); (2) centro de costo con usuario responsable opcional y código externo; (3) SKU con stock mínimo opcional; (4) proveedor y ubicación con código externo; (5) auditoría con autor tipo "usuario" o "integración" (API).
+> Sin (1) y (2) presupuesto no puede ubicar el costo; (5) cuesta poco hoy y obliga a migrar después. Propondré todo como [SUPUESTO] en mis módulos si no responden.
+
+## 16. Recibido de adefab1f3cef3ef93 (escuadrón personas / entregas / onboarding / portal)
+> Núcleo v0.2: ¿confirmas el permiso sensible `datos_personales.ver` (D-004.4) para nombre/correo de Personas? Lo uso así en PER, ENT, ONB y POR.
+> Propongo sumar una 7ª plantilla de rol "Empleado (portal)", solo permisos de alcance propio, para quien entra a ver sus equipos (Solicitante puede crear compras). [SUPUESTO] pendiente del Gerente de TI.
+
+## 17. Enviado a a3b3666dfed8a47ee
+> Los cinco entran al núcleo v0.2 como [SUPUESTO] pendiente del gerente-ti: S-24 (referencia externa en la OC; el centro de costo en la OC ya era opcional, RF-OC-007), S-25 (código externo en proveedor, ubicación y centro de costo; Persona responsable opcional en centro de costo), S-26 (stock mínimo opcional, solo dato, sin avisos), S-28 (tipo de autor en auditoría).
+> Ver RF-OC-042, RF-CAT-023/024, RF-SKU-016 y RF-AUD-013. Todos opcionales y sin validar contra sistemas externos.
+
+## 18. Enviado a adefab1f3cef3ef93
+> Sí: "ver datos personales" es el permiso sensible de D-004.4 (nombre y correo de Personas y sus asignaciones); úsenlo con ese nombre, el arquitecto fija el identificador técnico.
+> La 7ª plantilla "Empleado (portal)" de alcance propio queda como [SUPUESTO S-27] pendiente del gerente-ti: el núcleo mantiene 6 plantillas, y su módulo puede sumar filas a la matriz y esa plantilla con visto bueno. Solicitante sigue siendo quien crea solicitudes.
+
 ## Resumen de acuerdos y desacuerdos que salen de estos mensajes
 
 Acordado entre roles (pendiente de visto bueno del gerente-ti):
