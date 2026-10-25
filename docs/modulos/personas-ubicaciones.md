@@ -117,7 +117,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen. Cada RF indica
 | RN-PRS-018 | **Anonimizar = sobrescribir el registro de la Persona** (D-030.3): nombre pasa a "Persona anonimizada 0042"; se borran correo, código de empleado, puesto y datos de contacto (D-033.2); se desvincula la membresía sin tocar la cuenta global (D-041.2). Se conservan referencia, tipo, área y fechas. La auditoría **no se toca**. |
 | RN-PRS-019 | Plazo propuesto: 2 años desde el cese, configurable por empresa solo dentro de límites fijados por la plataforma (D-033.5, provisional hasta legal). |
 | RN-PRS-020 | La anonimización manual exige: solicitud documentada (RF-PRS-016), vista previa de lo que se afectará, una persona que propone y **otra distinta** que ejecuta, y que quien presentó el pedido no lo atienda. Queda como evento en la auditoría y en el registro de anonimizaciones fuera de la base (D-052.3). |
-| RN-PRS-021 | **Excepción declarada (D-051):** el acta de entrega guarda una copia del nombre y área en columnas propias con `retener_hasta` (activo más 5 años). La anonimización de la Persona **no** la toca; la función de anonimización la limpia al vencer `retener_hasta`. No se escribe en la auditoría. |
+| RN-PRS-021 | **Excepción declarada (D-051):** el acta de entrega guarda una copia del nombre y área en columnas propias con `retener_hasta` (cierre de la asignación más 5 años; vacía mientras la asignación esté abierta, S-36 del núcleo). La anonimización de la Persona **no** la toca; la función de anonimización la limpia al vencer `retener_hasta`. No se escribe en la auditoría. |
 | RN-PRS-022 | La jerarquía de ubicaciones es la del núcleo: Sede no tiene superior, Piso cuelga de Sede, Sala de Piso; Piso y Sala son opcionales. |
 | RN-PRS-023 | Nombre de ubicación único entre las que tienen el mismo superior (sin distinguir mayúsculas). Código externo opcional único por empresa. |
 | RN-PRS-024 | No se mueve una ubicación dentro de sí misma ni se cambia su nivel. Mover lleva consigo todo su contenido. |
@@ -311,4 +311,5 @@ Se reutilizan la pantalla genérica **Catálogos** (con vista de árbol para ubi
 | Cita D-024.4 sustituida por D-032 (caso límite 10) | D-032, H-AUD-24 |
 | Columna "Cuándo" y CA que cita el requisito; CA de aislamiento por identificador interno, de alcance propio sin Persona, de canario y de doble control | H-AUD-21, D-063.6, D-036.4, H-SEG-25f, H-QA-05 |
 | Etiqueta "Persona anonimizada 0042" | H-UX-25(d), D-049.2 |
+| RN-PRS-021: `retener_hasta` corre desde el cierre de la asignación del acta (no "activo más 5 años") | D-033, D-051, S-36 del núcleo, ronda 3 del Auditor Técnico |
 | RN-PRS-033: quién atiende un pedido de derechos cuando quien lo presenta es el único con el permiso (persona designada; si no hay, aviso al contacto autorizado) | Hallazgo R-08 de Cumplimiento (ronda 3), D-061.2, D-048.5, RF-PLA-004 |

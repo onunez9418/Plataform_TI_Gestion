@@ -272,3 +272,4 @@ Todo es `Fase 2`, por el motor único de NOT (una tabla de avisos, hora única d
 | Datos personales del módulo declarados; notas con validador común | D-061.3, D-063.2, H-CUM-09, H-CUM-10 |
 | Aislamiento por identificador interno y proceso diario con dos empresas | D-063.6, D-039.6, H-SEG-02 |
 | Referencias de Persona `PRS-0042` y tono "usted" en avisos | D-049.2, DS-09 |
+| Revisado en la ronda 3: sin identificadores de pantalla viejos (solo `PAN-ONB-nn`); E-ONB-01 cita L-11 | N-AUD-01, R-13 de Cumplimiento |
