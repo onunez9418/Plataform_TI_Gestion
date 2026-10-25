@@ -12,7 +12,7 @@
 2. Encontré **11 hallazgos nuevos** (2 altos, 8 medios, 1 bajo; sección 2). El más serio: el núcleo y el módulo de Personas se contradicen en qué pasa al cesar a alguien con cuenta (H-QA-23).
 3. Cobertura requisito a criterio: **309 de 309 filas del núcleo citan un CA que existe** (0 citas rotas), pero hay 3 mal apuntadas, 18 de 22 reglas RN sin criterio que las cite y 12 requisitos cuyo criterio no los prueba de verdad (sección 3).
 4. El plan de pruebas por etapa está actualizado con las decisiones D-035 a D-064 (sección 4). Los 15 criterios de integración siguen valiendo con cambios y agrego 2 (sección 5).
-5. **Veredicto: conforme con observaciones.** Mi visto bueno escrito para la condición 3 de D-064 queda sujeto a las 5 condiciones mínimas de la sección 7, la primera de las cuales es un hallazgo Alto aún abierto.
+5. **Veredicto: conforme con observaciones.** Los mensajes enviados durante la revisión cerraron H-QA-23, 25, 26 y 29 en los archivos (verificado, sección 9). Mi visto bueno escrito para la condición 3 de D-064 queda sujeto a las condiciones restantes de la sección 7.
 
 ---
 
@@ -255,14 +255,14 @@ El plan es de la v0.2 (cita "documento funcional v0.2" y "D-001 a D-029") y est�
 
 **Conforme con observaciones.**
 
-**Por qué.** El núcleo v0.3 cierra 19 de mis 22 hallazgos con evidencia en el archivo; todo requisito del núcleo cita un criterio que existe; no hay citas rotas ni identificadores duplicados; el registro de permisos es consistente en todos los archivos; y las reglas que no se podían probar en la ronda 2 (orden sin precios, estados del activo, importación, auditoría y anonimización, huecos de recepción) ahora tienen resultado esperado. Mantengo "con observaciones" y no "conforme" porque queda un hallazgo **Alto** del núcleo abierto (H-QA-23) y D-064 exige que no haya Críticos ni Altos abiertos para darle mi visto bueno escrito (condición 3).
+**Por qué.** El núcleo v0.3 cierra 19 de mis 22 hallazgos con evidencia en el archivo; todo requisito del núcleo cita un criterio que existe; no hay citas rotas ni identificadores duplicados; el registro de permisos es consistente en todos los archivos; y las reglas que no se podían probar en la ronda 2 (orden sin precios, estados del activo, importación, auditoría y anonimización, huecos de recepción) ahora tienen resultado esperado. Mantengo "con observaciones" y no "conforme" porque, al escribir esto, había un hallazgo **Alto** del núcleo abierto (H-QA-23); se cerró durante la revisión (sección 9), y queda abierto el Alto H-QA-24 (plan de operaciones, que no es del núcleo pero bloquea las condiciones 4, 5, 11 y 12 de D-064) y los Medios de la sección 2.
 
 **Condiciones mínimas** (en orden de urgencia):
 
-1. **H-QA-23.** Una sola regla para cesar a una Persona con cuenta vinculada (aceptar o rechazar sin `usuarios.suspender`), reflejada en RF-PER-005, CA-052a, PS-26 y CA-PRS-05. Es la única condición que mantiene mi visto bueno de D-064 condición 3 suspendido.
+1. **H-QA-23 (CERRADA durante la revisión, ver sección 9).** Una sola regla para cesar a una Persona con cuenta vinculada (aceptar o rechazar sin `usuarios.suspender`), reflejada en RF-PER-005, CA-052a, PS-26 y CA-PRS-05. Era la que mantenía suspendido mi visto bueno de D-064 condición 3.
 2. **H-QA-24.** Actualizar el plan de operaciones a la v0.3: ejecución continua con trabajador, cinco roles de base, 60 conexiones, reloj y disparador, correo de captura legible, volumen y carga nocturna desde la Etapa 4, y entornos efímeros sin base compartida. Sin eso no se pueden cumplir las condiciones 4, 5, 11 y 12 de D-064.
-3. **H-QA-25 y H-QA-26.** Corregir CA-082b y la fórmula de RN-GAR-003 (fin = inicio menos un día, más los meses), y las tres citas mal apuntadas (RF-INV-008, 029, 030). Son cambios mecánicos.
-4. **H-QA-29 y H-QA-28 (parte mínima).** Un CA para el aviso de aprobación y rechazo a quien creó (RF-ACC-021) y la columna "Se ejecuta en: Etapa N" en cada CA; sin ella no puedo cerrar etapas con criterios que dependen de módulos posteriores.
+3. **H-QA-25 y H-QA-26 (CERRADAS, sección 9).** Corregir CA-082b y la fórmula de RN-GAR-003 (fin = inicio menos un día, más los meses), y las tres citas mal apuntadas (RF-INV-008, 029, 030). Son cambios mecánicos.
+4. **H-QA-29 (CERRADA) y H-QA-28 (parte mínima, abierta).** Un CA para el aviso de aprobación y rechazo a quien creó (RF-ACC-021) y la columna "Se ejecuta en: Etapa N" en cada CA; sin ella no puedo cerrar etapas con criterios que dependen de módulos posteriores.
 5. **H-QA-15 (P-013).** El Gerente de TI fija los límites y formatos de la sección 19.2 y se define cómo se detecta una serie con ceros perdidos y qué significa "deshacer" en RNF-013.
 
 Todo lo demás (H-QA-27, 30, 31, 32 y 33, y los parciales H-QA-21 y 22) no bloquea el cierre de la Etapa 0, pero debe quedar resuelto antes de las etapas que toca; los volcaré en `docs/trazabilidad.md` y `docs/calidad/` al empezar la Etapa 0 (hoy no existen).
@@ -274,3 +274,19 @@ Este veredicto es sobre documentos y arquitectura escrita, no sobre software: na
 ## 8. Mensajes enviados (3 de 3)
 
 Registrados literalmente en `docs/revision-cruzada/mensajes-ronda3-qa-tester.md`: al Analista (H-QA-23, 25 y 26), al escuadrón A (orden de la fórmula de garantía) y al escuadrón C (criterios de NOT-base).
+
+---
+
+## 9. Actualización posterior a los mensajes (verificada abriendo los archivos)
+
+Mientras escribía este informe respondieron los tres destinatarios. Comprobé cada cambio en el archivo:
+
+| Hallazgo | Respuesta | Prueba en el archivo | Estado ahora |
+|---|---|---|---|
+| H-QA-23 Cese con cuenta vinculada | Analista: se rechaza sin `usuarios.suspender` | `documento-funcional.md` RF-PER-005 (línea 298) y CA-052a (964): "exige además el permiso `usuarios.suspender`; sin él, el cese se rechaza y nada cambia"; coincide con PS-26, RN-PRS-011 y CA-PRS-05 | **Cerrado** |
+| H-QA-25 Fórmula de la garantía | Analista y escuadrón A: se resta el día primero | RF-INV-008 (397) y CA-082b (934): fin 14/01/2028; RN-GAR-003 (garantias-mantenimiento línea 109): "(inicio menos 1 día) más esos meses… 31/01 más 1 mes da 28/02" (supuesto S-35, pendiente del gerente-ti) | **Cerrado** (queda la confirmación de S-35) |
+| H-QA-26 Citas mal apuntadas | Analista: corregidas | RF-INV-008 (CA-082b), RF-INV-029 (CA-081b), RF-INV-030 (CA-079b) | **Cerrado** |
+| H-QA-29 Aviso de decisión de la orden | Escuadrón C: agregó CA-NOT-20 (v1, Etapa 5) y marcó qué CA-NOT corren en cada etapa | `notificaciones.md`: RF-NOT-004, 007 y 013 citan CA-NOT-20; CA-NOT-05 y CA-NOT-07 quedan en Fase 2 | **Cerrado** en NOT. Falta que RF-ACC-021 del núcleo cite CA-NOT-20 |
+| H-QA-28 CA que cruzan etapas | Sin respuesta aún | CA-052a (964) sigue pidiendo "una línea y un dominio a su cargo" (módulos de Fase 2) | **Abierto** |
+
+**Estado final de mis hallazgos nuevos:** de los 11, quedan cerrados 4 (H-QA-23, 25, 26, 29); abiertos 1 Alto (H-QA-24, de DevOps), 5 Medios (H-QA-27, 28, 30, 31, 32) y 1 Bajo (H-QA-33).
