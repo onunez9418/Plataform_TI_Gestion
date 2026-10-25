@@ -52,27 +52,29 @@
 
 ## 3. Roles y permisos
 
-Nombres técnicos con el formato `<módulo>.<acción>` (D-036). Cada módulo agrega filas al registro, no cambia celdas del núcleo (D-037). Alcance: **Todo** o **Propio** (puestos de la Persona vinculada al usuario; sin Persona vinculada, lista vacía). Valores predeterminados, editables por empresa. Los nombres de esta tabla se reemplazan por los PS-nn del registro (`docs/registro-permisos.md`) cuando exista.
+Nombres técnicos con el formato `<módulo>.<acción>` (D-036). Cada módulo agrega filas al registro, no cambia celdas del núcleo (D-037). Alcance: **Todo** o **Propio** (quien tiene alcance "propio" y no tiene Persona vinculada ve una lista vacía, nunca un error). Valores predeterminados, editables por empresa. Este módulo agrega filas, no cambia celdas del núcleo.
 
-| Acción | Permiso | Admin | Jefatura TI | Técnico | Almacén | Solicitante | Solo lectura | Empleado (portal) |
+| Acción | Permiso (PS) | Adm | Jef | Téc | Alm | Sol | SL | Emp |
 |---|---|---|---|---|---|---|---|---|
-| Ver contratos, puestos y cuadre | `licencias.ver` | Todo | Todo | Todo | — | Propio | Todo | Propio |
-| Ver costos | `precios.ver` | Sí | Sí | — | — | — | — | — |
-| Ver a qué Persona está asignado cada puesto | `datos_personales.ver` | Sí | Sí | Sí | — | Propio | — | Propio |
-| Crear y editar contratos (borrador y datos) | `licencias.crear` / `licencias.editar` | Sí | — | Sí | — | — | — | — |
-| Confirmar contrato o renovación | `licencias.confirmar` | Sí | Sí | — | — | — | — | — |
-| Terminar contrato | `licencias.terminar` | Sí | Sí | — | — | — | — | — |
-| Asignar y liberar puestos | `licencias.asignar` | Sí | — | Sí | — | — | — | — |
-| Informar puestos en uso | `licencias.registrar_uso` | Sí | — | Sí | — | — | — | — |
-| **Ver clave completa** (sensible) | `licencias.ver_clave` | Sí | — | Opción* | — | — | — | — |
-| **Escribir o cambiar una clave** (sensible) | `licencias.editar_clave` | Sí | — | Opción* | — | — | — | — |
-| Importar (permiso único, módulo "licencias") | `datos.importar` | Sí | — | — | — | — | — | — |
-| Exportar (permiso único, módulo "licencias") | `datos.exportar` | Sí | — | — | — | — | — | — |
-| Configurar umbrales de este módulo | `licencias.configurar` | Sí | — | — | — | — | — | — |
-| Recibir avisos de este módulo | `licencias.recibir_avisos` | Sí | Sí | — | — | — | — | — |
-| Ver auditoría | `auditoria.ver` | Sí | Sí | — | — | — | — | — |
+| Ver contratos, puestos y cuadre | `licencias.ver` (PS-82) | T | T | T | - | - | T | - |
+| Ver los datos del contrato de proveedor | `contratos.ver` (PS-74) | T | T | T | - | - | T | - |
+| Ver costos | `precios.ver` (PS-23) | T | T | P | - | P | - | - |
+| Ver a qué Persona está asignado cada puesto | `datos_personales.ver` (PS-22) | T | T | T | - | - | - | - |
+| Crear y editar contratos de licencia (borrador y datos) | `licencias.crear_editar` (PS-83) | T | - | T | - | - | - | - |
+| Confirmar un contrato de licencia | `licencias.confirmar` (PS-84)* | T | T | - | - | - | - | - |
+| Renovar un contrato (renovación automática: acción del "sistema") | `contratos.renovar` (PS-77) | T | T | - | - | - | - | - |
+| Terminar contrato (en el registro: cancelar) | `licencias.cancelar` (PS-85)* | T | T | - | - | - | - | - |
+| Asignar y liberar puestos | `licencias.asignar` (PS-86) | T | - | T | - | - | - | - |
+| Informar puestos en uso | `licencias.registrar_uso` (nuevo) | T | - | T | - | - | - | - |
+| **Ver clave completa** (sensible) | `licencias.ver_clave` (PS-88) | T | - | - | - | - | - | - |
+| **Escribir o cambiar una clave** (sensible) | `licencias.editar_clave` (PS-89) | T | - | - | - | - | - | - |
+| Importar (permiso único; módulo "licencias") | `datos.importar` (PS-21) | T | - | - | - | - | - | - |
+| Exportar (permiso único; módulo "licencias") | `datos.exportar` (PS-20) | T | - | - | - | - | - | - |
+| Configurar umbrales de este módulo | `licencias.configurar` (PS-87) | T | - | - | - | - | - | - |
+| Recibir avisos de vencimiento del contrato | `contratos.recibir_avisos` (PS-81) | T | T | P | - | - | - | - |
+| Ver auditoría | `auditoria.ver` (PS-18) | T | T | - | - | - | - | - |
 
-\* "Opción": la empresa puede dárselo al Técnico; **no** viene activado (D-035.4).
+Los PS-nn son los de `docs/registro-permisos.md`. T = todo, P = lo propio, - = no puede. "Mis licencias" lo cubre el portal con `portal.ver_propio` (PS-205, Fase 3; Empleado: P); el Solicitante no tiene acceso a este módulo por defecto. El Técnico solo ve la clave si la empresa le da `licencias.ver_clave` (opción, no viene activada, D-035.4). \* PS-84 y PS-85 se solapan con PS-76 `contratos.activar` y PS-78 `contratos.terminar_anular`, porque el contrato de licencia es un contrato `CTR-`; pedido al Analista unificarlos. `licencias.registrar_uso` está pedido (sección 14 del registro).
 Controles de los permisos sensibles (D-036.5, D-048): `licencias.ver_clave` lleva reautenticación reciente (R), segundo factor (2F), auditoría de cada uso (A) y tope de 20 por usuario por hora (T). `licencias.editar_clave` lleva R, 2F y A. `datos.exportar` y `datos.importar` llevan R, 2F, A y los topes del núcleo. Todo se comprueba en el servidor (CLAUDE.md regla 6). Un rol nuevo parte sin permisos. Jefatura TI no exporta ni importa salvo que el administrador se lo active.
 
 ## 4. Requisitos
@@ -98,7 +100,7 @@ Controles de los permisos sensibles (D-036.5, D-048): `licencias.ver_clave` llev
 | RF-LIC-015 | Importar contratos con el marco único de importación (tipo "contratos de licencia"). Sin claves. | Fase 2, ola B | CA-LIC-14 |
 | RF-LIC-016 | Buscar y filtrar (producto, proveedor, estado, tipo, vencimiento, responsable); exportar solo por la puerta única de exportación. | Fase 2, ola B | CA-LIC-15 |
 | RF-LIC-017 | Historial de cada contrato: cambios, asignaciones, informes de uso y renovaciones. | Fase 2, ola B | CA-LIC-03 |
-| RF-LIC-018 | "Mis licencias": cada usuario con Persona vinculada ve los puestos que tiene asignados. | Fase 2, ola B | CA-LIC-16 |
+| RF-LIC-018 | Ofrecer al portal el servicio "mis licencias" (puestos abiertos de la Persona vinculada); la pantalla y su permiso (`portal.ver_propio`) son del portal. | Fase 3, con el portal | CA-LIC-16 |
 | RF-LIC-019 | Declarar como fuente de costo el contrato de proveedor (o la orden de compra enlazada) y marcar "Sin respaldo de compra" cuando corresponda. | Fase 2, ola B | CA-LIC-17 |
 | RF-LIC-020 | Declarar en el registro de módulo el pendiente "puesto de licencia asignado" y liberar los puestos al cesar la Persona o dar de baja el equipo. | Fase 2, ola B | CA-LIC-09 |
 | RF-LIC-021 | Avisar cuando una misma Persona tenga el mismo producto en dos contratos. | Fase 2, ola B | CA-LIC-04 |
@@ -157,13 +159,13 @@ Estados visibles (los mismos de todo contrato, D-049.5): **Borrador, Programado,
 
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
-| (nuevo) | Borrador | `licencias.crear` | Datos mínimos |
+| (nuevo) | Borrador | `licencias.crear_editar` | Datos mínimos |
 | Borrador | Programado o Vigente | `licencias.confirmar`; si supera el límite, otra persona (RN-LIC-018) | Según la fecha de inicio |
 | Borrador | (borrado) | quien lo creó | Nunca confirmado |
 | Programado | Vigente | Calculado | Llega la fecha de inicio |
 | Vigente | Vencido | Calculado | Pasa la fecha de fin |
-| Programado, Vigente, Vencido | Terminado | `licencias.terminar` | Motivo obligatorio |
-| Borrador, Programado | Anulado | `licencias.terminar` | Motivo obligatorio; documento emitido por error |
+| Programado, Vigente, Vencido | Terminado | `licencias.cancelar` | Motivo obligatorio |
+| Borrador, Programado | Anulado | `licencias.cancelar` | Motivo obligatorio; documento emitido por error |
 
 Terminado y Anulado son finales. No hay otras transiciones.
 
@@ -206,7 +208,7 @@ Terminado y Anulado son finales. No hay otras transiciones.
 | PAN-LIC-07 | Renovación | Asistente con vista previa de lo que se traslada | Técnico prepara; Jefatura TI confirma |
 | PAN-LIC-08 | Cuadre por producto | Detalle de déficit o excedente, con el descargo | Jefatura TI |
 | PAN-LIC-09 | Configuración del módulo | Excedente, días sin verificar, umbrales | Administrador |
-| PAN-LIC-10 | Mis licencias | Puestos que tengo asignados | Solicitante y Empleado (portal) |
+| PAN-LIC-10 | Mis licencias (pantalla del portal, Fase 3) | Puestos que tengo asignados | Empleado (portal) |
 
 La importación usa el asistente único "Importar datos" y la exportación la puerta única; este módulo no tiene pantallas propias para ellas.
 
@@ -216,7 +218,7 @@ Este módulo **no tiene procesos propios**. Declara reglas al motor único de av
 
 | Regla / evento | Fecha o hecho | Umbrales | Destinatarios | Texto (variables: nombre, fecha, días) |
 |---|---|---|---|---|
-| `licencias.contrato_por_vencer` | Fecha de fin del contrato Vigente | Los de Notificaciones (90, 60, 30, 15, 7) y 0 (el día) | Responsable (Persona; si no hay Usuario, su correo verificado; si no, el grupo) y quienes tengan `licencias.recibir_avisos` | "El contrato CTR-000123 vence el 30/11/2026 (faltan 30 días)." |
+| `licencias.contrato_por_vencer` | Fecha de fin del contrato Vigente | Los de Notificaciones (90, 60, 30, 15, 7) y 0 (el día) | Responsable (Persona; si no hay Usuario, su correo verificado; si no, el grupo) y quienes tengan `contratos.recibir_avisos` (PS-81) | "El contrato CTR-000123 vence el 30/11/2026 (faltan 30 días)." |
 | `licencias.preaviso_no_renovacion` | Fecha límite de preaviso del contrato con renovación automática | 30 y 7 días antes | Mismos | "Último día para avisar que no se renueva CTR-000123: 15/11/2026." |
 | `licencias.producto_en_deficit` | Evento al pasar un producto a Déficit | Al aparecer; resumen semanal mientras persista | Jefatura TI y responsables | "El producto LIC-0007 tiene más puestos asignados o en uso que comprados." |
 | `licencias.contrato_sin_respaldo` | Evento al confirmar un contrato sin respaldo de compra | Una vez | Jefatura TI | "El contrato CTR-000130 se confirmó sin orden de compra." |
@@ -229,7 +231,7 @@ Apartarse de los umbrales por defecto de Notificaciones solo con el umbral 0 y e
 - **Inventario.** Si el producto es por serie, las unidades se crean en la recepción de la orden de compra; el contrato se completa después. Un activo que pasa a De baja o Extraviado libera sus puestos de forma síncrona.
 - **Órdenes de compra.** Vínculo opcional; con orden, `fuente_costo` = orden de compra y no se duplica el gasto.
 - **Proveedores (PRV-B, escuadrón A).** El contrato de licencia **es una extensión** del contrato `CTR-`: reutiliza fechas, costo, renovación y avisos; PRV es dueño del proveedor, el contrato y su estado. El módulo no define estados propios distintos de los seis comunes.
-- **Personas (D).** Asignación a Persona; pendiente "puesto asignado" en el registro de módulo; `onboarding-offboarding` lo muestra como tarea y `portal-autoservicio` muestra "Mis licencias". La anonimización de la Persona queda bloqueada mientras haya puestos abiertos.
+- **Personas (D).** Asignación a Persona; pendiente "puesto asignado" en el registro de módulo; `onboarding-offboarding` lo muestra como tarea y `portal-autoservicio` muestra "Mis licencias" con `portal.ver_propio`. La anonimización de la Persona queda bloqueada mientras haya puestos abiertos.
 - **Notificaciones (C).** Sección 8. `mesa-de-ayuda` puede originar una asignación, pero la acción es de este módulo.
 - **Presupuesto y reportes (F).** `presupuesto-costos` posee el libro de costos y lee del contrato; `reportes-tableros` llama a los servicios del módulo y lee Comprados, En uso y estado del cuadre (En regla, Déficit, Excedente, Sin verificar). No escriben.
 - **CMDB (E).** El elemento de configuración es el **contrato**; la unidad de licencia no genera elemento (D-062.1). La CMDB lee del origen y da un identificador estable; este módulo emite el evento cuando el contrato pasa a Terminado o Anulado.
@@ -255,7 +257,7 @@ Cada criterio cita el requisito que cubre. Las pruebas de aislamiento usan ident
 - **CA-LIC-13 (avisos con dos empresas y reloj fijable; RF-LIC-013, 014, RNF-LIC-005).** Dado un contrato de la empresa A que vence en 30 días y otro de la empresa B que vence en 7, cuando se dispara manualmente el proceso diario con el reloj fijado, dos veces, entonces cada aviso queda en su empresa, con sus destinatarios, una sola vez por elemento, umbral y destinatario, sin claves, importes ni nombres; y un corte a la mitad se recupera al reiniciar sin perder avisos.
 - **CA-LIC-14 (importación; RF-LIC-015, RN-LIC-028).** Dado una plantilla de 200 contratos con 1 fila con error, cuando se confirma, entonces no se carga ninguno y se descarga el reporte con fila, columna y motivo; subir otra vez el mismo archivo ya confirmado se rechaza entero; una columna de claves se rechaza.
 - **CA-LIC-15 (listas y exportación; RF-LIC-016, RNF-LIC-001, 007).** Dado un usuario sin `datos.exportar`, cuando abre la lista, entonces "Exportar" está visible y desactivado con la razón; con el permiso, la exportación pide motivo y el archivo omite costos y Personas según sus permisos y no trae claves.
-- **CA-LIC-16 (mis licencias y alcance propio; RF-LIC-018).** Dado un Solicitante vinculado a una Persona con 2 puestos, cuando abre "Mis licencias", entonces ve solo esos 2; sin Persona vinculada ve la lista vacía, no un error.
+- **CA-LIC-16 (mis licencias y alcance propio; RF-LIC-018).** Dado un Empleado (portal) vinculado a una Persona con 2 puestos, cuando abre "Mis licencias", entonces ve solo esos 2 y nunca los de otra Persona de la misma empresa (prueba con dos Personas); sin Persona vinculada ve la lista vacía, no un error. Se ejecuta cuando exista el portal.
 - **CA-LIC-17 (costo y respaldo; RF-LIC-019, RN-LIC-022).** Dado un contrato con costo sin orden de compra, cuando se confirma, entonces queda "Sin respaldo de compra" y Jefatura TI recibe un aviso; con una orden enlazada el costo cuenta una sola vez (`fuente_costo` = orden de compra).
 - **CA-LIC-18 (aislamiento; RN-LIC-001).** Dado un contrato de la empresa A, cuando un usuario de la empresa B pide su identificador interno, entonces recibe "No encontrado", igual que uno inexistente; no aparece en listas, búsquedas, exportaciones ni avisos de B, y el rol de la aplicación no ve filas de A aunque la consulta omita el filtro.
 - **CA-LIC-19 (escritura con referencias cruzadas; RN-LIC-001).** Dado un usuario de B con permiso de asignar, cuando envía por llamada directa una asignación que apunta al contrato de A o a una Persona de A (por identificador interno), entonces recibe "No encontrado", no se escribe nada y no se consume ningún puesto.
@@ -325,7 +327,7 @@ Resultado de cada supuesto según D-057 y D-058 (confirmado, cambiado o retirado
 | Segunda persona con la regla única RN-017 (supera estrictamente el límite); se retiró RN-LIC-016, RN-LIC-017 y RN-LIC-018 anteriores (preparar/confirmar propio, OC y aprobador); casilla «licencias» del interruptor único; sin excepción propia. | D-043, D-031; H-QA-09, H-ARQ-10, H-AUD |
 | Puestos guardados al confirmar, restricción `puestos_asignados <= puestos`, bloqueo de fila, único (contrato, Persona) y (contrato, activo), campo "puestos" no editable con contrato vigente; en SKU por cantidad el contrato es la fuente. | D-044.6; H-DAT-06 |
 | Naturaleza "licencia": sin garantía, mantenimiento ni depreciación; el elemento de CMDB es el contrato. | D-045, D-062.1; H-ARQ-06, H-AUD-12 |
-| Permisos con formato `<módulo>.<acción>`; `licencias.ver_clave` solo Administrador (Técnico opcional); `datos.exportar` y `datos.importar` únicos; se retiraron `licencias.exportar` y `licencias.importar`; Jefatura TI sin exportar; `datos_personales.ver`; columna "Empleado (portal)". | D-036, D-037 filas 1, 2, 7, 11; H-SEG-07, H-SEG-08 |
+| Permisos migrados a los PS-nn del registro (`docs/registro-permisos.md`); `licencias.ver_clave` solo Administrador (Técnico opcional); `datos.exportar` (PS-20) y `datos.importar` (PS-21) únicos; se retiraron `licencias.exportar`, `licencias.importar` y `licencias.recibir_avisos` (se usa `contratos.recibir_avisos`, PS-81); Jefatura TI sin exportar; "Mis licencias" pasa al portal (`portal.ver_propio`); columna "Empleado (portal)". Pedidos al Analista: `licencias.registrar_uso` y unificar PS-76/PS-84 y PS-78/PS-85. | D-036, D-037 filas 1, 2, 7, 11; H-SEG-07, H-SEG-08; registro de permisos |
 | Vigencia calculada al leer; se retiraron el proceso nocturno de cambio de estado y el RNF de "1 hora"; avisos por el motor único de Notificaciones, sin tabla propia, hora única. | D-062.2, D-062.3, D-058 fila 3 |
 | La sección 8 declara que no hay procesos propios; idempotencia, recuperación y "hoy" por empresa son los de Notificaciones. Se retiró la liberación nocturna: es un evento síncrono. | D-038.4, D-038.5 |
 | Liberar puestos al cesar o dar de baja el equipo como pendiente de la persona; el cese no se bloquea; la anonimización se bloquea con puestos abiertos. | D-061.7, D-034, D-033.3 |

@@ -47,26 +47,27 @@
 
 ## 3. Roles y permisos
 
-Nombres con el formato `<módulo>.<acción>` (D-036); los módulos agregan filas, no cambian celdas del núcleo (D-037). Alcance **Todo** o **Propio** (líneas de la Persona vinculada; sin Persona vinculada, lista vacía). Los nombres se reemplazan por los PS-nn de `docs/registro-permisos.md` cuando exista.
+Nombres con el formato `<módulo>.<acción>` (D-036); los módulos agregan filas, no cambian celdas del núcleo (D-037). Alcance **Todo** o **Propio** (quien tiene alcance "propio" y no tiene Persona vinculada ve una lista vacía, nunca un error). Los PS-nn son los de `docs/registro-permisos.md`. T = todo, P = lo propio, - = no puede.
 
-| Acción | Permiso | Admin | Jefatura TI | Técnico | Almacén | Solicitante | Solo lectura | Empleado (portal) |
+| Acción | Permiso (PS) | Adm | Jef | Téc | Alm | Sol | SL | Emp |
 |---|---|---|---|---|---|---|---|---|
-| Ver líneas y planes | `lineas.ver` | Todo | Todo | Todo | — | Propio | Todo | Propio |
-| Ver costos | `precios.ver` | Sí | Sí | — | — | — | — | — |
-| Ver el número completo y la Persona responsable | `datos_personales.ver` | Sí | Sí | Sí | — | Propio | — | Propio |
-| Crear y editar líneas (sin cargo especial) | `lineas.crear` / `lineas.editar` | Sí | — | Sí | — | — | — | — |
-| Asignar Persona y asociar equipo | `lineas.asignar` | Sí | — | Sí | — | — | — | — |
-| Suspender y reactivar | `lineas.suspender` | Sí | Sí | Sí | — | — | — | — |
-| Dar de baja | `lineas.dar_de_baja` | Sí | Sí | — | — | — | — | — |
-| **Reingreso** (sensible) | `lineas.reingreso` | Sí | — | — | — | — | — | — |
-| Planes, cambios de cargo y **cargo especial** | `lineas.administrar_planes` | Sí | Sí | — | — | — | — | — |
-| Confirmar el costo cuando supera el límite | `lineas.confirmar_costo` | Sí | Sí | — | — | — | — | — |
-| Migrar números desde los celulares (sensible) | `lineas.migrar` | Sí | — | — | — | — | — | — |
-| Importar (permiso único, módulo "lineas") | `datos.importar` | Sí | — | — | — | — | — | — |
-| Exportar (permiso único, módulo "lineas") | `datos.exportar` | Sí | — | — | — | — | — | — |
-| Configurar avisos del módulo | `lineas.configurar` | Sí | — | — | — | — | — | — |
-| Recibir avisos del módulo | `lineas.recibir_avisos` | Sí | Sí | Sí | — | — | — | — |
-| Ver auditoría | `auditoria.ver` | Sí | Sí | — | — | — | — | — |
+| Ver líneas y planes | `lineas.ver` (PS-90) | T | T | T | - | - | T | - |
+| Ver costos | `precios.ver` (PS-23) | T | T | P | - | P | - | - |
+| Ver el número completo y la Persona responsable | `datos_personales.ver` (PS-22) | T | T | T | - | - | - | - |
+| Crear y editar líneas (sin cargo especial) | `lineas.crear_editar` (PS-91) | T | - | T | - | - | - | - |
+| Asignar Persona y asociar equipo | `lineas.asignar` (PS-92) | T | - | T | - | - | - | - |
+| Suspender y reactivar | `lineas.suspender` (PS-93) | T | - | T | - | - | - | - |
+| Dar de baja | `lineas.baja` (PS-94) | T | - | T | - | - | - | - |
+| **Reingreso** (sensible) | `lineas.reingreso` (PS-95) | T | T | - | - | - | - | - |
+| Planes, cambios de cargo, **cargo especial** y configuración del módulo | `lineas.administrar_planes` (PS-96) | T | - | - | - | - | - | - |
+| Confirmar el costo cuando supera el límite | `lineas.confirmar_costo` (nuevo) | T | T | - | - | - | - | - |
+| Migrar números desde los celulares (sensible) | `lineas.migrar` (nuevo) | T | - | - | - | - | - | - |
+| Importar (permiso único; módulo "lineas") | `datos.importar` (PS-21) | T | - | - | - | - | - | - |
+| Exportar (permiso único; módulo "lineas") | `datos.exportar` (PS-20) | T | - | - | - | - | - | - |
+| Recibir avisos del módulo | `lineas.recibir_avisos` (nuevo) | T | T | T | - | - | - | - |
+| Ver auditoría | `auditoria.ver` (PS-18) | T | T | - | - | - | - | - |
+
+"Mis líneas" lo cubre el portal con `portal.ver_propio` (PS-205, Fase 3; Empleado: P); el Solicitante no tiene acceso a este módulo por defecto. Los permisos marcados "nuevo" están pedidos al Analista (sección 14 del registro).
 
 Controles (D-036.5, D-048): `lineas.reingreso` y `lineas.migrar` llevan reautenticación reciente (R), segundo factor (2F) y auditoría de cada uso (A); `datos.exportar` y `datos.importar`, R, 2F, A y los topes del núcleo. Jefatura TI no exporta ni importa salvo que el administrador se lo active. Quien fija precios (`lineas.administrar_planes`) no es quien opera por defecto. Todo se comprueba en el servidor. Un rol nuevo parte sin permisos. Sin `datos_personales.ver` el número se ve enmascarado (`+51 ••• ••• 321`) y la Persona como `PRS-0042` (D-037 fila 7).
 
@@ -93,7 +94,7 @@ Controles (D-036.5, D-048): `lineas.reingreso` y `lineas.migrar` llevan reautent
 | RF-LIN-015 | Historial completo de la línea: estados, responsables, equipos, planes y cargos. | Fase 2, ola B | CA-LIN-10 |
 | RF-LIN-016 | Cambiar el plan de una línea con fecha de efecto. | Fase 2, ola B | CA-LIN-10 |
 | RF-LIN-017 | Declarar en el registro de módulo el pendiente "línea a nombre de la Persona" para su ficha y para `onboarding-offboarding`. | Fase 2, ola B | CA-LIN-07 |
-| RF-LIN-018 | "Mis líneas": cada usuario con Persona vinculada ve las suyas. | Fase 2, ola B | CA-LIN-09 |
+| RF-LIN-018 | Ofrecer al portal el servicio "mis líneas" (líneas de la Persona vinculada); la pantalla y su permiso (`portal.ver_propio`) son del portal. | Fase 3, con el portal | CA-LIN-09 |
 | RF-LIN-019 | Declarar el costo de la línea con el patrón común y su `fuente_costo`, y marcar "Sin respaldo de compra". | Fase 2, ola B | CA-LIN-08 |
 | RF-LIN-020 | Informe de líneas "sin movimiento": activas sin responsable, con responsable inactivo o sin equipo. | Fase 2, ola B | CA-LIN-07 |
 | RF-LIN-021 | **Asistente de migración:** leer los números de línea de los celulares, normalizarlos, crear las líneas ligadas al equipo y a la Persona, reportar duplicados y formatos dudosos, todo o nada por lote, con simulacro previo, lote deshacible y plan de vuelta atrás. | Fase 2, ola B | CA-LIN-14 |
@@ -151,13 +152,13 @@ Controles (D-036.5, D-048): `lineas.reingreso` y `lineas.migrar` llevan reautent
 
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
-| (nueva) | Por activar | `lineas.crear` | Alta pedida al operador, sin SIM activa |
-| (nueva) | Activa | `lineas.crear` | Línea ya en uso (importación o migración) |
-| Por activar | Activa | `lineas.editar` | Responsable asignado |
-| Por activar | Dada de baja | `lineas.dar_de_baja` | Pedido cancelado; motivo |
+| (nueva) | Por activar | `lineas.crear_editar` | Alta pedida al operador, sin SIM activa |
+| (nueva) | Activa | `lineas.crear_editar` | Línea ya en uso (importación o migración) |
+| Por activar | Activa | `lineas.crear_editar` | Responsable asignado |
+| Por activar | Dada de baja | `lineas.baja` | Pedido cancelado; motivo |
 | Activa | Suspendida | `lineas.suspender` | Motivo (RN-LIN-011) |
 | Suspendida | Activa | `lineas.suspender` | Motivo |
-| Activa, Suspendida | Dada de baja | `lineas.dar_de_baja` | Motivo; aviso de permanencia (RN-LIN-022) |
+| Activa, Suspendida | Dada de baja | `lineas.baja` | Motivo; aviso de permanencia (RN-LIN-022) |
 | Dada de baja | Activa | `lineas.reingreso` | Motivo; el número no lo usa otra línea (RN-LIN-021) |
 
 No hay otras transiciones. Al pasar a Dada de baja se cierran responsable y equipo, con fecha. "Responsable inactivo" y "Permanencia vencida" se calculan al leer; no son estados.
@@ -206,7 +207,7 @@ No hay otras transiciones. Al pasar a Dada de baja se cierran responsable y equi
 | PAN-LIN-08 | Líneas sin movimiento | Sin responsable, responsable inactivo, sin equipo | Técnico |
 | PAN-LIN-09 | Asistente de migración | Simulacro, informe de duplicados y formatos dudosos, confirmar, deshacer | Administrador |
 | PAN-LIN-10 | Confirmar costos | Costos pendientes de confirmación | Jefatura TI |
-| PAN-LIN-11 | Mis líneas | Líneas que tengo asignadas | Solicitante y Empleado (portal) |
+| PAN-LIN-11 | Mis líneas (pantalla del portal, Fase 3) | Líneas que tengo asignadas | Empleado (portal) |
 | PAN-LIN-12 | Configuración del módulo | Destinatarios y umbrales | Administrador |
 
 La importación usa el asistente único "Importar datos" y la exportación la puerta única.
@@ -235,7 +236,7 @@ Se usan los umbrales por defecto de Notificaciones sin apartarse. Los avisos de 
 - **Notificaciones (C).** Sección 8. `mesa-de-ayuda` puede originar un pedido de línea, pero crear la línea es acción de este módulo.
 - **CMDB (E).** La CMDB lee de LIN (referencia, nombre y estado) y no copia; este módulo da un identificador estable y emite el evento cuando la línea pasa a Dada de baja.
 - **Importación y exportación.** Marco único (D-050) y puerta única (D-061.1).
-- **Portal (D).** "Mis líneas" con alcance propio; el número mostrado depende del módulo activo.
+- **Portal (D).** "Mis líneas" con alcance propio (`portal.ver_propio`); el número mostrado depende del módulo activo.
 - **Auditoría (núcleo).** D-018 y D-030; referencias con clave compuesta con empresa (D-039.7).
 
 ## 10. Criterios de aceptación

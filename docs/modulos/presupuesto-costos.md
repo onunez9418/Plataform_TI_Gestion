@@ -50,25 +50,25 @@
 
 ## 3. Roles y permisos
 
-Solo se usan nombres del registro único de permisos (D-036). Para ver cifras hacen falta `presupuesto.ver` y `precios.ver`. Alcance: **todo** o **propio** (centros de costo de los que la Persona vinculada al usuario es responsable; sin Persona vinculada, lista vacía).
+Solo se usan nombres y PS-nn de `docs/registro-permisos.md` (D-036); "propio" lo define el resolvedor del registro. Para ver cifras hacen falta `presupuesto.ver` y `precios.ver`. Alcance: **todo** o **propio** (centros de costo de los que la Persona vinculada al usuario es responsable; sin Persona vinculada, lista vacía).
 
-| Acción | Permiso | Admin | Jefatura TI | Técnico | Almacén | Solicitante | Solo lectura |
+| Acción | Permiso (PS) | Admin | Jefatura TI | Técnico | Almacén | Solicitante | Solo lectura |
 |---|---|---|---|---|---|---|---|
-| Ver presupuestos, ejecución, proyección, depreciación | `presupuesto.ver` + `precios.ver` (todo / propio) | Sí | Sí | No | No | No | Solo si se activa precios |
-| Crear y editar borradores | `presupuesto.crear` | Sí | Sí | No | No | No | No |
-| Aprobar o rechazar presupuesto, modificación, gasto o reclasificación | `presupuesto.aprobar` (sensible) | Sí | Sí | No | No | No | No |
-| Anular borrador, pendiente o rechazado | `presupuesto.anular` | Sí | Sí | No | No | No | No |
-| Registrar gasto manual | `presupuesto.gasto_registrar` | Sí | Sí | No | No | No | No |
-| Anular gasto manual | `presupuesto.gasto_anular` (sensible) | Sí | Sí | No | No | No | No |
-| Reclasificar un costo | `presupuesto.reclasificar` (sensible) | Sí | Sí | No | No | No | No |
-| Cerrar un periodo | `presupuesto.cerrar_periodo` (sensible) | Sí | Sí | No | No | No | No |
-| Configurar umbrales, año fiscal, parámetros de depreciación | `presupuesto.configurar` (sensible) | Sí | No | No | No | No | No |
-| Corregir el costo de un activo (permiso del núcleo) | `activos.corregir_costo` (sensible) | Sí | Sí | No | No | No | No |
-| Exportar cifras (puerta única del núcleo) | `datos.exportar` (sensible) | Sí | No | No | No | No | No |
+| Ver presupuestos, ejecución, proyección, depreciación | `presupuesto.ver` (PS-112, todo / propio) + `precios.ver` (PS-23) | Sí | Sí | No | No | No | No |
+| Crear y editar borradores | `presupuesto.crear_editar` (PS-113) | Sí | No | No | No | No | No |
+| Aprobar o rechazar presupuesto, modificación, gasto o reclasificación | `presupuesto.aprobar` (PS-114; A, No) | Sí | Sí | No | No | No | No |
+| Anular borrador, pendiente o rechazado | `presupuesto.anular` (PS-115) | Sí | Sí | No | No | No | No |
+| Registrar gasto manual | `presupuesto.gasto_registrar` (PS-116; A, No) | Sí | No | No | No | No | No |
+| Anular gasto manual | `presupuesto.gasto_anular` (PS-117; A, No) | Sí | Sí | No | No | No | No |
+| Reclasificar un costo | `presupuesto.reclasificar` (PS-118; A, No) | Sí | No | No | No | No | No |
+| Cerrar un periodo | `presupuesto.cerrar_periodo` (PS-119) | Sí | Sí | No | No | No | No |
+| Configurar umbrales, año fiscal, parámetros de depreciación | `presupuesto.configurar` (PS-120) | Sí | No | No | No | No | No |
+| Corregir el costo de un activo (fila del núcleo) | `activos.corregir_costo` (PS-51; sensible) | Sí | No | No | No | No | No |
+| Exportar cifras (puerta única del núcleo) | `datos.exportar` (PS-20; sensible) | Sí | No | No | No | No | No |
 
 Notas
 - **Empleado (portal): no aplica.** PRE no tiene ninguna pantalla ni dato para la plantilla "Empleado (portal)".
-- Controles propuestos para el registro: aprobar, anular gasto, reclasificar y cerrar periodo con segunda verificación (por ser sensibles) y auditoría de cada uso; reautenticación reciente para `presupuesto.configurar`.
+- Los valores por rol y los controles (A = auditoría de cada uso, No = nunca sobre lo propio) son los del registro de permisos. Ningún permiso de PRE es sensible salvo `activos.corregir_costo` y `datos.exportar`, que son del núcleo. En el registro, Jefatura TI no crea presupuestos ni registra gastos ni reclasifica; solo aprueba, anula, anula gastos y cierra periodos.
 - El **responsable de un centro de costo** es una Persona, no un rol. Si tiene Usuario vinculado, recibe las alertas de su centro (sin importes si no tiene `presupuesto.ver`). Si no, van a Jefatura TI.
 - Las reglas de separación de funciones aplican también al Administrador (D-004.8). Todo se comprueba en el servidor.
 
@@ -173,7 +173,7 @@ Notas
 
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
-| (nuevo) | Borrador | `presupuesto.crear` | Moneda y año definidos |
+| (nuevo) | Borrador | `presupuesto.crear_editar` | Moneda y año definidos |
 | Borrador | Pendiente de aprobación | Quien lo creó | Al menos una línea; montos mayores o iguales a 0 |
 | Pendiente de aprobación | Aprobado | `presupuesto.aprobar`, otra persona | RN-PRE-002, 005, 007 |
 | Pendiente de aprobación | Rechazado | `presupuesto.aprobar`, otra persona | Motivo obligatorio |
@@ -279,7 +279,7 @@ Cada criterio cita el requisito que cubre.
 - **CA-PRE-09 Cierre de periodo.** *Cubre RF-PRE-016, RN-PRE-015, 016, 025, 031, RNF-PRE-004.* Dado enero cerrado, cuando se confirma una recepción con fecha de enero, entonces el costo va a febrero con la marca "imputado por cierre" y las cifras de enero no cambian; el cierre corre en segundo plano con avance.
 - **CA-PRE-10 Aislamiento entre empresas.** *Cubre RN-PRE-030, RNF-PRE-008.* Dado el identificador interno de un presupuesto de la empresa B, cuando un usuario de A lo pide, entonces recibe "no encontrado"; sus totales nunca incluyen datos de B.
 - **CA-PRE-11 Permiso denegado.** *Cubre la sección 3, RN-PRE-036.* Dado un Técnico sin `presupuesto.ver`, cuando abre la ejecución o llama directo al servidor, entonces recibe "No tiene permiso" y el intento queda en el registro de seguridad; con el módulo apagado recibe "no encontrado".
-- **CA-PRE-12 Precios ocultos.** *Cubre la sección 3.* Dado un usuario de Solo lectura con `presupuesto.ver` y sin `precios.ver`, cuando abre el módulo, entonces no ve importes y se le indica por qué.
+- **CA-PRE-12 Precios ocultos.** *Cubre la sección 3.* Dado un usuario con un rol personalizado que tiene `presupuesto.ver` y no `precios.ver`, cuando abre el módulo, entonces no ve importes y se le indica por qué.
 - **CA-PRE-13 Baja y reingreso.** *Cubre RN-PRE-022, 023.* Dado un activo en depreciación, cuando se da de baja en junio, entonces la última cuota es la de junio; si se reingresa en octubre, continúa con los meses pendientes; con "Pendiente de devolución" no se detiene.
 - **CA-PRE-14 Fuente única.** *Cubre RF-PRE-010, 011, 025, RN-PRE-013.* Dado un contrato de USD 500,00 mensuales con una OC vinculada, cuando corre el trabajo diario, entonces el libro tiene una sola fila de costo (la de la OC) y ninguna del contrato; sin OC ni contrato, la fila es de fuente propia y sale en el informe "sin respaldo de compra".
 - **CA-PRE-15 Segunda persona en gasto manual.** *Cubre RF-PRE-012, 013, RN-PRE-007, 014, 029.* Dado un límite de USD 5.000,00, cuando se registra un gasto de USD 5.000,00 (con impuesto), entonces nace Vigente; con USD 5.000,01 queda Pendiente de aprobación y lo aprueba otra persona; un gasto en otra moneda siempre queda pendiente; anularlo exige otra persona.
@@ -369,7 +369,7 @@ Cada criterio cita el requisito que cubre.
 | Formato de orden `OC-000042` y prefijos `PPT-`, `MPR-`, `GMA-` | D-049.2; plan de correcciones |
 | Punto de extensión en la aprobación de OC como pedido a la Etapa 5 (RF-PRE-015, sección 9) | H-AUD-28 (tabla de conflictos); plan de correcciones |
 | REP consume servicios de PRE, no sus tablas (RF-PRE-026) | D-062.5 |
-| Permisos con formato del registro; `reportes.exportar` se cambia por `datos.exportar`; se declara "Empleado (portal): no aplica" | D-036, D-037; plan de correcciones |
+| Permisos reemplazados por los PS-nn del registro (`presupuesto.crear` pasa a `presupuesto.crear_editar` PS-113; Jefatura TI sin crear, registrar gasto ni reclasificar; `reportes.exportar` pasa a `datos.exportar` PS-20; `activos.corregir_costo` PS-51 solo Administrador); se declara "Empleado (portal): no aplica" | D-036, D-037; `docs/registro-permisos.md` |
 | Procesos en segundo plano con idempotencia, recuperación, "hoy" por empresa y autor "sistema"; recepción síncrona y alertas asíncronas (RN-PRE-034, 035) | D-038.4, D-038.5, D-041.4; H-ARQ-01, H-SEG-02, H-QA |
 | Cierre mensual en segundo plano con avance (RNF-PRE-004); prueba de carga nocturna con el volumen de RNF-010 | D-038.7, S-19, D-057 |
 | Módulo apagado responde "no encontrado" (RN-PRE-036) | D-037 fila 12 |
