@@ -44,6 +44,9 @@ Registro de decisiones tomadas por el Gerente de TI. Cada una tiene un número f
 - **Qué cambia:** Documento: nueva sección sobre este rol y su límite. Diseño: consola de plataforma separada, a construir en la Etapa 1.
 
 ### D-004 · Roles y permisos
+
+> **Anotación (2026-10-25):** el punto 4 (permisos sensibles) queda **reescrito por D-036 y D-037** (registro único de permisos, un solo `datos.exportar` y un solo `datos.importar`, y quién tiene cada sensible por defecto). Los demás puntos siguen vigentes.
+
 - **Pregunta:** ¿Cuántos roles por persona? ¿Qué reglas protegen los permisos?
 - **Decisión:**
   1. **Un solo rol por usuario en cada empresa.** El rol vive en la relación persona-empresa (una persona puede tener roles distintos en empresas distintas).
@@ -77,6 +80,9 @@ Registro de decisiones tomadas por el Gerente de TI. Cada una tiene un número f
 - **Qué cambia:** Documento §6, §7 y §8: dos tipos de campos. Diseño: pantallas de SKU, recepción y ficha del activo muestran los dos juegos.
 
 ### D-006 · Persona que recibe equipos frente a usuario de la plataforma
+
+> **Anotación (2026-10-25):** el bloqueo de baja con activos asignados quedó **reemplazado por D-034 y D-057 (S-03)**: el cese nunca se bloquea; lo que se bloquea es la anonimización.
+
 - **Pregunta:** ¿Quien recibe una laptop debe tener cuenta?
 - **Decisión:** No. Se crea el concepto **Persona** (empleado o custodio), distinto del **Usuario** (quien entra al sistema). Los activos se asignan a Personas; una Persona puede o no estar vinculada a un Usuario. Datos mínimos de una Persona: nombre, área y correo (opcional). No se guarda documento de identidad, dirección ni teléfono personal en la v1. Ciclo de vida: no se borra a nadie; se desactiva, y los datos personales se anonimizan pasado el plazo de D-024. **No se puede dar de baja a una Persona con activos asignados** hasta que se reasignen o se registre su devolución; sus órdenes abiertas se reasignan o cancelan con motivo.
 - **Motivo:** La mayoría de quienes reciben equipos nunca entrarán a la plataforma. Obligar a invitarlos es absurdo y a la vez la lista de personas es un dato personal que debe tener reglas desde el inicio.
@@ -138,6 +144,9 @@ Registro de decisiones tomadas por el Gerente de TI. Cada una tiene un número f
 - **Qué cambia:** Documento §8.
 
 ### D-011 · Licencias
+
+> **Anotación (2026-10-25):** el punto 2 y la parte de claves del punto 3 quedaron **reemplazados por D-035** (la clave es un campo secreto, nunca la serie). El resto sigue vigente.
+
 - **Pregunta:** ¿Una licencia de 50 puestos se asigna a 50 personas una por una? ¿Cómo se tratan las claves?
 - **Decisión:**
   1. En la v1 **basta el total de puestos**; no se asigna cada puesto a una persona.
@@ -261,6 +270,9 @@ Registro de decisiones tomadas por el Gerente de TI. Cada una tiene un número f
 - **Qué cambia:** Documento §5, §8 y §11.
 
 ### D-020 · Importación del Excel actual
+
+> **Anotación (2026-10-25):** los puntos 4, 5 y 8 quedan **precisados por D-050** (qué significa "no duplicar", qué significa "deshacer" y que el archivo original ya no se guarda 30 días).
+
 - **Pregunta:** ¿Entra la carga masiva del inventario? ¿Qué pasa con filas con error?
 - **Decisión:**
   1. **Entra en la v1, dentro de la Etapa 4.** Sin ella la plataforma arranca vacía.
@@ -324,6 +336,9 @@ Registro de decisiones tomadas por el Gerente de TI. Cada una tiene un número f
 - **Qué cambia:** Documento: sección "Datos personales" (dato, finalidad, quién lo ve, plazo). **Escalado al CEO por ser tema legal.**
 
 ### D-025 · Aislamiento entre empresas (decisión técnica)
+
+> **Anotación (2026-10-25):** reemplazada por **D-038** (trabajos en segundo plano: ya no es "sin colas"), **D-039** (nueva redacción del aislamiento, tablas globales y roles de base) y **D-046** (empresa activa en la dirección de la página). Se conserva el texto original como historia.
+
 - **Pregunta:** ¿Cómo se garantiza que una empresa nunca vea datos de otra?
 - **Decisión:** Una sola base de datos compartida con la empresa en cada tabla, y **dos capas de defensa**: (1) un único punto de acceso en el servidor que filtra siempre por la empresa de la sesión; (2) reglas dentro de la propia base de datos (seguridad por fila) que devuelven nada si una consulta olvida el filtro. Las referencias entre datos deben pertenecer a la misma empresa (una orden no puede apuntar a un SKU o proveedor de otra). La empresa activa la fija y comprueba el servidor en cada acción, no la pantalla; si la persona deja de ser miembro, pierde el acceso al instante. Cada tabla nueva lleva su prueba de aislamiento. Cambiar de empresa no arrastra datos en pantalla de la anterior y queda en la auditoría. Los catálogos son por empresa, no compartidos. Un prototipo de 1 a 2 días con la herramienta de base de datos elegida valida todo esto antes de escribir la primera tabla. Base única, sin microservicios ni colas: el volumen supuesto no los necesita.
 - **Motivo:** Es el riesgo crítico #2: "una consulta que olvide el filtro es un defecto grave".
@@ -425,33 +440,578 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Recomendó:** Auditor de Cumplimiento (H-CUM-08, H-CUM-17). Decide el Gerente de TI.
 - **Qué cambia:** `personas-ubicaciones.md` RN-PER-021 y RN-PER-018 a 020, `entregas-devoluciones.md` RN-ENT-021 y CA-ENT-13; sección "Datos personales" del documento. **No decidido aquí:** el cese con equipos pendientes de devolución (H-CUM-15), que sigue abierto para el Gerente de TI y el Analista.
 
+### D-034 · Cese de una Persona con equipo pendiente de devolución (H-CUM-15)
+- **Pregunta:** D-006 impide dar de baja a una Persona con activos asignados. Si alguien se va y no devolvió el equipo, ¿cómo se cierra su situación sin registrar como "Extraviado o robado" algo que quizá no se perdió?
+- **Decisión:**
+  1. **Se permite el cese** de la Persona aunque tenga equipos sin devolver. Sus equipos pasan a una marca "**Pendiente de devolución**" que no es un estado nuevo del activo: el activo sigue "Asignado" a esa Persona, con fecha del cese y motivo.
+  2. "Pendiente de devolución" **no aparece** en los reportes de pérdidas ni en la depreciación como extravío o robo. Para pasar a "Extraviado o robado" hace falta una decisión explícita con motivo, como cualquier otro caso (D-012).
+  3. Se mantiene el **bloqueo para anonimizar** (D-033.3): no se anonimiza a una Persona con equipos pendientes hasta cerrarlos (devolución, extravío o baja con motivo).
+  4. Al cesar, la cuenta de Usuario vinculada se suspende: eso exige además el permiso de suspender usuarios, no basta el de cesar Personas (H-CUM-05b).
+  5. **Motivo de cese:** se quita el texto libre; queda una lista corta sin texto libre (salida, fin de contrato, traslado, otro), o se elimina si el Analista comprueba que TI no lo necesita.
+  6. El aviso al exempleado por correo personal sigue apagado hasta la opinión legal (L-11).
+- **Motivo:** Obligar a declarar una pérdida o robo falso ensucia reportes y señala a una persona sin prueba. Con la marca, el seguimiento queda visible sin afirmar nada que no se sabe.
+- **Recomendó:** Auditor de Cumplimiento (H-CUM-15). Decide el Gerente de TI.
+- **Qué cambia:** Reemplaza lo que dice D-006 sobre no poder dar de baja a una Persona con activos, y ajusta `personas-ubicaciones.md` RN-PER-008, RN-PER-011 y `entregas-devoluciones.md` RF-ENT-010. El tipo "No devuelto tras el cese" como motivo de extravío deja de usarse.
+
+---
+
+## Decisiones de la revisión cruzada (Mesa #002, oleada C)
+
+**Origen.** Siete revisiones cruzadas (`docs/revision-cruzada/`: arquitecto-software, ingeniero-datos, especialista-seguridad, qa-tester, auditor-codigo, auditor-cumplimiento, disenador-ux), sus mensajes `mensajes-*.md` y el plan de DevOps (`docs/operaciones/plan-entornos-y-costos.md`). Fecha: 2026-10-25. Decide el Gerente de TI por delegación del CEO; solo se escala lo que es dinero, legal o irreversible (ver "Escalado al CEO", al final).
+
+**Reglas de precedencia que rigen desde hoy**
+1. Si dos documentos se contradicen, manda lo decidido en este archivo; después el núcleo (`documento-funcional.md`); un módulo **no cambia** celdas ni reglas del núcleo por su cuenta: propone y aquí se decide.
+2. Todo `[SUPUESTO]` de un módulo que toque una decisión D-xxx se eleva aquí como propuesta y **no es vigente** hasta que se decida (H-AUD-06). Los `[SUPUESTO]` que no toquen ninguna D-xxx quedan aceptados como diseño del módulo (ver D-058).
+3. Si dos revisores discrepan, decide el Gerente de TI y deja el motivo.
+
+---
+
+### D-035 · La clave de una licencia es un campo secreto de la unidad, nunca la serie
+- **Pregunta:** ¿La clave de una licencia es la serie de la unidad (D-011.2) o un dato secreto aparte (SUP-LIC-03)?
+- **Decisión:**
+  1. La clave **nunca es la serie**. La serie de una unidad de licencia es un identificador visible (por ejemplo `M365-2026-A`). La clave es un campo de la unidad de un tipo nuevo, **"secreto"**: queda **seis tipos de campo** (texto, número, fecha, lista, sí/no y secreto).
+  2. Un campo secreto se guarda **cifrado, en una columna aparte** (nunca dentro del JSON de campos), no se busca, y no aparece ni en el historial (dice solo "clave cambiada"), ni en la auditoría, ni en exportaciones (ni siquiera enmascarado), importaciones, reportes, tableros, API, avisos de webhook, correos, portal o registros técnicos. Las claves de licencia **no entran por Excel**; se escriben una a una.
+  3. **Máscara:** se muestran los últimos 4 caracteres solo si la clave tiene 16 o más; si es más corta, menos.
+  4. **Quién la ve completa:** permiso aparte `licencias.ver_clave`, sensible, **solo Administrador por defecto**; la empresa puede dárselo al Técnico (queda como opción, no como valor por defecto). Cada revelación exige reautenticación reciente (D-048), queda en la auditoría **sin el valor**, tiene tope de 20 por usuario por hora (al superarlo se avisa a los administradores) y se oculta sola a los 30 segundos con aviso previo y posibilidad de extender. Escribir o cambiar una clave es `licencias.editar_clave`, también sensible.
+  5. Además, un campo de texto puede marcarse **"identificador"**: único por empresa y normalizado, con restricción en la base (lo usa el IMEI).
+  6. El tipo "secreto" y la marca "identificador" entran con el motor de campos en la **Etapa 2**.
+- **Motivo:** Si la clave fuera la serie se mostraría en búsquedas y en el historial de correcciones (D-017.1), que no puede contener secretos; además una licencia por serie recibiría garantía, depreciación y un elemento de CMDB de equipo físico, que no le corresponden.
+- **Recomendó:** Auditor Técnico (H-AUD-01), Arquitecto (H-ARQ-06), Ingeniero de Datos (H-DAT-05), Seguridad (H-SEG-04), QA (H-QA-11), Diseñador (H-UX-22), módulo de licencias (SUP-LIC-03). **Discrepancia:** el módulo daba la clave también al Técnico por defecto; manda Seguridad y el núcleo (solo Administrador).
+- **Qué cambia:** `documento-funcional.md`: RF-SKU-013 y 014, RF-CAT-012 (seis tipos y marca identificador), CA-020 y CA-042, glosario ("Activo"). `licencias-software.md`: SUP-LIC-03 y SUP-LIC-10. Reemplaza D-011.2 y las claves de D-011.3.
+
+### D-036 · Un solo registro de permisos, con formato único
+- **Pregunta:** ¿Cómo se evita que 17 módulos escriban el mismo permiso de cinco maneras y que nadie sepa qué está protegido?
+- **Decisión:**
+  1. Existe **un registro único de permisos** en el núcleo (sección 7), con un identificador funcional **PS-nn** por permiso, su nombre técnico, su nombre en español, el módulo, si es sensible, su alcance, sus controles y su valor por defecto en cada rol. Los módulos **no inventan permisos**: piden que se agregue una fila y el Gerente de TI la aprueba. Fuera del registro no hay permiso.
+  2. **Nombre técnico:** `<módulo>.<acción>`, en minúsculas y con guion bajo (por ejemplo `ordenes_compra.aprobar`). Nada de guiones ni de variantes como `datos-personales.ver`. El catálogo vive **en el código** (módulo, acción, marca sensible, alcance, controles) y alimenta la pantalla de roles.
+  3. **Permisos globales sensibles, uno solo de cada uno:** `datos_personales.ver`, `precios.ver`, `auditoria.ver`, **`datos.exportar`** y **`datos.importar`**. Cada módulo exporta o importa solo lo que el usuario ya puede ver y las columnas de precios y de datos personales se omiten según sus propios permisos. Se cierra así la contradicción entre D-004.4 y los módulos (más de diez variantes de "exportar").
+  4. **Alcance cerrado:** solo "todo" o "propio". Qué significa "propio" lo define un **resolvedor por tipo de recurso** (creador, asignado, responsable, Persona vinculada, miembro de la cola, responsable del centro de costo). Quien tiene alcance "propio" y no tiene Persona vinculada ve una lista vacía, nunca un error.
+  5. **Controles** (columna del registro): R reautenticación reciente, 2F segundo factor obligatorio a quien lo tenga, A cada uso en auditoría, T tope por hora, No segunda persona.
+  6. La API usa **los mismos permisos y los mismos servicios** que las pantallas (los alcances de una clave son un subconjunto del catálogo).
+  7. Una **prueba automática** falla si el código usa un permiso que no está en el registro, y QA genera la matriz de pruebas desde el catálogo (todas las celdas, cada una por petición directa).
+  8. Permisos de módulos que llegan después: al activar un módulo en una empresa que ya existe, sus permisos se ofrecen al administrador como plantilla sugerida; los roles personalizados no cambian solos.
+- **Motivo:** El Arquitecto contó 252 identificadores de permiso en los módulos, más del doble de lo que el núcleo diseñó. Sin un solo catálogo no se puede probar ni auditar quién puede qué.
+- **Recomendó:** Arquitecto (H-ARQ-09), Seguridad (H-SEG-07), QA (H-QA-07), Auditor Técnico (H-AUD-05), Diseñador (H-UX-04), Cumplimiento (H-CUM-05). Unanimidad.
+- **Qué cambia:** `documento-funcional.md` §7 (v0.3): registro PS-nn y matriz, RF-ROL-004/005/014. Los 17 módulos reescriben su sección 3 con los nombres y filas del registro. Reescribe D-004.4.
+
+### D-037 · Matriz de permisos: los choques entre núcleo y módulos, resueltos uno por uno
+- **Pregunta:** ¿Qué rol puede qué cuando el núcleo y un módulo no coinciden?
+- **Decisión:** (la regla general es que los módulos agregan filas, no cambian celdas)
+
+| # | Tema | Decisión | Motivo corto |
+|---|---|---|---|
+| 1 | Importar y exportar | Solo Administrador por defecto. Jefatura TI y los demás solo si el administrador lo activa en el rol. Se corrigen licencias, líneas y dominios. | D-004.4 pide un permiso sensible; exportar es la forma más fácil de llevarse todos los datos |
+| 2 | Ver la clave completa de una licencia | Administrador; el Técnico solo si la empresa se lo da (D-035) | Es un secreto |
+| 3 | Crear, editar y desactivar proveedores | Solo Administrador (D-015.5). Ver los contactos: `proveedores.ver_contactos`, por defecto Administrador, Jefatura TI y Técnico | Separación de funciones: quien aprueba compras no crea proveedores |
+| 4 | Cesar y reactivar una Persona | Administrador y Jefatura TI. El Técnico crea y edita Personas, pero no las cesa. Si la Persona tiene un Usuario vinculado, además hace falta `usuarios.suspender` (Administrador) | El cese suspende cuentas; es más delicado que editar |
+| 5 | Ubicaciones, áreas, centros de costo | Ubicaciones: Administrador y Técnico. Centros de costo, áreas y tipos de puesto: solo Administrador | La estructura de costos es financiera |
+| 6 | Entregar, devolver y traspasar equipos | Administrador y Técnico. **Almacén no** por defecto (la empresa puede concedérselo, y entonces necesita `datos_personales.ver`). Registrar extravío: Administrador, Jefatura TI y Técnico. Reingreso: Administrador y Jefatura TI | Quien recibe mercadería no debe entregarla al usuario final sin un segundo control; Cumplimiento y Seguridad piden que Almacén no vea nombres |
+| 7 | Ver datos personales | Administrador, Jefatura TI y Técnico. Almacén, Solicitante (salvo lo propio) y Solo lectura ven la referencia (`PRS-0042`), no el nombre | Minimiza exposición |
+| 8 | Alta rápida de una Persona al entregar | Técnico y Administrador. Almacén no (DS-10: no) | Coherente con la fila 6 |
+| 9 | Actas en PDF | Quien ve el acta la puede reimprimir; sin `datos_personales.ver`, el PDF omite nombre y área y muestra la referencia | El acta lleva nombre |
+| 10 | Ver y escribir precios | Ver precios: Administrador y Jefatura TI. Técnico y Solicitante solo en las órdenes que ellos crean o editan (alcance propio). El Solicitante crea con SKU y cantidades; el Técnico o el Administrador completan precios. Almacén y Solo lectura, no | Cierra el flujo de S-15 sin dar precios a todos |
+| 11 | Plantilla "Empleado (portal)" | Se aprueba como séptima plantilla, de lista cerrada y alcance "propio". En la v1 no hay portal; las columnas "Empleado (portal)" son informativas. Todo módulo declara la columna o "no aplica" | Cierra S-27 |
+| 12 | Activar o desactivar un módulo | Lo hace el Administrador de la empresa en Configuración (`empresa.configurar_modulos`, sensible, auditado). Desactivar oculta pero no borra, y la API responde "no encontrado" | H-QA-17 |
+| 13 | Segunda verificación | Se exige por permiso sensible, no por nombre de rol (D-048) | Los roles son editables |
+
+- **Controles por permiso sensible:** la lista consolidada de Seguridad (sección 4 de su revisión) pasa al registro como columna de controles: reautenticación reciente para ver clave, exportar, importar, administrar roles y usuarios, activar excepciones, cambiar titular de dominio y crear claves de API; auditoría de cada uso; tope por hora donde corresponda.
+- **Recomendó:** Auditor Técnico (tabla de conflictos), QA (H-QA-08), Seguridad (H-SEG-08), Cumplimiento (H-CUM-05), Diseñador (DS-02, DS-10), Arquitecto (H-ARQ-09). **Discrepancias resueltas:** Almacén entrega (Auditor Técnico y módulo ENT) frente a Almacén no (Cumplimiento, Seguridad): gana "no" por defecto; cese (QA: Jefatura; núcleo: Técnico): gana Jefatura.
+- **Qué cambia:** núcleo §7.3 y registro PS-nn; `personas-ubicaciones`, `entregas-devoluciones`, `licencias-software`, `lineas-moviles`, `dominios-certificados`, `proveedores-contratos` reescriben sus tablas.
+
+### D-038 · Trabajos en segundo plano, eventos y ejecución continua (reemplaza el "sin colas" de D-025)
+- **Pregunta:** Catorce módulos necesitan avisos diarios, reintentos, renovaciones, importaciones y exportaciones grandes. ¿Cómo se ejecutan?
+- **Decisión:**
+  1. **Cola de trabajos dentro de PostgreSQL** (tabla de trabajos con reintentos y bloqueo `SKIP LOCKED`, con una librería como pg-boss o graphile-worker; se elige en el prototipo) y **un proceso trabajador** junto a la aplicación web. No se agrega Redis ni otro servicio, ni microservicios.
+  2. **Ejecución continua:** la aplicación y el trabajador corren en un servicio de contenedores. Un alojamiento "sin servidor" con límite de pocos segundos no sirve para el trabajador. DevOps compara las opciones con precios verificados **antes del prototipo** (ver D-055 T-1).
+  3. **Un programador único** reparte los trabajos diarios; no hay 14 temporizadores sueltos.
+  4. **Reglas de todo trabajo:** idempotente (correrlo dos veces no duplica nada), recuperable (al arrancar procesa los días pendientes en orden y no pierde un aviso de vencimiento), se ejecuta empresa por empresa con la empresa fijada dentro de la transacción, salta empresas suspendidas, calcula "hoy" con la zona horaria de la empresa y deja un registro de cada corrida (fecha lógica, resultado, cuántos avisos).
+  5. **Eventos:** una sola tabla de eventos (`evento_dominio`, con identificador único) y un solo catálogo de nombres `<módulo>.<entidad>_<hecho>`. Lo que **protege la integridad** (liberar puestos, cancelar mantenimientos, cerrar asignaciones, crear el registro de costo, bloquear la anonimización) corre **síncrono y en la misma transacción**. Lo que es **aviso o espejo** (correo, webhook, elemento de CMDB derivado) corre **asíncrono** por la cola.
+  6. **Registro de módulo:** cada módulo declara al arrancar sus permisos, eventos emitidos y escuchados, **pendientes de la persona**, proveedores de búsqueda global, de vencimientos, de fuentes de costo, de indicadores, plantillas de importación y claves de contador. Así la Etapa 2 (Personas) consulta "lo registrado" sin importar los módulos de años después. Una prueba en CI falla si hay dependencias circulares entre módulos o si se importa algo que no sea una interfaz pública.
+  7. Las operaciones largas (importación, exportación hasta 50.000 filas, PDF masivo) corren en el trabajador con barra de avance, nunca dentro de la petición.
+  8. **Reloj de la plataforma** que las pruebas pueden fijar y adelantar (solo en entornos de prueba) y un disparador manual de los procesos diarios (QA lo necesita para probar vencimientos y SLA).
+- **Motivo:** El "sin colas" de D-025 fue razonable con el núcleo; con los 17 módulos ya no se sostiene (autocrítica del Arquitecto). Una cola dentro de la misma base de datos es lo más simple que funciona.
+- **Recomendó:** Arquitecto (H-ARQ-01, H-ARQ-11), Ingeniero de Datos (H-DAT-09), Seguridad (H-SEG-02), QA (H-QA-12). Unanimidad.
+- **Qué cambia:** Reemplaza el "sin colas" de D-025. `documento-funcional.md`: RNF de operaciones largas y de procesos diarios (nueva regla transversal), RF-AUD-013. Todos los módulos con procesos diarios declaran su regla. **Costo:** el trabajador es una pieza de alojamiento más, incluida en el escalado de dinero (D2).
+
+### D-039 · Aislamiento entre empresas, nueva redacción: tablas globales y roles de base de datos
+- **Pregunta:** ¿Cómo se cumple "todo dato tiene empresa" en lo que, por naturaleza, no pertenece a una sola (usuario, enlace de ingreso, clave de API) y en los procesos que corren antes de saber la empresa?
+- **Decisión:**
+  1. **Base compartida** con la empresa en cada tabla de negocio, **clave foránea compuesta** `(empresa, id)`, **seguridad por fila forzada** y todo índice empezando por la empresa. Una macro de SQL `aplicar_aislamiento(tabla)` crea todo de una vez.
+  2. La empresa de cada petición **sale de la dirección de la página** (D-046), se comprueba contra la membresía y se fija en la transacción; el cliente nunca manda una empresa que el servidor acepte sin verificar.
+  3. **Cinco roles de base de datos:** `app_empresa` (el de la aplicación: sin ser dueño, sin saltarse las reglas por fila, sin ser superusuario), `app_plataforma` (solo tablas globales: así "el Administrador de plataforma no ve datos del negocio" lo impone la base y no solo una ruta), `migraciones` (dueño de las tablas; solo existe en el paso de publicación), `mantenimiento` (solo archiva o borra por partición) y `lector_auditoria` (solo lectura de la auditoría, para la copia externa). **Todas las pruebas de aislamiento corren con `app_empresa`**, y una prueba verifica que ese rol no es dueño, no tiene BYPASSRLS y no es superusuario.
+  4. **Tablas globales: lista cerrada y corta**, mantenida por el Arquitecto y revisada por Seguridad: cuenta de usuario, sesión, enlace de ingreso, invitación por token, clave de API (búsqueda por huella), tipos de evento, estado del correo, monedas, países, administradores de plataforma, límites de plataforma, resumen de no leídas por usuario y eventos de seguridad de ingreso. Una prueba en CI **falla** si aparece una tabla que ni está en la lista global ni tiene las protecciones de empresa.
+  5. **Accesos previos a conocer la empresa** (iniciar sesión, validar una clave de API, aceptar una invitación, listar empresas para el programador, contar no leídas de otras empresas, estado del correo): solo mediante **funciones puntuales con SECURITY DEFINER** (lista cerrada, devuelven lo mínimo, auditadas y con prueba). Nunca una conexión sin restricción.
+  6. **Procesos automáticos:** empresa por empresa, con `app_empresa` y la empresa fijada dentro de la transacción; cada módulo agrega a su prueba "ejecutar el proceso con dos empresas y comprobar que cada aviso, registro y destinatario queda en la suya".
+  7. **Referencias a "objeto (tipo e identificador)"** (auditoría, avisos, CMDB, costos): una columna por tipo con clave foránea compuesta y una restricción de que solo una esté llena; en la auditoría, un disparador que valida la misma empresa más una verificación nocturna de cruces.
+  8. Una prueba genérica en CI recorre el catálogo de la base, más un caso de aislamiento **por módulo** (no por tabla). Para el **portal**, que separa Personas dentro de la misma empresa, se agregan consultas dedicadas que reciben la Persona de la sesión y una prueba con dos Personas de la misma empresa (H-SEG-09).
+  9. Plan B si Prisma no alcanza: Kysely o SQL puro para esa parte, sin cambiar el resto del stack.
+- **Motivo:** Es donde un aislamiento perfecto en papel suele romperse (H-ARQ-02, H-DAT-01). Es el riesgo crítico #2.
+- **Recomendó:** Arquitecto (H-ARQ-02, 13), Ingeniero de Datos (H-DAT-01), Seguridad (H-SEG-02, 09, 17), QA (criterios del prototipo). Unanimidad.
+- **Qué cambia:** Reemplaza D-025. Documento: RS-10 y RN-001 (las tablas globales como excepción listada). Un ADR de aislamiento en `docs/arquitectura/`.
+
+### D-040 · Un dueño por concepto: ubicación, centro de costo, área, proveedor y código externo
+- **Pregunta:** El mismo concepto se define dos veces con reglas distintas (ubicación, centro de costo, área, proveedor, código externo). ¿Quién es el dueño?
+- **Decisión:**
+  1. **Ubicación jerárquica desde la v1 (Etapa 2):** `ubicación superior` opcional, **máximo 3 niveles** (Sede > Piso > Sala), nombre único por superior. Activos y stock pueden estar en **cualquier nivel**. Mover un nodo **no** escribe movimientos por activo; el historial guarda la ruta en texto en el momento del movimiento. Una lista simple es un árbol de un nivel. (Nota: se dice que el árbol "lo pidió el CEO", pero no consta en ningún documento verificable; se adopta porque cambiarlo después obligaría a migrar datos reales.)
+  2. **Centro de costo:** un solo catálogo, el del núcleo, con **Persona responsable opcional** y código externo opcional. **Área** (una por Persona, un solo nivel) y **tipo de puesto** son catálogos del núcleo desde la Etapa 2. Personas los referencia; no los redefine.
+  3. **Proveedor:** una sola tabla desde la Etapa 2, con los campos de la parte A del módulo (identificación fiscal normalizada y única, país, "vende bienes / presta servicios", contactos). Contratos y SLA llegan después (parte B). El operador de línea, el registrador de dominio, el emisor de certificados y el garante son proveedores de la misma tabla.
+  4. **Código externo:** una columna simple y opcional (S-25) en la v1; cuando llegue la integración (INT-2) se migra a la tabla de equivalencias (migración conocida y anotada, no se hace antes).
+  5. **Centro de costo del activo:** columna opcional que se copia de la línea de la orden al recibir y se corrige con permiso; la depreciación se reparte por ese centro cuando exista el módulo de presupuesto.
+- **Motivo:** Cada concepto con dos dueños es un dato que se desincroniza; y estos cambios son baratos hoy y migraciones con datos reales mañana (criterio de D-023).
+- **Recomendó:** Arquitecto (H-ARQ-07), Ingeniero de Datos (H-DAT-16), Auditor Técnico (H-AUD-09), Analista (propuesta aceptada).
+- **Qué cambia:** núcleo RF-CAT-001, 006, 023, 024 y S-06 (**rechazado**, ver D-057); `personas-ubicaciones`, `proveedores-contratos`, `integraciones-api`. Reemplaza D-008.7 en lo que dice "ubicaciones".
+
+### D-041 · El autor de todo es la membresía; los datos personales viven en una tabla aparte
+- **Pregunta:** "Usuario" aparece como autor, destinatario y responsable sin aclarar si es la cuenta global o la persona dentro de una empresa.
+- **Decisión:**
+  1. **Cuenta global mínima** (correo normalizado y segunda verificación) y **membresía** `(empresa, usuario, rol, estado, nombre visible en esa empresa)`. **Todas las tablas de negocio apuntan a la membresía**, con clave compuesta, para "creado por", "aprobado por", "responsable" y "destinatario".
+  2. La **Persona** se vincula a la membresía (1 a 1, único por empresa). Anonimizar una membresía no toca la cuenta global; la cuenta global solo se anonimiza cuando no le queda ninguna empresa activa.
+  3. Los **datos personales** (nombre, correo, código de empleado, y los datos visibles de un usuario en una empresa) viven en una **tabla aparte**. Todo lo demás (activo, acta, caso, línea, auditoría) apunta a la persona por identificador y referencia `PRS-NNNN`. Anonimizar es sobrescribir una fila (D-030).
+  4. **Tipo de autor de la auditoría: tres valores** (membresía, integración, **sistema**). El "sistema" lleva el identificador de la regla y de quien la configuró.
+  5. Una empresa nunca ve a qué otras empresas pertenece una persona.
+- **Motivo:** Si el autor fuera la cuenta global, los registros de una empresa apuntarían a una fila sin empresa, quedarían fuera de las reglas por fila y no se podría anonimizar sin afectar a otras empresas.
+- **Recomendó:** Ingeniero de Datos (H-DAT-03), Arquitecto (H-ARQ-03, tabla aparte compatible con D-030), Seguridad (RS-06, RS-08), Auditor Técnico, QA (H-QA-06 sobre autor "sistema").
+- **Qué cambia:** núcleo §5, §8, RF-AUD-013 (S-28 **cambiado**, ver D-057), RF-PER; todos los módulos que dicen "Usuario" como responsable (PRV, GAR, ONB) pasan a "Persona con vínculo opcional a membresía".
+
+### D-042 · Número de línea: campo de la unidad hasta que exista el módulo de líneas
+- **Pregunta:** El núcleo da "número de línea" como campo del celular; el módulo de líneas dice que la línea es una entidad. ¿Quién manda?
+- **Decisión:**
+  1. **En la v1** el número de línea es un **campo opcional de la unidad** del Celular (como el IMEI), tratado como dato personal mientras legal no diga lo contrario (D-030.6) y con la marca "identificador".
+  2. **Cuando se active el módulo de Líneas** en una empresa, la línea pasa a ser la dueña del número: un **asistente de migración** lee los valores, normaliza (solo dígitos con código de país), crea las líneas ligadas al equipo y a la Persona, reporta duplicados y formatos dudosos, y funciona **todo o nada por lote**, con simulacro previo sobre copia anonimizada, lote deshacible y plan de vuelta atrás (D-029).
+  3. Tras migrar, el campo del celular queda **de solo lectura** con la etiqueta "Lo gestiona el módulo Líneas móviles" y se oculta de los formularios; los valores originales se conservan 90 días.
+  4. No se guardan PIN ni PUK (SUP-LIN-03 aceptado).
+- **Motivo:** Una empresa que necesite el número en la v1 puede capturarlo sin esperar a un módulo de fase posterior; y el módulo no obliga a una migración sorpresa.
+- **Recomendó:** Analista y Arquitecto (propuesta), Ingeniero de Datos (H-DAT-05, H-DAT-20: prefería retirar el campo desde el inicio), Auditor Técnico (H-AUD-13). **Discrepancia:** Datos y el Auditor Técnico querían retirar el ejemplo de la v1; se mantiene el campo opcional por utilidad y porque la migración queda definida.
+- **Qué cambia:** núcleo RF-CAT-014, §9.3 y §18.1 (el número de línea sigue como ejemplo, marcado "lo gestiona Líneas cuando está activo"); `lineas-moviles` SUP-LIN-02 y RF-LIN-014 (migración).
+
+### D-043 · Un único servicio de doble control y un único interruptor de excepciones para todos los módulos
+- **Pregunta:** La separación de funciones está definida nueve veces; la excepción de "una sola persona de TI" tiene versiones propias. ¿Cómo queda?
+- **Decisión:** (amplía D-031 y D-015)
+  1. **Un solo servicio de doble control** registra los participantes de cada ciclo de un documento (creó, editó, aprobó, recibió, implementó) y aplica las reglas declaradas por tipo de documento. **Definición única:** no aprueba nadie que haya **creado o editado desde la última aprobación**. Si una persona aprobó y alguien edita precio, cantidad o proveedor, vuelve a pendiente; el editor no puede reaprobar.
+  2. **Un solo interruptor por empresa** con **ocho casillas** (compras, recepción, presupuestos, contratos, licencias, mesa de ayuda, cambios y problemas), todas **apagadas** por defecto, consultadas por **una sola función**; vencen a los 90 días; se confirman por un segundo administrador cuando hay dos o más; resumen mensual de usos (D-031.6 a 8). **Se retira la excepción propia de cambios (RN-CAM-004)**. La **autoentrega de equipos no tiene excepción**.
+  3. **Una sola regla de monto:** el acto exige segunda persona cuando el **importe total comprometido, con impuesto, en la moneda base** supera estrictamente el límite de la empresa (RN-017). Con límite 0, toda orden con al menos una línea pasa por aprobación; una orden en otra moneda siempre pasa. Una función única `requiereSegundaPersona(acto, monto, moneda)`.
+  4. **Tabla única de actos** (la escribe el analista en RN-017):
+
+| Acto | Cuándo exige a otra persona |
+|---|---|
+| Aprobar orden de compra | Supera el límite (o moneda distinta de la base) |
+| Activar contrato de proveedor | Supera el límite (valor del periodo contratado) |
+| Confirmar contrato de licencia | Supera el límite (reemplaza el "cualquier costo mayor que 0") |
+| Alta de dominio, certificado o línea con costo | No hay aprobación; si el costo comprometido supera el límite, otra persona; siempre marca "sin respaldo de compra" |
+| Aprobar orden de servicio con costo | Supera el límite |
+| Aprobar presupuesto | Siempre |
+| Reclasificar costo o registrar gasto manual | Supera el límite; anular un gasto: otra persona |
+| Aprobar cambio | Siempre; riesgo Alto: permiso aparte y aprobador distinto del implementador |
+| Reaprobar plantilla estándar de cambios | Otra persona |
+| Publicar error conocido | Quien no lo redactó |
+| Aprobar solicitud de servicio con aprobación | Quien no la pidió |
+| Entregar un equipo | La autoentrega está prohibida, sin excepción |
+
+  5. **Medidas complementarias** (H-CUM-03): el "cargo especial" de una línea exige `lineas.administrar_planes`; la renovación automática de contratos es una acción del "sistema" con la regla y la persona que aprobó el contrato; informe mensual "sin respaldo de compra" a quien aprueba; aviso informativo "posible compra fraccionada" (mismo proveedor, suma sobre el límite en 30 días).
+  6. Una prueba automática por regla intenta cada violación por la API, con la casilla apagada y con ella vencida.
+- **Motivo:** Una excepción dispersa es un hueco de control; centralizada es auditable. Una sola medida de monto evita comparar cosas distintas en cada módulo.
+- **Recomendó:** Arquitecto (H-ARQ-10), Cumplimiento (H-CUM-02, H-CUM-03), Seguridad (H-SEG-21), QA (H-QA-09), Auditor Técnico (H-AUD-07), Diseñador (H-UX-06). **Discrepancia:** Cumplimiento proponía medir "sin impuesto, en el periodo contratado"; se mantiene **con impuesto** (S-14) para todos, porque es lo que se paga; el presupuesto sigue midiendo costo sin impuesto, que es otra cosa.
+- **Qué cambia:** núcleo RN-017, RF-OC-026, S-14/S-16; `proveedores-contratos`, `licencias-software`, `presupuesto-costos`, `gestion-cambios`, `gestion-problemas`, `mesa-de-ayuda`, `entregas-devoluciones`, `lineas-moviles`, `dominios-certificados`.
+
+### D-044 · Dinero y costos: un libro, una fuente, un redondeo y un solo contrato
+- **Pregunta:** El costo vive en siete lugares y cada módulo calcula el "costo mensual equivalente" a su manera. ¿Cómo se evita contar dos veces?
+- **Decisión:**
+  1. **Tipos compartidos** en el código: `Dinero` (decimal con moneda) y `ObligacionRecurrente` (importe sin impuesto, % de impuesto, moneda, periodicidad, inicio, fin, centro de costo, `fuente_costo`). **Una sola función** de costo mensual equivalente.
+  2. **El módulo de presupuesto (PRE) posee el único libro de costos**: un trabajo diario idempotente convierte cada obligación en filas del libro (registro no editable, clave de origen única).
+  3. **Regla de fuente única**, con el campo común `fuente_costo` ∈ {propia, orden de compra, contrato}: **orden de compra > contrato de proveedor > registro propio del módulo**. El libro solo toma el costo propio si no hay otra fuente.
+  4. **Contrato único:** el contrato de licencia es una **extensión 1 a 1 del contrato de proveedor** (reutiliza fechas, costo, renovación y avisos; agrega tipo y puestos). Desaparece el prefijo `CLI`; todo contrato es `CTR-`.
+  5. **Responsable** en todos los módulos: una **Persona** (con vínculo opcional a membresía). Los avisos se resuelven persona, luego membresía, luego correo, y si no hay, al grupo.
+  6. **Puestos de licencia:** número **guardado al confirmar el contrato** (no una suma sobre JSON), `puestos_asignados` con `CHECK (<= puestos)` actualizado en la misma transacción bloqueando la fila del contrato, único `(contrato, persona)` abierto, y el campo de unidad "puestos" no se edita mientras el contrato esté vigente. En un SKU por cantidad de la categoría Licencias, **el contrato es la fuente** y el stock no se mueve.
+  7. **Redondeo (regla escrita en el documento):** precio unitario con 4 decimales; subtotal de línea = cantidad por precio, redondeado a los decimales de la moneda (mitad hacia arriba); impuesto por línea redondeado igual; total de la orden = suma de las líneas, guardado y no recalculado. El costo del activo guarda el subtotal sin impuesto dividido por la cantidad, con 4 decimales. Tres ejemplos con resultado en el documento sirven de pruebas.
+  8. **Monedas** en una tabla global (ISO 4217, con sus decimales); la moneda es clave foránea. `pais`, `zona_horaria` y moneda base son datos de la empresa desde la Etapa 1. **No se puede cambiar la moneda base** de una empresa con órdenes abiertas ni presupuestos aprobados.
+  9. **Costo del activo:** se puede corregir (activos del Excel) con `activos.corregir_costo` (sensible, motivo, auditoría); la plantilla de importación incluye costo, moneda, fecha de compra, fin de garantía y centro de costo. La **depreciación se calcula al leer** y se guarda solo al cerrar el mes.
+  10. **Orden de servicio:** antes de la Etapa 6 se agregan costo real, moneda, proveedor, centro de costo, "cubierta por garantía" y vínculo 1 a 1 con mantenimiento (D-027).
+- **Motivo:** Sin un patrón común el doble conteo se descubrirá con datos reales. Se adopta el orden de precedencia del Ingeniero de Datos (orden de compra, contrato, propio) porque el contrato es el compromiso financiero más amplio.
+- **Recomendó:** Arquitecto (H-ARQ-08), Ingeniero de Datos (H-DAT-06, 07, 08, 13, 19), QA (H-QA-16), Auditor Técnico (H-AUD-14, 16). **Discrepancia:** el Arquitecto ponía "registro del módulo" antes que "contrato"; gana Datos.
+- **Qué cambia:** núcleo RF-OC-005/006/017, RF-INV-001, D-014; `presupuesto-costos`, `proveedores-contratos`, `licencias-software`, `lineas-moviles`, `dominios-certificados`, `garantias-mantenimiento`.
+
+### D-045 · "Naturaleza" de la categoría: equipo físico, licencia o servicio
+- **Pregunta:** Una licencia por serie hereda garantía, mantenimiento, depreciación y un elemento de CMDB de equipo físico. ¿Cómo se evita?
+- **Decisión:** Cada categoría tiene un atributo **naturaleza** con tres valores, fijo al crearla y heredado por sus subcategorías, SKU y activos: **equipo físico** (por defecto: garantía, mantenimiento, depreciación, "activos vigentes" y elemento de CMDB "Activo"), **licencia** (la trata el módulo de licencias; no recibe garantía, mantenimiento ni depreciación; su elemento de CMDB es el contrato) y **servicio** (suscripciones o servicios sin unidad física ni puestos; sin garantía ni depreciación). No se cambia con existencias. Entra en la Etapa 2.
+- **Motivo:** Cuenta como "activo vigente" lo que no lo es y falsea tableros y costos (H-ARQ-06).
+- **Recomendó:** Arquitecto (H-ARQ-06); el valor "servicio" lo suma el Gerente de TI para dominios, hospedajes y suscripciones sin puestos.
+- **Qué cambia:** núcleo RF-CAT (nuevo atributo), glosario "Activo"; `garantias-mantenimiento`, `cmdb-ligera`, `presupuesto-costos`, `reportes-tableros` aplican solo a "equipo físico".
+
+### D-046 · La empresa activa va en la dirección de la página
+- **Pregunta:** Con dos pestañas en dos empresas, una acción puede guardarse en la empresa equivocada si la empresa solo vive en la sesión.
+- **Decisión:** La empresa va **en la dirección** (`/e/{empresa}/...`) y en cada petición de acción o de API. El servidor la compara con la membresía en **cada petición** y fija el contexto de base de datos con ella. La sesión solo recuerda "la última usada". **Cambiar de empresa es navegar a otra dirección**; la pantalla anuncia "Ahora trabaja en: [Empresa]". Los enlaces de los correos llevan la empresa; si la persona no es miembro, responde "no encontrado". El contador de no leídas de otras empresas sale de una tabla resumen por usuario, nunca de recorrer empresas en una consulta.
+- **Motivo:** Es el punto del sistema donde el aislamiento se relaja a propósito (riesgo #11).
+- **Recomendó:** Arquitecto (H-ARQ-04), Seguridad (RS-07), QA (H-QA-18), Diseñador.
+- **Qué cambia:** núcleo RF-ACC-012, CA-004; `notificaciones` RF-NOT-006 y RN-NOT-020.
+
+### D-047 · Webhooks y claves de API
+- **Pregunta:** El webhook guarda solo una "huella" de su secreto, pero firmar exige conocerlo; y un webhook puede apuntar a la red interna.
+- **Decisión:**
+  1. El **secreto del webhook se guarda cifrado** (clave derivada por empresa, D-048), se muestra una sola vez y se puede rotar con traslape. Las **claves de API sí se guardan como huella** (alta entropía, al menos 128 bits) y cada clave tiene un **identificador público propio** (el prefijo común no sirve para bloquear una clave concreta). La clave viaja solo en una cabecera. Revisar el alcance de una clave cuando el creador cambia de rol; clave de un creador inactivo pasa a "en revisión" y se suspende a los 7 días si nadie la asume.
+  2. **Anti-SSRF (diseño obligatorio, lo revisa Seguridad antes de INT-2):** validar al registrar **y al enviar**; resolver el DNS en el envío y fijar la dirección; bloquear loopback, redes privadas, 169.254.x.x e IPv6 equivalentes; solo puerto 443; **no seguir redirecciones**; tope de tiempo y de tamaño; no mostrar el cuerpo de la respuesta (solo código y duración); envío desde un **componente aislado** sin acceso a la red interna ni a secretos más que el de firma; pruebas con nombres que resuelven a direcciones internas y con redirecciones.
+  3. La API usa los mismos validadores, permisos y servicios que la pantalla; escribe solo lo permitido por S-INT-04 y **nunca** crea o cambia proveedores ni desactiva Personas.
+- **Motivo:** Una huella no sirve para firmar (error de diseño); y el servidor no debe poder usarse para leer servicios internos.
+- **Recomendó:** Seguridad (H-SEG-03, 05, 25), Arquitecto (H-ARQ-05, 20), Cumplimiento (H-CUM-14).
+- **Qué cambia:** `integraciones-api` §6, RN-INT-002/017/022/023, CA-INT-12.
+
+### D-048 · Segunda verificación atada a permisos, llaves de cifrado y control dual de la plataforma
+- **Pregunta:** ¿Qué usuarios llevan segunda verificación, cómo se recuperan, dónde viven las llaves y cómo se controla al Administrador de plataforma?
+- **Decisión:**
+  1. **Segunda verificación (aplicación autenticadora, sin SMS) obligatoria a cualquier membresía que tenga algún permiso sensible** del registro, no según el nombre del rol (los roles son editables). "Administrador activo" = quien tiene administrar roles y usuarios; el último no se puede quitar aunque cambie de rol.
+  2. **Reautenticación reciente (10 minutos, enlace nuevo o segundo factor)** para: ver clave de licencia, exportar, importar, administrar roles y usuarios, activar excepciones, cambiar titular de dominio y crear claves de API.
+  3. **Recuperación:** 10 códigos de un solo uso, mostrados una vez; la reposición la hace otro administrador; si el único administrador pierde factor y códigos, rescate (punto 6).
+  4. **Llaves:** una **llave maestra fuera de la base y de los respaldos** (gestor de secretos); llaves **derivadas por empresa** (claves de licencia, secretos de webhook) y **por usuario** (semilla de la segunda verificación, porque la cuenta es global); cifrado con versiones, rotación anual y ante sospecha, con recifrado por lotes. **Respaldo de las llaves por separado, en dos lugares, con al menos dos custodios**; una restauración de ensayo comprueba que la llave guardada abre la copia. Ningún secreto en el repositorio, en JSON de campos, en registros técnicos, auditoría ni exportaciones; una prueba automática lo busca.
+  5. **Control dual del Administrador de plataforma:** (a) **rescate** de una empresa con **dos personas** de plataforma; si solo hay una, confirmación por otro medio con el **contacto autorizado** que la empresa registró al crearse; espera de 24 horas salvo emergencia declarada por ambas; aviso por correo a todos los usuarios activos y administradores; evidencia guardada. (b) **Soporte:** solo lectura, una empresa y un motivo por vez, máximo 24 horas (S-04), autorizado por la empresa, con banner "sesión de soporte" y entradas visibles en la **auditoría de la propia empresa**. (c) Cuentas de plataforma con **llave de seguridad física**, acceso desde red restringida (DevOps) y códigos de recuperación fuera de línea con dos custodios. (d) Dos registros: **de plataforma** (crear, suspender, rescatar) y **de empresa** (todo lo que soporte vio o hizo).
+  6. **Acceso de emergencia si el correo falla:** el Administrador de plataforma puede emitir un acceso excepcional de un solo uso a un administrador de empresa, **tras verificar su identidad por otro medio**, con segunda verificación aún exigida y todo auditado (propuesto por DevOps, 6.4; Seguridad aprueba el diseño). No se agregan contraseñas.
+- **Motivo:** Sin esto la cuenta de plataforma es el camino más corto a una fuga entre empresas, y el cifrado quedaría junto a los datos que protege.
+- **Recomendó:** Seguridad (H-SEG-01, 03, 06), Arquitecto (H-ARQ-05), Cumplimiento (H-CUM-16), DevOps (plan, 5 y 6.4), Ingeniero de Datos (H-DAT-05).
+- **Qué cambia:** núcleo RF-ACC-013/019, RF-ROL-002/008, RF-PLA-001 a 005; nueva sección "Gestión de secretos". **Costo menor:** llaves físicas y gestor de secretos (ver D2).
+
+### D-049 · Prefijos de identificadores, vocabulario y estados
+- **Pregunta:** Los prefijos chocan (`D-` decisión y devolución; `P-` pendiente, pantalla y Persona; `E-` escalado y acta; `REC-` reclamo y recepción) y "baja", "anular", "cancelar" significan cosas distintas en cada módulo.
+- **Decisión:**
+  1. **Requisitos:** `RF-<MÓD>-NNN`, un código de módulo propio. El módulo de Personas pasa de `RF-PER` a **`RF-PRS`** (el núcleo conserva `RF-PER-001` a 010). Los módulos usan la etapa o la fase y el criterio que cubre en cada requisito.
+  2. **Documentos de negocio** (ancho mínimo 6 dígitos): `OC-`, `OS-`, `RCP-` (recepción), `RCL-` (reclamo de garantía), `MNT-`, `CTR-`, `AYU-`, `CAM-`, `PRB-`, `KB-`, `EC-`, `ACT-E-` y `ACT-D-` (actas de entrega y devolución). SKU: prefijo de categoría con mínimo 4 dígitos (D-007). **Persona: `PRS-` con mínimo 4 dígitos** (la anonimización dice "Persona anonimizada 0042"). Se elimina `CLI-`.
+  3. **Prefijos reservados** que una categoría no puede usar: `OC, OS, RCP, RCL, MNT, CTR, AYU, CAM, PRB, KB, EC, ACT, PRS, PAN`.
+  4. **Otros:** pantallas `PAN-<MÓD>-nn`; supuestos de cambios y problemas `S-CAM-nn` y `S-PRB-nn`; escalados `E-<MÓD>-nn` (sin choque ahora que las actas cambian); pendientes `P-NNN`; decisiones `D-NNN`. Un **registro de prefijos** va en el documento y en `docs/trazabilidad.md`.
+  5. **Vocabulario del ciclo de vida** (el del Diseñador, 4.4, aprobado): Activar/Desactivar (listas), Suspender/Reactivar (accesos y servicios), Dar de baja (activo, línea, dominio, certificado, usuario), **Cesar** (Persona), Anular (documento ya emitido), Cancelar (trabajo en curso), Terminar (contrato), Cerrar (trabajo concluido), Aprobar/Rechazar. **Persona:** Activa, Cesada, Anonimizada. **Usuario:** Invitado, Activo, Suspendido, Dado de baja. Los contratos de proveedor y de licencia usan los mismos estados: Borrador, Programado, Vigente, Vencido, Terminado, Anulado.
+  6. **Quien pide:** el campo se llama **"Pedido por"** en orden de compra, orden de servicio, caso y cambio; "Solicitante" queda solo como nombre de rol. La "solicitud de servicio" del núcleo pasa a **"solicitud de trabajo"** (OS en Creada); en la mesa de ayuda el tipo se llama "Pedido de servicio" y su sujeto "Persona atendida".
+  7. **Compromiso de servicio del proveedor** reemplaza a "SLA" en proveedores; el SLA queda para los plazos internos de la mesa de ayuda.
+  8. **Formato de número:** el formato de cada empresa se toma del país (P-004); mientras no se sepa se usa la configuración regional del navegador. Fecha día/mes/año. Siempre el código de moneda junto al importe y nunca un total general entre monedas.
+- **Motivo:** Sin un registro de prefijos y un vocabulario único, la trazabilidad (D-026) y las pruebas no se pueden automatizar.
+- **Recomendó:** Auditor Técnico (H-AUD-03, 10, 11, 22), Diseñador (H-UX-07, 16, 24), Ingeniero de Datos (H-DAT-10, 25), QA (H-QA-19, 22).
+- **Qué cambia:** núcleo (glosario, §26, §27); renumeración del módulo de Personas; `entregas-devoluciones`, `garantias-mantenimiento`, `licencias-software`, `mesa-de-ayuda`, `gestion-cambios`, `gestion-problemas`, `presupuesto-costos`, `integraciones-api`.
+
+### D-050 · Importación: un solo marco, claves de no duplicación y "deshacer"
+- **Pregunta:** ¿Qué significa "no duplicar" al volver a subir, qué es "deshacer" y cómo se concilia con "todo o nada"? Hoy hay ocho importaciones distintas.
+- **Decisión:**
+  1. **Un solo marco** (plantilla declarativa por entidad, tablas `importacion_lote`, `importacion_fila` y `lote_registro`) y **un solo asistente "Importar datos"** con selector de tipo (SKU, catálogos, Personas, activos, stock, contratos de licencia, líneas, dominios, servicios de CMDB, maestros de SAP). La ejecución corre en el trabajador (D-038) con avance. Los pasos respetan un **orden de dependencias**: catálogos, Personas, SKU, activos, saldos. SKU y valores desconocidos (marcas, ubicaciones) **no se crean solos**: se listan para aprobarlos en bloque.
+  2. **Todo o nada por lote** (D-020.3 se mantiene). **La importación solo crea; no actualiza.**
+  3. **Qué significa "no duplicar":** un **archivo ya confirmado** (huella SHA-256 por empresa, lote confirmado y no deshecho) se rechaza entero con "este archivo ya se importó el [fecha] en el lote N". Un **archivo corregido** es otro archivo: sus filas se validan contra la base y una fila que ya existe por su clave natural es un **error de esa fila** ("ya existe"); como el lote anterior no cargó nada, las 100 filas corregidas entran.
+  4. **Claves naturales:** activo = SKU + serie normalizada; stock = un solo "saldo inicial" por SKU + ubicación; Persona = **código de empleado o correo** normalizado (la importación exige uno de los dos; la alta manual puede crear homónimos con aviso); línea = número; dominio = nombre normalizado; proveedor = identificación fiscal; SKU = código.
+  5. **Deshacer = anular, nunca borrar:** las filas pasan a un estado final **"Anulado por lote deshecho"** con motivo, salen de los conteos y de las reglas de unicidad (índice parcial) y conservan su historial. Solo se puede si **ninguna** fila del lote tiene un movimiento posterior (cualquier movimiento, asignación, corrección de costo o referencia desde otro documento; medido con una **secuencia creciente** por empresa, no con la hora). Si hay uno, no se deshace nada.
+  6. **El archivo original no se guarda** (reemplaza D-020.8 y RF-IMP-012): se lee, se guardan las **filas ya validadas** en preparación (hasta confirmar o 7 días), la huella y el reporte de errores, y el archivo se descarta al terminar. Así no hay un archivo con datos personales por 30 días ni costo de almacenamiento (D-022). La copia de lotes SAP es dato guardado y sigue el plazo de la auditoría.
+  7. **Formato:** fechas `dd/mm/aaaa` o número de serie de Excel (otro formato es error de fila). La plantilla incluye costo, moneda, fecha de compra, fin de garantía directo o meses, y centro de costo. Series dañadas por Excel (`3,5E+14`, ceros perdidos) se rechazan con aviso.
+  8. **Seguridad de la lectura:** solo `.xlsx` y `.csv`, sin evaluar fórmulas ni entidades externas, con límite de tamaño descomprimido, de hojas, columnas y largo de celda, rechazo de macros, tiempo máximo y **una importación a la vez por empresa**. Las celdas **de texto** que empiezan con `=`, `+`, `-`, `@`, tabulador o retorno se tratan como texto; las numéricas siguen siendo números (los importes negativos no se rompen). La empresa sale de la sesión, nunca del archivo.
+  9. **Topes** (D-054): 5.000 filas y 10 MB por archivo, 10 importaciones por día por empresa en total entre módulos. Para la **carga inicial** (Excel real, P-007) la plataforma puede subir el tope de una empresa por un periodo corto.
+  10. **Auditoría del lote:** una entrada de lote más el detalle en su propia tabla (no 100.000 entradas sueltas).
+  11. **Invitaciones masivas** del portal: por persona, no todo o nada (DS-08), y la pantalla lo dice.
+- **Motivo:** Concilia el pedido de QA (que se pueda cargar un Excel sucio) con el de Datos (que no queden cargas parciales) y elimina la contradicción entre "todo o nada" y "no duplicar".
+- **Recomendó:** Ingeniero de Datos (H-DAT-11), QA (H-QA-04), Seguridad (H-SEG-13, 18), Arquitecto (H-ARQ-14), Diseñador (H-UX-10).
+- **Qué cambia:** núcleo RF-IMP-001 a 014 y CA-038/039; los siete módulos con importación propia usan el marco.
+
+### D-051 · Excepción declarada: el nombre copiado en el acta de entrega
+- **Pregunta:** D-030.1 dice que los datos personales viven solo en Persona y Usuario, pero el acta de entrega guarda una copia de nombre y área. ¿Se acepta?
+- **Decisión:** **Sí, como excepción declarada**, porque el acta es la constancia de lo que se firmó y una reimpresión debe mostrarlo. Condiciones: (1) la copia vive en **columnas propias del acta** con una fecha `retener_hasta` (activo más 5 años, D-033); (2) no se escribe en la auditoría; (3) la función de anonimización limpia la copia cuando `retener_hasta` vence, de modo que cualquiera de las dos políticas que decida legal se aplica sin rehacer la tabla; (4) se declara en la tabla de datos personales y en el aviso de privacidad. Se corrigen S-PER-06 y CA-ENT-13, que decían que la anonimización alcanza el acta de inmediato. La alternativa del Auditor Técnico (el acta guarda solo el identificador y el nombre se resuelve al imprimir) se descarta porque destruiría la prueba de lo firmado.
+- **[ESCALAR AL CEO]** — **legal e irreversible:** si legal responde que hay que anonimizar también el nombre del acta antes del plazo (L-05, L-12), se aplica sobre lo existente y no se puede deshacer. Mientras no responda, rige la regla provisional de D-033.
+- **Recomendó:** Cumplimiento (H-CUM-08), Ingeniero de Datos (H-DAT-02), Auditor Técnico (H-AUD-02, opción descartada), QA (H-QA-05).
+- **Qué cambia:** `personas-ubicaciones` S-PER-06, RN-PER-021; `entregas-devoluciones` RN-ENT-006 y CA-ENT-13; núcleo §18.
+
+### D-052 · Restauración, copia externa de la auditoría y registro de anonimizaciones
+- **Pregunta:** ¿Qué pasa al restaurar un respaldo y cómo se detecta que alguien con poder total alteró la auditoría?
+- **Decisión:** (completa D-029, D-030.5 y D-032.3)
+  1. **Respaldo en dos capas:** el del proveedor de la base (recuperación a un punto en el tiempo si el plan lo ofrece) y uno propio, cifrado antes de salir, **diario** y uno extra antes de cada publicación con migración, guardado en **otro proveedor y otra cuenta**. Retención 30 diarios y 12 mensuales (D-032). **Objetivos provisionales:** pérdida máxima aceptable 24 horas (menos si el plan lo permite) y tiempo de recuperación 4 horas en horario laboral.
+  2. **Copia externa de la auditoría**, solo de agregar, **inmutable** (de una sola escritura) y **encadenada** (cada archivo lleva la huella del anterior), cada hora, con **verificación semanal** (alerta inmediata si no coincide). El trabajo que copia solo lee la auditoría y solo agrega al almacenamiento externo; quien administra la base no tiene borrado sobre la copia. Reduce, no elimina, el riesgo del superusuario: lo hace **detectable**. El modo de bloqueo (estricto o con borrado bajo orden legal) lo decide Cumplimiento con legal.
+  3. **Registro de anonimizaciones** (solo identificador y fecha) en un **almacén propio, fuera de la base que se restaura**, sin rotación y replicado, para que sobreviva a una pérdida total.
+  4. **Al restaurar y antes de abrir el sistema:** reaplicar las anonimizaciones; **revocar todas las sesiones y enlaces**, rotar las claves de API y **reaplicar suspensiones, bajas y cambios de rol posteriores** al respaldo (desde la auditoría, que vive aparte). La prueba de restauración (CA-053) incluye todo esto y que la prueba de aislamiento pasa sobre la base restaurada.
+  5. **Restaurar una sola empresa:** herramienta de **exportar/importar una empresa** (recorre el catálogo y mueve las filas por empresa), sin la cual una restauración completa borraría el trabajo de las demás. Datos y DevOps la entregan antes de la primera empresa real; hasta entonces, el plan de emergencia es restaurar completo con aprobación del CEO.
+  6. Calendario de restauraciones de ensayo: antes de la Etapa 1, antes de cada etapa que pase a uso real, y una vez al mes en producción.
+- **Motivo:** Un respaldo que nunca se restauró no es un respaldo; y una restauración puede revivir accesos ya revocados.
+- **Recomendó:** DevOps (plan, 4), Arquitecto (H-ARQ-03, 25), Seguridad (H-SEG-22), Cumplimiento (H-CUM-04), Ingeniero de Datos (H-DAT-02).
+- **Qué cambia:** núcleo RF-DAT-005, RNF-014, CA-053; D-029. **Costo:** almacenamiento externo con bloqueo (ver D2).
+
+### D-053 · Diseño: un botón "Pedir ayuda" y las 12 decisiones DS-01 a DS-12
+- **Pregunta:** El Diseñador pidió confirmar S-31 y 12 decisiones de sistema de diseño (DS-01 a DS-12).
+- **Decisión:**
+
+| ID | Decisión | Resultado |
+|---|---|---|
+| DS-01 | Un solo botón **"Pedir ayuda"** (S-31): en la v1 crea la orden de servicio en estado Creada; en la fase 2 abre el catálogo de casos y el técnico crea la orden desde el caso | **Confirmado** |
+| DS-02 | Qué matriz manda cuando núcleo y módulo no coinciden | **Manda el núcleo**; los módulos agregan filas; las diferencias se resuelven en D-037 |
+| DS-03 | Vocabulario del ciclo de vida (4.4) | **Aprobado** (D-049) |
+| DS-04 | Siete familias de color con texto e icono (4.1), etiqueta calculada con borde y reloj | **Aprobado** |
+| DS-05 | Verbo único **"Aprobar"** y una sola bandeja "Por aprobar" con pestañas por tipo | **Aprobado**. "Publicar" queda solo para textos |
+| DS-06 | Prototipo en dos niveles: 26 pantallas A y 18 B | **Aprobado**; las fases 2 y 3 se muestran al CEO como muestras |
+| DS-07 | Una sola pantalla de Vencimientos, una de Importar datos, un solo "Mi espacio", y la configuración de avisos solo en Notificaciones | **Aprobado** |
+| DS-08 | Invitaciones masivas: por persona, no todo o nada | **Por persona** (D-050) |
+| DS-09 | Tono "usted" en toda la plataforma, portal y correos | **Aprobado** |
+| DS-10 | Almacén puede dar de alta una Persona al entregar | **No** (D-037 fila 8) |
+| DS-11 | Lista "campo / oficina" para celular: buscar, ficha, entregar y devolver, recibir y capturar series, aprobar, mantenimiento y casos propios; roles, presupuesto, importación y configuración se ven en celular pero se editan en pantalla grande | **Aprobado**; QA prueba a 360 px |
+| DS-12 | Tabla única de prefijos | **Aprobado** (D-049) |
+
+  Se aprueban también: el **mapa de navegación** por perfil (8 grupos de menú, 8 perfiles; un módulo apagado o sin permiso no aparece; el portal con estructura propia; consola de plataforma con otro color); el **Inicio como página de tarjetas** que cada módulo aporta, con una tarjeta principal por rol y un máximo de seis visibles, y una sola bandeja **"Mi trabajo"** para el Técnico; la **ficha del activo con cabecera fija y 7 pestañas** condicionales; el **catálogo de 3 mensajes y 3 bloqueos** ("No encontrado", "No tiene permiso", "No se puede por una regla"; botón ausente, desactivado con la razón escrita o mensaje por dirección directa); **tres formas de dato oculto** (referencia, secreto enmascarado, columna omitida con aviso); el **diálogo de motivo único**; **Exportar visible y desactivado con la razón** si falta el permiso; **un solo asistente "Entregar" y un solo diálogo "Cambiar estado"** que reutilizan entregas, garantías y órdenes de servicio; las **pantallas que nadie había listado** (Primeros pasos, módulos activos, Mi cuenta y seguridad, autorizar soporte, aviso de privacidad y segunda verificación del primer ingreso, consola de plataforma, Mis permisos); **aviso a los 25 minutos** de la sesión y **borradores automáticos** en recepción, orden de compra, entrega e importación; buscador global agrupado por tipo; objetivos táctiles de 44 px y WCAG AA.
+- **Motivo:** Las decisiones dejan de ser 17 diseños distintos y el CEO puede aprobar el aspecto una sola vez.
+- **Recomendó:** Diseñador (H-UX-01 a 25), con ajustes de Seguridad (mensajes) y de este Gerente (DS-10).
+- **Qué cambia:** núcleo (glosario, RNF-004/007/008, nueva sección de pantallas), prototipo de la Etapa 0, y el glosario de mesa de ayuda y portal ("Pedir ayuda").
+
+### D-054 · Eventos de seguridad, topes de abuso y endurecimiento del acceso
+- **Pregunta:** Los topes están repartidos y no coinciden; los intentos rechazados no dicen en qué auditoría van; el enlace de ingreso se gasta si un filtro de correo lo abre.
+- **Decisión:**
+  1. **Eventos de seguridad aparte de la auditoría de negocio:** los intentos rechazados por empresa ajena, los accesos fallidos y los inicios de sesión fallidos van a una **tabla separada**, escrita en una **transacción independiente** (el rechazo no la revierte), con la **empresa del actor** (nunca la del objeto ajeno), sin datos del objeto, con tope de ritmo y agrupación por minuto. Plazo 12 meses (propuesta, D-030.7). Los ve la empresa del actor y la plataforma.
+  2. **Cuadro único de topes** (limitador en tablas de PostgreSQL; Redis solo si se mide la necesidad y entonces se escala por costo): enlaces de ingreso 5 por correo por hora, 10 por día, 20 por IP por hora; **5 intentos fallidos y espera de 1, 2, 5 y 15 minutos**; invitaciones 20 por administrador por hora y **100 por empresa por día** (la plataforma lo sube por empresa para una campaña del portal); importaciones 10 por día por empresa en total, 5.000 filas, 10 MB, una a la vez; exportaciones 10 por usuario por hora, 100 por empresa por día, 50.000 filas; lectura masiva por API (más de 5.000 filas por día por clave) tratada y auditada como exportación; revelar clave de licencia 20 por usuario por hora; correos 1.000 por día por empresa con **cupo propio para los obligatorios** y para `compras.orden_por_aprobar`.
+  3. **Enlace de ingreso:** abre una página con el botón **"Entrar"** que envía el formulario, y queda **atado al navegador que lo pidió**, para que un filtro de correo no lo gaste. El tope por correo no bloquea al dueño que ya tiene un enlace válido. Tiempos de respuesta iguales exista o no el correo; **no se envía nada a correos sin cuenta ni invitación**.
+  4. **Invitaciones:** texto fijo sin campos libres; nunca dicen si el correo ya tiene cuenta; la empresa se suma a la cuenta solo cuando la persona abre y acepta; se avisa al usuario cuando se le suma una empresa. DevOps configura SPF, DKIM y DMARC (DMARC por pasos) en un subdominio de envío.
+  5. **Ingreso con Microsoft o Google (INT-3):** se vincula una sola vez por el **identificador inmutable del proveedor**, no por el correo, a partir de una sesión ya iniciada o una invitación; los administradores conservan el enlace de correo y la segunda verificación.
+  6. **Correos:** se normalizan con comparación Unicode, sin quitar puntos ni etiquetas `+`.
+- **Motivo:** Evita abuso y costos de correo sin dejar topes sueltos que no cuadran entre módulos.
+- **Recomendó:** Seguridad (H-SEG-11, 14, 15, 20, 24; tabla de topes de su sección 5), QA (H-QA-06, 14), Arquitecto (H-ARQ-20, 21).
+- **Qué cambia:** núcleo RF-ACC-006/017, RF-AUD-005/010, CA-002/006; `notificaciones` RN-NOT-008 a 011; `portal-autoservicio` RN-POR-016, S-POR-06.
+
+### D-055 · Las 14 decisiones técnicas T-1 a T-14 y el prototipo ampliado a 3 o 4 días
+- **Pregunta:** El Arquitecto pide aprobar T-1 a T-14 antes de la Etapa 1.
+- **Decisión:**
+
+| # | Decisión técnica | Resultado |
+|---|---|---|
+| T-1 | Servidor de ejecución continua + proceso trabajador + PostgreSQL gestionado con agrupador de conexiones en modo transacción | **Aprobado** (D-038). El alojamiento concreto lo propone DevOps con precios verificados antes del prototipo; no se asume Vercel. Costo dentro de D2 |
+| T-2 | Cola de trabajos en PostgreSQL y bus de eventos único | **Aprobado** (D-038); la librería se elige en el prototipo |
+| T-3 | Contexto de empresa en la dirección, `set_config` por transacción, lista de tablas globales, roles de base, funciones SECURITY DEFINER | **Aprobado** (D-039, D-046) |
+| T-4 | Convenciones del esquema: identificadores UUID v7; empresa, clave compuesta y seguridad por fila con macro; normalización con columnas generadas; dinero decimal(19,4) y porcentajes decimal(7,4); `date` para fechas de calendario y `timestamptz` en hora universal; columna `version` en toda entidad editable; borrado físico solo en borradores sin hijos; estados con CHECK y tabla de transiciones comprobada por una función; relaciones "una abierta a la vez" con `desde`/`hasta` e índice único parcial. Extensiones `citext`, `unaccent`, `pg_trgm`, `btree_gist`, `pgcrypto` si el proveedor las admite (DevOps confirma) | **Aprobado** |
+| T-5 | Gestión de secretos y llaves | **Aprobado** (D-048) |
+| T-6 | Acceso: Auth.js con **sesiones en base** (revocación inmediata y atadas a empresa y rol vigente), segunda verificación propia, enlace con botón atado al navegador, "verificación reciente". Si Auth.js estorba, se usa solo como capa de proveedores | **Aprobado** (D-048, D-054). Entra en el prototipo |
+| T-7 | Catálogo de permisos (formato, sensibles, un `datos.exportar` y un `datos.importar`, alcance con resolvedor, módulos activables) | **Aprobado** (D-036) |
+| T-8 | Auditoría: tres tipos de autor, **partición mensual**, rol `mantenimiento` para el archivado a los 5 años (única excepción documentada a "solo se agrega", fuera de la aplicación y con dos personas), índices (empresa, entidad, id, fecha) y (empresa, fecha), las lecturas auditadas pasan por una ruta de escritura aparte, un lote es una entrada con detalle en su tabla, libro de anonimizaciones fuera de la base | **Aprobado** (D-030, D-041, D-052) |
+| T-9 | Servicio de doble control y una sola excepción | **Aprobado** (D-043) |
+| T-10 | Estructura de carpetas, capa de servicios como único punto de reglas de negocio, registro de módulo y prueba de dependencias | **Aprobado** (D-038) |
+| T-11 | Contadores: tabla `contador(empresa, clave, ultimo)` con clave con espacio de nombres (`sku:LAP`, `doc:OC`) y función `siguiente(empresa, clave, n)` que reserva `n` números en una **transacción corta y propia** (un salto es aceptable, D-007); la clave del SKU es el prefijo. **Guía de patrones de concurrencia obligatorios:** índice único parcial para "uno vigente"; actualización condicional con el estado esperado; capacidad con `UPDATE ... WHERE usados < total` y CHECK; clave de idempotencia en toda operación confirmada o recibida por API; columna `version`. QA escribe una prueba de concurrencia por patrón contra PostgreSQL real | **Aprobado** |
+| T-12 | Limitador de tasa en base, proveedor de correo con **una sola capa de envío y adaptador intercambiable** (segundo proveedor configurado), volúmenes | **Aprobado** (D-054). Costo del correo ya escalado (D1) |
+| T-13 | Un solo marco de campos personalizados (ámbito SKU, unidad o servicio de ayuda; mismas reglas de D-005; valores en JSON validado; resultado "completo/incompleto" guardado al escribir; índices solo en campos "filtrables") y un solo marco de importación | **Aprobado** (D-035, D-050) |
+| T-14 | Observabilidad: registros técnicos sin datos personales ni secretos (filtro antes de enviar), alertas a una persona con nombre | **Aprobado** (DevOps, sección 7) |
+
+- **Prototipo técnico previo a la Etapa 1: de 1-2 a 3-4 días**, corrido sobre el **proveedor de base candidato y con su agrupador de conexiones**, con `app_empresa`. Debe probar: (1) los siete criterios de aislamiento de QA (consulta sin filtro = 0 filas ajenas; insertar con empresa ajena falla; clave foránea cruzada falla; UPDATE y DELETE ajenos afectan 0; 50 peticiones intercaladas sobre un grupo compartido sin que la empresa quede pegada; conexión limpia tras error; el rol de la aplicación no puede modificar la auditoría), (2) tabla particionada, índice parcial, consulta recursiva, actualización condicional, funciones SECURITY DEFINER y los cinco roles, (3) sesiones en base, enlace con botón atado al navegador, segunda verificación propia y bloqueo por intentos, (4) la cola y el trabajador, (5) 20 y 50 conexiones simultáneas para contadores. **Si algo falla**, el Arquitecto vuelve a mesa con alternativa.
+- **Motivo:** Son las piezas comunes que evitan 17 diseños distintos (veredicto del Arquitecto).
+- **Recomendó:** Arquitecto (T-1 a T-14, H-ARQ-13), QA (criterios del prototipo), Ingeniero de Datos (H-DAT-14, 18, 19, 22, 23), DevOps (elección de proveedor antes del prototipo).
+- **Qué cambia:** ADR en `docs/arquitectura/` (uno por T); riesgo #18 (3 a 4 días).
+
+### D-056 · Orden de construcción y fase de cada módulo
+- **Pregunta:** ¿Cuándo se construye cada módulo y qué se prepara en el núcleo?
+- **Decisión:**
+  1. **Núcleo (v1), Etapas 0 a 7** como están en D-023, con las precisiones: Etapa 1 recibe además la cola de trabajos y el bus de eventos, NOT-base, la gestión de secretos, los roles de base, la consola de plataforma, contadores genéricos, calendario de empresa, país, zona horaria y moneda base de la empresa, `modulo_activo` y el esqueleto del marco de campos y del de importación; Etapa 2 recibe ubicación con superior, proveedor ampliado (PRV-A), centro de costo con responsable, Personas con datos aparte, categorías con naturaleza y el motor de campos con tipo secreto e identificador; Etapa 3 recibe el stock mínimo opcional; Etapa 4 recibe inventario, actas (ENT-A), importación, cifrado de claves, pendientes de la persona (registro de módulo), costo del activo corregible y la tabla de garantía (GAR-A); Etapa 5, el doble control, aprobaciones, avisos de aprobación, referencia externa y centro de costo en la orden; Etapa 6, órdenes de servicio con costo; Etapa 7, pulido y salida (la prueba de carga corre ya desde la Etapa 4 en integración nocturna).
+  2. **Nada fuera de la v1 se construye antes de que el CEO apruebe la Etapa 7**, salvo decisión del Gerente de TI (riesgo #7). El **diseño** de las preparaciones sí se hace desde la Etapa 1.
+  3. **Fases y olas después de la Etapa 7** (por dependencias, no por gusto; la tabla maestra de alcance del documento usa la palabra **"Cuándo"** con tres valores: "v1, Etapa N", "Fase 2" o "Fase 3", y los módulos partidos tienen una fila por parte):
+
+| Fase | Ola | Módulos | Depende de |
+|---|---|---|---|
+| Fase 2 | A | **NOT-completo** (motor de avisos por fecha, bandeja, preferencias) | Cola y bus de la Etapa 1 |
+| Fase 2 | B | **DOM** (primero: no depende del inventario), **PRV-B** (contratos y compromiso de servicio), **LIC**, **LIN**, **GAR-B** (PRV-B antes que GAR-B) | NOT-completo, Personas (E2), Inventario (E4) |
+| Fase 2 | C | **AYU** (mesa de ayuda), **ONB** (altas y bajas) | OS (E6), Personas, Inventario, ENT, NOT-completo |
+| Fase 3 | D | **POR** (portal) | AYU, ENT, Personas |
+| Fase 3 | E | **CMD** → **CAM** → **PRB** | Inventario, Personas; CAM necesita CMD; PRB necesita AYU, CMD y CAM |
+| Fase 3 | F | **PRE-A**, **REP-A**, **INT-1** (solo piden el núcleo y pueden adelantarse a la ola B si el Gerente de TI lo decide), luego **PRE-B**, **REP-B/C**, **INT-2**, **INT-3** | PRE-B necesita PRV-B, LIC, LIN, DOM, GAR-B; REP-B necesita PRE; INT-2 necesita E5 y E6 |
+
+  4. **ENT** se parte: **ENT-A** (asistente de entrega, acta imprimible, devolución, traspaso, extravío) es de la **v1, Etapa 4**; **ENT-B** (avisos de préstamo y acta sin firma, conformidad) es de la **Fase 2** con NOT-completo. **PRV-A** (proveedor y contactos) es Etapa 2/5; **GAR-A** (dato de garantía) Etapas 4 y 5; **NOT-base** es Etapa 1 y es **la misma fuente que RF-ACC-021**. **PER (Personas)** es Etapa 2.
+  5. **Preparaciones del núcleo** (baratas hoy, migración con datos reales mañana): tipo de autor con tres valores; tipo de campo secreto y marca identificador; naturaleza de categoría; ubicación con superior; proveedor ampliado; centro de costo con responsable y código externo; área y tipo de puesto; Persona con datos aparte; costo y moneda del activo corregibles; stock mínimo; garantía como tabla; `modulo_activo`, bus de eventos, cola, contadores y calendario de empresa; marca `fuente_costo` en toda obligación de pago; país, zona horaria y monedas de referencia.
+  6. Los módulos de las olas se activan **por empresa**; cada uno cumple el registro de módulo, el doble control único y el marco de costos antes de pasar a uso real.
+- **Motivo:** Es el orden por dependencias que propone el Arquitecto; así CMD, CAM y PRB no salen "vacíos" (sin licencias, líneas ni dominios) y la v1 no se retrasa.
+- **Recomendó:** Arquitecto (orden de construcción y preparaciones), Auditor Técnico (H-AUD-08), QA (H-QA-10), Diseñador (mapa de navegación). **Discrepancia:** el Diseñador marcaba algunas fases distintas (dominios y reportes en Fase 3); manda la dependencia técnica.
+- **Qué cambia:** núcleo §2 y §27 (tabla maestra con "Cuándo"); el campo "Fase" de cada módulo (ver `plan-correcciones.md`).
+
+### D-057 · Los 31 supuestos del núcleo (S-01 a S-31), uno por uno
+- **Pregunta:** El Analista pide confirmar, cambiar o rechazar S-01 a S-31.
+- **Decisión:**
+
+| ID | Resultado | Precisión o cambio |
+|---|---|---|
+| S-01 | Confirmado | Enlace de 15 minutos de un solo uso; abre una página con botón "Entrar" y queda atado al navegador (D-054) |
+| S-02 | Confirmado | 30 minutos de inactividad o 12 horas; aviso a los 25 minutos y borradores automáticos (D-053) |
+| S-03 | **Cambiado** | Suspender es reversible. Dar de baja a un usuario siempre se permite y corta sus sesiones al instante; **se retira el bloqueo** por activos asignados. El bloqueo no es de la baja del usuario: ver D-034 y D-061 (cese de la Persona nunca se bloquea; se bloquea anonimizar) |
+| S-04 | Confirmado | Soporte de solo lectura, una empresa y un motivo, máximo 24 horas, con banner y entradas visibles en la auditoría de la empresa (D-048) |
+| S-05 | Confirmado | El cambio de rol vale desde la siguiente acción; un rol con usuarios no se elimina |
+| S-06 | **Rechazado** | Las ubicaciones son jerárquicas hasta 3 niveles (D-040) |
+| S-07 | Confirmado | Más una lista de prefijos reservados (D-049) |
+| S-08 | Confirmado | Se amplía con una sección "Límites y formatos" (el Analista propone valores y los fija el Gerente de TI al revisar la v0.3: nombres de Persona, proveedor y ubicación, notas, número de orden, máximos numéricos de cantidad, precio y stock) |
+| S-09 | Confirmado | |
+| S-10 | Confirmado | El equipo compartido se asigna a una Persona custodio |
+| S-11 | Confirmado | Retirar una orden Pendiente la devuelve a Borrador |
+| S-12 | Confirmado | "Recibida total" dura un instante y se ve en el historial; QA prueba ambos cambios |
+| S-13 | Confirmado | Más: revertir un ingreso por cantidad solo si ningún saldo queda negativo; revertir la recepción de una orden Cerrada a mano la reabre a Recibida parcial y anula el cierre (D-060) |
+| S-14 | Confirmado | Total con impuesto, y vale para **todos** los actos de dinero (D-043) |
+| S-15 | Confirmado | Con la precisión de D-037 fila 10 sobre quién completa los precios |
+| S-16 | Confirmado | OS con costo se aprueba si supera el límite (RN-017) |
+| S-17 | Confirmado | Tope **combinado** entre todos los módulos; subida temporal para la carga inicial (D-050, D-054) |
+| S-18 | Confirmado | Columna `version` en toda entidad editable |
+| S-19 | Confirmado | Prueba de carga en integración nocturna desde la Etapa 4; el volumen de referencia es **una sola cifra en RNF-010** que todos los módulos citan |
+| S-20 | Confirmado | |
+| S-21 | Confirmado | Fecha día/mes/año; el formato de número lo da el país o, mientras no se sepa (P-004), el navegador (D-049) |
+| S-22 | Confirmado | Con las celdas resueltas en D-037 |
+| S-23 | Confirmado | |
+| S-24 | Confirmado | Columna simple; INT-2 migra a equivalencias |
+| S-25 | Confirmado | Idem; responsable del centro de costo es una Persona |
+| S-26 | Confirmado | Solo un dato en la v1 |
+| S-27 | **Convertido en decisión** | Los módulos agregan filas, no celdas; plantilla "Empleado (portal)" aprobada (D-037 filas 11) |
+| S-28 | **Cambiado** | Tres tipos de autor desde la Etapa 1: usuario (membresía), integración y **sistema** (D-041) |
+| S-29 | Confirmado | Con **tabla completa de 25 combinaciones** de estado y CHECK en la base (D-060) |
+| S-30 | Confirmado | "Supera" es estrictamente mayor; con límite 0, toda orden con al menos una línea; borde exacto con su criterio de aceptación |
+| S-31 | Confirmado | Botón "Pedir ayuda" (D-053) |
+
+- **Motivo:** Los supuestos son la manera de no inventar reglas de negocio; aquí pasan a ser decisiones con responsable.
+- **Recomendó:** Analista (propuesta), con las recomendaciones de los siete revisores en cada fila.
+- **Qué cambia:** núcleo §23: el Analista reemplaza la tabla por los resultados de arriba; S-06, S-03 y S-28 modifican los requisitos que citan.
+
+### D-058 · Los supuestos de los módulos que cambian decisiones ya tomadas
+- **Pregunta:** El Auditor Técnico cuenta 8 `[SUPUESTO]` de módulos que modifican decisiones anteriores; hay más menores.
+- **Decisión (los 8, uno a uno):**
+
+| # | Supuesto | Resultado |
+|---|---|---|
+| 1 | SUP-LIC-03: la clave es un campo secreto, no la serie | **Aceptado** (D-035) |
+| 2 | S-PER-07: reemplazar valores personales en la auditoría | **Rechazado** (D-030) |
+| 3 | NOT-S08: un motor único de avisos por fecha | **Aceptado solo para la Fase 2**, como un único motor y una única tabla de avisos; NOT define los umbrales por defecto y la hora de envío (una, configurable por empresa, por defecto 08:00); cada módulo justifica por escrito si se aparta. Reemplaza la exclusión de avisos automáticos de D-023 solo después de la Etapa 7 |
+| 4 | RF-PER-007 / S-PER-09: ubicaciones de tres niveles | **Aceptado** (D-040) |
+| 5 | SUP-LIN-02: la línea es entidad y retira el campo del celular | **Aceptado con condiciones** (D-042) |
+| 6 | RN-CAM-004: excepción propia de cambios | **Rechazado**; es una casilla del interruptor único (D-043) |
+| 7 | PER amplía los datos mínimos de D-006 | **Aceptado con finalidad declarada y límites:** tipo de Persona (Empleado, Externo, Custodio), código de empleado, puesto (tipo), área, ubicación habitual, **jefe directo** (visible solo con `datos_personales.ver`), fechas de ingreso y de cese. **Rechazado:** el motivo de cese como texto libre (queda una lista corta sin texto libre: salida, fin de contrato, traslado, otro) (D-034). Siguen prohibidos documento de identidad, dirección y teléfono personal |
+| 8 | RN-ENT-007: prohibir la autoentrega, que alcanza al Administrador | **Aceptado, sin excepción** (D-043) |
+
+- **Otros supuestos que se resuelven en esta decisión:**
+  - **Aceptados como diseño del módulo** (no contradicen ninguna D-xxx): el resto de los `[SUPUESTO]` de los 17 módulos, mientras no choquen con D-035 a D-064.
+  - **Almacén entrega (S-ENT-02):** no por defecto (D-037). **S-ENT-03** (Asignado siempre tiene Persona) y **S-ENT-04** (traspaso): aceptados. **S-ENT-09**: aceptado sin excepción.
+  - **Líneas bloquean el cese (S-PER-05, SUP-LIN-07, S-ONB-08):** **cambiado**; el cese no se bloquea por recursos, se generan pendientes y se bloquea la anonimización (D-061).
+  - **S-PER-01** (plantilla Empleado portal): D-037 fila 11. **S-PER-02, 03, 04, 08, 10:** aceptados (el cese suspende al Usuario, con `usuarios.suspender`). **S-PER-06:** D-051.
+  - **S-PRV-07** (contactos de proveedor sin `datos_personales.ver`): **aceptado con condiciones:** solo los ven los roles con `proveedores.ver_contactos`, no salen en exportaciones generales y tienen ciclo de vida (inactivos 2 años se anonimizan). **S-PRV-03:** aceptado (D-043).
+  - **S-PRE-12:** aceptado como casilla de "presupuestos" (D-043). **S-PRE-02, 03, 04** (impuestos, depreciación, consolidado): quedan **escalados** a contabilidad (ver "Escalado").
+  - **S-INT-04:** aceptado excluyendo proveedores y la desactivación de Personas. **S-INT-10:** aceptado. **S-INT-13:** los archivos de SAP llevan un código interno del usuario, no el nombre. **S-INT-08 y S-INT-09:** quedan escalados por costo.
+  - **S-POR-02, 03:** aceptados ("solicitar equipo" crea un caso; TI decide si sale de stock o se compra y crea la OC en Borrador). **S-POR-07:** el nombre del jefe directo no se muestra en el portal.
+  - **SUP-LIC-10:** Administrador por defecto, Técnico opcional (D-035). **SUP-LIC-08, 09, 12:** aceptados. **SUP-DOM-05:** el titular persona natural es dato personal. **SUP-DOM-06:** no bloquea el cese (acuerdo). **S-ONB-07:** el recordatorio de salida queda **apagado** hasta la opinión legal (E-ONB-01).
+  - **CMD supuestos 2 y 5:** aceptados con la CMDB delgada (D-062). **AYU-S01:** Fase 2. **AYU-S07:** 5 años provisional, con el aviso de que el texto libre no se puede anonimizar de forma garantizada.
+- **Motivo:** Cierra el vacío que señaló el Auditor Técnico: reglas cambiadas por un supuesto sin pasar por este archivo.
+- **Recomendó:** Auditor Técnico (H-AUD-06 y tabla de conflictos), Cumplimiento (sección 5 de su revisión).
+- **Qué cambia:** cada módulo afectado (ver `plan-correcciones.md`).
+
+### D-059 · Procedimiento ante una fuga de datos o acceso indebido
+- **Pregunta:** Ningún documento define quién decide, a quién se avisa y qué se registra ante una fuga (H-CUM-18).
+- **Decisión:** (lo escrito aquí rige; la versión detallada va a `docs/operaciones/procedimiento-incidente-datos.md`, antes de producción)
+  1. **Quién:** *Líder del incidente* = Especialista en Seguridad (si no está, DevOps). *Decide la contención y los accesos* = Gerente de TI. *Ejecuta* = DevOps. *Evalúa si hay obligación de avisar* = Auditor de Cumplimiento con el abogado. *Habla con el CEO y con las empresas afectadas* = Jefatura de Proyecto. Antes de producción se nombra por escrito a **una persona real con su suplente** que recibe las alertas (DevOps, 9.3).
+  2. **Detectar y declarar:** cualquier rol, el monitoreo o un usuario puede declarar un incidente; se abre un registro en `docs/operaciones/incidentes/` con hora, quién y qué se vio. Gravedad: **G1** acceso o fuga confirmada de datos de una o más empresas, de claves o de secretos; **G2** sospecha seria o alerta de integridad de la auditoría; **G3** menor sin datos.
+  3. **Plazos internos (propuestos):** contener en **1 hora** (revocar sesiones y enlaces, rotar claves, suspender la empresa o la integración si hace falta, sin borrar evidencia); **avisar al CEO en 24 horas** desde la confirmación, en lenguaje claro; evaluar alcance (qué empresas, qué datos, cuántas personas) en **24 horas**; preservar evidencia (auditoría y su copia externa, registros técnicos); informe y análisis de causa en **10 días**, sin buscar culpables, con acciones, pruebas nuevas y riesgos actualizados.
+  4. **Avisos a empresas y personas afectadas:** propuesta de **72 horas desde la confirmación** salvo que legal fije un plazo menor; el texto lo prepara Cumplimiento con plantilla preaprobada por legal. **[ESCALAR AL CEO]** — **legal (L-16):** la obligación y los plazos reales de avisar a la autoridad y a los afectados dependen del país y los fija un abogado; es una condición para pasar a producción con datos reales.
+  5. **Contratos con proveedores técnicos** (L-08): deben exigirles avisar a la plataforma de un incidente en su lado.
+  6. **Cierre:** la restauración ante un incidente sigue D-052.4 (revocar antes de reabrir).
+- **Motivo:** Es una de las 8 condiciones del Auditor de Cumplimiento y un requisito previo a producción.
+- **Recomendó:** Cumplimiento (H-CUM-18, L-16), DevOps (plan, 9.3), Seguridad. Plazos internos: Gerente de TI.
+- **Qué cambia:** nuevo documento de operaciones; `docs/equipo/riesgos.md` (#26); puerta de salida (D-064).
+
+### D-060 · Compras, recepción e inventario: los huecos que QA no podía probar
+- **Pregunta:** QA reportó reglas sin resultado esperable (H-QA-01 a 03, 15; H-AUD-14 a 16; H-DAT-04).
+- **Decisión:**
+  1. **Orden completa:** una orden con alguna línea sin precio no sale de Borrador (RF-OC-043); el precio 0 solo con la marca "sin costo". "Supera el límite" es **estrictamente mayor**; el borde exacto tiene su criterio de aceptación.
+  2. **Edición tras recepción:** una orden con cualquier recepción confirmada no cambia cantidad, precio ni proveedor; solo se cierra.
+  3. **Recepciones:** el borrador **no reserva** la cantidad, vale 7 días, lo retoma cualquiera con permiso de recepción y al confirmar se valida contra lo pendiente de ese momento. Se puede recibir contra una orden ya emitida **aunque el SKU o el proveedor se desactive después**, con aviso. **Tope de 1.000 series por recepción** (y por lista pegada). Revertir un ingreso **por cantidad** solo si ningún saldo queda negativo en cada ubicación; si no, se corrige con ajuste. Revertir la recepción de una orden cerrada a mano la reabre y anula el cierre.
+  4. **Estados del activo:** el Analista escribe la **tabla completa de 5 por 5 estados** (Permitida, Prohibida o "solo por reingreso") y QA genera las 25 pruebas. Reglas fijas: Asignado a Asignado solo como **traspaso** atómico; De baja a De baja y De baja a Extraviado, prohibidos; **Extraviado a De baja**, permitido con motivo; De baja o Extraviado a En stock, solo como reingreso (D-009, D-012). El responsable **se conserva durante En reparación** (S-29, S-GAR-05).
+  5. **Estado, asignación y ubicación en la base:** columna `responsable_persona_id` en el activo (copia de la asignación abierta) con CHECK por estado; índice único parcial "una asignación abierta por activo"; ubicación obligatoria; todas las transiciones por una sola función; "movimiento posterior" medido con una secuencia creciente por empresa.
+  6. **Cambio de ubicación de un activo con serie:** movimiento propio ("cambio de ubicación") con permiso, historial y sin cambiar el estado.
+  7. **Ingreso manual de un activo** (reemplazos por garantía, donaciones, compras sin orden): requisito de la Etapa 4 con permiso propio, serie única, motivo obligatorio, costo opcional, historial, auditoría y su criterio de aceptación.
+  8. **Corregir el costo de un activo:** D-044.9. **Garantía:** se captura la fecha de compra y los meses (o el fin directo) y el cálculo vive en el núcleo; tabla `garantia` desde la Etapa 4.
+  9. **Otros casos límite de QA** quedan como casos de prueba: no se cambia la moneda base con órdenes abiertas; cambiar la zona horaria recalcula los avisos pendientes; archivo con codificación distinta de UTF-8; corte de conexión en medio de una recepción o importación deja todo o nada; dos pestañas en dos empresas (D-046).
+  10. **Los criterios de aceptación que cruzan etapas se dividen** (CA-052 en a, b, c y d; CA-011 en dos; CA-015 en cuatro; CA-050 medible: 360 px, teclado completo, contraste AA).
+- **Motivo:** Cada regla sin resultado esperado la habría resuelto un desarrollador por su cuenta.
+- **Recomendó:** QA (H-QA-01, 02, 03, 15, 21), Auditor Técnico (H-AUD-14, 15, 16), Ingeniero de Datos (H-DAT-04, 23).
+- **Qué cambia:** núcleo §11 a §13, RF-INV, RF-OC, CA.
+
+### D-061 · Privacidad y cumplimiento transversal (hallazgos de Cumplimiento adoptados)
+- **Pregunta:** ¿Cómo se bajan a todo el conjunto los hallazgos H-CUM-05 a H-CUM-19 que no están ya decididos?
+- **Decisión:**
+  1. **Puerta única de exportación en el núcleo desde la Etapa 2 (H-CUM-07):** confirmación con motivo, vista de filas y columnas sensibles, neutralización de fórmulas, límites por usuario y por empresa, alerta de uso inusual (más de 5 por hora por usuario), auditoría de filas y columnas sensibles (sin el contenido) y una hoja "Aviso" con quién lo generó, cuándo y que contiene datos personales. Los módulos la usan; ninguno exporta por su cuenta. El módulo de reportes es el modelo.
+  2. **Registro de solicitudes de derechos en Personas desde la Etapa 2 (H-CUM-11):** fecha, quién la presenta, tipo, quién la atiende, plazo (lo fija legal), resultado. Permiso propio. Se excluyen de búsquedas, listas, reportes, exportaciones, tableros, avisos y API; **quien presenta el pedido no lo atiende** (lo atiende otro administrador o la plataforma); la copia se entrega por una descarga única con vencimiento y registro, nunca por correo. En la mesa de ayuda solo queda una referencia sin contenido y los casos restringidos son invisibles por **todas** las vías (H-QA-13). La eliminación condicionada a devolver equipos queda como pregunta legal (L-06).
+  3. **Tabla única de retención y anonimización (H-CUM-09)** en el documento: dato, módulo, finalidad, quién lo ve, plazo, rutina. **Cada módulo declara sus campos personales o no pasa a desarrollo.** "Archivado" significa fuera de la vista con el mismo plazo, no retención indefinida. Contactos de proveedor inactivos: se anonimizan a los 2 años. Una prueba global de QA busca un nombre "canario" en toda la base, exportaciones y correos.
+  4. **Correos (H-CUM-06):** a una Persona sin Usuario o a una dirección sin verificar solo se envían tipo de aviso, código (`ACT-E-000123`, `PRS-0042`), fecha y nombre de la empresa; sin serie, IMEI, nombres de terceros, importes ni enlaces de acción. Entre usuarios, un nombre solo si hace falta para actuar. **Los correos de la v1 son invitación, acceso y aprobación** (D-013.10); los avisos de entregas, altas y bajas **no entran a la v1** (Fase 2 con NOT-completo). La ficha de la Persona muestra "correo no verificado"; cambiar un correo queda auditado.
+  5. **Redacción por seguridad (H-CUM-10):** operación distinta de "retirar", con permiso propio y motivo obligatorio, que reemplaza el texto por `[REDACTADO]` y deja en la auditoría quién, cuándo y por qué, sin el texto. Los textos de extravío con posible acusación se ven solo con permiso y no salen en el portal, exportaciones ni reportes. Se declara que los comentarios que mencionan a una Persona no se pueden anonimizar de forma garantizada.
+  6. **Auditoría ampliada (H-CUM-13):** tipo de autor "sistema"; se auditan las lecturas masivas (desde 5.000 filas), las consultas al registro de envíos y al de solicitudes de derechos, y todo acceso de soporte; dos registros: de plataforma y de empresa (D-048).
+  7. **Cese de una Persona (H-CUM-15 y D-034 ampliada):** **el cese nunca se bloquea por recursos.** Activos, líneas, licencias, dominios y elementos de CMDB generan **pendientes de la persona** visibles en su ficha (cada módulo los declara en el registro de módulo, D-038.6), una tarea de salida y un aviso a Jefatura TI. **Lo que sí se bloquea es la anonimización** mientras haya pendientes sin cerrar (D-033.3). El cese suspende al Usuario vinculado. Se corrige PER (RN-PER-008, 011, 012), el núcleo (RF-PER-006, RF-USR-004), ENT, LIN y ONB.
+  8. **Aviso de privacidad (H-CUM-12):** el texto para empleados es configurable por empresa (la empresa lo entrega; la plataforma lo imprime en el acta y lo muestra en el portal); se vuelve a pedir la aceptación cuando cambie la versión, con registro de versión y fecha.
+  9. **Operación (H-CUM-18):** activar un módulo es un permiso del Administrador, auditado; apagarlo no borra datos; cada módulo cumple RNF-015, RNF-016 y CA-053 antes de uso real; se crea `docs/trazabilidad.md` y `docs/calidad/`.
+  10. **Datos de prueba:** D-028 sigue; ningún dato personal real en repositorio ni pruebas.
+- **Motivo:** Son las condiciones 4 a 6 del veredicto de Cumplimiento, que condicionan pasar a conforme.
+- **Recomendó:** Auditor de Cumplimiento (H-CUM-05 a 19), Seguridad (H-SEG-10, 16), QA (H-QA-13), Ingeniero de Datos (H-DAT-12, 24).
+- **Qué cambia:** núcleo §16, §18, §19, RF-ACC-021, RF-PER; `personas-ubicaciones`, `entregas-devoluciones`, `onboarding-offboarding`, `notificaciones`, `mesa-de-ayuda`, `portal-autoservicio`, `reportes-tableros`.
+
+### D-062 · CMDB delgada, vigencias calculadas y calendario de empresa compartido
+- **Pregunta:** La CMDB copia todo el inventario (más de 100.000 filas); los estados "Vencido" los cambia un proceso nocturno; hay tres calendarios y dos tablas de avisos.
+- **Decisión:**
+  1. **CMDB delgada:** solo los **Servicios** y los elementos que participan en una **relación manual** se guardan como filas; el resto (activos, licencias, líneas, dominios, Personas) se lee de su origen. "Asignado a" **se deriva** de las asignaciones, no se almacena. Cuando un elemento se materializa, se hace con un gancho **síncrono en la misma transacción** del origen y un reconciliador nocturno de seguridad. La **unidad de una licencia no genera elemento de CMDB**; el elemento es el contrato. El stock por cantidad no es elemento. Códigos EC reservados por bloque. Impacto: consulta recursiva de hasta 5 niveles con control de ciclos. Desaparecen el "desfase de sincronización", el requisito de 1 minuto y la carga inicial de 100.000 filas.
+  2. **Vigencia calculada al leer** con la fecha y la zona horaria de la empresa (`hoyEnEmpresa()`); **no se guarda** un estado "Vencido" que cambie un proceso. El trabajo diario solo dispara los **efectos** (avisos, renovaciones). Se guardan solo las decisiones (renovado, cancelado, dado de baja).
+  3. **Una sola tabla de avisos** (la de Notificaciones: empresa, regla, entidad, umbral y destinatario); desaparecen las tablas "Alerta enviada" de proveedores y garantías.
+  4. **Calendario de empresa compartido** (zona horaria, horario de atención, feriados) usado por mesa de ayuda, cambios y altas/bajas. Plazos en días corridos salvo que el módulo use ese calendario.
+  5. **Indicadores de reportes:** cada indicador se define **una vez** como un filtro reutilizable que produce la cifra y la lista (así coinciden por construcción); los tableros usan **agregados precalculados** por el trabajador con fecha de corte; reportes llama a los servicios de presupuesto y mesa de ayuda, no a sus tablas.
+- **Motivo:** Evita sincronizaciones, estados que mienten por horas y cifras que no coinciden con su lista.
+- **Recomendó:** Arquitecto (H-ARQ-12, 16, 19), Ingeniero de Datos (H-DAT-15, 17, 19), QA (H-QA-12, 18).
+- **Qué cambia:** `cmdb-ligera`, `licencias-software`, `dominios-certificados`, `proveedores-contratos`, `garantias-mantenimiento`, `notificaciones`, `reportes-tableros`, `mesa-de-ayuda`, `gestion-cambios`, `onboarding-offboarding`.
+
+### D-063 · Seguridad transversal: hallazgos medios y bajos adoptados
+- **Pregunta:** ¿Qué se adopta de los hallazgos medios de Seguridad que no están ya cubiertos?
+- **Decisión:**
+  1. **PDF** de actas y órdenes con una librería que **no interpreta HTML ni descarga recursos** (o un motor aislado sin red ni acceso a archivos); todo texto se escapa; prueba con texto malicioso en cada campo (H-SEG-19).
+  2. **Texto libre:** un **validador común** rechaza bloques de clave privada y patrones de claves conocidos en todo campo de texto; los artículos y soluciones aceptan texto simple o un formato limitado con etiquetas permitidas; los enlaces externos solo `https`, con aviso de salida (H-SEG-23).
+  3. **Auditoría:** el visor oculta los campos que el lector no puede ver en su origen (precios, datos personales) (H-SEG-11.2).
+  4. **Lectura masiva por API:** se define como más de 5.000 filas por día por clave; `IMEI` y número de línea no salen en `activos:lectura` sin el alcance de personas (H-SEG-12).
+  5. **Calendario de cambios:** el título se muestra solo a quien puede ver el cambio; los demás ven "Cambio programado" (H-SEG-25d). **Portal:** el nombre del jefe no se muestra.
+  6. **Pruebas de aislamiento** de cada módulo por **identificador interno** (no por un "número" que sí puede existir en la otra empresa) (H-SEG-25f). La carga de maestros SAP por archivo exige también `proveedores.crear_editar`.
+  7. **Cuentas externas y restauración:** D-054.5 y D-052.4.
+- **Motivo:** Cierran los huecos medios de Seguridad sin esperar al módulo.
+- **Recomendó:** Seguridad (H-SEG-09 a 25).
+- **Qué cambia:** `entregas-devoluciones`, `mesa-de-ayuda`, `gestion-problemas`, `gestion-cambios`, `integraciones-api`, `portal-autoservicio`.
+
+### D-064 · Puerta de salida de la Etapa 0: condiciones para empezar a codificar
+- **Pregunta:** ¿Cuándo se puede escribir la primera tabla?
+- **Decisión:** No se escribe código de funcionalidades hasta que se cumplan **todas** estas condiciones, cada una con responsable y evidencia verificable:
+
+| # | Condición | Responsable | Evidencia |
+|---|---|---|---|
+| 1 | **Documento funcional v1.0** (v0.3 revisada) con D-035 a D-064 incorporadas, matriz de permisos y registro PS-nn aprobados por el Gerente de TI (P-005) | Analista; aprueba Gerente de TI | `documento-funcional.md` v1.0 y registro de permisos |
+| 2 | **Los 17 módulos corregidos** según `plan-correcciones.md`, sin choques con el núcleo | Escuadrones; verifica Auditor Técnico | Revisión del Auditor Técnico: conforme |
+| 3 | Revisión final **sin hallazgos Críticos ni Altos abiertos** del núcleo por QA, Seguridad, Auditor Técnico y Auditor de Cumplimiento | QA, Seguridad, Auditores | Cuatro vistos buenos escritos |
+| 4 | **Prototipo técnico de 3 a 4 días** aprobado (D-055) sobre el proveedor candidato con su agrupador de conexiones | Arquitecto, Ingeniero de Datos, DevOps; QA mide | Informe con los criterios y el rol sin privilegios |
+| 5 | **Proveedor de base de datos y de alojamiento elegido** con precios verificados y **aprobado por el CEO** (dinero) | DevOps; decide CEO | Ficha de costos con fecha y enlace |
+| 6 | **Proveedor de correo elegido** tras la matriz de entrega (20 envíos a cada tipo de buzón, SPF, DKIM y DMARC en "pass") y costo aprobado por el CEO | DevOps; decide CEO | Resultado de la matriz |
+| 7 | **Prototipo de las pantallas A** (26) mostrado y **aprobado por el CEO** en demo, con prueba de tareas con 5 personas no técnicas | Diseñador; aprueba CEO | Informe de la prueba y acta de la demo |
+| 8 | **Documentos reales recibidos** (P-002): orden de compra, orden de servicio y Excel con nombres reemplazados (o declarados como datos de ejemplo), y el Excel analizado (P-007) | Entrega CEO; analiza Ingeniero de Datos | Archivos fuera del repositorio y nota de análisis |
+| 9 | **Cuentas a nombre de la empresa** con al menos dos personas con segunda verificación, y **una persona con suplente** nombrada para recibir alertas | CEO designa; DevOps configura | Lista de accesos |
+| 10 | **Estrategia de llaves y secretos** aprobada por Seguridad; `.env.example`; repositorio con ramas protegidas y revisión automática configurada | DevOps, Seguridad | Configuración y revisión |
+| 11 | **Ensayo de vuelta atrás y de restauración** en pruebas, con cronómetro | DevOps, Ingeniero de Datos | Registro del ensayo |
+| 12 | **Plan de pruebas** por etapa en `docs/calidad/`, juego de datos de dos empresas, reloj fijable y correo de captura | QA, DevOps | Plan y entorno |
+| 13 | **Tabla de datos personales y retención** completa en el documento y **procedimiento de incidente** en borrador | Cumplimiento, Seguridad | Sección 18 y borrador del procedimiento |
+
+- **Lo que NO exige la puerta:** la opinión legal. Se puede codificar y probar con datos inventados. La opinión legal (prioridad A: L-01 a L-04, L-07, L-08, L-14, L-16) y la aprobación del CEO son condición para **cargar datos reales** y para pasar a producción (Etapa 7).
+- **Motivo:** Es la lista corta y verificable que pidió la Jefatura de Proyecto; sin documentos reales ni prototipo, se programaría sobre supuestos (riesgos #1, #6, #18).
+- **Recomendó:** QA (plan por etapa, criterios del prototipo), Cumplimiento (condiciones 1 a 6), DevOps (plan de entornos), Arquitecto (condiciones para la Etapa 1), Gerente de TI.
+- **Qué cambia:** `docs/equipo/plan-correcciones.md` (sección de puerta) y el cierre de la Etapa 0.
+
 ---
 
 ## Escalado al CEO
 
-Todo lo anterior está decidido por el Gerente de TI. Solo esto llega al CEO, y solo porque implica dinero, un tema legal o algo que no se puede deshacer. Se le explica en español claro, sin jerga.
+Todo lo anterior está decidido por el Gerente de TI. Solo esto llega al CEO, y solo porque implica dinero, un tema legal o algo que no se puede deshacer. La hoja de una página para el CEO está en `docs/equipo/hoja-ceo.md`. **Nota sobre las cifras:** las que da DevOps en `docs/operaciones/plan-entornos-y-costos.md` **no están verificadas** (no pudo consultar precios); sirven para dimensionar, no para decidir.
 
 ### Dinero (le pedimos que apruebe o rechace)
-1. **Servicio de envío de correos** (para invitaciones, enlaces de acceso y avisos de aprobación). Es indispensable porque el acceso es por correo. El costo mensual es bajo, pero es un gasto recurrente que hay que contratar. **Recomendación del Gerente de TI: aprobarlo.** DevOps trae el costo concreto y el proveedor en la Etapa 0.
-2. **Alojamiento, respaldos y soporte de la plataforma** (riesgo #14). Hay un costo mensual por servidor, base de datos y copias de seguridad. DevOps presenta el costo estimado en la Etapa 0, antes de programar.
-3. **Archivos adjuntos** (D-022): no entra ahora. Si al cierre de la Etapa 4 conviene habilitarlos, implica pagar almacenamiento; se le consultará entonces.
+1. **Servicio de envío de correos** (invitaciones, enlaces de acceso, avisos de aprobación). Indispensable porque el acceso es por correo. Gasto mensual bajo y recurrente. **Recomendación: aprobar** un plan dimensionado para las Etapas 1 a 5, con tope por empresa y alerta al 80 % (RN-NOT-012); revisarlo al activar el portal y la mesa de ayuda. Más un segundo proveedor configurado de reserva (puede ser gratuito).
+2. **Alojamiento, base de datos y respaldos (D2).** Dos fases: **A** (Etapas 0 a 3, datos inventados) con planes gratuitos o los más baratos, sin datos reales; **B** (antes de cualquier uso con datos reales) con base de datos de pago con respaldos, alojamiento de pago y almacenamiento externo con bloqueo. **Cambio por D-038:** el alojamiento debe ser de ejecución continua (un servicio de contenedores) para correr también el proceso de trabajos en segundo plano; DevOps trae la comparación con precios verificados antes del prototipo. Orden de magnitud **sin verificar** para producción: 50 a 150 USD al mes en total para una o pocas empresas.
+3. **Copia externa inmutable de la auditoría, respaldos en otro proveedor y vigilancia** (D-052, plan de DevOps): almacenamiento externo de bajo costo y un servicio de vigilancia de errores y disponibilidad (gratuito al principio).
+4. **Gestor de secretos y llaves de seguridad físicas** para las pocas cuentas de la plataforma (D-048): costo muy bajo, único o mensual según el gestor elegido.
+5. **Dominio:** usar un subdominio de uno que la empresa ya tenga; si no existe, comprar uno (gasto anual).
+6. **Honorarios de un abogado de protección de datos** (nuevo): para contestar el paquete de preguntas legales de abajo.
+7. **Archivos adjuntos** (D-022): no ahora; se consulta al cierre de la Etapa 4. **SAP:** si la empresa usa SAP y quiere conexión directa, puede requerir licencias o consultor (S-INT-08); no se cotiza. **Impuestos, depreciación y consolidado de monedas** (S-PRE-02 a 04): consulta a contabilidad antes de PRE-B.
 
 ### Legal (le pedimos que consiga una opinión legal; el equipo no la da)
-1. **Qué ley de protección de datos aplica** (según el país o países de las empresas) y si hay que registrar el banco de datos de usuarios y empleados ante la autoridad. Por ejemplo, para Perú existe una ley específica; hay que confirmarlo con un abogado.
-2. **Confirmar los plazos de D-024 y D-032**: 5 años de auditoría, 2 años antes de anonimizar a una persona dada de baja, 30 días para archivos importados, respaldos diarios de 30 días y mensuales de 12 meses.
-3. **Texto del aviso de privacidad y de los términos de uso**, y si la plataforma se considera proveedor de las empresas o titular de los datos.
-4. **Si guardar datos de varias empresas en un mismo servidor, o en un servidor en otro país**, exige requisitos especiales.
-5. **Contratos con los proveedores** de alojamiento y de correo.
-6. **Si el CEO planea usar la plataforma con empresas que no son suyas** (ofrecerla a terceros), esto cambia contratos, soporte y costos. Para la v1 asumimos que solo se usa con las empresas que el CEO designe. No necesitamos una respuesta ahora, solo que nos avise si ese plan existe.
+Son 16 preguntas consolidadas por el Auditor de Cumplimiento (L-01 a L-16, en `docs/revision-cruzada/auditor-cumplimiento.md`, sección 6). Siete son previas a cargar datos reales (prioridad A). Las cinco más importantes:
+1. **L-01 y L-02:** qué ley de protección de datos aplica según el país de cada empresa, quién es responsable de qué (la empresa, la plataforma, el proveedor de alojamiento) y si hay que registrar los bancos de datos ante la autoridad.
+2. **L-04:** confirmar los plazos propuestos: auditoría 5 años (D-024), anonimización a los 2 años, archivos de importación sin guardarse (D-050), respaldos 30 días y 12 meses (D-032), eventos de seguridad 12 meses, casos de ayuda 5 años.
+3. **L-16:** la obligación y los plazos de avisar una fuga de datos a la autoridad y a los afectados (D-059).
+4. **L-07 y L-08:** si tener datos de varias empresas en un mismo servidor, o en otro país, y usar proveedores externos (correo, alojamiento) exige requisitos especiales; y los contratos con esos proveedores y con cada empresa.
+5. **L-05 y L-12:** si se puede conservar el nombre en el acta de entrega hasta el fin de su plazo (D-033, D-051) y el valor probatorio de un acta firmada en papel o de una aceptación en pantalla.
+Además: **si la plataforma se usará con empresas que no son del CEO** (cambia contratos, soporte y costos; basta con que avise si existe el plan).
 
 ### Irreversible (se le explica antes de ejecutarse)
-1. **Anonimizar o borrar datos personales** no se puede deshacer. Por eso los plazos de D-024 son propuesta hasta que legal los confirme; no se activa ninguna anonimización automática antes de esa confirmación.
-2. **Pasar a producción con datos reales de una empresa** (Etapa 7): lo aprueba el CEO tras la demo, con el respaldo y la restauración ya probados.
+1. **Anonimizar o borrar datos personales** (D-024, D-033, D-051). La automática queda **apagada** hasta la opinión legal; la manual solo para pedidos de derechos documentados y con dos personas.
+2. **Purgar la auditoría a los 5 años y rotar respaldos** (D-030.5, D-032): lo purgado no se recupera. No se activa antes de confirmar los plazos.
+3. **Pasar a producción con datos reales** (Etapa 7): lo aprueba el CEO tras la demo, con respaldo restaurado y anonimizaciones reaplicadas, aviso de privacidad aceptable, contratos con proveedores firmados, preguntas legales de prioridad A contestadas y procedimiento de incidente escrito.
+4. **Datos exportados fuera de la plataforma:** una vez descargado un archivo, la plataforma ya no lo controla; por eso solo el Administrador exporta y con registro (solo informar).
 
 ### Insumos que solo el CEO tiene (no son decisiones de producto)
-1. Una **orden de compra real**, una **orden de servicio real** y el **Excel de inventario actual**, con los nombres de personas reemplazados (D-028). Sin ellos la Etapa 0 no se cierra y se trabaja con datos de ejemplo declarados como tales.
-2. Una **cifra aproximada** de activos, usuarios y órdenes por mes (pendiente #4), para dimensionar.
-3. El **país o países** de las empresas y si los precios de sus compras incluyen impuestos (para configurar los impuestos por línea).
+1. Una **orden de compra real**, una **orden de servicio real** y el **Excel de inventario actual**, con los nombres de personas reemplazados (D-028). Sin ellos la Etapa 0 no se cierra y se trabaja con datos de ejemplo declarados.
+2. Una **cifra aproximada** de activos, usuarios y órdenes por mes (P-003).
+3. El **país o países** de las empresas y si los precios de compra incluyen impuestos (P-004).
+4. **A nombre de quién** quedan las cuentas (alojamiento, base de datos, correo, dominio, copias), qué **dominio** de la empresa existe, y **qué persona con suplente** recibe las alertas.
+5. Si la empresa **usa SAP** (solo antes de INT-2).
 
 ### Lo que el CEO sigue haciendo
 Aprobar la demo al final de cada etapa antes de empezar la siguiente, tal como dice `CLAUDE.md`.
