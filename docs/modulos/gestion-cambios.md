@@ -104,9 +104,9 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 |---|---|---|---|
 | RN-CAM-001 | No aprueba ni rechaza un cambio quien lo creó o editó desde la última aprobación (definición única, D-043.1). Vale para todos los roles. | Fase 3 | CA-CAM-02 |
 | RN-CAM-002 | En riesgo Alto, el aprobador tampoco es el responsable de implementación. | Fase 3 | CA-CAM-03 |
-| RN-CAM-003 | Nadie reaprueba una plantilla que creó o editó (acto "Reaprobar plantilla estándar", RN-017). | Fase 3 | CA-CAM-11 |
+| RN-CAM-003 | Nadie reaprueba una plantilla que creó o editó (acto "Reaprobar plantilla estándar", RN-017 del núcleo). | Fase 3 | CA-CAM-11 |
 | RN-CAM-004 | **Retirada** (excepción propia de cambios). Se usa la casilla "cambios" del interruptor único (RN-CAM-024). | n/a | n/a |
-| RN-CAM-005 | Estándar nace Aprobado desde una plantilla Vigente; Normal exige un aprobador; Urgente exige un aprobador con `cambios.aprobar_alto`. Aprobar un cambio exige siempre a otra persona (tabla de actos, RN-017). | Fase 3 | CA-CAM-05 |
+| RN-CAM-005 | Estándar nace Aprobado desde una plantilla Vigente; Normal exige un aprobador; Urgente exige un aprobador con `cambios.aprobar_alto`. Aprobar un cambio exige siempre a otra persona (tabla de actos, RN-017 del núcleo). | Fase 3 | CA-CAM-05 |
 | RN-CAM-006 | Riesgo = impacto por probabilidad. Impacto Bajo: Bajo, Bajo, Medio (probabilidad Baja, Media, Alta). Impacto Medio: Bajo, Medio, Alto. Impacto Alto: Medio, Alto, Alto. | Fase 3 | CA-CAM-01 |
 | RN-CAM-007 | Normal de riesgo Bajo o Medio: `cambios.aprobar`. Riesgo Alto: `cambios.aprobar_alto`. Un solo nivel (D-023). | Fase 3 | CA-CAM-03 |
 | RN-CAM-008 | El impacto sugerido se puede subir. Bajarlo exige un motivo que el aprobador ve. | Fase 3 | CA-CAM-08 |
@@ -330,7 +330,7 @@ Cada criterio indica el requisito que cubre.
 | Cambio | Decisión o hallazgo |
 |---|---|
 | RN-CAM-004 retirada; casilla "cambios" del interruptor único (vence a 90 días, segundo administrador); RN-CAM-024 | D-031.6, D-043.2, D-058 (6), H-AUD-07, H-ARQ-10 |
-| Definición única de creador o editor (RN-CAM-001) y tabla de actos de RN-017 | D-043.1 y 4 |
+| Definición única de creador o editor (RN-CAM-001) y tabla de actos de RN-017 del núcleo | D-043.1 y 4 |
 | "Solicitante" pasa a "Pedido por" / "quien pide"; permiso `cambios.solicitar` pasa a `cambios.pedir` | D-049.6 |
 | Calendario: título solo a quien ve el cambio (RN-CAM-026) | D-063.5, H-SEG-25d |
 | Ventanas con el calendario de empresa (feriados) | D-062.4 |

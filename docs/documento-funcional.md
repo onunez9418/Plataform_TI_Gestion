@@ -531,6 +531,7 @@ La regla de dinero es la **regla única RN-017** (sección 21): una sola medida 
 | RF-OC-018 | Una orden en una moneda distinta de la base siempre pasa por aprobación. | v1, Etapa 5 | CA-031 |
 | RF-OC-019 | El valor del monto límite lo configura cada empresa (P-001). | v1, Etapa 5 | CA-031 |
 | RF-OC-020 | Sin varios niveles ni reglas por tipo de orden en la v1. | v1, Etapa 5 | CA-031 |
+| RF-OC-051 | **Punto de extensión en la pantalla de aprobación:** la pantalla de aprobación de la orden reserva un espacio donde un módulo activo (hoy solo presupuesto, PRE) puede mostrar su información (por ejemplo el efecto en el presupuesto) y pedir una **justificación** si se excede. No agrega un segundo nivel de aprobación ni cambia quién puede aprobar. Sin módulo activo, el espacio no aparece (plan de correcciones, PRE punto 5). | v1, Etapa 5 | CA-031 |
 | RF-OC-047 | Una función única `requiereSegundaPersona(acto, monto, moneda)` decide en todos los módulos; ningún módulo tiene una regla de monto propia. | v1, Etapa 5 | CA-055 |
 
 ### 12.4 Separación de funciones
@@ -1108,7 +1109,7 @@ Cada tabla de requisitos de este documento es la matriz: la columna **Cuándo** 
 | CAT Catálogos y campos | RF-CAT-001 a 029 | v1, Etapa 2 | CA-001, CA-016 a 021, CA-032, CA-042, CA-045, CA-048, CA-060, CA-064, CA-065, CA-074 |
 | SKU Maestro | RF-SKU-001 a 016 | v1, Etapa 3 (RF-SKU-014 en 4) | CA-017 a 023, CA-032, CA-042, CA-048, CA-061, CA-064 |
 | INV Inventario | RF-INV-001 a 032 | v1, Etapa 4 (RF-INV-012 en 6) | CA-011b, CA-023 a 028, CA-032, CA-036, CA-038, CA-044, CA-046, CA-058, CA-059, CA-060, CA-063, CA-079b, CA-081b, CA-082b |
-| OC Compras y recepción | RF-OC-001 a 050 | v1, Etapa 5 (RF-OC-027 en 2, RF-OC-028 en 7) | CA-011a, CA-012 a 014, CA-018, CA-020, CA-024, CA-029 a 037, CA-045, CA-055, CA-061, CA-062, CA-070, CA-072, CA-078 |
+| OC Compras y recepción | RF-OC-001 a 051 | v1, Etapa 5 (RF-OC-027 en 2, RF-OC-028 en 7) | CA-011a, CA-012 a 014, CA-018, CA-020, CA-024, CA-029 a 037, CA-045, CA-055, CA-061, CA-062, CA-070, CA-072, CA-078 |
 | OS Órdenes de servicio | RF-OS-001 a 011 | v1, Etapa 6 | CA-018, CA-044, CA-055 |
 | IMP / EXP Importación y exportación | RF-IMP-001 a 018 (012 retirado), RF-EXP-001 a 007 | v1, Etapas 2 y 4 | CA-011b, CA-038, CA-039, CA-041, CA-043, CA-056, CA-057, CA-067 |
 | AUD Auditoría | RF-AUD-001 a 019 | v1, Etapa 1 (015 en 2; 016 y 018 en 7) | CA-001, CA-002, CA-011b, CA-015b, CA-040 a 042, CA-045, CA-054, CA-066 |

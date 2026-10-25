@@ -21,7 +21,7 @@
 **No entra:** contabilidad oficial, impuestos, conversión de monedas, pagos (sección 13).
 
 **Fase (D-056).** PRE-A es de la Fase 3, ola F. PRE-B llega después de los módulos de los que lee costos. Nada de PRE se construye antes de que el Cliente (CEO) apruebe la Etapa 7, salvo decisión del Gerente de TI.
-**Preparaciones del núcleo en la v1** (el diseño se hace desde la Etapa 1): tipo de autor "sistema" (Etapa 1); centro de costo con Persona responsable y código externo, y moneda base de la empresa (Etapas 1 y 2); costo y moneda del activo corregibles (Etapa 4); centro de costo en la OC (Etapa 5) y, **[SUPUESTO] pendiente del Analista**, un punto de extensión en la pantalla de aprobación de la OC; campo `fuente_costo` en toda obligación de pago.
+**Preparaciones del núcleo en la v1** (el diseño se hace desde la Etapa 1): tipo de autor "sistema" (Etapa 1); centro de costo con Persona responsable y código externo, y moneda base de la empresa (Etapas 1 y 2); costo y moneda del activo corregibles (Etapa 4); centro de costo en la OC (Etapa 5) y el espacio reservado en la pantalla de aprobación de la OC (RF-OC-051 del núcleo, Etapa 5); campo `fuente_costo` en toda obligación de pago.
 
 ---
 
@@ -94,7 +94,7 @@ Notas
 | RF-PRE-012 | Registrar gasto manual (rubro, centro, fecha, importe sin impuesto, % de impuesto, moneda, descripción, motivo) y anularlo con otro registro. | A | CA-PRE-15 |
 | RF-PRE-013 | Reclasificar un costo a otro centro o rubro, con motivo; genera un registro contrario y uno nuevo. | A | CA-PRE-15 |
 | RF-PRE-014 | Alertar cuando la ejecución llegue a los umbrales de atención y excedido, por línea, centro y presupuesto. | A | CA-PRE-06 |
-| RF-PRE-015 | **[SUPUESTO]** En la pantalla de aprobación de la OC (punto de extensión que el núcleo aún no declara) mostrar el efecto en el presupuesto y exigir una justificación escrita si lo excede, sin segundo nivel. | A | CA-PRE-07 |
+| RF-PRE-015 | En la pantalla de aprobación de la OC (espacio reservado por RF-OC-051 del núcleo) mostrar el efecto en el presupuesto y exigir una justificación escrita si lo excede, sin segundo nivel. | A | CA-PRE-07 |
 | RF-PRE-016 | Cerrar un periodo mensual: congela ejecutado, comprometido y cuotas de depreciación de ese mes. | A | CA-PRE-09 |
 | RF-PRE-017 | Proyección de renovaciones de los próximos 12 meses por mes, rubro y moneda, desde los vencimientos y el último importe conocido. | B | CA-PRE-22 |
 | RF-PRE-018 | Porcentaje de incremento esperado por rubro para la proyección (por defecto 0 %). | B | CA-PRE-22 |
@@ -368,6 +368,7 @@ Cada criterio cita el requisito que cubre.
 | Costo del activo corregible con `activos.corregir_costo`; se quita el "pedido pendiente" al núcleo (RN-PRE-032) | D-044.9; H-AUD-16 |
 | Formato de orden `OC-000042` y prefijos `PPT-`, `MPR-`, `GMA-` | D-049.2; plan de correcciones |
 | Punto de extensión en la aprobación de OC como pedido a la Etapa 5 (RF-PRE-015, sección 9) | H-AUD-28 (tabla de conflictos); plan de correcciones |
+| El punto de extensión queda marcado [SUPUESTO] porque el núcleo no lo contiene; se pide al Analista incorporarlo o retirarlo | Ronda 3 del Auditor Técnico |
 | REP consume servicios de PRE, no sus tablas (RF-PRE-026) | D-062.5 |
 | Permisos reemplazados por los PS-nn del registro (`presupuesto.crear` pasa a `presupuesto.crear_editar` PS-113; Jefatura TI sin crear, registrar gasto ni reclasificar; `reportes.exportar` pasa a `datos.exportar` PS-20; `activos.corregir_costo` PS-51 solo Administrador); se declara "Empleado (portal): no aplica" | D-036, D-037; `docs/registro-permisos.md` |
 | Procesos en segundo plano con idempotencia, recuperación, "hoy" por empresa y autor "sistema"; recepción síncrona y alertas asíncronas (RN-PRE-034, 035) | D-038.4, D-038.5, D-041.4; H-ARQ-01, H-SEG-02, H-QA |

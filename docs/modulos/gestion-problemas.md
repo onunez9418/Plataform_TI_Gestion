@@ -102,7 +102,7 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 | RN-PRB-006 | Resolver exige (a) un cambio vinculado Cerrado con resultado Exitoso o Exitoso con observaciones, o (b) un motivo escrito de por qué no hace falta cambio. | Fase 3 | CA-PRB-07, CA-PRB-08 |
 | RN-PRB-007 | Resolver un problema no cierra ni modifica los incidentes vinculados. | Fase 3 | CA-PRB-07 |
 | RN-PRB-008 | Cerrar exige haber pasado el periodo de observación (14 días corridos desde Resuelto, ajustable) sin incidentes nuevos, o un motivo de cierre anticipado. | Fase 3 | CA-PRB-09 |
-| RN-PRB-009 | Publicar una solución temporal exige a una persona que no la redactó ni editó desde la última publicación (acto "Publicar error conocido", RN-017). Con la casilla "problemas" del interruptor único encendida (apagada por defecto, vence a los 90 días) puede publicarla quien la redactó; cada uso queda en el aviso y la auditoría. No existe excepción propia del módulo. | Fase 3 | CA-PRB-06, CA-PRB-13 |
+| RN-PRB-009 | Publicar una solución temporal exige a una persona que no la redactó ni editó desde la última publicación (acto "Publicar error conocido", RN-017 del núcleo). Con la casilla "problemas" del interruptor único encendida (apagada por defecto, vence a los 90 días) puede publicarla quien la redactó; cada uso queda en el aviso y la auditoría. No existe excepción propia del módulo. | Fase 3 | CA-PRB-06, CA-PRB-13 |
 | RN-PRB-010 | Cerrado y Descartado no se reabren; si ocurre otra vez se registra una reaparición. | Fase 3 | CA-PRB-11 |
 | RN-PRB-011 | Con incidentes nuevos y el problema Resuelto, el responsable puede devolverlo a En análisis con motivo. | Fase 3 | CA-PRB-09 |
 | RN-PRB-012 | Al descartar se desvinculan los incidentes (quedan libres) y se conserva el historial. | Fase 3 | CA-PRB-12 |
@@ -268,7 +268,7 @@ Cada criterio indica el requisito que cubre.
 | S-PRB-03 | [SUPUESTO] | Resolver no cierra incidentes. | Aceptado; confirmado por la mesa de ayuda. |
 | S-PRB-04 | [SUPUESTO] | Umbral de sugerencia 3 incidentes en 30 días. | Aceptado. |
 | S-PRB-05 | [SUPUESTO] | Observación de 14 días corridos. | Aceptado (D-062.4). |
-| S-PRB-06 | [SUPUESTO] | Dos personas para publicar una solución temporal. | Aceptado como acto de RN-017 (D-043); sin excepción propia: casilla "problemas". |
+| S-PRB-06 | [SUPUESTO] | Dos personas para publicar una solución temporal. | Aceptado como acto de RN-017 del núcleo (D-043); sin excepción propia: casilla "problemas". |
 | S-PRB-07 | [SUPUESTO] | Categorías de causa: lista cerrada de 7. | Aceptado. |
 | S-PRB-08 | [SUPUESTO] | Cerrado no se reabre (como D-027). | Aceptado. |
 | S-PRB-09 | [SUPUESTO] | Sin método formal de análisis; basta la bitácora. | Aceptado. |

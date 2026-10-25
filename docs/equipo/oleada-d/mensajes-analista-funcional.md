@@ -109,6 +109,13 @@ Registro literal y en orden. Fecha: 2026-10-25. Las direcciones son las de la ag
 ## 29. Enviado a ae7eb02ad82ad97ab
 > Agregado al registro como PS-231 `garantias.confirmar_costo` (Administrador y Jefatura TI, controles A No, Fase 2), igual que PS-224 y PS-228. Cítenlo así en GAR. Recuerden que S-33 (tres actos nuevos en RN-017) aún espera la confirmación del gerente-ti.
 
+## 30. Recibido de a3b3666dfed8a47ee (escuadrón F)
+> El Auditor Técnico dice que el núcleo no declara un punto de extensión en la pantalla de aprobación de la OC (Etapa 5) para que PRE muestre el efecto en el presupuesto y pida justificación, sin segundo nivel (RF-PRE-015).
+> ¿Lo incorporan al núcleo (una línea en RF-OC de aprobación) o deciden retirarlo? Mientras tanto lo dejé [SUPUESTO]; si se retira, PRE usa una pantalla propia.
+
+## 31. Enviado a a3b3666dfed8a47ee
+> Incorporado al núcleo como RF-OC-051 (Etapa 5): la pantalla de aprobación de la OC reserva un espacio para que un módulo activo (PRE) muestre su efecto y pida justificación si se excede, sin segundo nivel ni cambio de quién aprueba. Ya estaba en el plan de correcciones (PRE punto 5), así que no es supuesto; pueden citarlo sin la marca.
+
 ## Notas
 
 - Supuestos nuevos de este segundo lote, para el Gerente de TI: S-33 (tres actos en RN-017) y S-34 (endurecimiento de Seguridad). Además, la clasificación de sensibles de PS-08, 68, 135 y las aprobaciones queda abierta.

@@ -96,7 +96,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen.
 | RN-ENT-003 | Un activo tiene una sola asignación abierta; la base lo impide con un índice único parcial aunque dos técnicos entreguen a la vez (RF-INV-024, D-060.5). |
 | RN-ENT-004 | La condición de cada equipo es obligatoria. "Con detalles" y "Dañado" exigen observación. **No se entrega un equipo "Dañado".** |
 | RN-ENT-005 | Numeración `ACT-E-` y `ACT-D-`, mínimo 6 dígitos, por empresa y con contador propio (T-11). Un número no se reutiliza; puede haber saltos (D-007). |
-| RN-ENT-006 | **Excepción declarada (D-051):** el acta guarda copia de nombre y área en **columnas propias** con `retener_hasta` (activo más 5 años, D-033). No se escribe en la auditoría. La anonimización de la Persona no la toca; la función de anonimización la limpia al vencer `retener_hasta` y la reimpresión posterior muestra la referencia. |
+| RN-ENT-006 | **Excepción declarada (D-051):** el acta guarda copia de nombre y área en **columnas propias** con `retener_hasta` (cierre de la asignación más 5 años, RN-ENT-021). No se escribe en la auditoría. La anonimización de la Persona no la toca; la función de anonimización la limpia al vencer `retener_hasta` y la reimpresión posterior muestra la referencia. |
 | RN-ENT-007 | **La autoentrega está prohibida sin excepción**, también al Administrador: quien registra una entrega, devolución o traspaso no puede ser la Persona vinculada a su membresía. Ninguna casilla del interruptor único la cubre (D-043.2). |
 | RN-ENT-008 | La entrega queda registrada y el equipo Asignado al confirmar, haya o no firma. La conformidad es un dato aparte (ENT-B) y no bloquea el uso. |
 | RN-ENT-009 | En la v1 la conformidad es el **papel firmado** que archiva la empresa; la plataforma no lo guarda (D-022) y no lo rastrea hasta ENT-B. |
@@ -111,7 +111,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen.
 | RN-ENT-018 | El traspaso es atómico: o se registran la devolución y la entrega, o ninguna. La Persona destino debe estar Activa y ser distinta del origen. |
 | RN-ENT-019 | Anular un acta solo si el activo no tuvo asignación posterior, reparación, traslado ni baja; "posterior" se mide con la **secuencia creciente** por empresa, no con la hora (D-060.5). Con motivo; genera el movimiento contrario; el acta queda "Anulada". |
 | RN-ENT-020 | Confirmar es todo o nada y no se repite con doble clic (misma clave de idempotencia). |
-| RN-ENT-021 | Retención: el acta se conserva mientras exista el activo más 5 años (D-024.5, provisional hasta legal). |
+| RN-ENT-021 | Retención (regla provisional D-033 y D-051, S-36 del núcleo): el acta y la copia del nombre se conservan **5 años desde el cierre de la asignación** a la que pertenece el acta (devolución, baja o extravío). Mientras la asignación siga abierta no hay fecha: `retener_hasta` queda vacía y el nombre no se limpia. Al cerrarse, `retener_hasta` = fecha de cierre + 5 años. Provisional hasta legal. |
 | RN-ENT-022 | Un acta tiene una sola Persona y activos de una sola empresa. |
 | RN-ENT-023 | Todo registro lleva la empresa; un identificador de otra empresa responde "no encontrado" (D-021.5). |
 | RN-ENT-024 | Nada con historial se borra: ni actas ni asignaciones. Solo los borradores sin efecto. |
@@ -182,7 +182,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen.
 
 | Dato | Finalidad | Quién lo ve | Plazo y rutina |
 |---|---|---|---|
-| Copia de nombre y área en el acta | Prueba de lo firmado | `datos_personales.ver`; la Persona | Hasta `retener_hasta` (activo + 5 años, provisional); la función de anonimización la limpia |
+| Copia de nombre y área en el acta | Prueba de lo firmado | `datos_personales.ver`; la Persona | Hasta `retener_hasta` (cierre de la asignación + 5 años, provisional; vacía mientras la asignación esté abierta); la función de anonimización la limpia |
 | Asignaciones (Persona, equipos, fechas) | Saber quién tiene qué | `datos_personales.ver` | Referencia a la Persona; conserva el historial tras anonimizar |
 | Circunstancias y denuncia de un extravío | Constancia | `datos_personales.ver` | Plazo del acta; texto libre no anonimizable de forma garantizada (se declara) |
 | Observaciones y "firma rechazada" | Constancia | `datos_personales.ver` | Plazo del acta |
@@ -313,3 +313,4 @@ Se reutilizan el **asistente "Entregar"** y el **diálogo "Cambiar estado"** (D-
 | Aislamiento probado por identificador interno y por número de acta repetido en otra empresa | D-063.6, H-SEG-25f |
 | Permisos migrados a PS-nn; `datos.exportar` único; cita RN-ENT-016 corregida | D-036, registro de permisos, H-AUD-24 |
 | Datos personales del módulo declarados; aviso de privacidad configurable por empresa | D-061.3, D-061.8, H-CUM-09, H-CUM-12 |
+| RN-ENT-021 y fila de datos personales: el plazo de 5 años corre desde el cierre de la asignación, no "mientras exista el activo"; `retener_hasta` vacía mientras la asignación está abierta | D-033, D-051, S-36 del núcleo (RF-DAT-006), ronda 3 del Auditor Técnico |

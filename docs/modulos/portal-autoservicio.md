@@ -170,7 +170,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen (`Fase 3`).
 
 ## 7. Pantallas necesarias
 
-Se reutilizan el catálogo y las pantallas de casos de AYU (AYU-01, AYU-02, AYU-14), el directorio de Personas (para invitar), el aviso de privacidad del primer ingreso del núcleo y el diálogo de motivo (D-053).
+Se reutilizan el catálogo y las pantallas de casos de AYU (PAN-AYU-01, PAN-AYU-02, PAN-AYU-14), el directorio de Personas (para invitar), el aviso de privacidad del primer ingreso del núcleo y el diálogo de motivo (D-053).
 
 | ID | Pantalla | Propósito | Rol principal |
 |---|---|---|---|
@@ -292,3 +292,4 @@ Los avisos a Personas sin Usuario los define cada módulo; el portal no envía a
 | Datos personales del módulo declarados; aviso de privacidad con reaceptación | D-061.3, D-061.8, H-CUM-09, H-CUM-12 |
 | Aislamiento probado por identificador interno | D-063.6, H-SEG-25f |
 | Aceptación en pantalla marcada como Fase 3 (acuse informativo) | D-023.2, D-056.4 |
+| Las seis citas `AYU-01`, `AYU-02` y `AYU-14` pasan al formato `PAN-AYU-nn` (sin citas cruzadas de otros módulos a pantallas del portal) | N-AUD-01, ronda 3 del Auditor Técnico |
