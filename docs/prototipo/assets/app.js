@@ -346,7 +346,7 @@ function barraApp(layout) {
     <div class="barra-fin">
       ${layout === 'app' && puedePedirAyuda() ? `<a class="btn-barra relleno" href="#/pedir-ayuda">${icono('ayuda')}<span class="etq">Pedir ayuda</span></a>` : ''}
       ${nuevos.length ? `<div class="desplegable"><button type="button" class="btn-barra" data-acc="desp" data-desp="nuevo" aria-haspopup="true" aria-expanded="false">${icono('mas')}<span class="etq">Nuevo</span></button><div class="lista-desp" id="desp-nuevo" hidden><div class="titulo">Acciones rápidas</div>${nuevos.map((n) => `<a href="${n.h}">${n.t}</a>`).join('')}</div></div>` : ''}
-      ${layout === 'app' && APP.modulos.avisos ? `<a class="btn-barra" href="#/avisos" aria-label="Avisos: ${nAv} sin leer">${icono('campana')}<span>${nAv}</span></a>` : ''}
+      ${layout === 'app' && APP.modulos.avisos ? `<a class="btn-barra campana" href="#/avisos" aria-label="Avisos: ${nAv} sin leer">${icono('campana')}<span>${nAv}</span></a>` : ''}
       <div class="desplegable"><button type="button" class="btn-barra" data-acc="desp" data-desp="usuario" aria-haspopup="true" aria-expanded="false">${icono('usuario')}<span class="etq">${esc(R().persona)}</span></button>
         <div class="lista-desp" id="desp-usuario" hidden><div class="titulo">${esc(R().nombre)}${APP.rol !== 'plat' ? ' · ' + esc(E().corto) : ''}</div>
           ${layout === 'plat' ? '' : `<a href="#/${APP.rol === 'emp' ? 'portal?tab=datos' : 'mi-espacio'}">Mi espacio</a><a href="#/mi-cuenta">Mi cuenta y seguridad</a><a href="#/mis-permisos">Mis permisos</a><a href="#/empresa">Cambiar de empresa</a><hr>`}

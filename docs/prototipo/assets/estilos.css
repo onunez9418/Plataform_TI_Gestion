@@ -151,6 +151,7 @@ small, .chica { font-size: var(--f-chica); }
 .barra-buscar input:focus { background: #fff; color: #17202B; outline-color: #fff; }
 .barra-buscar svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; pointer-events: none; }
 .btn-barra {
+  flex: none; min-width: 40px; justify-content: center;
   background: transparent; border: 1px solid rgba(255,255,255,.45); border-radius: var(--radio); min-height: 40px; padding: 0 var(--e3);
   font: inherit; font-size: var(--f-chica); cursor: pointer; display: inline-flex; align-items: center; gap: var(--e2); white-space: nowrap;
 }
@@ -283,6 +284,7 @@ legend { font-weight: 650; padding: 0 var(--e2); }
 .tarjeta .corte { font-size: 12px; color: var(--c-texto-suave); margin-top: var(--e2); }
 .tarjeta .pie { margin-top: var(--e3); padding-top: var(--e2); border-top: 1px solid var(--c-borde); display: flex; justify-content: space-between; gap: var(--e2); flex-wrap: wrap; }
 .rejilla { display: grid; gap: var(--e4); grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); margin-bottom: var(--e4); }
+.rejilla > *, .pila > *, .captura > * { min-width: 0; }
 .rejilla.dos { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
 .rejilla.ancha { grid-template-columns: 2fr 1fr; }
 .pila { display: flex; flex-direction: column; gap: var(--e3); }
@@ -454,8 +456,14 @@ dl { margin: 0; }
   .demo-bar .demo-aviso { display: none; }
   .barra { padding: 0 var(--e2); gap: var(--e2); }
   .barra .marca .texto-marca { display: none; }
-  .empresa-activa { max-width: 150px; padding: 0 var(--e2); }
+  .empresa-activa { flex: 1 1 auto; min-width: 0; max-width: none; padding: 0 var(--e2); }
+  .barra-fin { flex: none; }
+  .btn { white-space: normal; text-align: center; }
+  .btn-con-razon { max-width: 100%; }
   .btn-barra .etq { display: none; }
+  .btn-barra { padding: 0 var(--e2); }
+  .barra { gap: 6px; }
+  .campana { display: none !important; }
   .cabecera-pantalla h1 { font-size: 1.3rem; }
   .lista-datos { grid-template-columns: 1fr; gap: 0; }
   .lista-datos dt { margin-top: var(--e2); }

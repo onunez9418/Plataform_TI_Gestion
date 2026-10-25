@@ -545,6 +545,7 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
   7. **Referencias a "objeto (tipo e identificador)"** (auditoría, avisos, CMDB, costos): una columna por tipo con clave foránea compuesta y una restricción de que solo una esté llena; en la auditoría, un disparador que valida la misma empresa más una verificación nocturna de cruces.
   8. Una prueba genérica en CI recorre el catálogo de la base, más un caso de aislamiento **por módulo** (no por tabla). Para el **portal**, que separa Personas dentro de la misma empresa, se agregan consultas dedicadas que reciben la Persona de la sesión y una prueba con dos Personas de la misma empresa (H-SEG-09).
   9. Plan B si Prisma no alcanza: Kysely o SQL puro para esa parte, sin cambiar el resto del stack.
+  10. **Lectura de soporte (RF-PLA-013, añadido el 2026-10-25 por D-073).** Una sesión de soporte **no usa `app_plataforma`**. Es una **transacción de solo lectura** (`SET TRANSACTION READ ONLY`) con el contexto de **esa única empresa**, creada con `app_empresa` a partir de una **autorización temporal**: una fila de una tabla global `autorizacion_soporte` (empresa, motivo, persona de plataforma, vence en un máximo de 24 horas) que **crea un administrador de esa empresa**; una función `SECURITY DEFINER` de la lista cerrada la valida y fija el contexto. Prohibidos `BYPASSRLS` y superusuario. La sesión **no ve** columnas secretas ni la cola de derechos de datos, muestra el banner de soporte y cada consulta queda en la auditoría de la propia empresa (RF-PLA-005). **Prueba:** con la autorización vencida, de otra empresa o ya usada por otra persona, la lectura devuelve cero filas y cualquier escritura falla. El Arquitecto lo prueba en el prototipo y Seguridad lo revisa.
 - **Motivo:** Es donde un aislamiento perfecto en papel suele romperse (H-ARQ-02, H-DAT-01). Es el riesgo crítico #2.
 - **Recomendó:** Arquitecto (H-ARQ-02, 13), Ingeniero de Datos (H-DAT-01), Seguridad (H-SEG-02, 09, 17), QA (criterios del prototipo). Unanimidad.
 - **Qué cambia:** Reemplaza D-025. Documento: RS-10 y RN-001 (las tablas globales como excepción listada). Un ADR de aislamiento en `docs/arquitectura/`.
@@ -978,6 +979,184 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 
 ---
 
+## Decisiones de la ronda 3 (conformidad final de la Mesa #002)
+
+**Origen.** Informes de la ronda 3 de Seguridad, Cumplimiento (con su anexo de verificación final, que manda sobre el informe principal), QA y Auditor Técnico (`docs/revision-cruzada/ronda3-*.md`), más el documento v0.3, `docs/registro-permisos.md`, `docs/calidad/` y `docs/trazabilidad.md`. Fecha: 2026-10-25. Resultado de la ronda: los cuatro revisores dicen "conforme con observaciones", sin hallazgos Críticos ni Altos abiertos del núcleo; de los 17 módulos, 13 conformes y 4 con observaciones (ENT, GAR, DOM, LIN), ninguno no conforme. Estas decisiones cierran lo que cada uno dejó "pendiente del Gerente de TI". Nada de lo que sigue es dinero, legal ni irreversible nuevo (ver el final de esta sección).
+
+### D-065 · Supuestos del núcleo S-32 a S-37
+- **Pregunta:** El Analista elevó seis supuestos nuevos; por la regla de precedencia no son vigentes hasta decidirlos.
+- **Decisión:**
+
+| ID | Resultado | Precisión o cambio |
+|---|---|---|
+| S-32 Número de versión de la orden de compra | **Confirmado** | Entero que empieza en 1 y sube con cada reaprobación; no se reutiliza; se ve en la orden y en la auditoría. Sirve a las integraciones para distinguir alta, cambio y anulación (INT-2). Es el requisito RF-OC-044 |
+| S-33 Tres actos de dinero nuevos en RN-017 (garantía extendida con costo, mantenimiento con costo sin orden de servicio, corregir el costo de un activo) | **Confirmado con precisiones** | (a) Los dos primeros usan `garantias.confirmar_costo` (PS-231); (b) corregir el costo usa PS-51 `activos.corregir_costo`, sensible: si el nuevo costo, con impuesto y en moneda base, supera el límite, queda "pendiente de confirmación" y lo confirma **otra persona con PS-51** (si la empresa tiene una sola, la casilla "compras" del interruptor único, D-066); (c) **`recepciones.revertir` (PS-68) lleva el control "No"**: no la revierte quien confirmó esa recepción, salvo la casilla "recepción" (R-05); (d) su costo no entra al libro de costos mientras esté pendiente |
+| S-34 Endurecimiento de la plataforma | **Confirmado** | (a) El **contacto autorizado** lo registra el Administrador de plataforma al crear la empresa y lo **confirma el primer administrador** al aceptar la invitación; cambiarlo lo hace un administrador de la empresa, con espera de 24 horas y aviso por correo a todos los administradores (RF-PLA-011). (b) **Veto:** durante la espera de 24 horas de un rescate, cualquier administrador activo puede vetarlo; queda en el registro de plataforma (RF-PLA-012). (c) **Acceso de emergencia (PS-05):** exige a una segunda persona de plataforma o al contacto autorizado confirmado, aviso a todos los administradores de la empresa y tope de **un uso por empresa y por semana** (Seguridad lo aceptó con estas condiciones). (d) **Lectura de soporte:** D-039.10. (e) **Enlaces, invitaciones, sesiones, códigos de recuperación y enlaces de descarga se guardan solo como huella** irreversible, con vencimiento y un solo uso donde corresponda; el valor en claro solo existe en el correo o la pantalla de su dueño (RS-51), con una prueba automática en integración continua de que la base no contiene ningún valor que sirva directamente para entrar |
+| S-35 Fórmula del fin de garantía | **Confirmado, con la fórmula exacta de QA** | **Fin = (fecha de inicio menos 1 día) más los meses, ajustando al último día del mes.** Ejemplos: 15/01/2026 + 24 meses = 14/01/2028; 15/03/2024 + 36 meses = 14/03/2027; 31/01 + 1 mes = 28/02 (año no bisiesto). Se escribe en RF-INV-008 y RN-GAR-003 y los criterios CA-082b, CA-GAR-01 y CA-GAR-15 ya concuerdan |
+| S-36 El plazo de 5 años del nombre en el acta corre desde el cierre de la asignación | **Confirmado** | Cierre = devolución, baja o extravío de esa asignación. `retener_hasta` = fecha de cierre + 5 años (RF-DAT-006). Sigue **provisional hasta la opinión legal** (L-05, L-12; D-033, D-051). Un acta de entrega cuya asignación sigue abierta no vence |
+| S-37 Líneas, dominios y certificados usan la casilla "contratos" | **Confirmado** | Ver D-066 (mapa completo de casillas) |
+
+- **Motivo:** Son correcciones que piden los revisores y no cambian dinero, plazos legales ni alcance. S-35 evita dos fechas de garantía distintas en el núcleo y el módulo.
+- **Recomendó:** Auditor de Cumplimiento (R-05), Seguridad (H-SEG-26 a 28), QA (H-QA-25), Auditor Técnico (N-AUD-02, 05), Analista.
+- **Qué cambia:** núcleo §21 (tabla de actos sin la marca de supuesto), §23 (S-32 a S-37 como "Confirmado"), RF-PLA-001/009/011/012/013, RF-INV-008, RS-51; registro PS-05, PS-51, PS-68, PS-231; `garantias-mantenimiento.md` (RN-GAR-003).
+
+### D-066 · Mapa de casillas del interruptor único de excepciones (completa D-043)
+- **Pregunta:** Las ocho casillas de D-043 no nombran dominios, líneas, certificados ni garantías; el escuadrón B propuso «contratos».
+- **Decisión:** **Se mantienen ocho casillas** (no se agrega una novena) y se publica el mapa acto → casilla. La casilla «contratos» pasa a llamarse **«contratos y servicios recurrentes»** y cubre contratos de proveedor, líneas, dominios, certificados, garantías extendidas y mantenimientos con costo.
+
+| Casilla | Qué actos exceptúa |
+|---|---|
+| **compras** | Aprobar una orden de compra; aprobar una orden de servicio con costo; confirmar el costo corregido de un activo (PS-51); que quien creó o editó una orden la apruebe |
+| **recepción** | Que quien recibió la mercadería haya creado o aprobado la orden; que quien confirmó una recepción la revierta (PS-68) |
+| **presupuestos** | Aprobar un presupuesto o una modificación; reclasificar un costo; registrar o anular un gasto manual |
+| **contratos y servicios recurrentes** | Activar un contrato de proveedor; confirmar el costo de una línea, un dominio o un certificado; confirmar el costo de una garantía extendida o de un mantenimiento sin orden de servicio |
+| **licencias** | Confirmar un contrato de licencia (PS-76 cuando el contrato es de licencia) |
+| **mesa de ayuda** | Aprobar una solicitud de servicio con aprobación (quien no la pidió) |
+| **cambios** | Aprobar un cambio y reaprobar una plantilla estándar; **cerrar un cambio quien lo implementó** (D-067) |
+| **problemas** | Publicar un error conocido quien lo redactó |
+
+  Sin casilla (**nunca** se exceptúa): la autoentrega de equipos, la anonimización de una Persona (propone uno y ejecuta otro) y el rescate de una empresa.
+- **Motivo:** Mantener ocho casillas conserva la simplicidad del panel y cada acto tiene un solo interruptor; la persona que activa una casilla es la misma que se beneficia en cualquiera de los actos de ese grupo, por lo que separar más no aumenta el control.
+- **Recomendó:** Escuadrón B (propuesta), Auditor Técnico (N-AUD-03, C1), Cumplimiento (R-14).
+- **Qué cambia:** núcleo RF-OC-026 (nombrar el mapa y renombrar «contratos»), RN-017; `dominios-certificados.md` RN-DOM-017, `lineas-moviles.md` RN-LIN-016, `garantias-mantenimiento.md` RN-GAR-041, `proveedores-contratos.md`, `licencias-software.md`, `gestion-cambios.md`, `gestion-problemas.md`, `mesa-de-ayuda.md`; registro de permisos (la columna de casilla).
+
+### D-067 · PS-175 `cambios.cerrar`
+- **Pregunta:** ¿Quién cierra un cambio?
+- **Decisión:** **Confirmado:** Administrador, Jefatura TI y Técnico (todo), con el control "No": **no lo cierra quien lo implementó**, salvo la casilla «cambios» del interruptor único (D-066). "Quien implementó" es el responsable de implementación registrado en el cambio.
+- **Motivo:** El cierre certifica que el cambio se hizo bien; que lo certifique quien lo hizo anula la revisión posterior.
+- **Recomendó:** Cumplimiento (sección 4), registro de permisos.
+- **Qué cambia:** nada en el registro (PS-175 ya dice esto); `gestion-cambios.md` cita la casilla de D-066.
+
+### D-068 · Qué permisos son sensibles además de los actuales (H-SEG-07, H-SEG-30)
+- **Pregunta:** El registro tiene 35 sensibles (con segunda verificación obligatoria). Seguridad pide marcar otros cuya falta de protección permite desactivar el control de dinero o robar la sesión de quien aprueba.
+- **Decisión:** **Se marcan como sensibles (2F, y R donde se indica) los siguientes 16 permisos**, con lo que el registro pasa de 35 a **51 sensibles**:
+
+| Grupo | Permisos | Controles |
+|---|---|---|
+| Aprobaciones de dinero | PS-63 `ordenes_compra.aprobar`, PS-73 `ordenes_servicio.aprobar`, PS-76 `contratos.activar`, PS-114 `presupuesto.aprobar` | 2F, A, No |
+| Aprobaciones de cambios | PS-172 `cambios.aprobar`, PS-173 `cambios.aprobar_alto` | 2F, A, No |
+| Confirmaciones de costo | PS-224 `lineas.confirmar_costo`, PS-228 `dominios.confirmar_costo`, PS-231 `garantias.confirmar_costo` | 2F, A, No |
+| Gastos y costos | PS-116 `presupuesto.gasto_registrar`, PS-117 `presupuesto.gasto_anular`, PS-118 `presupuesto.reclasificar` | 2F, A, No |
+| Ajustes de control | PS-68 `recepciones.revertir` | 2F, A, No (D-065) |
+| Webhooks | PS-135 `integraciones.administrar_webhooks` | 2F, R, A |
+| Encuestas | PS-157 `ayuda.encuesta_ver_detalle` (muestra quién respondió) | 2F, A |
+| **Monto límite y moneda base (nuevo permiso)** | **PS-232 `empresa.configurar_aprobacion`**: cambiar el monto límite de aprobación, la moneda base y activar o desactivar la aprobación. Sale de PS-08, que queda como configuración general no sensible | 2F, R, A; **cada cambio avisa por correo a todos los administradores** |
+
+  La segunda verificación llega así a Jefatura TI (hoy ya la tiene si cumple otro sensible) y a los roles personalizados que aprueben dinero; es una aplicación de autenticación sin costo y se justifica porque un robo de sesión de quien aprueba es el camino más corto al fraude. PS-08 `empresa.configurar` y PS-154 `ayuda.solicitud_aprobar` (no mueve dinero) **no** pasan a sensibles.
+- **Motivo:** Cambiar el monto límite a un valor enorme apaga el control de dinero; quien aprueba sin segunda verificación es un blanco de robo de sesión.
+- **Recomendó:** Seguridad (H-SEG-07 parcial, H-SEG-30), Cumplimiento (R-05). **Discrepancia:** el Analista lo había dejado para decisión porque "pone la segunda verificación a Jefatura TI en casi todo"; se acepta ese costo.
+- **Qué cambia:** `registro-permisos.md` (marcar los 16, crear PS-232 y actualizar el pendiente de la sección 16), núcleo RF-ACC-013 y CA-007/CA-011b (la prueba de matriz regenerada), RF-ROL-005; las tablas de módulos citan solo el PS.
+
+### D-069 · El contrato de licencia es el contrato de proveedor (PS-76 y PS-78)
+- **Pregunta:** ¿Se unifica del todo el contrato de licencia en el de proveedor?
+- **Decisión:** **Confirmado D-044.4.** El contrato de licencia es una **extensión 1 a 1** del contrato `CTR-` (tipo y puestos). **PS-76 `contratos.activar`** sirve para activar un contrato de proveedor y para confirmar uno de licencia (con la casilla «contratos y servicios recurrentes» o «licencias», según su tipo, D-066); **PS-78 `contratos.terminar_anular`** termina o anula uno u otro (terminar uno de licencia libera sus puestos como pendiente). PS-84 y PS-85 quedan retirados. Terminar o anular lo hace una sola persona con motivo (no compromete gasto). Avisos con `contratos.recibir_avisos` (PS-81).
+- **Motivo:** Una ficha, una regla de dinero, un solo permiso por acción.
+- **Recomendó:** Ingeniero de Datos (H-DAT-08), Cumplimiento (sección 4 de su informe), Auditor Técnico.
+- **Qué cambia:** núcleo y registro sin cambios; `licencias-software.md` y `proveedores-contratos.md` ya lo reflejan (verificar que ambos remitan a PS-76 y PS-78).
+
+### D-070 · "Costo comprometido" y claves naturales de importación
+- **Pregunta:** SUP-LIN-14 y SUP-DOM-13 definen el "costo comprometido" de líneas y dominios; SUP-LIC-16 y SUP-DOM-14 proponen claves de importación.
+- **Decisión:**
+  1. **Principio único (completa D-043.3):** el **costo comprometido** es lo que se paga o se compromete a pagar **por el periodo que se confirma**, **con impuesto y en la moneda base**; en otra moneda siempre confirma otra persona.
+  2. **Línea (SUP-LIN-14): confirmado.** Cargo mensual vigente con impuesto × meses de permanencia restantes (12 si no hay permanencia), para un alta, un cambio de plan o un cargo especial.
+  3. **Dominio y certificado (SUP-DOM-13): confirmado.** Importe total con impuesto de la compra o renovación (el del periodo que se paga de una vez).
+  4. **Garantía extendida y mantenimiento sin orden de servicio:** el precio con impuesto.
+  5. En los tres casos: el registro **opera mientras tanto** (no se pierde un dominio por esperar), su costo queda "pendiente de confirmación" y **no entra al libro de costos** hasta confirmarse; la casilla de excepción es la de D-066.
+  6. **Claves naturales de importación (D-050.4), confirmadas:** contrato de licencia = número de contrato si existe, y si no **proveedor + producto + inicio + fin** (SUP-LIC-16); dominio = nombre normalizado; certificado = emisor + número de serie, o **nombre común + emisor + vencimiento** si no hay serie (SUP-DOM-14); línea = número normalizado. **Toda clave natural debe tener un índice único parcial que excluya lo anulado.** El Ingeniero de Datos revisa los índices al editar su ADR de importación; el cambio de una clave natural exige nueva decisión.
+- **Motivo:** Sin una definición RN-017 no es probable para líneas y dominios.
+- **Recomendó:** Cumplimiento (R-06), Escuadrón B (propuestas), Auditor Técnico, QA (H-QA-32).
+- **Qué cambia:** `lineas-moviles.md` SUP-LIN-14 y `dominios-certificados.md` SUP-DOM-13/14 pasan a "Aceptado (D-070)"; `licencias-software.md` SUP-LIC-16; núcleo RN-017 (principio).
+
+### D-071 · Derechos de datos, errores conocidos y CMDB: S-PRS-14, S-PRB-12, S-CMD-11 y S-CMD-12
+- **Pregunta:** Cuatro supuestos de módulos esperan visto bueno.
+- **Decisión:**
+  1. **S-PRS-14 (R-08): confirmado con una exigencia nueva.** Si quien presenta un pedido de derechos es la única persona con PS-29, **no lo atiende ni ella ni la plataforma**: el pedido queda "En espera de persona designada", el Administrador **designa** a otra membresía de confianza dándole PS-29 (con segunda verificación; es un cambio de rol de otra persona). **Toda empresa debe tener una persona suplente con PS-29**: "Primeros pasos" muestra la tarea "Designar suplente de derechos de datos" y, mientras no exista, el sistema recuerda cada 3 días a los administradores. Si pasan 5 días sin designar, se avisa al **contacto autorizado** y se deja constancia de que el plazo legal corre; la salida es el procedimiento de rescate (D-048.5), que habilita a quien atiende. RN-AYU-027 cita RN-PRS-033.
+  2. **S-PRB-12: aceptado con una condición.** Los errores conocidos publicados los ven todos los roles con `problemas.ver_errores_conocidos` (incluye Almacén y Solicitante), pero cada error conocido tiene **dos textos**: un **resumen para usuarios** (visible para todos esos roles; sin datos internos, validado por el validador común y publicado por una segunda persona) y un **detalle técnico** (solo roles con `problemas.ver`).
+  3. **S-CMD-11: aceptado** (un elemento de CMDB de origen se materializa al relacionarlo o completarle datos propios; coherente con D-062.1).
+  4. **S-CMD-12: aceptado con umbral propio.** Se audita toda consulta de impacto que devuelva **100 o más nombres de Personas**; la lectura masiva general de 5.000 filas (D-061.6) se mantiene. El umbral de 100 es configurable por la plataforma.
+- **Motivo:** El plazo legal de un derecho de datos no puede quedar sin responsable; los nombres de Personas valen más que una fila de activo.
+- **Recomendó:** Cumplimiento (R-08), Seguridad (H-SEG-32 d), módulos (S-PRS-14, S-PRB-12, S-CMD-11 y 12).
+- **Qué cambia:** `personas-ubicaciones.md` RN-PRS-033/S-PRS-14, `mesa-de-ayuda.md` RN-AYU-027, `portal-autoservicio.md` caso 13, `gestion-problemas.md` S-PRB-12, `cmdb-ligera.md` S-CMD-11/12; núcleo "Primeros pasos".
+
+### D-072 · Límites y formatos (P-013), series dañadas, "deshacer" y el cuarto ejemplo de redondeo
+- **Pregunta:** El Analista propuso los valores de la sección 19.2 y quedaron P-013 y tres huecos de QA (H-QA-15, H-QA-16).
+- **Decisión:**
+  1. **Se fijan los valores de 19.2 tal como los propuso el Analista** (SKU 120; Persona 120; proveedor 160; ubicación, área, centro de costo y categoría 80; texto de campo 255; nombre de campo 60; 100 opciones; 40 campos por categoría; serie 64; motivo 500; notas 1.000; correo 254; cantidad por línea hasta 1.000.000; precio hasta 999.999.999,9999; 200 líneas por orden; stock hasta 10.000.000; 1.000 series por recepción; 3 niveles de ubicación; números de documento mínimo 6 dígitos y SKU mínimo 4) y se agregan: **campo secreto hasta 512 caracteres** y **texto del aviso de privacidad hasta 5.000 caracteres**. **P-013 queda cerrado.** Los límites se pueden cambiar con una decisión nueva.
+  2. **Serie dañada por Excel** (RF-INV-005, RF-IMP-010): se rechaza con aviso cuando (a) tiene notación científica (`E+` o `e+`); (b) es numérica pura y su longitud es menor que la mínima de las series ya existentes de ese SKU (cuando hay 10 o más); o (c) un campo "identificador" con **largo exacto** configurado (por ejemplo IMEI de 15 dígitos) no lo cumple. El campo "identificador" admite el largo exacto como atributo opcional.
+  3. **RNF-013 ("donde se pueda, se puede corregir o deshacer") se reemplaza por una lista cerrada:** son **reversibles** el cambio de estado (por reingreso), la asignación (por devolución o traspaso), la recepción (por reversión), un lote de importación (por anulación), una orden aprobada y editada (vuelve a pendiente) y todo lo que se desactiva (se reactiva). **No son reversibles:** anonimizar, purgar, exportar y una aprobación ya consumida por una recepción. **No hay un botón "Deshacer" genérico.**
+  4. **Redondeo (RF-OC-045):** se agrega un cuarto ejemplo y se fija que **el impuesto se calcula sobre el subtotal ya redondeado**: 1 × 10,0050 con impuesto de 50 % da subtotal 10,01; impuesto 5,01 (5,005 redondeado hacia arriba); total 15,02.
+- **Motivo:** Cierra lo que QA no podía convertir en prueba y deja un solo orden de cálculo.
+- **Recomendó:** QA (H-QA-15, H-QA-16), Analista (propuesta de valores).
+- **Qué cambia:** núcleo §19.2 (valores en firme), P-013 cerrado, RNF-013, RF-INV-005, RF-IMP-010, RF-CAT (largo exacto), RF-OC-045 y CA-072.
+
+### D-073 · Plataforma: personas mínimas, acceso de emergencia y lectura de soporte
+- **Pregunta:** RF-PLA-001 dice "1 o 2 personas"; faltan el diseño de la lectura de soporte y qué ve la plataforma de los eventos de seguridad.
+- **Decisión:**
+  1. **RF-PLA-001:** son de **2 a 3 personas** de plataforma y, **antes de cargar datos reales, al menos dos** (con datos inventados puede haber una). RF-PLA-009 (acceso de emergencia) se alinea con PS-05: exige a la segunda persona o al contacto autorizado confirmado (D-065 S-34).
+  2. **Lectura de soporte: D-039.10** (diseño técnico de abajo, que el Arquitecto prueba en el prototipo y Seguridad revisa).
+  3. **Qué ve plataforma de los eventos de seguridad (D-054.1):** **solo conteos por empresa**, sin correos ni direcciones IP, mediante un permiso nuevo `plataforma.ver_conteos_seguridad` (PS-233, Administrador de plataforma, no sensible).
+  4. **Enlace en otro dispositivo (H-SEG-31):** se adopta. Quien pide el enlace en el computador y abre el correo en el celular ve en el navegador de origen un **código corto de 8 caracteres** que escribe en el otro dispositivo; si no, pide un enlace nuevo en el mismo. Se agrega a CA-068; el Diseñador define la pantalla.
+- **Motivo:** Con una sola persona el "control dual" depende de un contacto que ella misma registró.
+- **Recomendó:** Seguridad (H-SEG-26, 27, 31, 32 c).
+- **Qué cambia:** núcleo RF-PLA-001/009/013, CA-068; registro (PS-233); D-039 (punto 10).
+
+### D-074 · Permisos pendientes del registro: PS-106, PS-232, PS-233 y PS-234
+- **Pregunta:** ¿Qué permisos faltan o están pendientes en el registro?
+- **Decisión:**
+  1. **`garantias.recibir_avisos` (PS-106): confirmado y vigente** (hay una referencia vieja `gar.recibir_alertas` ya reemplazada en la bitácora). Valores por defecto: Administrador y Jefatura TI (todo), Técnico (propio: los activos de los que es ejecutor o responsable); los demás, no. `lineas.recibir_avisos` (PS-226), `dominios.recibir_avisos` (PS-229) y `contratos.recibir_avisos` (PS-81) se confirman con el mismo patrón.
+  2. **PS-232 `empresa.configurar_aprobacion`:** nuevo, sensible (D-068). **PS-233 `plataforma.ver_conteos_seguridad`:** nuevo (D-073).
+  3. **PS-234 `texto.redactar`:** nuevo, sensible (2F, A): redactar por seguridad un texto libre de cualquier registro del núcleo (motivo, nota, observación), con el mismo mecanismo `[REDACTADO]` que PS-153, 221 y 222. Va en la **Etapa 4** (R-09, D-075).
+  4. **Quién puede pedir una fila nueva:** se mantiene el mecanismo de la sección 14 del registro; el Gerente de TI aprueba.
+- **Motivo:** Cierran los pendientes de la sección 16 del registro.
+- **Recomendó:** Seguridad, Cumplimiento (R-09), Analista.
+- **Qué cambia:** `registro-permisos.md` (filas PS-232 a PS-234, sección 16 sin pendientes); `garantias-mantenimiento.md` (usa PS-106).
+
+### D-075 · Residuales de Cumplimiento, parciales de otros revisores y decisiones sueltas
+- **Pregunta:** Para cada residual o hallazgo parcial: ¿se cierra con una decisión o qué rol edita qué?
+- **Decisión:**
+
+| Hallazgo | Resultado | Quién edita qué |
+|---|---|---|
+| **R-04** (§18.1 incompleta) | Se cierra editando | **Analista:** una fila por dato declarado en los módulos (puestos de licencia ligados a Persona, encuestas con nombre, acuse con IP a 12 meses, textos de extravío, comentarios de cambios y problemas, registro de envíos 12 meses con correo enmascarado a los 90 días) con sus plazos |
+| **R-06** (costo comprometido) | **Cerrado por D-070** | Escuadrón B lo marca "Aceptado" |
+| **R-09** (texto libre con datos) | **Se cierra con D-074.3** y una declaración | **Analista:** en §18.1 y en el aviso de privacidad, "los motivos y notas son texto libre no anonimizable de forma garantizada"; adelantar la redacción del núcleo (PS-234) a la Etapa 4 (RF-DAT-013). **Seguridad:** el validador común aplica también a la serie de licencias (H-SEG-32 b) |
+| **R-10** (documentos operativos) | **Parcial** | `docs/trazabilidad.md` y `docs/calidad/` **ya existen** (QA). Falta `docs/operaciones/procedimiento-incidente-datos.md`: lo redactan **Seguridad y Cumplimiento** sobre la base de D-059 antes de cerrar la Etapa 0 (condición 13) |
+| **R-11** (riesgo #10) | **Cerrado** | Corregido en `riesgos.md` (plan: antes de cargar datos reales) |
+| **R-14** (casilla «contratos») | **Cerrado por D-066** | **Analista:** RF-OC-026 nombra el mapa |
+| R-05, R-08, R-01, R-02, R-03, R-07, R-12, R-13 | Cerrados (D-065, D-071; los demás ya verificados por Cumplimiento) | Ninguno |
+| **H-CUM-03, 09, 10, 18, 19** | 03: cierra con D-065/D-066/D-070. 09: cierra con R-04 (Analista). 10: cierra con R-09. 18: cierra con el procedimiento de incidente (R-10). 19: cierra con R-04 | Ver filas anteriores |
+| **H-QA-15** | **Cerrado** por D-072 (RNF-013, series dañadas, P-013) | Analista edita |
+| **H-QA-21 y H-QA-28** | Se cierran editando | **Analista:** agregar a cada CA la columna "Se ejecuta en: Etapa N" y partir CA-016, CA-052a/b, CA-054 (a Etapa 2, b Etapa 4, c Etapa 7), CA-060, CA-064, CA-065, CA-NOT-05, CA-NOT-07 y CA-PRV-04, usando la partición ya propuesta por QA en `docs/calidad/criterios-por-etapa.md` |
+| **H-QA-22** | **Cerrado** (`trazabilidad.md` y `calidad/` existen) | QA mantiene la matriz |
+| **H-QA-24** | Abierto, no es del núcleo | **DevOps** reedita el plan a la v0.3 (ver `plan-aplicacion.md`) |
+| **H-QA-32** (RN-017) | **Decidido** | La regla dice "un documento **sin costo no pasa por la regla de dinero**" (los actos "siempre" de la tabla son otra regla); una orden con todas las líneas "sin costo" **sí** pasa por aprobación cuando el límite es 0. **Analista** edita RN-017, RF-OC-016 y CA-055 |
+| **H-AUD-21, 23, 24** | Se cierran editando | **Analista:** reordenar y fusionar RF-INV-012 con RF-OS-007 (una sola regla), completar §26.1 (CA-041 y CA-050). **QA:** mantener `trazabilidad.md`. **Escuadrones:** unificar "Cuándo" de PRE, REP e INT a las tres palabras (`v1, Etapa N` / `Fase 2` / `Fase 3`) |
+| **N-AUD-04** | Se cierra editando | **Escuadrón D:** `entregas.imprimir_acta`, columna Empleado: "-" |
+| **N-AUD-06** | **Decidido** | Un solo evento de cambio de estado del activo: **`inventario.activo_estado_cambiado`** (con el nuevo estado y la causa; la baja es un valor, no otro evento); `presupuesto.aprobado` pasa a **`presupuesto.presupuesto_aprobado`**; las citas de tabla se escriben `D-037 fila 11` y `D-058 fila 3`; "En espera del solicitante" pasa a "En espera de la persona atendida". Editan los escuadrones C, E y F |
+| **H-SEG-07** | **Cerrado por D-068** | Analista marca los sensibles |
+| **H-SEG-32** | (a) y (b) ya aplicados; (c) D-073.3; (d) D-071.1; (e) DevOps: **ramas protegidas y revisión automática** (la higiene `.gitignore` y `.env.example` ya existe); (f) **Ingeniero de Datos:** las filas de importación en preparación van en una tabla con empresa y reglas por fila y se limpian al confirmar o a los 7 días; (g) **Escuadrón A:** en los correos de garantías, el código del activo en lugar de la serie | Roles indicados |
+| **Conflicto 28** (gancho de presupuesto en la aprobación de la OC) | **Cerrado** | RF-OC-051 ya lo registra |
+
+- **Motivo:** Cada residual queda con dueño y vía de cierre.
+- **Recomendó:** Cumplimiento (anexo de verificación final), QA, Seguridad, Auditor Técnico.
+- **Qué cambia:** los documentos de la columna "Quién edita qué"; ver `plan-aplicacion.md`.
+
+### D-076 · Qué criterios se exigen antes de la Etapa 1 y cuáles se difieren
+- **Pregunta:** QA marca 18 reglas RN sin criterio que las cite y unos 17 requisitos cuyo criterio no los prueba. ¿Se cierran antes de la Etapa 1 o se difieren?
+- **Decisión:** **Regla general:** un requisito necesita un criterio que lo pruebe **antes de que se abra la etapa en la que se programa**, no antes. Se aplica así:
+  1. **Antes de cerrar el documento v1.0 (puerta de la Etapa 0):** (a) la tabla de reglas RN lleva una **columna CA** y las 18 reglas sin cita se completan **citando** el criterio que ya las cubre (RN-005 con CA-023, RN-006 con CA-040, RN-010 con CA-012 y 013, RN-012 con CA-017, RN-017 con CA-055, etcétera); (b) **los requisitos de la Etapa 1** cuyo criterio no los prueba se corrigen: RF-ACC-006 (15 minutos y un solo uso), RF-ACC-014 (30 minutos y 12 horas), RF-ACC-020 (aviso de dos administradores), RF-PLA-009, 010, 011 y 012, RF-EMP-004 (calendario), RF-ROL-015 (dependencias circulares) y la parte de CA-070 sobre la confirmación del segundo administrador y el resumen mensual; (c) **RN-008** (motivo en las acciones que lo piden) obtiene un criterio nuevo, porque rige desde la Etapa 1.
+  2. **Antes de abrir la Etapa 2:** criterios nuevos para RN-015 (inactivo no se usa en registros nuevos) y RN-016 (catálogos no compartidos) y RF-CAT-026 (contactos: anonimizar y no exportar).
+  3. **Antes de abrir cada una de las Etapas 4 a 6:** los de su etapa (RF-IMP-008, 009 y 015; RF-ENT-002; RF-OC-048, 049 y 050; los CA ambiguos H-QA-31 con fechas y números; el partido de CA-038, CA-053 y CA-054).
+  4. **Módulos de Fase 2 y 3:** los pendientes se cierran al **activar** cada módulo; no bloquean la v1.
+  5. **Responsables:** el **Analista** redacta o cita el criterio; **QA** revisa y propone el texto cuando lo prefiera el Analista (en `docs/calidad/`); el **Auditor Técnico** verifica con su guion que ningún requisito de la etapa que se abre quede sin criterio. El Gerente de TI no abre una etapa con esa verificación pendiente.
+- **Motivo:** Exigirlo todo antes de la Etapa 1 retrasaría el arranque sin reducir riesgo; lo que rige en la Etapa 1 sí debe estar probable antes.
+- **Recomendó:** QA (H-QA-27, 30, 31), Auditor Técnico (guion), Gerente de TI.
+- **Qué cambia:** núcleo §21, §22; `docs/calidad/criterios-por-etapa.md` y `docs/trazabilidad.md` (QA los actualiza); definición de "listo" de cada etapa.
+
+**Escalado al CEO por la ronda 3.** Nada nuevo en dinero, legal o irreversible. Se agrega un **insumo** que solo él tiene: **designar dos personas** del equipo para administrar la plataforma antes de cargar datos reales (D-073.1); esa designación no tiene costo propio salvo las llaves de seguridad físicas ya incluidas en el escalado de dinero.
+
+---
+
 ## Escalado al CEO
 
 Todo lo anterior está decidido por el Gerente de TI. Solo esto llega al CEO, y solo porque implica dinero, un tema legal o algo que no se puede deshacer. La hoja de una página para el CEO está en `docs/equipo/hoja-ceo.md`. **Nota sobre las cifras:** las que da DevOps en `docs/operaciones/plan-entornos-y-costos.md` **no están verificadas** (no pudo consultar precios); sirven para dimensionar, no para decidir.
@@ -1011,7 +1190,8 @@ Además: **si la plataforma se usará con empresas que no son del CEO** (cambia 
 2. Una **cifra aproximada** de activos, usuarios y órdenes por mes (P-003).
 3. El **país o países** de las empresas y si los precios de compra incluyen impuestos (P-004).
 4. **A nombre de quién** quedan las cuentas (alojamiento, base de datos, correo, dominio, copias), qué **dominio** de la empresa existe, y **qué persona con suplente** recibe las alertas.
-5. Si la empresa **usa SAP** (solo antes de INT-2).
+5. **Dos personas del equipo** (no más de tres) para administrar la plataforma antes de cargar datos reales (D-073.1).
+6. Si la empresa **usa SAP** (solo antes de INT-2).
 
 ### Lo que el CEO sigue haciendo
 Aprobar la demo al final de cada etapa antes de empezar la siguiente, tal como dice `CLAUDE.md`.
