@@ -292,11 +292,10 @@ Cada criterio indica el requisito que cubre.
 1. Dos aprobadores deciden a la vez: el segundo recibe "este cambio ya fue decidido".
 2. El responsable de implementación es cesado con un cambio Aprobado: se asigna otro; no cambia la aprobación (RN-CAM-011 no lista al responsable).
 3. Una sola persona de TI y un urgente a las 3:00 sin la casilla: no puede aprobarlo; por eso se recomienda tener dos aprobadores o activar la casilla de antemano.
-4. Un elemento afectado queda De baja antes de ejecutarse: aviso "elemento de baja" y el responsable decide si cancela.
-5. Un caso vinculado a un cambio que luego se cancela: el vínculo se conserva.
-6. Plantilla Desactivada con cambios Aprobados pendientes: siguen su curso.
-7. Más de 20 elementos afectados: se permite y se avisa si el cálculo tarda.
-8. Cambio de zona horaria de la empresa: se recalculan los avisos pendientes (D-060.9).
+4. Un elemento afectado queda De baja antes de ejecutarse: aviso "elemento de baja" y el responsable decide si cancela. Un caso vinculado a un cambio cancelado conserva el vínculo.
+5. Quien implementó es la única persona con `cambios.cerrar` y la casilla «cambios» está apagada: otro usuario debe cerrarlo (RN-CAM-030).
+6. Plantilla Desactivada con cambios Aprobados pendientes: siguen su curso. Más de 20 elementos afectados: se permite y se avisa si el cálculo tarda.
+7. Cambio de zona horaria de la empresa: se recalculan los avisos pendientes (D-060.9).
 
 ## 12. Decisiones propuestas y supuestos
 
@@ -322,11 +321,8 @@ Cada criterio indica el requisito que cubre.
 
 - Comité de cambios con reuniones o varios niveles de aprobación (D-023).
 - Costo o aprobación por monto de un cambio.
-- Ejecución automática de pasos; despliegue continuo.
-- Aviso a usuarios finales por canales distintos al correo.
-- Cambios recurrentes automáticos.
-- Reapertura de cambios cerrados; adjuntos (D-022).
-- Indicadores avanzados (van a `reportes-tableros`).
+- Ejecución automática de pasos; despliegue continuo; aviso a usuarios finales por canales distintos al correo.
+- Cambios recurrentes automáticos; reapertura de cambios cerrados; adjuntos (D-022); indicadores avanzados (van a `reportes-tableros`).
 
 ## 14. Historial de cambios
 
