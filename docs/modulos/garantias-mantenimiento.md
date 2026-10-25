@@ -51,6 +51,7 @@ Los permisos son los del registro único `docs/registro-permisos.md` (PS-nn, D-0
 | Reprogramar o cancelar | PS-110 `mantenimiento.reprogramar` | Sí | No | Sí | No | No | No |
 | Gestionar planes | PS-111 `mantenimiento.planes` | Sí | No | No | No | No | No |
 | Ver costos (sensible) | PS-23 `precios.ver` | Sí | Sí | No | No | No | No |
+| Confirmar un costo que supera el límite | PS pendiente `garantias.confirmar_costo` (solicitado) | Sí | Sí | No | No | No | No |
 | Cambiar el estado del activo | PS-45 `activos.cambiar_estado` | Sí | No | Sí | No | No | No |
 | Dar de baja el activo original | PS-47 `activos.dar_baja` | Sí | No | Sí | No | No | No |
 | Ingreso manual del activo de reemplazo | PS-44 `activos.ingreso_manual` | Sí | No | Sí | No | No | No |
@@ -96,6 +97,7 @@ Columnas: **Cuándo** = `v1, Etapa 4` / `v1, Etapa 5` (GAR-A) o `Fase 2` (GAR-B)
 | RF-GAR-027 | Botón opcional "Crear cambio estándar" desde un mantenimiento (precarga activo y fecha); GAR guarda solo el vínculo. | Fase 2 | 16 |
 | RF-GAR-028 | Mostrar en un correctivo el contrato de PRV que cubre el activo, si existe. | Fase 2 | 02 |
 | RF-GAR-029 | Parámetros por empresa: días de "reparación prolongada" y de reclamo sin novedad. Los umbrales de aviso se configuran en NOT-05. | Fase 2 | 16 |
+| RF-GAR-031 | Confirmar el costo de una garantía extendida o de un mantenimiento sin OS cuando supera el límite (RN-GAR-041). | Fase 2 | 20 |
 | RF-GAR-030 | Declarar en el registro de módulo: cancelar mantenimientos al dar de baja el activo (síncrono) y los mantenimientos de una Persona como pendientes (D-038.5, D-061.7). | Fase 2 | 11, 19 |
 
 ### 4.2 Reglas de negocio
@@ -141,6 +143,7 @@ Columnas: **Cuándo** = `v1, Etapa 4` / `v1, Etapa 5` (GAR-A) o `Fase 2` (GAR-B)
 | RN-GAR-037 | Los procesos diarios (avisos, programaciones) son idempotentes y recuperables, corren empresa por empresa con la empresa fijada en la transacción, saltan empresas suspendidas y registran cada corrida (D-038.4). |
 | RN-GAR-038 | Una decisión simultánea (cerrar, cancelar, resolver un reclamo) usa actualización condicional y `version`: gana una y la otra recibe "ya fue decidido". |
 | RN-GAR-039 | Falla, notas y descripciones son texto libre: pasan por el validador común, la auditoría guarda "el campo cambió" sin el texto, y la pantalla avisa que no se escriban datos personales ni claves. Los motivos sí se guardan (D-030.6). |
+| RN-GAR-041 | Acto de dinero de RN-017 (S-33): registrar una garantía extendida con costo, o un mantenimiento con costo sin OS, no pide aprobación; si el costo con impuesto, en moneda base, supera estrictamente el límite (o está en otra moneda), lo confirma otra persona con `garantias.confirmar_costo`, según la función única `requiereSegundaPersona`; sin orden de compra queda la marca "sin respaldo de compra". La excepción es la casilla "compras" del interruptor único; GAR no tiene regla propia. |
 | RN-GAR-040 | La depreciación, el costo del activo y el libro de costos no son de este módulo; PRE toma el costo con `fuente_costo` (OS, orden de compra, propia). |
 
 ### 4.3 Requisitos de calidad
@@ -227,11 +230,12 @@ Reglas declaradas al motor único de Notificaciones (RF-NOT-024); NOT envía, ag
 
 | Evento | Cuándo | A quién | Qué dice |
 |---|---|---|---|
-| `vencimiento.proximo` (garantía) | A los umbrales por defecto de NOT: 90, 60, 30, 15 y 7 días antes del fin | Quienes tienen `garantias.recibir_avisos` | "La garantía del activo con serie 8H2K9 vence el 15/03/2027 (faltan 30 días). Revise si necesita un reclamo o una extensión." |
+| `garantias.costo_pendiente_confirmacion` | Al registrar un costo sobre el límite | Quienes tienen `garantias.confirmar_costo`, excepto quien lo registró | "Hay un costo de garantía o mantenimiento pendiente de confirmación." |
+| `vencimiento.umbral_alcanzado` (garantía) | A los umbrales por defecto de NOT: 90, 60, 30, 15 y 7 días antes del fin | Quienes tienen `garantias.recibir_avisos` | "La garantía del activo con serie 8H2K9 vence el 15/03/2027 (faltan 30 días). Revise si necesita un reclamo o una extensión." |
 | `garantias.garantia_vencida` | Un día después del fin | Igual | "La garantía del activo con serie 8H2K9 venció el 15/03/2027." |
-| `vencimiento.proximo` (mantenimiento) | Los días de aviso del plan y el mismo día (se aparta del umbral general porque es una tarea y no un vencimiento) | Ejecutor y quienes tienen `garantias.recibir_avisos` | "MNT-000045 está programado para el 20/11/2026." |
+| `vencimiento.umbral_alcanzado` (mantenimiento) | Los días de aviso del plan y el mismo día (se aparta del umbral general porque es una tarea y no un vencimiento) | Ejecutor y quienes tienen `garantias.recibir_avisos` | "MNT-000045 está programado para el 20/11/2026." |
 | `mantenimiento.mantenimiento_atrasado` | Un día después de la fecha y luego cada lunes | Ejecutor y Jefatura TI | "MNT-000045 está atrasado 9 días." |
-| `mantenimiento.reparacion_prolongada` | Con más de 30 días En reparación y cada 30 días | Jefatura TI | "El activo con serie 8H2K9 lleva 34 días En reparación." |
+| `mantenimiento.activo_reparacion_prolongada` | Con más de 30 días En reparación y cada 30 días | Jefatura TI | "El activo con serie 8H2K9 lleva 34 días En reparación." |
 | `garantias.reclamo_sin_novedad` | 15 días sin cambios en un reclamo En el garante | Quien lo abrió | "El reclamo RCL-000007 no tiene novedades hace 15 días." |
 | `mantenimiento.mantenimiento_asignado` | Al asignar | Ejecutor | "Se le asignó MNT-000045." |
 | `mantenimiento.mantenimiento_cancelado` | Al cancelar el sistema | Ejecutor | "MNT-000045 se canceló: activo dado de baja." |
@@ -276,6 +280,7 @@ Los avisos de GAR-B no entran a la v1 (D-023, D-061.4). Un proveedor de servicio
 | CA-GAR-16 | RF-GAR-024, 026, 027, 029 | **Dado** un mantenimiento programado y una garantía por vencer, **cuando** se abre "Vencimientos" con filtro por tipo, **entonces** aparecen ambos y, desde el mantenimiento, se ofrece "Crear cambio estándar". |
 | CA-GAR-17 | RF-GAR-015, RN-GAR-038 | **Dado** un mantenimiento En ejecución, **cuando** dos técnicos lo cierran a la vez, **entonces** una operación gana y la otra recibe "ya fue decidido". |
 | CA-GAR-18 | RN-GAR-039 | **Dado** una falla con un nombre canario, **cuando** se edita, **entonces** la auditoría dice "el campo cambió" sin el texto; y un texto con bloque de clave privada se rechaza. |
+| CA-GAR-20 | RF-GAR-031, RN-GAR-041 | **Dado** el límite 50 000 USD y una garantía extendida registrada por Ana, **cuando** el costo con impuesto es 50 000,00, **entonces** no exige confirmación; **cuando** es 50 000,01 (o está en otra moneda), **entonces** Ana no puede confirmarlo, otra persona con `garantias.confirmar_costo` sí, y sin orden de compra queda "sin respaldo de compra". |
 | CA-GAR-19 | RF-GAR-030, RN-GAR-025 | **Dado** el cese de la Persona ejecutora, **cuando** se cesa, **entonces** el cese no se bloquea y sus mantenimientos aparecen como pendientes de la persona. |
 
 ## 11. Casos límite
@@ -331,6 +336,8 @@ Los avisos de GAR-B no entran a la v1 (D-023, D-061.4). Un proveedor de servicio
 | Reemplazo por garantía usa el ingreso manual del núcleo | D-060.7, H-AUD-15 |
 | Cancelación de mantenimientos al dar de baja en la misma transacción | D-038.5, H-ARQ-11, H-DAT-09 |
 | Ejecutor y pendientes como Persona con vínculo opcional | D-044.5, D-041, D-061.7 |
+| Acto de dinero S-33 (garantía extendida y mantenimiento sin OS sobre el límite): RF-GAR-031, RN-GAR-041, permiso `garantias.confirmar_costo` solicitado, evento y CA-GAR-20 | S-33 del núcleo, RN-017, D-043.4, H-CUM-03 |
+| Eventos renombrados al catálogo de NOT (`vencimiento.umbral_alcanzado`, `mantenimiento.activo_reparacion_prolongada`) | D-038.5, D-049, notificaciones.md |
 | Permisos migrados a los PS-nn del registro (PS-102 a PS-111, PS-23, PS-44, PS-45, PS-47, PS-20, PS-09); `mantenimiento.planes` y `garantias.recibir_avisos` con el nombre del registro; Almacén y Jefatura TI según sus valores por defecto; `datos.exportar` único; columna "Empleado (portal): no aplica" | D-036, D-037, H-AUD-05, H-SEG-07, registro de permisos |
 | Volumen de referencia citado de RNF-010; RNF-GAR-007 definido | S-19 (D-057), H-AUD-24, H-QA-22 |
 | Texto libre sin valor en la auditoría y con validador común | D-030.6, D-063.2, H-CUM-01, H-SEG-23 |

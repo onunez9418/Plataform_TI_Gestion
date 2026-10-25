@@ -81,6 +81,28 @@ Registro literal y en orden. Fecha: 2026-10-25. Las direcciones son las de la ag
 > Hecho: PS-23 precios.ver ya es solo "todo" (sensible); lo propio de Técnico y Solicitante pasó a PS-230 precios.ver_propios, no sensible, así CA-007 y §7.3 cuadran. PS-08, 68, 135 y las aprobaciones quedan como están y anotados en el registro (§16) para que decida el gerente-ti.
 > Contacto autorizado confirmado por el primer administrador, cambio con 24 h y aviso, veto durante el rescate (RF-PLA-011 y 012), PS-05 con "No", lectura de soporte limitada a la empresa (RF-PLA-013, el Arquitecto la diseña en D-039) y huella para enlaces, invitaciones, sesiones y códigos (RS-51): todo como [SUPUESTO S-34] del gerente-ti. No encontré ronda3-especialista-seguridad.md; usé su mensaje.
 
+## 22. Recibido de ab1bc35a838fd603f (qa-tester)
+> ¿Si Jefatura TI cesa a una Persona con membresía vinculada sin tener usuarios.suspender, el cese se rechaza o se acepta sin suspender el acceso? RF-PER-005 y CA-052a dicen "se suspende solo si…" (acepta); PS-26, RN-PRS-011 y CA-PRS-05 dicen que se rechaza. Además: CA-082b da 15/01/2028 y RN-GAR-003/CA-GAR-01 dan 14 (fin = inicio menos un día); y RF-INV-008, 029 y 030 apuntan a CA-082, CA-081 y CA-079 en vez de 082b, 081b y 079b.
+
+## 23. Enviado a ab1bc35a838fd603f
+> Cese: se rechaza. Ya corregí RF-PER-005 y CA-052a: cesar a una Persona con Usuario vinculado exige además usuarios.suspender; sin él nada cambia (PS-26, RN-PRS-011 y CA-PRS-05 mandan).
+> Garantía: adopto la del módulo, fin = compra + meses - 1 día, 14/01/2028 en CA-082b (S-35, pendiente del gerente-ti). Referencias: RF-INV-008, 029, 030 y la matriz de §26.1 ahora citan CA-082b, 081b y 079b; los CA-079, 081 y 082 sin letra son otros criterios de acceso (dos pestañas, segunda verificación, códigos).
+
+## 24. Recibido de ac84a1c36e8343ef4 (auditor-codigo)
+> Defectos de referencia (se arreglan sin rediseño): (1) CMD, CAM y PRB citan criterios como "CMD-01"/"CAM-01"/"PRB-01" sin "CA-" (170 citas) y chocan con los prefijos CAM-/PRB-; (2) AYU y NOT citan "RN-001", "RF-001" sin código de módulo (90 citas), que se confunden con RN-001..022 del núcleo; (3) portal cita "AYU-01/02/14" y GAR/PRV "NOT-05" en vez de PAN-AYU-nn / PAN-NOT-05.
+> Además: RF-PER-010 (Etapa 2) menciona la importación (Etapa 4), y "mientras exista el activo más 5 años" (RF-DAT-006/011, D-033/D-051) no tiene fecha de arranque porque el activo nunca desaparece: defina desde cuándo corre `retener_hasta`.
+
+## 25. Enviado a ac84a1c36e8343ef4
+> En el núcleo: RF-PER-010 queda Etapa 2 para el alta manual y Etapa 4 para la importación, y retener_hasta corre desde el cierre de la asignación del acta + 5 años (RF-DAT-006, S-36, pendiente del gerente-ti).
+> Los puntos 1 a 3 son de los módulos: las citas CMD-01/CAM-01/PRB-01 sin "CA-", los RN-001/RF-001 sin código de módulo (usen RN-AYU-nnn, RF-NOT-nnn) y AYU-01 por PAN-AYU-nn los corrigen sus escuadrones (yo no edito docs/modulos). El núcleo reserva CAM-/PRB-/AYU- como prefijos de documento (sección 26.2), no de criterios.
+
+## 26. Recibido de a71e9e52606bce7ee (escuadrón B)
+> Pedido de mapeo: D-043 tiene ocho casillas (compras, recepción, presupuestos, contratos, licencias, mesa de ayuda, cambios, problemas) pero no asigna ninguna a líneas, dominios ni certificados. Propongo «contratos» para ambos; ¿lo eleva al Gerente de TI?
+> Ya corregí precios.ver (PS-23) a Adm y Jef solamente en LIC, LIN y DOM.
+
+## 27. Enviado a a71e9e52606bce7ee
+> Sí, lo elevo: queda como [SUPUESTO S-37] en el núcleo, líneas, dominios y certificados usan la casilla "contratos" del interruptor único, pendiente del gerente-ti (yo no edito decisiones.md; lo llevo en mi nota). Gracias por corregir precios.ver en LIC, LIN y DOM.
+
 ## Notas
 
 - Supuestos nuevos de este segundo lote, para el Gerente de TI: S-33 (tres actos en RN-017) y S-34 (endurecimiento de Seguridad). Además, la clasificación de sensibles de PS-08, 68, 135 y las aprobaciones queda abierta.

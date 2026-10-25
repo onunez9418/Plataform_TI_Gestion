@@ -221,8 +221,8 @@ Reglas declaradas al motor único de Notificaciones (RF-NOT-024); NOT envía, ag
 
 | Evento (catálogo único `<módulo>.<entidad>_<hecho>`) | Cuándo | A quién | Qué dice |
 |---|---|---|---|
-| `vencimiento.proximo` (contrato por vencer) | A cada umbral antes del fin, contratos activados sin renovación posterior | Responsable y quienes tienen `contratos.recibir_avisos` | "El contrato CTR-000012 vence el 30/11/2026 (faltan 30 días). Revíselo." |
-| `vencimiento.proximo` (preaviso) | A cada umbral antes de la fecha límite de preaviso | Igual | "Si no desea que CTR-000012 se renueve, avise antes del 31/10/2026." |
+| `vencimiento.umbral_alcanzado` (contrato por vencer) | A cada umbral antes del fin, contratos activados sin renovación posterior | Responsable y quienes tienen `contratos.recibir_avisos` | "El contrato CTR-000012 vence el 30/11/2026 (faltan 30 días). Revíselo." |
+| `vencimiento.umbral_alcanzado` (preaviso) | A cada umbral antes de la fecha límite de preaviso | Igual | "Si no desea que CTR-000012 se renueve, avise antes del 31/10/2026." |
 | `contratos.contrato_vencido` | El día siguiente al fin sin renovación | Igual | "CTR-000012 venció el 30/11/2026. Renueve o termine el contrato." |
 | `contratos.contrato_renovado_automatico` | Al ejecutarse | Responsable | "CTR-000012 se renovó hasta el 30/11/2027 con las mismas condiciones. Si el proveedor cambió el precio, registre una adenda." |
 | `contratos.contrato_por_activar` | Al pedir activación (no a quien lo creó) | Quienes tienen `contratos.activar` | "El contrato CTR-000015 espera su aprobación." |
@@ -334,6 +334,7 @@ Reglas: los avisos de PRV-B no entran a la v1 (D-023, D-061.4); los de la misma 
 | Responsable pasa de Usuario a Persona; cese sin bloqueo | D-044.5, D-041, D-061.7 |
 | Pantallas `PAN-PRV-nn`; bandeja única "Por aprobar"; sin pantalla de avisos propia | D-049.4, H-UX-06, H-UX-11 |
 | Orden de RN-PRV-036 a 038 corregido | H-AUD-24 |
+| Evento renombrado a `vencimiento.umbral_alcanzado` (catálogo de NOT) | D-038.5, notificaciones.md |
 | Reglas de proceso diario, concurrencia y aislamiento; CA-PRV-14 a 22 (dos empresas, reloj fijable, referencia cruzada, concurrencia, borde, canario) | D-038.4, D-039.6, D-063.6, H-SEG-02, H-QA-12, H-ARQ-17, QA fila PRV |
 | Volumen de referencia citado de RNF-010; hora única de avisos | S-19 (D-057), H-AUD-24, H-QA-22 |
 | Supuestos resueltos como confirmados, cambiados o nuevos | D-057, D-058 |

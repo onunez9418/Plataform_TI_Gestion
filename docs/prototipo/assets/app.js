@@ -327,7 +327,7 @@ function demoBar() {
     <label>Probar como: <select id="sel-rol" aria-label="Rol que se está probando">${ORDEN_ROLES.map((k) => `<option value="${k}" ${k === APP.rol ? 'selected' : ''}>${ROLES[k].nombre}</option>`).join('')}</select></label>
     <label>Empresa: <select id="sel-empresa" ${APP.rol === 'plat' ? 'disabled title="La consola de plataforma no pertenece a ninguna empresa"' : ''} aria-label="Empresa activa">${Object.values(EMPRESAS).map((e) => `<option value="${e.id}" ${e.id === APP.empresa ? 'selected' : ''}>${e.nombre}</option>`).join('')}</select></label>
     <button type="button" class="btn chico" data-acc="tema" aria-pressed="${APP.tema === 'oscuro'}">${icono(APP.tema === 'oscuro' ? 'sol' : 'luna')}<span>${APP.tema === 'oscuro' ? 'Modo claro' : 'Modo oscuro'}</span></button>
-    <a class="btn chico" href="#/pantallas">${icono('lista' in ICONOS ? 'lista' : 'tabla')}<span>Lista de pantallas</span></a>
+    <a class="btn chico" href="#/pantallas">${icono('tabla')}<span>Lista de pantallas</span></a>
     <a class="btn chico" href="#/guia">${icono('doc')}<span>Guía visual</span></a>
     <span class="demo-aviso">Prototipo de la Etapa 0 · datos de ejemplo inventados · no guarda nada</span>
   </div>`;

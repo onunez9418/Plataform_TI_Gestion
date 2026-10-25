@@ -52,7 +52,7 @@ Nombres con el formato `<módulo>.<acción>` (D-036); los módulos agregan filas
 | Acción | Permiso (PS) | Adm | Jef | Téc | Alm | Sol | SL | Emp |
 |---|---|---|---|---|---|---|---|---|
 | Ver líneas y planes | `lineas.ver` (PS-90) | T | T | T | - | - | T | - |
-| Ver costos | `precios.ver` (PS-23) | T | T | P | - | P | - | - |
+| Ver costos | `precios.ver` (PS-23) | T | T | - | - | - | - | - |
 | Ver el número completo y la Persona responsable | `datos_personales.ver` (PS-22) | T | T | T | - | - | - | - |
 | Crear y editar líneas (sin cargo especial) | `lineas.crear_editar` (PS-91) | T | - | T | - | - | - | - |
 | Asignar Persona y asociar equipo | `lineas.asignar` (PS-92) | T | - | T | - | - | - | - |
@@ -119,7 +119,7 @@ Controles (D-036.5, D-048): `lineas.reingreso` y `lineas.migrar` llevan reautent
 | RN-LIN-013 | Una línea Suspendida cuesta el cargo vigente salvo que se informe un cargo en suspensión distinto. |
 | RN-LIN-014 | **Costo:** patrón compartido (D-044.1): importe sin impuesto (4 decimales exactos), % de impuesto, moneda de 3 letras, periodicidad, inicio, fin, centro de costo y `fuente_costo` ∈ {propia, orden de compra, contrato}. El costo mensual vigente es el cargo especial si existe, si no el del plan. Una moneda por línea, sin conversión; **nunca un total general entre monedas**. |
 | RN-LIN-015 | **Cargo especial:** solo lo escribe o cambia quien tiene `lineas.administrar_planes` (D-043.5). Cambiar el cargo de un plan no cambia el pasado: se guarda con fecha de efecto; las líneas con cargo especial no se afectan. |
-| RN-LIN-016 | **Segunda persona (RN-017 del núcleo):** si el costo comprometido de un alta, un cambio de plan o un cargo especial supera **estrictamente** el límite de la empresa (total con impuesto en la moneda base; otra moneda siempre), el costo debe confirmarlo otra persona con `lineas.confirmar_costo`: no confirma quien creó o editó el registro desde la última confirmación. Aplica al Administrador. La línea opera mientras tanto, pero su costo queda "pendiente de confirmación" y no entra al libro de costos hasta confirmarse. La excepción es solo la casilla «contratos» del interruptor único (D-031, D-043); no hay excepción propia. [SUPUESTO] SUP-LIN-14 |
+| RN-LIN-016 | **Segunda persona (RN-017 del núcleo):** si el costo comprometido de un alta, un cambio de plan o un cargo especial supera **estrictamente** el límite de la empresa (total con impuesto en la moneda base; otra moneda siempre), el costo debe confirmarlo otra persona con `lineas.confirmar_costo`: no confirma quien creó o editó el registro desde la última confirmación. Aplica al Administrador. La línea opera mientras tanto, pero su costo queda "pendiente de confirmación" y no entra al libro de costos hasta confirmarse. La excepción es solo una casilla del interruptor único (D-031, D-043) que el Gerente de TI debe asignar a las líneas (propuesta: «contratos»; ver SUP-LIN-14); no hay excepción propia, y mientras no se asigne la casilla la excepción no existe para líneas. [SUPUESTO] SUP-LIN-14 |
 | RN-LIN-017 | **Fuente única:** orden de compra, luego contrato de proveedor (si la línea lo enlaza y el contrato cubre su costo), luego registro propio (D-044.3). Con costo y sin orden ni contrato enlazados, la línea queda **"Sin respaldo de compra"** (marca visible; informe mensual a quien aprueba); no se bloquea. |
 | RN-LIN-018 | **El número de línea asignado a una Persona se trata como dato personal** hasta que legal diga lo contrario (D-030.6, L-09): la auditoría registra que el campo número cambió, no su valor; sin `datos_personales.ver` se ve enmascarado; los correos solo muestran el número enmascarado; por la API, ni el IMEI ni el número salen sin el alcance de personas (D-063.4). |
 | RN-LIN-019 | Solo se registran líneas contratadas por la empresa. No se guarda el teléfono personal de nadie, ni documento de identidad ni dirección (D-006). No se guardan PIN ni PUK. |
@@ -297,7 +297,7 @@ Resultado de cada supuesto según D-042, D-057 y D-058.
 | SUP-LIN-11 | El número es dato personal en el vínculo con la Persona. | **Confirmado** como dato personal hasta que legal responda (L-09; D-030.6). |
 | SUP-LIN-12 | Totales por moneda, sin conversión. | **Confirmado** (D-014, D-049.8). |
 | SUP-LIN-13 | Una línea sin responsable no se bloquea al importar. | **Confirmado**; se marca en "sin movimiento". |
-| SUP-LIN-14 | Costo comprometido de una línea = cargo mensual vigente con impuesto × meses de permanencia restantes (12 si no hay permanencia); usa la casilla «contratos» del interruptor único y el costo queda "pendiente de confirmación" hasta que otra persona lo confirma. | **Propuesto**, a confirmar por el Gerente de TI (D-043 no define esta medida para líneas). |
+| SUP-LIN-14 | Costo comprometido de una línea = cargo mensual vigente con impuesto × meses de permanencia restantes (12 si no hay permanencia); la casilla del interruptor único para líneas no está asignada en D-043 (se propone «contratos») y el costo queda "pendiente de confirmación" hasta que otra persona lo confirma. | **Propuesto**, a confirmar por el Gerente de TI (D-043 no define esta medida para líneas). |
 | SUP-LIN-15 | Una línea migrada queda con plan "pendiente de completar". | **Propuesto** como diseño del módulo (D-005). |
 
 ## 13. Fuera de alcance

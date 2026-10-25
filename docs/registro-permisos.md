@@ -199,6 +199,7 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-103 | `garantias.registrar` | Registrar o corregir la garantía de un activo (compra + meses, o fin directo) | | todo | A | v1 E4 | T | - | T | - | - | - | - |
 | PS-104 | `garantias.anular` | Anular una garantía registrada | | todo | A | Fase 2 | T | - | - | - | - | - | - |
 | PS-105 | `garantias.gestionar_reclamos` | Gestionar reclamos de garantía (`RCL-`) | | todo | A | Fase 2 | T | - | T | - | - | - | - |
+| PS-231 | `garantias.confirmar_costo` | Confirmar el costo de una garantía extendida o de un mantenimiento sin orden de servicio (si supera el límite, otra persona) | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
 | PS-106 | `garantias.recibir_avisos` | Recibir avisos de garantías por vencer | | todo o propio | | Fase 2 | T | T | P | - | - | - | - |
 | PS-107 | `mantenimiento.ver` | Ver mantenimientos | | todo | | Fase 2 | T | T | T | - | - | T | - |
 | PS-108 | `mantenimiento.programar` | Programar mantenimientos | | todo | A | Fase 2 | T | - | T | - | - | - | - |

@@ -58,7 +58,7 @@ Nombres técnicos con el formato `<módulo>.<acción>` (D-036). Cada módulo agr
 |---|---|---|---|---|---|---|---|---|
 | Ver contratos, puestos y cuadre | `licencias.ver` (PS-82) | T | T | T | - | - | T | - |
 | Ver los datos del contrato de proveedor | `contratos.ver` (PS-74) | T | T | T | - | - | T | - |
-| Ver costos | `precios.ver` (PS-23) | T | T | P | - | P | - | - |
+| Ver costos | `precios.ver` (PS-23) | T | T | - | - | - | - | - |
 | Ver a qué Persona está asignado cada puesto | `datos_personales.ver` (PS-22) | T | T | T | - | - | - | - |
 | Crear y editar contratos de licencia (borrador y datos) | `licencias.crear_editar` (PS-83) | T | - | T | - | - | - | - |
 | Confirmar (activar) un contrato de licencia | `contratos.activar` (PS-76) | T | T | - | - | - | - | - |
