@@ -68,6 +68,18 @@ Nota: durante la redacción de la ronda 1 la sesión estuvo en modo plan y no se
 > Coincido: los campos van en dos niveles, "del tipo de artículo" (SKU) y "de cada unidad" (activo).
 > Ya lo planteé en mi ronda 1 (2.7) y el arquitecto confirmó que cada definición de campo declarará a cuál nivel aplica, con valores en JSON validado en el servidor. Falta que el gerente-ti lo fije en decisiones.md.
 
+## 13. Recibido de qa-tester (ab1bc35a838fd603f), cierre del intercambio 6 y 9
+
+> Gracias, con eso CA-04 y CA-06 quedan como pruebas contra PostgreSQL real con conexiones simultáneas.
+> Dejo anotado que necesito una base de pruebas de devops; ya agoté mis mensajes de la ronda, así que la Jefatura debe pedírsela.
+
+## 14. Recibido de auditor-cumplimiento (a45ce2ef63e8747ae), cierre del intercambio 5 y 8
+
+> Conforme con INSERT/SELECT únicamente más disparador: cubre mi R3 frente al Administrador de la app.
+> El límite del superusuario lo registro como riesgo residual; pido cuenta separada y registrada, copia externa de la auditoría (con devops) y que la auditoría registre también los cambios de permisos sobre esa tabla.
+
+(Los mensajes 13 y 14 son confirmaciones; no requieren respuesta. Sus pedidos quedan anotados: base de pruebas de devops para la Jefatura, y registro de cambios de permisos sobre la tabla de auditoría para el diseño.)
+
 ---
 
 ## Recomendaciones para el gerente-ti (antes "preguntas al CEO")
@@ -84,3 +96,17 @@ Por la nueva instrucción, las preguntas del apartado 4 de mi ronda 1 pasan como
 8. Código de SKU anulado nunca se reutiliza.
 9. Importación del Excel: todo o nada, con informe fila por fila y deshacer el lote. Falta ver el Excel real.
 10. Campos de dos niveles: del SKU y de cada unidad (confirmado por el arquitecto y propuesto también por auditor-codigo).
+
+---
+
+## 15. Recibido de analista-funcional (a6e1b8bc987bd105a)
+
+> ¿Importación del Excel: todo o nada (tú) o importar las filas válidas y reportar las malas (QA, CA-10)?
+> Tu punto es lotes parciales imposibles de reconciliar. Propongo compromiso para decisiones.md: vista previa obligatoria; confirmar solo si el usuario acepta importar las válidas; el lote queda registrado y se puede deshacer completo. ¿Te sirve?
+
+## 16. Enviado a analista-funcional (a6e1b8bc987bd105a), respuesta al mensaje 15
+
+> Sí, me sirve el compromiso, con tres condiciones.
+> (1) Lo predeterminado es todo o nada; importar solo las válidas exige que el usuario lo acepte de forma explícita tras ver la vista previa. (2) Las filas válidas se guardan en una sola transacción (nunca fila por fila) y las rechazadas se devuelven en un archivo con el motivo, listo para corregir y recargar. (3) El lote queda registrado (quién, cuándo, archivo, filas cargadas y rechazadas) y se puede deshacer completo mientras no tenga movimientos posteriores.
+
+Nota: este compromiso modifica mi recomendación 9 de la sección anterior (de "todo o nada" a "todo o nada por defecto, parcial solo con aceptación explícita"). Lo decide el gerente-ti en decisiones.md.

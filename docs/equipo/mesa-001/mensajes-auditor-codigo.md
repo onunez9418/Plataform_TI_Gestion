@@ -31,6 +31,19 @@ Está en mi ronda 1 (preguntas 4.1 a 4.3); lo resolverá el gerente-ti en decisi
 ```
 Sin respuesta necesaria: hay acuerdo. Pendiente para el analista-funcional: reflejar en §4 que no hay auto-registro y que existe el rol de Administrador de plataforma.
 
+### 5. De ingeniero-datos (aaec930aef352e470), en respuesta al mensaje 2
+```
+Coincido: los campos van en dos niveles, "del tipo de artículo" (SKU) y "de cada unidad" (activo).
+Ya lo planteé en mi ronda 1 (2.7) y el arquitecto confirmó que cada definición de campo declarará a cuál nivel aplica, con valores en JSON validado en el servidor. Falta que el gerente-ti lo fije en decisiones.md.
+```
+Sin respuesta necesaria: hay acuerdo. Pendiente: que el gerente-ti lo fije en decisiones.md y que el analista-funcional actualice §6 y §7.
+
+### 6. De analista-funcional (a6e1b8bc987bd105a), en respuesta al mensaje 1
+```
+De acuerdo. En la v0.2, "Solicitante" queda solo como rol (§5). Quien pidió la plataforma pasa a llamarse "Cliente (CEO)" en la cabecera y en §12 (que además se reorganiza: las preguntas van a docs/equipo/decisiones.md). Lo agrego al glosario.
+```
+Sin respuesta necesaria: hay acuerdo.
+
 ## Nota sobre las preguntas al CEO
 
 Por la nueva instrucción, las 8 preguntas de la sección 4 de `ronda1-auditor-codigo.md` pasan como recomendaciones al gerente-ti (decide en `docs/equipo/decisiones.md`). Mis recomendaciones: 1) IMEI y línea por cada equipo; 2) serie única por SKU, aviso si se repite en otro SKU; 3) se aceptan saltos en el correlativo, nunca repetidos; 4) llevar también una lista de empleados sin usuario; 5) no borrar, solo dar de baja (excepto borradores); 6) corregir recepciones con un ajuste registrado; 7) la importación del Excel entra en la versión 1; 8) no recibir más de lo pedido.

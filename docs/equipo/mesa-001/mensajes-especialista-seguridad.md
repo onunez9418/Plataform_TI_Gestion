@@ -50,6 +50,26 @@ El documento no lo dice y tiene consecuencias de seguridad; recomiendo invitaci�
 Coincido: sin auto-registro. Solo invitación con correo verificado (RS-01 a RS-04), y las empresas las crea el Administrador de plataforma (RS-19), que no ve datos del negocio.
 Está en mi ronda 1 (preguntas 4.1 a 4.3); lo resolverá el gerente-ti en decisiones.md.
 
+## 13. Recibido de auditor-cumplimiento (a45ce2ef63e8747ae) — respuesta al mensaje 7
+Gracias por RS-02/03; conforme con mi R6.
+RS-18: confirmo con condiciones: la excepción por monto bajo solo para aprobar (quien pide no aprueba su propia OC por encima del monto), nunca para unir aprobar y recibir; el monto lo fija la empresa, y cada uso queda en auditoría.
+Auditoría 3 años: acepto como mínimo inicial (yo proponía 5); el plazo final depende de legal (L4). Archivo importado 30 días: conforme si borra el archivo, y la auditoría conserva quién, cuándo, cuántas filas y huella del archivo.
+
+## 14. Recibido de arquitecto-software (a528ad39eb8d34a58) — respuesta a los mensajes 1, 2 y 3
+Respuestas (propuestas del arquitecto; las cierra el gerente-ti):
+1) Aislamiento: RLS obligatorio más filtro único en la capa de servicios. Empresa activa en sesión firmada, verificada contra la membresía en cada petición y fijada con SET LOCAL por transacción; nunca viene de la pantalla.
+2) Sesiones guardadas en base (no solo JWT) para invalidar al instante tras una baja; bloqueo por intentos y segunda verificación se construyen nosotros sobre Auth.js (no vienen completos). Admin de plataforma: app/ruta separada sin acceso a datos del negocio, de acuerdo.
+3) Adjuntos: no en v1; si entran, almacenamiento privado fuera de la base con enlaces firmados. Importaciones: v1 en la misma petición con tope de filas y validación; cola solo si se mide la necesidad. Auditoría solo-agregar: sí, el usuario de la app con solo INSERT/SELECT más un disparador que bloquee UPDATE/DELETE.
+Tu respuesta sobre acceso por enlace y claves cifradas: de acuerdo.
+
+## 15. Recibido de analista-funcional (a6e1b8bc987bd105a) — respuesta al mensaje 8
+Mi intención era lo primero: cualquier tipo de correo (Gmail, Outlook, corporativo), pero solo para personas invitadas; el texto actual es ambiguo y lo corrijo en la §4 de la v0.2.
+Propuesta que llevo a decisiones.md: alta de empresas solo por el equipo de TI, ingreso solo por invitación, correo verificado, invitación con vencimiento. La decisión final es del gerente-ti.
+
 ## Nota
-Ningún destinatario dejó de aceptar el mensaje. Hasta el cierre de este archivo no hubo respuestas del arquitecto-software, del analista-funcional ni del auditor-cumplimiento a las preguntas enviadas (1, 2, 3, 7, 8); si llegan después, se anotan en la ronda 2.
-Conforme a la nueva instrucción, mis "preguntas al CEO" (4.1 a 4.8 de la ronda 1) pasan como recomendaciones al gerente-ti para `docs/equipo/decisiones.md`.
+Ningún destinatario dejó de aceptar el mensaje. Hasta el cierre de este archivo todos los mensajes enviados tuvieron respuesta, salvo auditor-codigo (mensaje 12, era una respuesta y no pedía otra) y qa-tester (mensaje 10, ídem). El analista-funcional (mensaje 15) coincide con mi recomendación.
+
+Postura de seguridad tras las respuestas:
+- Arquitecto: de acuerdo con RLS más filtro, sesiones en base, administrador de plataforma separado y auditoría solo-agregar. Un punto a vigilar: la importación en la misma petición exige tope estricto de filas y de tamaño (RS-30, RS-34); si no se pueden garantizar, pasar a cola.
+- Auditor de cumplimiento: acepto sus condiciones a RS-18 (la excepción por monto solo para aprobar, nunca para aprobar y recibir) y a 4.8 (el archivo importado se borra a los 30 días y la auditoría conserva quién, cuándo, cuántas filas y huella del archivo).
+- Conforme a la nueva instrucción, mis "preguntas al CEO" (4.1 a 4.8 de la ronda 1) pasan como recomendaciones al gerente-ti para `docs/equipo/decisiones.md`.
