@@ -1,0 +1,143 @@
+# =============================================================================
+# .gitignore de la Plataforma de Gestión de Áreas de TI
+# Responsable: DevOps. Pedido por Seguridad (H-SEG-32 e, D-064 condición 10).
+#
+# Regla de oro (CLAUDE.md, regla 4): nunca guardar contraseñas, claves ni datos
+# reales de clientes en el repositorio. Este archivo es la primera barrera;
+# la segunda es la búsqueda automática de secretos en la revisión de cada cambio.
+# =============================================================================
+
+# --- Secretos y variables de entorno -----------------------------------------
+# Se ignora todo archivo .env salvo el de ejemplo (.env.example, sin valores reales).
+.env
+.env.*
+!.env.example
+*.env
+.envrc
+
+# Claves, certificados y credenciales
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.crt
+*.cer
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+*.secret
+*.secrets
+secrets/
+.secrets/
+credentials.json
+service-account*.json
+*-credentials.json
+.npmrc.local
+.netrc
+
+# --- Datos reales y copias de la base de datos (D-028) -----------------------
+# Los documentos reales del CEO (Excel, OC, OS) se guardan FUERA del repositorio.
+# Si se necesita un archivo de ejemplo, debe estar inventado y vivir en las
+# carpetas permitidas más abajo.
+datos-reales/
+datos-privados/
+datos-sin-anonimizar/
+backups/
+respaldos/
+dumps/
+*.dump
+*.backup
+*.bak
+*.sql.gz
+*.sql.zst
+*.sql.enc
+*.pgdump
+pgdata/
+postgres-data/
+mailpit-data/
+
+# Hojas de cálculo y CSV: ignorados por defecto porque son la vía más común por
+# la que se cuelan datos personales. Los archivos INVENTADOS de prueba y las
+# plantillas de importación se permiten solo en estas carpetas.
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+!tests/fixtures/**/*.xlsx
+!tests/fixtures/**/*.csv
+!public/plantillas/*.xlsx
+!public/plantillas/*.csv
+
+# --- Node.js / dependencias --------------------------------------------------
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+# Los archivos de bloqueo (package-lock.json, pnpm-lock.yaml, yarn.lock) SÍ se
+# versionan: garantizan que se instalan las mismas versiones en todas partes.
+
+# --- Next.js y compilación ---------------------------------------------------
+.next/
+out/
+build/
+dist/
+.turbo/
+.vercel/
+next-env.d.ts
+*.tsbuildinfo
+
+# --- Pruebas y cobertura (Vitest, Playwright) --------------------------------
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+playwright/.auth/
+.vitest-cache/
+
+# --- Base de datos local y Prisma --------------------------------------------
+# Las migraciones (prisma/migrations/) SÍ se versionan. Solo se ignoran bases locales.
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# --- Registros técnicos ------------------------------------------------------
+logs/
+*.log
+
+# --- Herramientas del editor y del sistema -----------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+
+# --- Claude Code: ajustes locales de cada persona ----------------------------
+.claude/settings.local.json
+.claude/*.local.json
+
+# --- Temporales --------------------------------------------------------------
+tmp/
+temp/
+.tmp/
+.cache/
+*.tmp
