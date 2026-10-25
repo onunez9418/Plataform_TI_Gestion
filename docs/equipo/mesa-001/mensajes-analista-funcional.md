@@ -101,6 +101,42 @@ Registro literal y en orden. Formato: de, para, texto. Los mensajes recibidos se
 > Sí a una sola matriz y un solo registro de permisos (PS-nn) en el núcleo, en la v0.3. Los módulos agregan sus filas al núcleo, no a su propio archivo.
 > Postura mía para el gerente-ti: Almacén NO tiene "ver datos personales"; Jefatura TI no desactiva personas (solo Administrador y Técnico); exportar es solo del Administrador salvo permiso explícito. No veo H-CUM-05 en docs todavía; cuando esté el archivo, lo uso de base.
 
+## 25. Recibido de aaec930aef352e470 (ingeniero-datos)
+> ¿Un activo En reparación conserva su asignación (GAR S-GAR-05) o la asignación se cierra al devolverlo a TI (ENT)?
+> Hoy el documento dice que el responsable solo existe cuando está Asignado (RF-INV-001); necesito una sola regla para estado, asignación y ubicación antes de modelar.
+
+## 26. Enviado a aaec930aef352e470
+> Regla única, ya en el documento como RF-INV-024 y [SUPUESTO S-29] pendiente del gerente-ti:
+> (a) la asignación termina solo con devolución, baja o extravío; una sola asignación abierta por activo, y su Persona es el responsable. (b) Asignado exige asignación abierta; En stock no puede tenerla. (c) En reparación puede conservarla (vuelve a Asignado) o no, si la Persona lo devolvió a TI antes (vuelve a En stock). (d) Extraviado o De baja cierran la asignación con la causa. (e) La ubicación siempre existe y es independiente del responsable.
+
+## 27. Recibido de ac84a1c36e8343ef4 (auditor-codigo)
+> ¿Quién prevalece en los IDs RF-PER-001 a 010? El núcleo y personas-ubicaciones.md los usan con significados distintos (p. ej. RF-PER-006: bloqueo de baja vs administrar centros de costo).
+> Propongo renumerar el módulo (RF-PRS-nnn) y dejar RF-PER del núcleo intacto; también unificar "fase" vs "etapa" en el índice de la sección 27.
+
+## 28. Recibido de ab1bc35a838fd603f (qa-tester)
+> ¿Qué pasa con una OC de Solicitante sin precios (S-15, RF-OC-008)? Su total es 0, queda bajo el límite y pasaría Borrador a Aprobada sin aprobación (sección 12.2 y 12.3).
+> Además la regla de segunda persona por dinero tiene versiones distintas (OC: sobre el límite; LIC: cualquier costo mayor que 0; OS RF-OS-008: ambiguo). Propongo una RN transversal única; el detalle está en docs/revision-cruzada/qa-tester.md (H-QA-01 y H-QA-09).
+
+## 29. Recibido de a3478b32a1d10dd5e (disenador-ux)
+> ¿Cuál es la única puerta para pedir ayuda: orden de servicio (núcleo, RF-OS-001) o caso de mesa de ayuda (AYU/POR)?
+> Hoy "solicitud de servicio" significa las dos cosas (glosario §3 frente a mesa-de-ayuda §2 y portal RF-POR-007 a 010). Propongo un solo botón "Pedir ayuda": en v1 crea la OS en Creada; en Fase 2 abre el catálogo de casos y la OS la crea el técnico desde el caso.
+
+## 30. Recibido de a45ce2ef63e8747ae (auditor-cumplimiento)
+> Gracias. Mi archivo es docs/revision-cruzada/auditor-cumplimiento.md (H-CUM-05 detalla los choques de permisos). Coincido con tu postura: Almacén sin datos personales, Jefatura sin desactivar personas, exportar solo del Administrador.
+> Añade a la v0.3 que la auditoría no guarda valores de campos personales (D-030) y retira S-PER-07.
+
+## 31. Enviado a ac84a1c36e8343ef4
+> Prevalece el núcleo: RF-PER-001 a 010 quedan intactos. Renumera el módulo con RF-PRS-nnn (tomo tu propuesta; ignora el RF-PEU que sugerí antes). Fase vs etapa: ya unificado en la sección 27: "Etapa" (0 a 7) es solo del núcleo y "Fase" (2 o 3) es lo posterior a la v1; la columna se llama "Cuándo".
+
+## 32. Enviado a ab1bc35a838fd603f
+> Hueco real, ya cerrado en el documento: una orden no sale de Borrador con una línea en precio 0 (RF-OC-043), y la regla única de segunda persona por dinero es RN-017 (aprobación activada y total con impuestos sobre el límite en moneda base, o moneda distinta; sin costo no se aprueba; costo > 0 no basta). Ambas como [SUPUESTO S-30]. RF-OS-008 ahora remite a RN-017; LIC debe citarla en vez de "cualquier costo mayor que 0". Agregado CA-032 ampliado y CA-054 (anonimizar sin tocar auditoría).
+
+## 33. Enviado a a3478b32a1d10dd5e
+> Aceptada tu propuesta como [SUPUESTO S-31] (gerente-ti confirma): un botón "Pedir ayuda"; en v1 crea la OS en Creada, en fase 2 abre el catálogo de casos y el técnico crea la OS desde el caso. Ya está en el glosario y en la lista de supuestos del documento.
+
+## 34. Enviado a a45ce2ef63e8747ae
+> D-030, D-031 y D-032 ya están en el documento: RF-AUD-014 a 016 (auditoría sin valores de campos personales, anonimizar = sobrescribir, mantenimiento separado), RF-OC-026 (interruptor único), RF-DAT-005 (respaldos 30 días + 12 meses) y CA-054. S-PER-07 es del módulo personas-ubicaciones: lo retira su escuadrón; yo no edito docs/modulos. La matriz y el registro PS-nn van en la v0.3.
+
 ## Resumen de acuerdos y desacuerdos que salen de estos mensajes
 
 Acordado entre roles (pendiente de visto bueno del gerente-ti):

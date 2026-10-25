@@ -77,7 +77,7 @@ Una plataforma web para que el área de TI de una empresa controle sus activos t
 | **Persona** | Empleado o custodio que recibe equipos. Puede no tener acceso a la plataforma. Está vinculada a un usuario solo si también entra al sistema. |
 | **Rol** | Conjunto de permisos que se asigna a un usuario en una empresa (ej. Técnico, Jefatura TI). |
 | **Solicitante** | Un rol: crea solicitudes de compra o de servicio y ve las propias. No tiene relación con el Cliente (CEO). |
-| **Solicitud** | No es un documento aparte. Una solicitud de compra es una orden de compra en Borrador; una solicitud de servicio es una orden de servicio en estado Creada. |
+| **Solicitud** | No es un documento aparte. Una solicitud de compra es una orden de compra en Borrador. En la v1, una solicitud de servicio es una orden de servicio en estado Creada. Con el módulo de mesa de ayuda (fase 2), la puerta para pedir ayuda es el caso de la mesa y la orden de servicio la crea el técnico desde el caso [SUPUESTO S-31]. |
 | **Permiso sensible** | Permiso que se da por separado porque expone dinero o datos personales: ver precios, ver auditoría, ver datos personales, importar, exportar, administrar roles, escribir código propio de SKU, ver la clave completa de una licencia, reingreso. |
 | **Alcance de un permiso** | "Todo" (toda la empresa) o "Propio" (solo lo que la persona creó o le corresponde). |
 | **SKU** (también "artículo") | Código que identifica un *tipo* de artículo. Ej.: `LAP-0001` = Laptop Dell Latitude 5440 i7/16GB. Existe una sola vez por empresa. En este documento "artículo" significa siempre SKU; a las unidades físicas se les llama activos. |
@@ -352,7 +352,7 @@ Basado en D-009, D-010, D-012. Etapa 4.
 
 | ID | Requisito | Etapa | CA |
 |---|---|---|---|
-| RF-INV-001 | Cada unidad se registra como un activo con: serie, SKU, estado, ubicación, responsable (solo cuando está Asignado), fecha de compra, fin de garantía, orden de compra de origen (opcional, los activos del Excel no la tienen), costo de compra y moneda, y los campos "a cada unidad" de su categoría. | 4 | CA-024 |
+| RF-INV-001 | Cada unidad se registra como un activo con: serie, SKU, estado, ubicación, responsable (la Persona de su asignación abierta, si la hay; ver RF-INV-024), fecha de compra, fin de garantía, orden de compra de origen (opcional, los activos del Excel no la tienen), costo de compra y moneda, y los campos "a cada unidad" de su categoría. | 4 | CA-024 |
 | RF-INV-002 | La serie es única por empresa y SKU, comparada sin distinguir mayúsculas ni espacios al inicio o al final. Repetida en el mismo SKU: se rechaza siempre. | 4 | CA-023 |
 | RF-INV-003 | Si la serie ya existe en otro SKU de la misma empresa, se acepta con un aviso visible que dice dónde está. | 4 | CA-023 |
 | RF-INV-004 | Una unidad física es un solo registro para siempre. Nunca se crea un segundo registro con la misma serie. | 4 | CA-028 |
@@ -402,6 +402,7 @@ Transiciones permitidas (el servidor rechaza cualquier otra):
 | RF-INV-016 | La constancia de entrega y devolución es un registro en el sistema (activo, serie, persona, fecha, estado en que se entrega, quién entrega) más un **acta imprimible en PDF** para firmar en papel. | 4 | CA-046 |
 | RF-INV-017 | La aceptación en pantalla del receptor y la subida del escaneo del acta quedan fuera de la v1. | 4 | CA-046 |
 | RF-INV-018 | Cada ingreso, asignación, traslado, reparación, baja, extravío y reingreso queda en el historial con fecha, usuario y motivo (cuando aplica). | 4 | CA-024 |
+| RF-INV-024 | **Una sola regla para estado, asignación y ubicación** [SUPUESTO S-29]: (a) la asignación termina únicamente cuando se registra una devolución, una baja o un extravío; (b) el responsable es la Persona de la asignación abierta, y solo hay una asignación abierta por activo; (c) el estado Asignado exige una asignación abierta; En stock no puede tenerla; (d) En reparación puede tener asignación abierta (la Persona sigue siendo responsable y al volver el activo regresa a Asignado) o no (si la Persona lo devolvió a TI antes de mandarlo a reparar, la asignación ya se cerró y al volver queda En stock); (e) Extraviado o robado y De baja cierran la asignación abierta, con la causa registrada; (f) todo activo tiene siempre una ubicación, distinta e independiente del responsable. | 4 | CA-025 |
 
 ### 11.4 Stock (control por cantidad)
 
@@ -430,6 +431,7 @@ Basado en D-013, D-014, D-015 y en la propuesta del Auditor de Cumplimiento (`do
 | RF-OC-007 | Cada orden puede indicar un centro de costo (opcional) [SUPUESTO S-23]. | 5 | CA-032 |
 | RF-OC-008 | Una orden en Borrador creada por un Solicitante lleva SKU y cantidades; el precio lo completa quien edita la orden [SUPUESTO S-15]. | 5 | CA-029 |
 | RF-OC-009 | "Emitida" solo cambia el estado; el sistema no envía correo al proveedor. Se ofrece una vista imprimible o PDF de la orden para enviarla a mano. | 5 | CA-029 |
+| RF-OC-043 | **Una orden no sale de Borrador si alguna línea tiene precio 0 o sin precio.** El precio 0 solo se acepta mientras es Borrador (por ejemplo, la solicitud de un Solicitante que aún no tiene precios). Así una orden sin precios, con total 0, nunca pasa por debajo del límite de aprobación sin revisión [SUPUESTO S-30]. | 5 | CA-032 |
 | RF-OC-042 | Cada orden puede llevar una **referencia externa** opcional (por ejemplo el número de documento de SAP). Es texto libre; no se valida contra ningún sistema externo [SUPUESTO S-24]. | 5 | CA-032 |
 | RF-OC-010 | Una orden Recibida o Cerrada no se edita; se corrige con una reversión de recepción (RF-OC-032) o un ajuste de inventario, que quedan en la auditoría. | 5 | CA-036 |
 
@@ -446,8 +448,8 @@ Anulada: solo antes de la primera recepción
 
 | Desde | Hacia | Quién puede | Condición o efecto |
 |---|---|---|---|
-| Borrador | Pendiente de aprobación | Quien la creó, o quien tenga permiso de editar | Tiene al menos una línea y la empresa exige aprobación para ese monto. |
-| Borrador | Aprobada | Automático | Cuando no se exige aprobación (sección 12.3). El estado Pendiente no aparece. |
+| Borrador | Pendiente de aprobación | Quien la creó, o quien tenga permiso de editar | Tiene al menos una línea, todas con precio mayor que 0 (RF-OC-043), y la empresa exige aprobación para ese monto. |
+| Borrador | Aprobada | Automático | Cuando no se exige aprobación (sección 12.3) y todas las líneas tienen precio mayor que 0. El estado Pendiente no aparece. |
 | Borrador | Anulada | Quien la creó o con permiso de anular | Motivo obligatorio. |
 | Pendiente de aprobación | Aprobada | Un aprobador distinto de quien la creó o editó | Se guarda quién aprobó y por qué monto. |
 | Pendiente de aprobación | Rechazada | Un aprobador distinto de quien la creó | Motivo obligatorio. Queda visible con el motivo. |
@@ -493,7 +495,7 @@ No existe ninguna otra transición. **Anulada** y **Cerrada** son estados finale
 | RF-OC-023 | Quien aprueba una orden no puede recibir la mercadería de esa misma orden. | 5 | CA-013 |
 | RF-OC-024 | Quien recibe la mercadería no puede haber creado ni aprobado esa orden. | 5 | CA-013 |
 | RF-OC-025 | Estas cuatro reglas las hace cumplir el sistema en el servidor y valen para todos los roles, incluido el Administrador. | 5 | CA-012 |
-| RF-OC-026 | **Excepción configurable por empresa**, desactivada por defecto, para empresas con una sola persona de TI. Solo un Administrador la puede activar. Mientras esté activa se muestra un aviso visible en cada orden en que se use, y cada uso queda en la auditoría (quién, cuándo, monto, orden). | 5 | CA-014 |
+| RF-OC-026 | **Excepción configurable por empresa**, desactivada por defecto, para empresas con una sola persona de TI. Hay un único ajuste por empresa, "Excepciones de separación de funciones", con una casilla por regla exceptuable (aprobar lo propio; recibir lo creado o aprobado). Ninguna pantalla ni módulo consulta el ajuste por su cuenta. Solo un Administrador puede cambiarlo, con segunda verificación reciente y motivo obligatorio; el Administrador de plataforma no puede activarlo por la empresa. Mientras esté activa se muestra un aviso visible en cada orden en que se use, y cada uso queda en la auditoría (quién, cuándo, monto, orden) (D-031). | 5 | CA-014 |
 | RF-OC-027 | Crear o editar proveedores es un permiso distinto del de crear órdenes. | 1 | CA-011 |
 | RF-OC-028 | Dar de baja un activo de valor con una segunda persona queda fuera de la v1; la baja con motivo obligatorio y la auditoría la cubren. Se revisa en la Etapa 7 (P-009). | 7 | CA-024 |
 
@@ -535,7 +537,7 @@ Creada -> Asignada -> En ejecución -> Cerrada
 | RF-OS-005 | La orden de servicio tiene número correlativo por empresa que nunca se repite. | 6 | CA-018 |
 | RF-OS-006 | Una orden puede cancelarse antes de cerrar. Una orden cerrada no se reabre: se crea una nueva. | 6 | CA-044 |
 | RF-OS-007 | Abrir o cerrar la orden no cambia el estado del activo. | 6 | CA-044 |
-| RF-OS-008 | La aprobación se exige solo si el servicio tiene costo. Una orden "tiene costo" cuando su costo estimado es mayor que cero, y usa el mismo límite y las mismas reglas de separación de funciones que las compras [SUPUESTO S-16]. | 6 | CA-044 |
+| RF-OS-008 | La aprobación de una orden de servicio sigue la regla única RN-017: no se aprueba si no tiene costo estimado; si lo tiene, necesita una segunda persona cuando supera el límite de la empresa, con las mismas reglas de separación de funciones que las compras [SUPUESTO S-16]. | 6 | CA-044 |
 | RF-OS-009 | Si el activo relacionado se da de baja, la orden abierta sigue su curso y muestra el aviso; no se cancela sola. | 6 | CA-044 |
 
 ## 15. Importación del Excel de inventario actual
@@ -567,10 +569,13 @@ Basado en D-018 y D-019. Etapa 1: se construye como mecanismo general para que t
 |---|---|---|---|
 | RF-AUD-001 | La auditoría **solo se agrega**: no se edita ni se borra desde la aplicación, ni siquiera por el Administrador. | 1 | CA-040 |
 | RF-AUD-002 | La auditoría se escribe en la misma operación que el cambio: si el cambio ocurre, la auditoría existe; si falla, no queda un cambio sin rastro. | 1 | CA-040 |
-| RF-AUD-003 | Cada entrada guarda: quién, cuándo, qué empresa, qué registro, qué acción, valor anterior y nuevo, motivo cuando aplique, y desde dónde (IP) si se puede. | 1 | CA-041 |
+| RF-AUD-003 | Cada entrada guarda: quién, cuándo, qué empresa, qué registro, qué acción, valor anterior y nuevo (excepto los campos personales, RF-AUD-014), motivo cuando aplique, y desde dónde (IP) si se puede. | 1 | CA-041 |
 | RF-AUD-004 | Se registran como mínimo: altas, cambios (con antes y después), aprobaciones, rechazos, anulaciones, bajas y asignaciones de usuarios, personas, roles y permisos, catálogos, SKU, activos, órdenes, recepciones y configuración de aprobaciones y montos. | 1 | CA-041 |
 | RF-AUD-005 | También se registran: inicios de sesión correctos y fallidos, invitaciones, cambios de empresa activa, importaciones, exportaciones, accesos del Administrador de plataforma, consultas a la clave completa de una licencia y **las consultas a la propia auditoría**. | 1 | CA-041 |
 | RF-AUD-006 | No guarda contraseñas, enlaces de acceso, claves de licencia ni más datos personales de los necesarios. | 1 | CA-042 |
+| RF-AUD-014 | Los datos personales (nombre, correo, área) viven solo en los registros de Persona y de Usuario. La auditoría y el historial de movimientos guardan únicamente el identificador interno de la persona. Cuando un cambio toca un dato personal, la auditoría registra **qué campo cambió** pero **no el valor anterior ni el nuevo** de nombre, correo o área (D-030). | 1 | CA-054 |
+| RF-AUD-015 | Anonimizar es sobrescribir los datos en el registro de Persona o de Usuario con una referencia ("Persona dada de baja 0042"); la auditoría no se toca y sigue legible. La anonimización queda como un evento más en la auditoría (D-030). | 7 | CA-054 |
+| RF-AUD-016 | Lo que en la auditoría pueda ser dato personal indirecto (como la dirección IP) se conserva solo hasta que venza el plazo de la auditoría. Al vencer, un proceso de mantenimiento separado de la aplicación (no un botón del administrador) archiva o elimina las entradas vencidas y deja constancia; es el único borrado permitido sobre la auditoría (D-030). | 7 | CA-054 |
 | RF-AUD-007 | Ven la auditoría el Administrador y Jefatura TI por defecto, con un permiso sensible separado que el administrador puede dar a otros roles. | 1 | CA-011 |
 | RF-AUD-008 | La auditoría es distinta del historial de §11: el historial dice qué pasó con un activo; la auditoría dice quién tocó qué. | 1 | CA-041 |
 | RF-AUD-009 | "Registro importante" significa todo lo listado en RF-AUD-004 y RF-AUD-005. | 1 | CA-041 |
@@ -636,7 +641,7 @@ Basado en D-024. **Todos los plazos son una propuesta provisoria hasta que legal
 | RF-DAT-002 | **Auditoría: 5 años.** **[ESCALAR AL CEO]** confirmar con legal (L2). | 7 | CA-040 |
 | RF-DAT-003 | **Datos personales de una persona o usuario dado de baja: 2 años; luego se anonimiza.** El nombre y el correo se reemplazan por una referencia como "Persona dada de baja 0042"; el historial de activos se conserva. **[ESCALAR AL CEO]** por ser irreversible (I1) y legal (L2). | 7 | CA-052 |
 | RF-DAT-004 | Archivos de importación: máximo 30 días. | 4 | CA-039 |
-| RF-DAT-005 | Respaldos: mismo plazo y mismas protecciones que los datos. Al restaurar un respaldo antiguo se vuelve a aplicar la anonimización pendiente (procedimiento a definir con DevOps). | 7 | CA-052 |
+| RF-DAT-005 | Respaldos (D-032, propuesta a confirmar con legal): diarios durante 30 días y uno mensual durante 12 meses; cifrados y sin mezclar empresas. Un dato anonimizado puede seguir en respaldos hasta 12 meses y se declara en el aviso de privacidad. Al restaurar cualquier respaldo, antes de abrir el sistema se vuelve a aplicar el registro de anonimizaciones (una lista aparte que guarda solo el identificador y la fecha). La auditoría de 5 años vive en el sistema, no en los respaldos. **[ESCALAR AL CEO]** plazo (L2) y costo (D2). | 7 | CA-054 |
 | RF-DAT-006 | Constancias de entrega y devolución: mientras exista el activo más el plazo de auditoría. | 4 | CA-046 |
 | RF-DAT-007 | Debe poder atenderse una solicitud de acceso, corrección o eliminación de datos personales: quién la recibe, en cuánto tiempo y qué se entrega. Se puede exportar y anonimizar a una persona sin romper el historial. **[ESCALAR AL CEO]** el procedimiento y los plazos los define legal (L5). | 7 | CA-052 |
 | RF-DAT-008 | Los datos personales no aparecen en mensajes de error ni en registros técnicos. | 1 | CA-039 |
@@ -688,6 +693,7 @@ Basado en D-021 y D-029.
 | RN-014 | Si dos personas editan el mismo registro a la vez, a la segunda se le avisa que el registro cambió y debe revisarlo antes de guardar; no gana el último en silencio [SUPUESTO S-18]. |
 | RN-015 | Un registro inactivo no se puede usar en registros nuevos, pero sigue visible en los antiguos. |
 | RN-016 | Los catálogos, las personas y los usuarios de una empresa no se comparten con otra. |
+| RN-017 | **Segunda persona por dinero (regla única para compras, servicios y cualquier módulo con costo).** Un documento con costo necesita la aprobación de una segunda persona cuando la empresa tiene la aprobación activada y su total con impuestos, en la moneda base, supera el monto límite de la empresa (con límite 0, cualquier total mayor que 0), o está en otra moneda. Un documento sin costo no se aprueba. Tener un costo mayor que cero no basta por sí solo para exigir aprobación. Los módulos citan esta regla; no definen otra [SUPUESTO S-30]. |
 
 ## 21. Criterios de aceptación
 
@@ -739,7 +745,7 @@ Formato: Dado... cuando... entonces... Parten de los criterios de QA (CA-01 a CA
 - **CA-012 · Quien crea o edita no aprueba** (RF-OC-021, 022, 025, RF-ROL-009). Dado un usuario con permiso de aprobar que creó o editó una orden, cuando intenta aprobarla o rechazarla, entonces el servidor lo rechaza, incluso si es Administrador.
 - **CA-013 · Quien recibe no creó ni aprobó** (RF-OC-023, 024). Dado una orden que aprobó el usuario X, cuando X intenta recibir esa mercadería, o quien la creó intenta recibirla, entonces se rechaza.
 - **CA-014 · Excepción auditada** (RF-OC-026). Dado una empresa de una sola persona de TI donde el Administrador activó la excepción, cuando esa persona aprueba su propia orden, entonces se acepta, la orden muestra un aviso visible y la auditoría registra quién, cuándo, monto y orden; con la excepción desactivada se rechaza.
-- **CA-032 · Datos de la orden** (RF-OC-002, 004 a 007, RF-SKU-010, 011, RF-CAT-005, RF-INV-023). Dado el formulario de orden, cuando se intenta guardar sin líneas, con cantidad 0 o negativa, con precio negativo, con el mismo SKU en dos líneas, con un SKU o proveedor inactivo, o con decimales en un SKU que no los admite, entonces se rechaza con mensaje por campo; el total y el impuesto se calculan con decimales exactos.
+- **CA-032 · Datos de la orden** (RF-OC-002, 004 a 007, RF-SKU-010, 011, RF-CAT-005, RF-INV-023). Dado el formulario de orden, cuando se intenta guardar sin líneas, con cantidad 0 o negativa, con precio negativo, o sacar de Borrador una orden con alguna línea en precio 0 (por ejemplo la solicitud de un Solicitante sin precios), con el mismo SKU en dos líneas, con un SKU o proveedor inactivo, o con decimales en un SKU que no los admite, entonces se rechaza con mensaje por campo; el total y el impuesto se calculan con decimales exactos.
 - **CA-033 · Recepción parcial y luego total** (RF-OC-029, 035, 036, 040). Dado una orden Emitida de 10 unidades de un SKU con serie, cuando se reciben 4 con 4 series y después las 6 restantes, entonces tras la primera hay 4 activos nuevos y la orden queda Recibida parcial con 6 pendientes; tras la segunda hay 10 activos sin duplicados y la orden pasa a Recibida total y a Cerrada.
 - **CA-034 · Recepción inválida: nada a medias** (RF-OC-030, 031, 033, 037, 038). Dado la misma orden con 4 recibidas, cuando se intenta recibir 7 (más de las 6 pendientes), o confirmar 4 con una lista de 3 series, o 4 series de las cuales una ya existe en el SKU, entonces la recepción completa se rechaza con un mensaje que dice el problema, no se crea ningún activo y los pendientes siguen en 6; con series incompletas se puede guardar como borrador y retomarlo.
 - **CA-035 · Doble clic y simultaneidad** (RF-OC-033, 034). Dado una recepción lista, cuando se hace doble clic en Confirmar, o dos personas confirman recepciones de la misma orden a la vez, entonces los activos se crean una sola vez y nunca se supera lo pendiente.
@@ -757,6 +763,7 @@ Formato: Dado... cuando... entonces... Parten de los criterios de QA (CA-01 a CA
 - **CA-041 · Qué se audita** (RF-AUD-003 a 005, 008, 009, RF-USR-007, RF-ROL-013). Dado un conjunto de acciones (alta de usuario, cambio de rol, aprobación, baja de activo, importación, exportación, cambio de empresa, inicio de sesión fallido, consulta a la auditoría), cuando se ejecutan, entonces cada una deja una entrada con quién, cuándo, empresa, qué cambió (antes y después) y motivo si aplica.
 - **CA-042 · Claves de licencia** (RF-SKU-014, RF-AUD-006). Dado una clave de licencia, cuando se consulta el activo, entonces se muestra enmascarada; verla completa exige el permiso aparte y esa consulta queda en la auditoría sin guardar la clave.
 - **CA-043 · Exportación** (RNF-006). Dado un rol sin permiso de exportar, cuando intenta exportar una lista por el botón o por petición directa, entonces se rechaza; con permiso se exporta y queda en la auditoría; las celdas con `=` se exportan como texto.
+- **CA-054 · Anonimizar sin tocar la auditoría** (RF-AUD-014 a 016, RF-DAT-003, 005). Dado una Persona con asignaciones y cambios en la auditoría, cuando se la anonimiza, entonces su registro muestra "Persona dada de baja 0042", la auditoría sigue completa y sin nombres ni correos, la anonimización queda como un evento, y al restaurar un respaldo antiguo nadie anonimizado reaparece.
 - **CA-045 · Nada con historial se borra** (RF-AUD-011, RN-007). Dado un SKU, activo, orden, persona, usuario o valor de catálogo con historial, cuando se intenta eliminar, entonces solo se permite desactivar, anular o dar de baja con motivo; un borrador que nunca tuvo efecto sí se puede borrar.
 
 **Servicios, búsqueda y uso**
@@ -805,7 +812,7 @@ Los propone el Analista con recomendación; los confirma o cambia el Gerente de 
 | S-13 | Revertir una recepción reabre la orden al estado que corresponde (Recibida parcial o Emitida); es la única salida de Cerrada. | RF-OC-032 |
 | S-14 | El monto que se compara con el límite de aprobación es el total con impuestos. | RF-OC-017 |
 | S-15 | El Solicitante no ve precios; crea la orden con SKU y cantidades y quien la edita completa los precios. | Sección 7.3, RF-OC-008 |
-| S-16 | Una orden de servicio "tiene costo" cuando su costo estimado es mayor que cero; usa el mismo límite y las mismas reglas de separación de funciones que las compras. | RF-OS-008 |
+| S-16 | Una orden de servicio sin costo estimado no se aprueba; con costo se aplica la regla única RN-017 (mismo límite y mismas reglas de separación de funciones que las compras). | RF-OS-008, RN-017 |
 | S-17 | Tope de importación: 5.000 filas y 10 MB por archivo, 10 importaciones por día por empresa. | RF-IMP-009 |
 | S-18 | Edición simultánea: se avisa a quien guarda segundo; no gana el último en silencio. | RN-014 |
 | S-19 | Rendimiento objetivo: con 100.000 activos, 95 % de listas y búsquedas en menos de 2 segundos; recepción de 100 series en menos de 5 segundos. | RNF-011 |
@@ -818,6 +825,9 @@ Los propone el Analista con recomendación; los confirma o cambia el Gerente de 
 | S-26 | El SKU puede tener un stock mínimo opcional; en la v1 es solo un dato, sin avisos ni bloqueos. | RF-SKU-016 |
 | S-27 | Los módulos adicionales pueden agregar filas a la matriz de permisos y, con visto bueno del Gerente de TI, plantillas de rol propias (por ejemplo "Empleado (portal)" de alcance propio, para el portal de autoservicio de la fase 3). El núcleo de la v1 mantiene 6 plantillas. | Sección 7.3, sección 27 |
 | S-28 | La auditoría guarda el tipo de autor ("usuario" o "integración"); en la v1 siempre es usuario. | RF-AUD-013 |
+| S-31 | Una sola puerta para pedir ayuda: un botón "Pedir ayuda". En la v1 crea la orden de servicio en estado Creada; en la fase 2 abre el catálogo de casos de la mesa de ayuda y la orden de servicio la crea el técnico desde el caso. Pedido por el diseñador. | Glosario, RF-OS-001 |
+| S-30 | Regla única de segunda persona por dinero (RN-017) y precio mayor que 0 para salir de Borrador (RF-OC-043). Pedido por QA (H-QA-01 y H-QA-09). | RN-017, RF-OC-043 |
+| S-29 | Regla única de estado, asignación y ubicación: la asignación solo termina con devolución, baja o extravío; En reparación puede conservar la asignación abierta; Asignado exige asignación abierta; la ubicación es independiente. Pedido por el ingeniero de datos (garantías S-GAR-05 y entregas ENT). | RF-INV-024 |
 
 ## 24. Escalado al Cliente (CEO)
 
@@ -879,9 +889,9 @@ Resumen por módulo:
 
 ## 27. Módulos adicionales (fases 2 y 3)
 
-Seis escuadrones escriben en paralelo los módulos que se suman al núcleo. Fase 2 = viene después de la versión 1 (entran con el núcleo estable); fase 3 = más adelante. La fase que declara cada archivo de `docs/modulos/` manda sobre este índice; el índice se alineó con ellos el 2026-10-25 (cmdb-ligera, gestión de cambios, gestión de problemas y portal de autoservicio dicen "después de la v1" sin número de fase; se dejan en 3 como propuesta). Este índice solo enumera los módulos y no repite su contenido.
+Seis escuadrones escriben en paralelo los módulos que se suman al núcleo. Palabras: **Etapa** (0 a 7) es solo del núcleo de la v1; **Fase** (2 o 3) es lo que viene después de la v1. Fase 2 = entra con el núcleo estable; fase 3 = más adelante. La columna "Cuándo" usa solo una de las dos palabras. La fase que declara cada archivo de `docs/modulos/` manda sobre este índice; el índice se alineó con ellos el 2026-10-25 (cmdb-ligera, gestión de cambios, gestión de problemas y portal de autoservicio dicen "después de la v1" sin número de fase; se dejan en 3 como propuesta). Este índice solo enumera los módulos y no repite su contenido.
 
-| Módulo | Fase | Documento |
+| Módulo | Cuándo | Documento |
 |---|---|---|
 | Proveedores y contratos | 2 | ver docs/modulos/proveedores-contratos.md |
 | Garantías y mantenimiento | 2 | ver docs/modulos/garantias-mantenimiento.md |
@@ -890,16 +900,16 @@ Seis escuadrones escriben en paralelo los módulos que se suman al núcleo. Fase
 | Dominios y certificados | 2 | ver docs/modulos/dominios-certificados.md |
 | Mesa de ayuda | 2 | ver docs/modulos/mesa-de-ayuda.md |
 | Notificaciones | 2 | ver docs/modulos/notificaciones.md |
-| Personas y ubicaciones | Etapa 2 de la v1 (el módulo amplía lo mínimo del núcleo) | ver docs/modulos/personas-ubicaciones.md |
+| Personas y ubicaciones | Etapa 2 (v1; el módulo amplía lo mínimo del núcleo) | ver docs/modulos/personas-ubicaciones.md |
 | Entregas y devoluciones | 2 | ver docs/modulos/entregas-devoluciones.md |
 | Onboarding y offboarding | 2 | ver docs/modulos/onboarding-offboarding.md |
 | Portal de autoservicio | 3 | ver docs/modulos/portal-autoservicio.md |
 | Gestión de cambios | 3 | ver docs/modulos/gestion-cambios.md |
 | Gestión de problemas | 3 | ver docs/modulos/gestion-problemas.md |
 | CMDB ligera | 3 | ver docs/modulos/cmdb-ligera.md |
-| Presupuesto y costos | 2 (después de la Etapa 5, en dos entregas) | ver docs/modulos/presupuesto-costos.md |
-| Reportes y tableros | 2 (en tres partes, desde después de la Etapa 4) | ver docs/modulos/reportes-tableros.md |
-| Integraciones y API | 2 (por partes, desde después de la Etapa 4) | ver docs/modulos/integraciones-api.md |
+| Presupuesto y costos | Fase 2 (después de la Etapa 5, en dos entregas) | ver docs/modulos/presupuesto-costos.md |
+| Reportes y tableros | Fase 2 (en tres partes, desde después de la Etapa 4) | ver docs/modulos/reportes-tableros.md |
+| Integraciones y API | Fase 2 (por partes, desde después de la Etapa 4) | ver docs/modulos/integraciones-api.md |
 
 Cruces con el núcleo, para que los escuadrones no dupliquen reglas:
 - **Personas y ubicaciones** amplía el directorio de Personas (sección 8) y las ubicaciones (RF-CAT-006); el núcleo solo trae lo mínimo.
