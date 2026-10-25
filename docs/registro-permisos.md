@@ -60,7 +60,7 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-02 | `plataforma.rescatar_empresa` | Rescatar una empresa sin administrador (dos personas de plataforma, espera de 24 horas, contacto autorizado) | S | todo | 2F R A No | v1 E1 | T |
 | PS-03 | `plataforma.soporte_leer` | Ver, solo lectura, datos de una empresa autorizada por ella, hasta 24 horas, con banner visible | S | todo | 2F R A | v1 E1 | T |
 | PS-04 | `plataforma.limites_ajustar` | Subir por un periodo corto los topes de una empresa (invitaciones, importación inicial) | S | todo | 2F A | v1 E1 | T |
-| PS-05 | `plataforma.acceso_emergencia` | Emitir un acceso excepcional de un solo uso si el correo falla, tras verificar la identidad por otro medio | S | todo | 2F R A | v1 E1 | T |
+| PS-05 | `plataforma.acceso_emergencia` | Emitir un acceso excepcional de un solo uso si el correo falla, tras verificar la identidad por otro medio; exige a una segunda persona de plataforma o al contacto autorizado de la empresa [SUPUESTO S-34] | S | todo | 2F R A No | v1 E1 | T |
 | PS-06 | `plataforma.correo_administrar` | Ver y cambiar el estado global del correo y del proveedor de envío | S | todo | 2F A | v1 E1 | T |
 
 ## 4. Empresa, accesos, auditoría y datos (todas las empresas)
@@ -83,7 +83,8 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-20 | `datos.exportar` | Exportar listas a Excel por la puerta única (motivo, tope, hoja "Aviso") | S | todo | 2F R A T | v1 E2 | T | - | - | - | - | - | - |
 | PS-21 | `datos.importar` | Importar datos por el asistente único (todo o nada) | S | todo | 2F R A | v1 E4 | T | - | - | - | - | - | - |
 | PS-22 | `datos_personales.ver` | Ver nombre, correo y datos de contacto de las Personas; sin él se ve la referencia (`PRS-0042`) | S | todo | 2F A | v1 E2 | T | T | T | - | - | - | - |
-| PS-23 | `precios.ver` | Ver precios, totales y costos. Técnico y Solicitante, solo en las órdenes que ellos crean o editan | S | todo o propio | 2F | v1 E5 | T | T | P | - | P | - | - |
+| PS-23 | `precios.ver` | Ver precios, totales y costos de toda la empresa | S | todo | 2F | v1 E5 | T | T | - | - | - | - | - |
+| PS-230 | `precios.ver_propios` | Ver precios y totales **solo** de las órdenes que la persona creó o editó (Técnico y Solicitante). No es sensible: no exige segunda verificación (D-037 fila 10) | | propio | | v1 E5 | - | - | P | - | P | - | - |
 
 ## 5. Personas, estructura y proveedores (núcleo)
 
@@ -381,6 +382,8 @@ Los nombres de **eventos** que aparecen en los módulos (por ejemplo `acceso.inv
 
 ## 16. Pendientes del registro
 
+- **Clasificación de sensibles (H-SEG-29 y 30 de Seguridad):** PS-08 (cambia el monto límite), PS-68 (revertir recepción), PS-135 (webhooks) y las aprobaciones (PS-63, 73, 76, 114, 172, 173) hoy no son sensibles. Convertirlos en sensibles pondría la segunda verificación a Jefatura TI en casi todo; lo decide el Gerente de TI. Mientras tanto quedan como están.
+- **PS-23 y PS-230:** `precios.ver` es solo para todo y sensible; lo propio (Técnico y Solicitante) pasó a `precios.ver_propios` (PS-230), no sensible.
 - Los valores de las celdas de los módulos de Fase 2 y 3 son una propuesta mía (supuesto S-22 del documento funcional) hasta que cada escuadrón confirme las suyas; se resuelven en la revisión del Auditor Técnico (plan de correcciones, sección 4).
 - El nombre técnico definitivo de cada fila lo fija el Arquitecto en el catálogo del código; este registro fija el nombre funcional y el identificador PS-nn.
 - Si un módulo necesita una fila nueva durante su corrección, la pide por el mecanismo de la sección 14.

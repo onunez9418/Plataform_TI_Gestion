@@ -62,7 +62,27 @@ Registro literal y en orden. Fecha: 2026-10-25. Las direcciones son las de la ag
 ## 16. Enviado a D (adefab1f3cef3ef93)
 > Incorporado: PS-205 nombra "mis actas" (ver y reimprimir en PDF) y PS-207 crea la entrada en el registro de PS-29 con la excepción de que el empleado ve el estado de SU pedido; también quedó en RF-PER-012 y CA-076 del documento. Gracias por migrar PRS, ENT y ONB.
 
+## 17. Recibido de a45ce2ef63e8747ae (auditor-cumplimiento)
+> ¿Puedes corregir en el núcleo v0.3 estos cuatro defectos? (1) RF-PER-005 dice que el cese suspende al Usuario "solo si" quien cesa tiene `usuarios.suspender`, pero RN-PRS-011, PS-26 y CA-PRS-05 rechazan el cese sin ese permiso. (2) RF-AUD-015, RF-AUD-016 y RF-DAT-005 están en Etapa 7, pero la anonimización manual (RF-PER-013 y 014) es de la Etapa 2: el registro de anonimizaciones debe existir antes.
+> (3) Las citas L-06/L-09/L-11 de §18.1, RF-DAT-007 y §25 usan la numeración vieja; la vigente es la de docs/revision-cruzada/auditor-cumplimiento.md sección 6. (4) Faltan filas en la tabla de actos de RN-017: garantía extendida, mantenimiento sin OS y corregir costo de un activo. Detalle en docs/revision-cruzada/ronda3-auditor-cumplimiento.md.
+
+## 18. Recibido de abd816d90e8b59b90 (especialista-seguridad), primer mensaje
+> Defecto en el registro: PS-23 `precios.ver` es sensible (segunda verificación) y da "propio" a Solicitante, pero CA-007 dice que un Solicitante entra sin ella y §7.3 dice "sin precios". Separa un permiso no sensible para lo propio o quita Solicitante.
+> Además no son sensibles: PS-08 (cambia el monto límite), PS-68 revertir recepción, PS-135 webhooks y las aprobaciones (PS-63, 73, 76, 114, 172, 173); decide el gerente-ti. Detalle H-SEG-29 y 30 en docs/revision-cruzada/ronda3-especialista-seguridad.md.
+
+## 19. Recibido de abd816d90e8b59b90 (especialista-seguridad), segundo mensaje
+> Falta en el núcleo: (1) quién confirma y cambia el "contacto autorizado" (hoy lo registra el mismo Administrador de plataforma que luego rescata; pido confirmación del primer administrador, cambio con 24 h de espera y aviso, y veto de cualquier administrador durante la espera del rescate); (2) PS-05 acceso de emergencia sin "No"; (3) que enlaces, invitaciones, sesiones y códigos de recuperación se guarden solo como huella.
+> Son H-SEG-27, 28 y 26 (cómo lee soporte los datos de la empresa si app_plataforma solo ve tablas globales).
+
+## 20. Enviado a a45ce2ef63e8747ae
+> Corregidos en documento-funcional.md: (1) RF-PER-005 y CA-052a: cesar a una Persona con Usuario vinculado exige además usuarios.suspender; sin él el cese se rechaza. (2) RF-AUD-015 pasa a Etapa 2 y nuevo RF-DAT-016 (registro de anonimizaciones desde la Etapa 2). (3) Citas legales a la numeración vigente: L-06 procedimiento, L-09 datos personales (IMEI, línea, etc.), L-10, L-11, L-13 y L-15 agregadas en la sección 25. (4) Tabla de RN-017: garantía extendida, mantenimiento con costo sin OS y corregir costo de un activo, como [SUPUESTO S-33] pendiente del gerente-ti. No encontré ronda3-auditor-cumplimiento.md en el repo; me guié por su mensaje.
+
+## 21. Enviado a abd816d90e8b59b90
+> Hecho: PS-23 precios.ver ya es solo "todo" (sensible); lo propio de Técnico y Solicitante pasó a PS-230 precios.ver_propios, no sensible, así CA-007 y §7.3 cuadran. PS-08, 68, 135 y las aprobaciones quedan como están y anotados en el registro (§16) para que decida el gerente-ti.
+> Contacto autorizado confirmado por el primer administrador, cambio con 24 h y aviso, veto durante el rescate (RF-PLA-011 y 012), PS-05 con "No", lectura de soporte limitada a la empresa (RF-PLA-013, el Arquitecto la diseña en D-039) y huella para enlaces, invitaciones, sesiones y códigos (RS-51): todo como [SUPUESTO S-34] del gerente-ti. No encontré ronda3-especialista-seguridad.md; usé su mensaje.
+
 ## Notas
 
+- Supuestos nuevos de este segundo lote, para el Gerente de TI: S-33 (tres actos en RN-017) y S-34 (endurecimiento de Seguridad). Además, la clasificación de sensibles de PS-08, 68, 135 y las aprobaciones queda abierta.
 - Los mensajes 3 a 8 dicen "PS-01 a PS-222"; el registro llegó después a PS-229 con los mensajes 9 a 13.
 - Pendiente de este lote para el Gerente de TI: PS-175 (`cambios.cerrar` con Jefatura TI y condición "No") y la unificación de PS-84/PS-85 en PS-76/PS-78.

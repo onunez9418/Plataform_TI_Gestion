@@ -217,6 +217,9 @@ Basado en D-003, D-039, D-044.8, D-048, D-037 fila 12. Etapa 1.
 | RF-PLA-008 | No puede activar en nombre de una empresa el interruptor único de excepciones. | v1, Etapa 5 | CA-070 |
 | RF-PLA-009 | **Acceso de emergencia (PS-05):** si el correo falla, emite un acceso excepcional de un solo uso a un administrador de empresa, tras verificar su identidad por otro medio, con segunda verificación aún exigida y todo auditado. No se agregan contraseñas. | v1, Etapa 1 | CA-015c |
 | RF-PLA-010 | Puede subir por un periodo corto los topes de una empresa (invitaciones, carga inicial) (PS-04). | v1, Etapa 1 | CA-067 |
+| RF-PLA-011 | **Contacto autorizado [SUPUESTO S-34]:** lo registra el Administrador de plataforma al crear la empresa y lo **confirma el primer administrador** al entrar. Cambiarlo lo hace un administrador de la empresa, con **espera de 24 horas** y aviso por correo a todos los administradores. | v1, Etapa 1 | CA-015c |
+| RF-PLA-012 | **Veto durante el rescate [SUPUESTO S-34]:** durante la espera de 24 horas de un rescate, cualquier administrador activo de la empresa puede vetarlo; el rescate se detiene y queda en el registro de plataforma. | v1, Etapa 1 | CA-015c |
+| RF-PLA-013 | **Cómo lee soporte los datos [SUPUESTO S-34]:** la sesión de soporte usa una lectura de solo lectura limitada a la empresa autorizada y al tiempo autorizado (el rol de plataforma por sí solo ve únicamente tablas globales). El diseño técnico lo fija el Arquitecto al actualizar D-039. | v1, Etapa 1 | CA-015b |
 
 ### 6.1 Datos de la empresa
 
@@ -253,7 +256,7 @@ Basado en D-004 (reescrita), D-036, D-037, D-048. Etapa 1.
 | RF-ROL-002 | Hay **siete plantillas** de rol (Administrador, Jefatura TI, Técnico, Almacén, Solicitante, Solo lectura y Empleado (portal)). Se copian al crear la empresa; cada empresa edita su copia sin afectar a las demás. "Empleado (portal)" es de lista cerrada y alcance propio; en la v1 no hay portal. | v1, Etapa 1 | CA-047 |
 | RF-ROL-003 | Cada permiso tiene un alcance: "todo" o "propio". Qué es "propio" lo define un resolvedor por tipo de recurso (registro de permisos, sección 2). Quien tiene alcance "propio" y no tiene Persona vinculada ve una lista vacía, nunca un error. No hay restricción por sede en la v1. | v1, Etapa 1 | CA-011b |
 | RF-ROL-004 | **Existe un registro único de permisos** (`docs/registro-permisos.md`) con PS-nn, nombre técnico `modulo.accion`, nombre en español, módulo, sensible, alcance, controles (reautenticación, segunda verificación, auditoría, tope, no sobre lo propio) y valor por defecto por rol. Los módulos agregan filas, no cambian celdas del núcleo. Fuera del registro no hay permiso. | v1, Etapa 1 | CA-011a |
-| RF-ROL-005 | Los permisos globales sensibles son uno solo de cada uno: ver datos personales (`datos_personales.ver`), ver precios (`precios.ver`), ver auditoría (`auditoria.ver`), **exportar (`datos.exportar`)** e **importar (`datos.importar`)**, más administrar roles y usuarios y los demás marcados "S" en el registro. Importar y exportar vienen activados solo para el Administrador. Solo lectura no ve precios ni datos personales (ve la referencia `PRS-0042`). | v1, Etapa 1 | CA-011b |
+| RF-ROL-005 | Los permisos globales sensibles son uno solo de cada uno: ver datos personales (`datos_personales.ver`), ver precios de toda la empresa (`precios.ver`; los precios de lo propio, que ven Técnico y Solicitante, son `precios.ver_propios` y no son sensibles), ver auditoría (`auditoria.ver`), **exportar (`datos.exportar`)** e **importar (`datos.importar`)**, más administrar roles y usuarios y los demás marcados "S" en el registro. Importar y exportar vienen activados solo para el Administrador. Solo lectura no ve precios ni datos personales (ve la referencia `PRS-0042`). | v1, Etapa 1 | CA-011b |
 | RF-ROL-006 | Todo rol nuevo parte sin ningún permiso. | v1, Etapa 1 | CA-047 |
 | RF-ROL-007 | Nadie puede darse permisos a sí mismo, ni crear o asignar un rol con más permisos de los que tiene. Los cambios del rol propio los hace otro administrador. | v1, Etapa 1 | CA-010 |
 | RF-ROL-008 | La empresa siempre tiene al menos un administrador activo (quien tiene administrar roles y cambiar el rol de usuarios). El sistema impide quitar, suspender o bajar de rol al último, aunque cambie de rol. | v1, Etapa 1 | CA-009 |
@@ -267,7 +270,7 @@ Basado en D-004 (reescrita), D-036, D-037, D-048. Etapa 1.
 
 ### 7.3 Resumen por rol y celdas resueltas
 
-La matriz completa módulo × acción × rol **no se repite aquí**: es el registro `docs/registro-permisos.md` (PS-01 a PS-229). Resumen:
+La matriz completa módulo × acción × rol **no se repite aquí**: es el registro `docs/registro-permisos.md` (PS-01 a PS-230). Resumen:
 
 | Rol | En resumen |
 |---|---|
@@ -689,6 +692,7 @@ Reúne los requisitos del Especialista en Seguridad. Donde ya están escritos co
 | RS-47 | **PDF** de actas y órdenes con una librería que no interpreta HTML ni descarga recursos; todo texto se escapa; prueba con texto malicioso en cada campo. | CA-078 |
 | RS-48 | **Anti-SSRF, claves y webhooks** (cuando existan, Fase 3): el secreto del webhook se guarda cifrado y se muestra una vez; las claves de API se guardan como huella de alta entropía con identificador público propio; envío desde un componente aislado, solo puerto 443, sin redirecciones, con resolución de DNS fijada. | `integraciones-api.md`, D-047 |
 | RS-49 | **Restauración:** al restaurar y antes de abrir el sistema se reaplican las anonimizaciones, se revocan todas las sesiones y enlaces, se rotan las claves de API y se reaplican suspensiones, bajas y cambios de rol posteriores al respaldo. | D-052.4 |
+| RS-51 | **Solo huella [SUPUESTO S-34]:** los enlaces de ingreso, las invitaciones, las sesiones y los códigos de recuperación se guardan **solo como huella**, nunca en claro; el valor se muestra una sola vez. | H-SEG-26 |
 | RS-50 | **Roles de base de datos:** `app_empresa` (sin ser dueño, sin saltarse las reglas por fila), `app_plataforma` (solo tablas globales), `migraciones`, `mantenimiento` y `lector_auditoria`. Las pruebas de aislamiento corren con `app_empresa`. | D-039.3 |
 
 ## 18. Datos personales y retención
@@ -1047,6 +1051,7 @@ D-057 resolvió los 31 supuestos de la v0.2. Los resultados:
 | ID | Supuesto | Dónde aplica |
 |---|---|---|
 | S-32 | La orden de compra lleva un número de versión que sube con cada reaprobación, para que las integraciones distingan alta, cambio y anulación (pedido por presupuesto e integraciones). | RF-OC-044 |
+| S-34 | Endurecimiento pedido por Seguridad (H-SEG-26, 27, 28): contacto autorizado confirmado por el primer administrador y con cambio de 24 horas y aviso; veto de cualquier administrador durante el rescate; acceso de emergencia con segunda persona; soporte con lectura limitada a la empresa autorizada; enlaces, invitaciones, sesiones y códigos de recuperación guardados solo como huella. | RF-PLA-011 a 013, RS-51, PS-05 |
 | S-33 | Tres actos de dinero se suman a la tabla de RN-017: garantía extendida con costo, mantenimiento con costo sin orden de servicio, y corregir el costo de un activo (segunda persona si el costo, con impuesto y en moneda base, supera el límite). Pedido por el Auditor de Cumplimiento. | RN-017 |
 
 ## 25. Escalado al Cliente (CEO)
