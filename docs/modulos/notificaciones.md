@@ -65,16 +65,16 @@ Cada empresa puede dar los permisos sensibles a otros roles. Los destinatarios d
 | RF-NOT-001 | Existe un **catálogo único de eventos** `<módulo>.<entidad>_<hecho>`, mantenido por desarrollo y acordado con `integraciones-api`. Cada evento declara: módulo, grupo, si es obligatorio, si se resume, destinatarios, variables permitidas y si puede avisar a Personas sin usuario. | v1, Etapa 1 | CA-NOT-12 |
 | RF-NOT-002 | Todo evento se escribe en la tabla única de eventos con identificador único; el mismo identificador avisa una sola vez. | v1, Etapa 1 | CA-NOT-12 |
 | RF-NOT-003 | Los destinatarios se calculan al emitir el evento: miembro activo de la empresa del evento, con permiso para ver el objeto. | v1, Etapa 1 | CA-NOT-03, CA-NOT-13 |
-| RF-NOT-004 | Quien provoca el evento no recibe aviso de su propia acción, salvo los eventos que declaran lo contrario (p. ej. la confirmación del caso a quien lo pidió). | Fase 2 | CA-NOT-01 |
+| RF-NOT-004 | Quien provoca el evento no recibe aviso de su propia acción, salvo los eventos que declaran lo contrario (p. ej. la confirmación del caso a quien lo pidió). | v1, Etapa 5 | CA-NOT-01, CA-NOT-20 |
 | RF-NOT-005 | Canal "En la plataforma": campana con contador de no leídas, lista paginada, marcar leída (una o todas), archivar y abrir el objeto con un clic. | Fase 2 | CA-NOT-02 |
 | RF-NOT-006 | La bandeja muestra la empresa activa; el contador de otras empresas del usuario sale de una tabla resumen por usuario, sin contenido, nunca de recorrer empresas. | Fase 2 | CA-NOT-02 |
-| RF-NOT-007 | Canal "Correo": va al correo verificado del usuario con contenido mínimo y un enlace que exige iniciar sesión. Por defecto sin texto de comentarios. | v1, Etapa 1 | CA-NOT-05 |
+| RF-NOT-007 | Canal "Correo": va al correo verificado del usuario con contenido mínimo y un enlace que exige iniciar sesión. Por defecto sin texto de comentarios. | v1, Etapa 1 | CA-NOT-20, CA-NOT-05 (Fase 2) |
 | RF-NOT-008 | Cada usuario elige por grupo y canal: activado o apagado; en correo además inmediato, resumen diario o semanal. | Fase 2 | CA-NOT-06 |
 | RF-NOT-009 | El administrador fija los valores iniciales de la empresa; el usuario los cambia salvo en mensajes obligatorios. | Fase 2 | CA-NOT-06 |
 | RF-NOT-010 | Un usuario no puede activar avisos de eventos cuyo objeto no podría ver. | Fase 2 | CA-NOT-13 |
 | RF-NOT-011 | Resumen diario a la hora única de la empresa (08:00 por defecto) y semanal los lunes; no se envía si no hay avisos. | Fase 2 | CA-NOT-07 |
 | RF-NOT-012 | Un resumen lista hasta 50 avisos por grupo; el resto como "y N más" con enlace a la bandeja. | Fase 2 | CA-NOT-07 |
-| RF-NOT-013 | Los eventos marcados "no se resume" (seguridad, caso P1, plazo vencido, aprobación pendiente) salen de inmediato si el correo del grupo está activado. | v1, Etapa 1 | CA-NOT-07 |
+| RF-NOT-013 | Los eventos marcados "no se resume" (seguridad, caso P1, plazo vencido, aprobación pendiente) salen de inmediato si el correo del grupo está activado. | v1, Etapa 1 | CA-NOT-01, CA-NOT-20 (v1); CA-NOT-07 (Fase 2) |
 | RF-NOT-014 | Varios avisos del mismo tipo sobre el mismo objeto en menos de 5 minutos se agrupan en uno. | Fase 2 | CA-NOT-07 |
 | RF-NOT-015 | Hay una plantilla base por evento y canal, en español y tratando de "usted", mantenida por la plataforma. | v1, Etapa 1 | CA-NOT-11 |
 | RF-NOT-016 | El administrador con PS-215 personaliza asunto y párrafo inicial de las plantillas no obligatorias. | Fase 2 | CA-NOT-11, CA-NOT-16 |
@@ -272,6 +272,9 @@ No hay otras transiciones. Finales: Entregado, Rebotado, Omitido, Fallido (hasta
 | CA-NOT-17 | **Dado** el Administrador de plataforma, **cuando** consulta la consola de correo, **entonces** ve estado y totales por empresa, nunca destinatarios ni textos; la base se lo impide con su rol (D-039). | RF-028 |
 | CA-NOT-18 | **Dado** una invitación a un correo que ya tiene cuenta, **cuando** se envía, **entonces** el texto es el mismo fijo, no dice que la cuenta existe, la empresa se suma solo al aceptar y la persona recibe el aviso `acceso.empresa_sumada`. | RF-033 |
 | CA-NOT-19 | **Dado** un comentario interno de un caso, **cuando** se notifica a la Persona atendida, **entonces** el aviso no contiene ni referencia su texto. | RN-003, 006 |
+| CA-NOT-20 | **Dado** una orden de compra `OC-000042` creada por Ana y decidida por Luis, **cuando** Luis la aprueba (o la rechaza con motivo), **entonces** Ana recibe de inmediato `compras.orden_aprobada` (o `compras.orden_rechazada`) por correo, con asunto "[Empresa Norte] ...", solo código, tipo de aviso, fecha y empresa (sin importes ni proveedor; el motivo se lee dentro de la plataforma), Luis no recibe aviso y queda un registro de envío por correo. | RF-004, 007, 013, 033; RN-003, 005; RF-ACC-021 |
+
+**Cuándo corre cada criterio** (QA los ejecuta desde la etapa indicada): **v1, Etapa 1:** CA-NOT-03, 10, 12, 13, 14, 15, 17, 18, 19 y 08 y 09 en lo que toca al correo y a los límites. **v1, Etapa 5** (cuando existen las órdenes de compra): CA-NOT-01 y CA-NOT-20. **Fase 2, ola A:** CA-NOT-02, 04, 05, 06, 07, 11, 16 y la parte de bandeja, exportación y enmascarado de CA-NOT-08 y 09. CA-NOT-05 necesita un evento que avise a una Persona sin usuario; ninguno existe en la v1, por eso corre en Fase 2 con los eventos de entregas y altas.
 
 ## 11. Casos límite
 
@@ -338,5 +341,6 @@ Resultado según D-057 y D-058: **Confirmado**, **Cambiado** o **Retirado**.
 | Archivar la bandeja significa fuera de la vista con el mismo plazo de retención | H-CUM-09 (D-061.3) |
 | Registros técnicos sin correos completos; SPF, DKIM y DMARC por DevOps | T-14; D-054.4 |
 | Supuestos con resultado (NOT-S04 cambiado, NOT-S07 provisional, NOT-S08 solo Fase 2); escalados `E-NOT-01` y `E-NOT-02` (antes NOT-E01 y NOT-E02); pantallas `PAN-NOT-nn` | D-057; D-058; D-049.4; H-AUD-22 |
+| Nuevo CA-NOT-20 (aviso de aprobación o rechazo al creador, v1); se agrega la lista de qué CA corre desde la Etapa 1, la Etapa 5 y la Fase 2; RF-NOT-007, 013 y 004 citan CA de la v1 | Revisión del plan de pruebas; RF-ACC-021; D-013.10 |
 | Nuevos CA: dos empresas en el proceso programado con reloj fijado, escritura con referencias cruzadas, permiso denegado, plataforma sin contenido | D-039.6; D-063.6; H-SEG-02; H-QA-12 |
 | Se retiran de 0.1: el contador "de otras empresas" calculado por consulta conjunta, el motor de avisos sin hora única y "las consultas al registro no se auditan" | H-QA-18; H-AUD-19; H-CUM-13 |

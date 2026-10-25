@@ -104,7 +104,7 @@ Columnas: **Cuándo** = `v1, Etapa 4` / `v1, Etapa 5` (GAR-A) o `Fase 2` (GAR-B)
 |---|---|
 | RN-GAR-001 | Garantía, reclamo y mantenimiento aplican solo a activos con serie de naturaleza "equipo físico" (D-045). |
 | RN-GAR-002 | El fin no es anterior al inicio. |
-| RN-GAR-003 | Con meses, fin = inicio más esos meses menos un día; si el día no existe en el mes final, el último día de ese mes. El cálculo vive en el núcleo (D-060.8). |
+| RN-GAR-003 | Con meses, fin = (inicio menos 1 día) más esos meses; si el día resultante no existe en el mes final, el último día de ese mes. Se resta el día primero (31/01 más 1 mes da 28/02, o 29/02 en bisiesto). El cálculo vive en el núcleo (D-060.8). |
 | RN-GAR-004 | La garantía vale hasta el final del día de su fin, en la zona de la empresa; "hoy" sale de `hoyEnEmpresa()`. |
 | RN-GAR-005 | El inicio de la garantía del fabricante es la fecha de compra del activo, salvo otra indicada con motivo. |
 | RN-GAR-006 | Varias garantías pueden superponerse; la efectiva es la vigente con fin más lejano. |

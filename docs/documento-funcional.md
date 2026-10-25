@@ -1051,6 +1051,7 @@ D-057 resolvió los 31 supuestos de la v0.2. Los resultados:
 | ID | Supuesto | Dónde aplica |
 |---|---|---|
 | S-32 | La orden de compra lleva un número de versión que sube con cada reaprobación, para que las integraciones distingan alta, cambio y anulación (pedido por presupuesto e integraciones). | RF-OC-044 |
+| S-35 | El fin de garantía es la fecha de compra más los meses, menos un día (14/01/2028 para una compra del 15/01/2026 con 24 meses), como en el módulo de garantías. Pedido por QA. | RF-INV-008, CA-082b |
 | S-34 | Endurecimiento pedido por Seguridad (H-SEG-26, 27, 28): contacto autorizado confirmado por el primer administrador y con cambio de 24 horas y aviso; veto de cualquier administrador durante el rescate; acceso de emergencia con segunda persona; soporte con lectura limitada a la empresa autorizada; enlaces, invitaciones, sesiones y códigos de recuperación guardados solo como huella. | RF-PLA-011 a 013, RS-51, PS-05 |
 | S-33 | Tres actos de dinero se suman a la tabla de RN-017: garantía extendida con costo, mantenimiento con costo sin orden de servicio, y corregir el costo de un activo (segunda persona si el costo, con impuesto y en moneda base, supera el límite). Pedido por el Auditor de Cumplimiento. | RN-017 |
 
@@ -1104,7 +1105,7 @@ Cada tabla de requisitos de este documento es la matriz: la columna **Cuándo** 
 | PER Personas | RF-PER-001 a 014 | v1, Etapas 2, 4 y 5 | CA-001, CA-011b, CA-016, CA-038, CA-052a a d, CA-054, CA-076, CA-081b |
 | CAT Catálogos y campos | RF-CAT-001 a 029 | v1, Etapa 2 | CA-001, CA-016 a 021, CA-032, CA-042, CA-045, CA-048, CA-060, CA-064, CA-065, CA-074 |
 | SKU Maestro | RF-SKU-001 a 016 | v1, Etapa 3 (RF-SKU-014 en 4) | CA-017 a 023, CA-032, CA-042, CA-048, CA-061, CA-064 |
-| INV Inventario | RF-INV-001 a 032 | v1, Etapa 4 (RF-INV-012 en 6) | CA-011b, CA-023 a 028, CA-032, CA-036, CA-038, CA-044, CA-046, CA-058, CA-059, CA-060, CA-063, CA-079, CA-081, CA-082 |
+| INV Inventario | RF-INV-001 a 032 | v1, Etapa 4 (RF-INV-012 en 6) | CA-011b, CA-023 a 028, CA-032, CA-036, CA-038, CA-044, CA-046, CA-058, CA-059, CA-060, CA-063, CA-079b, CA-081b, CA-082b |
 | OC Compras y recepción | RF-OC-001 a 050 | v1, Etapa 5 (RF-OC-027 en 2, RF-OC-028 en 7) | CA-011a, CA-012 a 014, CA-018, CA-020, CA-024, CA-029 a 037, CA-045, CA-055, CA-061, CA-062, CA-070, CA-072, CA-078 |
 | OS Órdenes de servicio | RF-OS-001 a 011 | v1, Etapa 6 | CA-018, CA-044, CA-055 |
 | IMP / EXP Importación y exportación | RF-IMP-001 a 018 (012 retirado), RF-EXP-001 a 007 | v1, Etapas 2 y 4 | CA-011b, CA-038, CA-039, CA-041, CA-043, CA-056, CA-057, CA-067 |
