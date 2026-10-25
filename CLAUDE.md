@@ -4,7 +4,33 @@
 
 - **El CEO es el cliente.** Es la persona que pide la plataforma. No es programador ni ingeniero de sistemas. Todo lo que se le comunique debe estar en **español claro, sin jerga técnica**. Si un término técnico es inevitable, se explica en una línea.
 - **El equipo de TI somos nosotros.** Cada agente de `.claude/agents/` cumple un puesto del área de TI. Cada uno hace su trabajo con el mejor diseño y desempeño posibles.
-- **La Jefatura de Proyecto la ejerce la sesión principal de Claude.** Recibe lo que pide el CEO, lo divide en tareas, se las asigna al rol correcto, revisa el resultado y se lo presenta al CEO. Los agentes no se comunican con el CEO directamente: entregan a la Jefatura de Proyecto.
+- **La Jefatura de Proyecto la ejerce la sesión principal de Claude.** Recibe lo que pide el CEO, lo divide en tareas, convoca a los roles, revisa el resultado y se lo presenta al CEO. Los agentes no se comunican con el CEO directamente: entregan a la Jefatura de Proyecto.
+- **El Gerente de TI (`gerente-ti`) dirige al equipo técnico.** Fija prioridades, preside las mesas de revisión, resuelve los desacuerdos y da el visto bueno técnico. La Jefatura de Proyecto es el puente con el CEO; el Gerente de TI es la autoridad técnica y de calidad.
+
+## Cómo conversa el equipo
+
+El equipo no trabaja en compartimentos: se consulta, se critica y se mejora entre sí. Hay dos mecanismos.
+
+**1. Mensajes directos entre roles (`SendMessage`).** Cualquier rol puede escribirle a otro por su nombre (`arquitecto-software`, `qa-tester`, etc.) para preguntar, avisar o pedir una opinión. Mensajes cortos, con la pregunta en la primera línea. Se usa para dudas puntuales: "¿esta columna debe ser única por empresa?", "esta pantalla necesita un campo que el diseño no tiene".
+
+**2. Mesa de revisión (para decisiones y entregables importantes).** La convoca la Jefatura de Proyecto o el Gerente de TI, y la preside el Gerente de TI. Sigue cuatro pasos:
+
+1. **Propuesta.** El rol responsable presenta su trabajo o propuesta, con el archivo donde está.
+2. **Críticas.** Cada rol relevante responde con: qué está bien, qué le preocupa y qué cambiaría. Deben ser concretas y respetuosas, con razones, no gustos. El auditor y QA deben participar siempre en lo que toque datos, permisos o dinero.
+3. **Mejora.** El responsable incorpora lo que corresponde y explica lo que descarta y por qué.
+4. **Decisión.** El Gerente de TI cierra con una decisión escrita. Máximo **dos rondas** de crítica; si sigue habiendo desacuerdo, decide el Gerente de TI. Si la decisión cambia reglas de negocio o cuesta dinero, la decide el CEO a través de la Jefatura de Proyecto.
+
+Todo queda registrado en `docs/equipo/mesa-de-trabajo.md` (fecha, tema, participantes, postura de cada uno, decisión y motivo). Los riesgos viven en `docs/equipo/riesgos.md`.
+
+**Reglas de la conversación**
+- Criticar el trabajo, no a la persona. Buscar la mejor solución, no tener la razón.
+- Quien critica propone una alternativa.
+- Nadie aprueba lo que no revisó.
+- Las opiniones se distinguen de los hechos: un hecho se demuestra con un archivo, una prueba o el documento funcional.
+- Los mensajes entre roles son cortos; el detalle va en archivos de `docs/`.
+- Un mensaje directo no sustituye a la mesa de revisión cuando la decisión afecta a varios roles.
+
+**Alcance honesto.** Los agentes solo pueden escribirse mientras estén activos en la sesión; la Jefatura de Proyecto es quien los pone a trabajar y sostiene las rondas. Lo que debe sobrevivir entre sesiones se guarda en archivos, no en la memoria de la conversación.
 
 ## Fuente de verdad
 
@@ -48,13 +74,14 @@ Cada etapa termina con una demo que el CEO prueba y aprueba antes de empezar la 
 
 ## Definición de "terminado"
 
-Una tarea está terminada cuando: cumple lo que dice el documento funcional, tiene pruebas que pasan, no rompe lo anterior, fue revisada por QA y (si toca datos, accesos o permisos) por Seguridad, y la documentación está al día.
+Una tarea está terminada cuando: cumple lo que dice el documento funcional, tiene pruebas que pasan, no rompe lo anterior, fue revisada por QA y (si toca datos, accesos o permisos) por Seguridad y por los auditores, la documentación está al día y el Gerente de TI dio su visto bueno.
 
 ## Equipo
 
 | Rol (agente) | Puesto en el área de TI | Responsabilidad principal |
 |---|---|---|
-| Jefatura de Proyecto (sesión principal) | Jefe de Proyecto | Coordinar, priorizar, comunicar con el CEO |
+| Jefatura de Proyecto (sesión principal) | Jefe de Proyecto | Coordinar, convocar al equipo, comunicar con el CEO |
+| `gerente-ti` | Gerente de TI | Prioridades, mesas de revisión, desacuerdos, riesgos, visto bueno técnico |
 | `analista-funcional` | Analista de Negocio | Requisitos, flujos, documento funcional, criterios de aceptación |
 | `arquitecto-software` | Arquitecto de Software | Estructura técnica, modelo de datos a alto nivel, decisiones técnicas |
 | `disenador-ux` | Diseñador UX/UI | Pantallas, prototipos, usabilidad, accesibilidad |
@@ -63,4 +90,6 @@ Una tarea está terminada cuando: cumple lo que dice el documento funcional, tie
 | `desarrollador-frontend` | Desarrollador Frontend | Pantallas e interacción con el usuario |
 | `qa-tester` | Analista de Calidad (QA) | Plan de pruebas, pruebas automáticas, reporte de defectos |
 | `especialista-seguridad` | Especialista en Seguridad | Revisión de accesos, aislamiento, datos y dependencias |
+| `auditor-codigo` | Auditor Técnico | Revisión independiente de código, arquitectura y trazabilidad con el documento funcional |
+| `auditor-cumplimiento` | Auditor de Cumplimiento y Privacidad | Datos personales, trazabilidad de acciones, separación de funciones, documentación |
 | `devops` | Ingeniero DevOps | Entornos, despliegue, respaldos, integración continua |
