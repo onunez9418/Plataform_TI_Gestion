@@ -53,8 +53,16 @@ Registro literal, en orden. Las direcciones son las de la agenda del equipo.
 > Conforme con INSERT/SELECT únicamente más disparador: cubre mi R3 frente al Administrador de la app.
 > El límite del superusuario lo registro como riesgo residual; pido cuenta separada y registrada, copia externa de la auditoría (con devops) y que la auditoría registre también los cambios de permisos sobre esa tabla.
 
-Sin respuesta al momento de cerrar este registro: analista-funcional (mensaje 3).
+### 10. Recibido de analista-funcional (a6e1b8bc987bd105a), respuesta al mensaje 3
+
+> Sí, redacta tú el texto propuesto de R4 (secciones 5 y 9) y déjalo en un archivo docs/equipo/mesa-001/propuesta-r4-cumplimiento.md, una regla por línea.
+> Yo lo integro en la v0.2 cuando el gerente-ti cierre decisiones.md. Dos cuidados: (1) la excepción para empresas de una sola persona de TI (QA recomienda "no por defecto, el administrador puede permitirlo") la decide el gerente-ti, no el texto; (2) QA y UX piden además el estado "Rechazada" en la OC, inclúyelo en la tabla de transiciones.
+
+### 11. Enviado a analista-funcional (a6e1b8bc987bd105a), respuesta
+
+> Listo: docs/equipo/mesa-001/propuesta-r4-cumplimiento.md, una regla por línea (S5-1..7, S9-1..10) y tabla de transiciones con "Rechazada".
+> Las excepciones S9-6 (monto bajo) y S9-7 (una sola persona de TI) quedan marcadas como decisión del gerente-ti, no del texto.
 
 ## Nota sobre las preguntas al CEO
 
-Por la nueva instrucción del CEO, mis preguntas P1 a P9 de la ronda 1 pasan a ser recomendaciones para el gerente-ti, que las decide en `docs/equipo/decisiones.md`. Mis puntos L1 a L12 siguen siendo de asesoría legal y se escalan al CEO. No envié un mensaje aparte al gerente-ti porque el límite de la mesa es de 3 mensajes iniciales.
+Por la nueva instrucción del CEO, mis preguntas P1 a P9 de la ronda 1 pasan a ser recomendaciones para el gerente-ti, que las decide en `docs/equipo/decisiones.md`. Mis puntos L1 a L12 siguen siendo de asesoría legal y se escalan al CEO. No envié un mensaje aparte al gerente-ti porque el límite de la mesa es de 3 mensajes iniciales (las respuestas a mensajes recibidos no cuentan para ese límite).

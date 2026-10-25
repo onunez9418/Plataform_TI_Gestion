@@ -49,6 +49,14 @@ Registro literal y en orden. Formato: de, para, texto. Los mensajes recibidos se
 > Me parece bien: "Rechazada" como estado con motivo y "Reabrir como borrador" con el motivo a la vista.
 > CA-06 queda marcado (*) hasta la decisión del gerente-ti. Mi única condición: reabrir deja registro en auditoría y exige nueva aprobación.
 
+## 13. Recibido de auditor-cumplimiento
+> Listo: docs/equipo/mesa-001/propuesta-r4-cumplimiento.md, una regla por línea (S5-1..7, S9-1..10) y tabla de transiciones con "Rechazada".
+> Las excepciones S9-6 (monto bajo) y S9-7 (una sola persona de TI) quedan marcadas como decisión del gerente-ti, no del texto.
+
+## 14. Recibido de ingeniero-datos
+> Sí, me sirve el compromiso, con tres condiciones.
+> (1) Lo predeterminado es todo o nada; importar solo las válidas exige que el usuario lo acepte de forma explícita tras ver la vista previa. (2) Las filas válidas se guardan en una sola transacción (nunca fila por fila) y las rechazadas se devuelven en un archivo con el motivo, listo para corregir y recargar. (3) El lote queda registrado (quién, cuándo, archivo, filas cargadas y rechazadas) y se puede deshacer completo mientras no tenga movimientos posteriores.
+
 ## Resumen de acuerdos y desacuerdos que salen de estos mensajes
 
 Acordado entre roles (pendiente de visto bueno del gerente-ti):
@@ -57,5 +65,5 @@ Acordado entre roles (pendiente de visto bueno del gerente-ti):
 - OC con estado "Rechazada" con motivo y acción "Reabrir como borrador", con auditoría y nueva aprobación (QA y UX).
 
 Desacuerdos abiertos:
-- Importación: todo o nada (ingeniero-datos) frente a importar válidas y reportar malas (QA). Compromiso propuesto en el mensaje 11; sin respuesta aún.
+- Importación: resuelto entre ingeniero-datos y analista (mensajes 11 y 14): por defecto todo o nada; importar solo las válidas exige aceptación explícita tras la vista previa, en una sola transacción, con archivo de rechazadas y lote deshacible. Falta confirmar con QA (CA-10 pide importar válidas por defecto).
 - Excepción de separación de funciones para empresas de una sola persona de TI: auditor-cumplimiento pide "nunca, salvo decisión explícita"; QA pide "no por defecto, el administrador puede permitirlo". Decide el gerente-ti.
