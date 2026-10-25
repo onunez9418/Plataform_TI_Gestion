@@ -288,6 +288,7 @@ function menuActual() {
       { r: 'catalogos', t: 'Catálogos y ubicaciones', i: 'edificio', ok: 'catalogos.ver' },
       { r: 'categorias', t: 'Categorías y campos', i: 'ajustes', ok: 'catalogos.ver' } ] },
     { g: 'Administración', items: [
+      { r: 'primeros-pasos', t: 'Primeros pasos', i: 'check', ok: 'empresa.configurar' },
       { r: 'usuarios', t: 'Usuarios', i: 'usuario', ok: 'usuarios.ver' },
       { r: 'roles', t: 'Roles y permisos', i: 'escudo', ok: 'roles.ver' },
       { r: 'auditoria', t: 'Auditoría', i: 'doc', ok: 'auditoria.ver' },

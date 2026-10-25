@@ -116,6 +116,14 @@ Registro literal y en orden. Fecha: 2026-10-25. Las direcciones son las de la ag
 ## 31. Enviado a a3b3666dfed8a47ee
 > Incorporado al núcleo como RF-OC-051 (Etapa 5): la pantalla de aprobación de la OC reserva un espacio para que un módulo activo (PRE) muestre su efecto y pida justificación si se excede, sin segundo nivel ni cambio de quién aprueba. Ya estaba en el plan de correcciones (PRE punto 5), así que no es supuesto; pueden citarlo sin la marca.
 
+## 32. Enviados al terminar el plan de aplicación (AN-01 a AN-15)
+
+- A abd816d90e8b59b90 (Seguridad): "Listos AN-04, AN-05 y AN-08 (y AN-11): registro v1.1 con los 16 sensibles de D-068 más PS-232/233/234 (52 en total), PS-68 y PS-51 con "No", PS-05 sin marca de supuesto; documento: RF-PLA-001/009/011 a 013, RS-51 con CA-083, CA-007/011b/015e/015f/068 (código corto de 8 caracteres)."
+- A a45ce2ef63e8747ae (Cumplimiento): "Listos AN-03, AN-09 y AN-10 (mapa de casillas, sección 18.1 ampliada, RF-DAT-013 a Etapa 4, suplente de derechos, CA-093)."
+- A ab1bc35a838fd603f (QA): "Listos AN-02, AN-06, AN-07, AN-08 y AN-12. No partí CA-040 ni redacté los criterios de Etapas 4 a 6 que D-076 difiere."
+- A ac84a1c36e8343ef4 (Auditor Técnico): "AN-01 a AN-15 aplicados (AN-13 en parte). AN-16 espera su visto bueno y el de QA."
+- Detalle: docs/equipo/oleada-d/respuesta-analista-v10.md.
+
 ## Notas
 
 - Supuestos nuevos de este segundo lote, para el Gerente de TI: S-33 (tres actos en RN-017) y S-34 (endurecimiento de Seguridad). Además, la clasificación de sensibles de PS-08, 68, 135 y las aprobaciones queda abierta.

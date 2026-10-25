@@ -426,7 +426,8 @@ dl { margin: 0; }
 .acta .borrador-legal { border: 1px dashed #555; padding: 8px; margin-top: 16px; font-size: 12px; }
 
 /* tema oscuro: el acta imprimible sigue siendo blanca (papel) */
-.tabs-guia a { margin-right: var(--e3); }
+.tabs-guia { display: flex; flex-wrap: wrap; gap: var(--e2) var(--e4); }
+.tabs-guia a { min-height: 32px; display: inline-flex; align-items: center; }
 
 /* ---------- 8. Pantalla pequeña (360 px) ---------- */
 @media (max-width: 900px) {

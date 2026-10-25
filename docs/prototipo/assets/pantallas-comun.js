@@ -32,6 +32,8 @@ const LISTA_PANTALLAS = [
   ['PR-23', 'Auditoría', 'A', '#/auditoria', 'Administrador'],
   ['PR-24', 'Consola de plataforma', 'A', '#/plataforma', 'Administrador de plataforma'],
   ['PR-25', 'Mensajes de error, permiso y bloqueo', 'A', '#/mensajes', 'Cualquiera'],
+  ['PR-44', 'Ingreso en otro dispositivo (código corto)', 'A', '#/codigo-corto', 'Cualquiera'],
+  ['PR-45', 'Primeros pasos (con «Designar suplente de derechos de datos»)', 'A', '#/primeros-pasos', 'Administrador (empresa Santa Aurora)'],
   ['PR-26', 'Primer ingreso: privacidad y segunda verificación', 'B', '#/primer-ingreso', 'Cualquiera'],
   ['PR-27', 'Inicio Administrador y «Primeros pasos»', 'B', '#/inicio', 'Administrador (empresa Santa Aurora)'],
   ['PR-28', 'Inicio Solicitante y Solo lectura', 'B', '#/inicio', 'Solicitante'],
@@ -54,14 +56,14 @@ const LISTA_PANTALLAS = [
 /* Otras pantallas del prototipo (apoyo): bandejas, permisos, soporte, etc. */
 const LISTA_APOYO = [
   ['Por aprobar (bandeja única)', '#/por-aprobar', 'Jefatura TI'], ['Mi trabajo (bandeja del Técnico)', '#/mi-trabajo', 'Técnico'],
-  ['Mi espacio', '#/mi-espacio', 'Cualquiera'], ['Mis permisos', '#/mis-permisos', 'Cualquiera'],
+  ['Mi espacio', '#/mi-espacio', 'Cualquiera'], ['Mis permisos', '#/mis-permisos', 'Cualquiera'], ['Primeros pasos', '#/primeros-pasos', 'Administrador'],
   ['Autorizar soporte por 24 horas', '#/soporte', 'Administrador'], ['Recepciones (por recibir)', '#/recepciones', 'Almacén'],
   ['Entregas y devoluciones (actas)', '#/entregas', 'Técnico'], ['Proveedores', '#/proveedores', 'Jefatura TI'], ['Pedir ayuda', '#/pedir-ayuda', 'Solicitante']
 ];
 
 ruta('pantallas', { id: '', titulo: 'Lista de pantallas', render() {
   const filas = LISTA_PANTALLAS.map((p) => ({ id: p[0], n: p[1], pr: p[2], h: p[3], rol: p[4] }));
-  return `${cabeceraPantalla('Lista de pantallas del prototipo')}<p>Esta es la lista de las <strong>26 pantallas de prioridad A</strong> (las que debe ver para aprobar el diseño) y las <strong>18 de prioridad B</strong> (completan el recorrido o son muestras de módulos futuros). Cada enlace abre la pantalla; la columna «Rol sugerido» dice con qué rol se ve mejor (use el selector «Probar como» de arriba).</p>
+  return `${cabeceraPantalla('Lista de pantallas del prototipo')}<p>Esta es la lista de las <strong>${filas.filter((f) => f.pr === 'A').length} pantallas de prioridad A</strong> (las 26 acordadas más el código corto de ingreso y «Primeros pasos», que pidieron las decisiones D-071 y D-073; son las que debe ver para aprobar el diseño) y las <strong>${filas.filter((f) => f.pr === 'B').length} de prioridad B</strong> (completan el recorrido o son muestras de módulos futuros). Cada enlace abre la pantalla; la columna «Rol sugerido» dice con qué rol se ve mejor (use el selector «Probar como» de arriba).</p>
   ${tabla({ cols: [{ t: 'Código', k: (f) => `<span class="cod">${f.id}</span>` }, { t: 'Pantalla', k: (f) => `<a href="${f.h}">${esc(f.n)}</a>` }, { t: 'Prioridad', k: (f) => chipEtq('Prioridad ' + f.pr) }, { t: 'Rol sugerido', k: (f) => esc(f.rol) }], filas })}
   <h2 style="margin-top:24px">Pantallas de apoyo</h2>${tabla({ cols: [{ t: 'Pantalla', k: (f) => `<a href="${f[1]}">${esc(f[0])}</a>` }, { t: 'Rol sugerido', k: (f) => esc(f[2]) }], filas: LISTA_APOYO })}`;
 } });
@@ -74,7 +76,7 @@ ruta('ingreso', { id: 'PR-01', titulo: 'Ingreso', layout: 'solo', render() {
     <h1 id="titulo-pantalla" tabindex="-1">${enviado ? 'Revise su correo' : 'Entrar a la plataforma'}</h1>
     ${enviado ? `${aviso('exito', 'Si el correo tiene una cuenta o una invitación, le enviamos un enlace.', 'El enlace dura 15 minutos y sirve una sola vez. Este mensaje es el mismo exista o no el correo, para proteger a las personas.')}
       <p>Cuando abra el enlace verá un botón <strong>«Entrar»</strong>. Pulse ese botón para terminar el ingreso.</p>
-      <div class="fila"><a class="btn primario" href="#/empresa" data-acc="enlace-abierto">Simular que abro el enlace</a><button class="btn" type="button" data-acc="ingreso-reiniciar">Usar otro correo</button></div>`
+      <div class="fila"><a class="btn primario" href="#/empresa" data-acc="enlace-abierto">Simular que abro el enlace aquí</a><a class="btn" href="#/codigo-corto">Voy a abrir el correo en otro dispositivo</a><button class="btn" type="button" data-acc="ingreso-reiniciar">Usar otro correo</button></div>`
       : `<p>No hay contraseñas. Escriba su correo y le enviaremos un enlace para entrar.</p>
       <form data-form="ingreso" novalidate><div class="campo"><label for="correo">Correo electrónico <span class="obligatorio">(obligatorio)</span></label><input id="correo" type="email" autocomplete="email" placeholder="nombre@empresa.pe" required><div class="error" id="correo-e" hidden>${icono('alerta')}<span>Escriba un correo válido, por ejemplo nombre@empresa.pe.</span></div></div>
       <button class="btn primario" type="submit" style="width:100%">Enviarme el enlace</button></form>
@@ -132,10 +134,15 @@ function filaAprobar(o) {
   const tuya = o.creo === R().persona;
   return `<li class="fila entre" style="border-bottom:1px solid var(--c-borde);padding:8px 0"><span><a href="#/oc?id=${o.num}" class="cod">${o.num}</a> · ${esc(o.prov || 'sin proveedor')}<br><span class="suave chica">Pidió ${esc(o.creo)} · ${dinero(totalOC(o), o.mon)}${tuya ? ' · ' + chip('Excepción activa', 'sensible').replace('Excepción activa', 'La preparó usted') : ''}</span></span><a class="btn chico" href="#/oc?id=${o.num}">Revisar</a></li>`;
 }
+function pasosEmpresa() {
+  const sup = !!(APP.tmp.suplente && APP.tmp.suplente[APP.empresa]);
+  return [['Crear categorías y campos', true, '#/categorias'], ['Crear ubicaciones', true, '#/catalogos'], ['Crear centros de costo', false, '#/catalogos?tab=cc'], ['Cargar proveedores', false, '#/proveedores'], ['Invitar a los demás usuarios', false, '#/usuarios'], ['Importar el inventario actual desde Excel', false, '#/importar'], ['Designar suplente de derechos de datos', sup, '#/primeros-pasos']];
+}
 function inicioAdm() {
   const nueva = E().nueva;
-  const pasos = [['Crear categorías y campos', true], ['Crear ubicaciones', true], ['Crear centros de costo', false], ['Cargar proveedores', false], ['Invitar a los demás usuarios', false], ['Importar el inventario actual desde Excel', false]];
-  const primeros = nueva ? tarjeta('Primeros pasos de la empresa', `<p>Esta empresa es nueva. Complete estos pasos para empezar a trabajar.</p><ol class="pila" style="list-style:none;padding:0;margin:0">${pasos.map((p) => `<li class="opcion">${p[1] ? chip('Hecho') : chip('Sin iniciar')}<span>${p[0]}</span></li>`).join('')}</ol><div class="pie"><a class="btn primario chico" href="#/importar">Importar inventario</a><a class="btn chico" href="#/categorias">Categorías</a></div>`, { cls: 'principal-rol' }) : '';
+  const pasos = pasosEmpresa();
+  const falta = pasos.filter((p) => !p[1]).length;
+  const primeros = nueva ? tarjeta('Primeros pasos de la empresa', `<p>Esta empresa es nueva. Complete estos pasos para empezar a trabajar.</p><ol class="pila" style="list-style:none;padding:0;margin:0">${pasos.map((p) => `<li class="opcion">${p[1] ? chip('Hecho') : chip('Sin iniciar')}<a href="${p[2]}">${p[0]}</a></li>`).join('')}</ol><div class="pie"><span>Faltan ${falta} pasos</span><a class="btn primario chico" href="#/primeros-pasos">Abrir «Primeros pasos»</a></div>`, { cls: 'principal-rol' }) : (!(APP.tmp.suplente && APP.tmp.suplente[APP.empresa]) ? tarjeta('Tarea pendiente', `<p>${chip('Pendiente de completar')} <strong>Designar suplente de derechos de datos.</strong></p><p class="suave chica">Toda empresa debe tener una segunda persona que pueda atender los pedidos de datos personales. Le recordaremos cada 3 días.</p><div class="pie"><a class="btn primario chico" href="#/primeros-pasos">Designar ahora</a></div>`, { cls: 'principal-rol' }) : '');
   const aprobar = pendientesOC();
   return `${cabeceraPantalla('Resumen de la empresa', '<span class="id-pantalla">PR-27 · Resumen y Primeros pasos</span>')}${nueva ? aviso('info', 'Está viendo una empresa nueva.', 'Cambie a «Distribuidora Andina S.A.» arriba para ver una empresa en uso.') : ''}
   <div class="rejilla">${primeros}${tarjetaEstados()}
@@ -212,7 +219,7 @@ ruta('por-aprobar', { id: '', titulo: 'Por aprobar', acceso: ['ordenes_compra.ap
   const filaOC = (o) => ({ cod: o.num, que: o.prov || 'sin proveedor', monto: dinero(totalOC(o), o.mon), pidio: o.creo, fecha: o.fecha, tuya: o.creo === R().persona, otra: o.mon !== E().moneda });
   const filas = oc.map(filaOC);
   return `${cabeceraPantalla('Por aprobar', '<span class="id-pantalla">Una sola bandeja · verbo único «Aprobar»</span>')}
-  <p>Aquí llegan todas las decisiones que esperan a una persona con permiso. El verbo es siempre <strong>Aprobar</strong> o <strong>Rechazar</strong>.</p>
+  <p>Aquí llegan todas las decisiones que esperan a una persona con permiso. El verbo es siempre <strong>Aprobar</strong> o <strong>Rechazar</strong>.</p>${avisoDosF()}
   ${pestanas('apr', tabs, tab)}
   ${panel('apr', 'oc', tab, tabla({ filas, vacio: { titulo: 'No hay órdenes por aprobar', texto: 'Cuando alguien envíe una, aparecerá aquí.' }, cols: [
     { t: 'Orden', k: (f) => `<a class="cod" href="#/oc?id=${f.cod}">${f.cod}</a>` }, { t: 'Proveedor', k: (f) => esc(f.que) }, { t: 'Monto con impuesto', cls: 'num', k: (f) => f.monto + (f.otra ? ' ' + chipEtq('Otra moneda: siempre pasa por aprobación') : '') },
@@ -300,7 +307,7 @@ ruta('mi-cuenta', { id: 'PR-35', prio: 'B', titulo: 'Mi cuenta y seguridad', ren
   return `${cabeceraPantalla('Mi cuenta y seguridad', '<span class="id-pantalla">PR-35 · prioridad B</span>')}
   <div class="rejilla dos">
   ${tarjeta('Sesiones', `<p>Su sesión se cierra sola tras <strong>30 minutos sin actividad</strong> (con aviso a los 25) o a las 12 horas.</p><dl class="lista-datos"><dt>Esta sesión</dt><dd>Navegador de escritorio · Lima · ahora</dd><dt>Otra sesión</dt><dd>Celular · hace 2 días</dd></dl><button class="btn peligro" type="button" data-acc="cerrar-todas" style="margin-top:12px">Cerrar sesión en todos los dispositivos</button>`)}
-  ${tarjeta('Segunda verificación', `<p>${chip(obligatoria ? 'Activa' : 'Inactivo')} ${obligatoria ? 'Obligatoria para su rol: tiene permisos sensibles.' : 'Opcional para su rol.'}</p><p class="suave">Se usa una aplicación autenticadora en el celular. No usamos mensajes de texto.</p><a class="btn" href="#/primer-ingreso">Ver cómo se activa</a>`)}
+  ${tarjeta('Segunda verificación', `<p>${chip(obligatoria ? (dosFActiva() ? 'Activa' : 'Pendiente de completar') : 'Inactivo')} ${obligatoria ? 'Obligatoria para su rol: ' + (apruebaDinero() ? 'aprueba dinero (un robo de sesión no debe bastar para aprobar).' : 'tiene permisos sensibles.') : 'Opcional para su rol.'}</p><p class="suave">Se usa una aplicación autenticadora en el celular. No usamos mensajes de texto.</p><div class="fila"><a class="btn" href="#/primer-ingreso">Ver cómo se activa</a>${obligatoria ? `<label class="interruptor"><input type="checkbox" role="switch" ${dosFActiva() ? '' : 'checked'} data-cambio="sin-dosf" aria-label="Simular que aún no activé la segunda verificación"><span class="pista"></span><span>Simular que aún no la activé</span></label>` : ''}</div>`)}
   ${tarjeta('Privacidad', `<p>Aviso de privacidad aceptado: versión 1.0 · 24/10/2026.</p><p class="suave chica">Puede pedir ver, corregir o eliminar sus datos desde «Mis datos» o con el administrador.</p>`)}
   ${tarjeta('Empresa', APP.rol === 'plat' ? '<p>La consola de plataforma no pertenece a ninguna empresa.</p>' : `<p>Trabajando en <strong>${esc(E().nombre)}</strong>.</p><a class="btn" href="#/empresa">Cambiar de empresa</a>`)}</div>`;
 } });
@@ -410,7 +417,7 @@ ruta('guia', { id: 'PR-00', titulo: 'Guía visual y componentes', render() {
   const ejemplo = { neutro: 'Borrador', curso: 'Asignado', atencion: 'Pendiente de aprobación', exito: 'Aprobada', alerta: 'Rechazada', final: 'Anulada', sensible: 'Sensible' };
   return `${cabeceraPantalla('Guía visual y componentes', '<span class="id-pantalla">PR-00 · prioridad A</span>')}
   <p>Esta guía muestra todo lo que usa la plataforma: colores, etiquetas, botones, formularios, tablas y mensajes. Se aprueba una sola vez. Use el botón <strong>«Modo oscuro»</strong> de arriba para ver los dos modos.</p>
-  <nav class="tabs-guia" aria-label="Secciones de la guía"><a href="#g-estados" data-acc="ancla">Estados</a><a href="#g-botones" data-acc="ancla">Botones</a><a href="#g-forms" data-acc="ancla">Formularios</a><a href="#g-tablas" data-acc="ancla">Tablas</a><a href="#g-avisos" data-acc="ancla">Avisos</a><a href="#g-vocab" data-acc="ancla">Vocabulario</a><a href="#g-color" data-acc="ancla">Color y contraste</a></nav>
+  <nav class="tabs-guia" aria-label="Secciones de la guía"><a href="#g-estados" data-acc="ancla">Estados</a><a href="#g-botones" data-acc="ancla">Botones</a><a href="#g-forms" data-acc="ancla">Formularios</a><a href="#g-tablas" data-acc="ancla">Tablas</a><a href="#g-avisos" data-acc="ancla">Avisos</a><a href="#g-vocab" data-acc="ancla">Vocabulario</a><a href="#g-nombres" data-acc="ancla">Nombres oficiales</a><a href="#g-color" data-acc="ancla">Color y contraste</a></nav>
 
   <h2 id="g-estados" style="margin-top:24px">1. Siete familias de color de estado</h2>
   <p>Regla de oro: <strong>todo estado lleva texto y un icono</strong>; el color solo lo refuerza. Así se entiende aunque no se distingan los colores.</p>
@@ -454,7 +461,12 @@ ruta('guia', { id: 'PR-00', titulo: 'Guía visual y componentes', render() {
   <h3 style="margin-top:16px">Códigos que verá en pantalla</h3>
   <p class="fila"><span class="cod">LAP-0001</span><span class="cod">OC-000212</span><span class="cod">OS-000041</span><span class="cod">RCP-000042</span><span class="cod">ACT-E-000123</span><span class="cod">PRS-0042</span><span class="cod">AYU-000118</span><span class="cod">CTR-000014</span></p>
 
-  <h2 id="g-color" style="margin-top:24px">7. Color, tipografía y espaciado</h2>
+  <h2 id="g-nombres" style="margin-top:24px">7. Nombres oficiales (punto P-014)</h2>
+  <p>Estos son los nombres definitivos que propone el Diseñador para el menú, para las pestañas de la ficha del activo y para las familias de color.</p>
+  <h3>Los 8 grupos del menú</h3>${tabla({ filas: GRUPOS_MENU, cols: [{ t: 'Grupo', k: (f) => `<strong>${f[0]}</strong>` }, { t: 'Qué contiene', k: (f) => f[1] }] })}
+  <h3 style="margin-top:16px">Las 7 pestañas de la ficha del activo</h3>${tabla({ filas: PESTANAS_ACTIVO, cols: [{ t: 'Pestaña', k: (f) => `<strong>${f[0]}</strong>` }, { t: 'Qué muestra', k: (f) => f[1] }] })}
+  <h3 style="margin-top:16px">Las 7 familias de color</h3><p class="fila">${[['Neutro', 'neutro'], ['En curso', 'curso'], ['Atención', 'atencion'], ['Éxito', 'exito'], ['Alerta', 'alerta'], ['Final', 'final'], ['Sensible', 'sensible']].map((f) => chip(f[0], f[1])).join('')}</p>
+  <h2 id="g-color" style="margin-top:24px">8. Color, tipografía y espaciado</h2>
   ${tabla({ cols: [{ t: 'Uso', k: (f) => f[0] }, { t: 'Modo claro', k: (f) => `<span class="cod">${f[1]}</span>` }, { t: 'Modo oscuro', k: (f) => `<span class="cod">${f[2]}</span>` }, { t: 'Contraste claro / oscuro', cls: 'num', k: (f) => f[3] }], filas: [
     ['Texto sobre fondo', '#17202B sobre #F5F7FA', '#E8EDF3 sobre #0F141A', '15,3 / 15,7'],
     ['Texto suave sobre tarjeta', '#4A5663 sobre #FFFFFF', '#A9B5C3 sobre #171E26', '7,5 / 8,1'],
@@ -469,3 +481,81 @@ ENTRADA['guia-nombre'] = (el) => { const v = el.value.length === 0 || el.value.l
 ACC.ancla = (el, e) => { e.preventDefault(); const t = document.getElementById(el.getAttribute('href').slice(1)); if (t) { t.scrollIntoView(); t.setAttribute('tabindex', '-1'); t.focus(); } };
 ACC['guia-dialogo'] = () => dialogoMotivo({ titulo: 'Dar de baja el activo', verbo: 'Dar de baja', destructivo: true, motivos: ['Equipo obsoleto', 'Irreparable', 'Vendido o donado'], texto: 'Esta es la forma única en que la plataforma pide un motivo.', consecuencias: ['El activo pasa a «De baja».', 'La asignación se cierra con esta causa.', 'Solo se podrá recuperar con un reingreso, con motivo y permiso especial.'], alConfirmar: () => toast('Acción simulada: el activo pasó a De baja.') });
 ACC['guia-toast'] = () => toast('Acción terminada. Los mensajes de éxito son breves.');
+
+/* =========================================================================
+   Añadidos de las decisiones D-068, D-071, D-073 y P-014
+   ========================================================================= */
+
+/* ---------- Segunda verificación para quien aprueba dinero (D-068) ---------- */
+const PERMISOS_DINERO = ['ordenes_compra.aprobar', 'ordenes_servicio.aprobar', 'contratos.activar', 'presupuesto.aprobar', 'cambios.aprobar', 'cambios.aprobar_alto', 'lineas.confirmar_costo', 'dominios.confirmar_costo', 'garantias.confirmar_costo', 'presupuesto.gasto_registrar', 'presupuesto.gasto_anular', 'presupuesto.reclasificar', 'recepciones.revertir', 'empresa.configurar_aprobacion'];
+function apruebaDinero() { return PERMISOS_DINERO.some((n) => PERM[n] && valor(n) !== '-'); }
+function dosFActiva() { return !(APP.tmp.sinDosF && APP.tmp.sinDosF[APP.rol]); }
+function razonDosF() { return apruebaDinero() && !dosFActiva() ? 'Su rol aprueba dinero y exige segunda verificación, que usted aún no activó. Actívela en «Mi cuenta y seguridad».' : ''; }
+function avisoDosF() {
+  if (!apruebaDinero()) return '';
+  return dosFActiva()
+    ? aviso('sensible', 'Aprobar dinero exige segunda verificación', 'Su cuenta tiene la segunda verificación activada con una aplicación autenticadora. Se le puede pedir el código de nuevo antes de una acción importante.')
+    : aviso('alerta', 'Falta su segunda verificación', 'Su rol aprueba dinero, por eso la segunda verificación es obligatoria (así un robo de sesión no basta para aprobar). Hasta activarla no podrá aprobar. <a class="btn chico" href="#/primer-ingreso">Activarla ahora</a>');
+}
+
+/* ---------- PR-44 Ingreso en otro dispositivo (código corto) ---------- */
+ruta('codigo-corto', { id: 'PR-44', titulo: 'Ingreso en otro dispositivo', layout: 'solo', render() {
+  const lado = APP.tmp.ccLado || 'pc';
+  const err = APP.tmp.ccError;
+  return `<div class="tarjeta" style="margin-top:24px"><p class="suave sin-margen">${icono('marca')} Plataforma de Gestión de Áreas de TI</p>
+  <h1 id="titulo-pantalla" tabindex="-1">Entrar abriendo el correo en otro dispositivo</h1>
+  <p>Si pidió el enlace en el computador pero abrió el correo en el celular, el enlace no funciona solo ahí: por seguridad queda atado al navegador que lo pidió. Use este código corto.</p>
+  <div class="fila" style="margin-bottom:12px"><span>Ver lo que se ve en:</span><div class="conmutador" role="group" aria-label="Dispositivo"><button type="button" data-acc="cc-lado" data-l="pc" aria-pressed="${lado === 'pc'}">El computador (donde pidió el enlace)</button><button type="button" data-acc="cc-lado" data-l="cel" aria-pressed="${lado === 'cel'}">El celular (donde abrió el correo)</button></div></div>
+  ${lado === 'pc' ? `<div class="tarjeta" style="background:var(--c-superficie-2)"><h2>Paso 1 · En el computador</h2><p>Este es su código. Escríbalo en el celular, en la pantalla que le mostrará el enlace del correo.</p>
+    <p class="mono" style="font-size:2.2rem;letter-spacing:.3em;font-weight:700;margin:12px 0" aria-label="Código: K 7 M 4 X 9 P Q">K7M4X9PQ</p>
+    <p class="chica">${icono('reloj')} Vence en 15 minutos, igual que el enlace. Sirve una sola vez.</p>
+    <p class="suave chica">Cuando lo escriba bien en el celular, esta pantalla entrará sola. Si no lo hace, pida un enlace nuevo aquí mismo.</p>
+    <div class="fila"><button class="btn" type="button" data-acc="cc-nuevo">Pedir un enlace nuevo</button><a class="btn primario" href="#/empresa" data-acc="cc-listo">Simular que ya lo escribí en el celular</a></div></div>`
+  : `<div class="tarjeta" style="background:var(--c-superficie-2)"><h2>Paso 2 · En el celular</h2><p>Abrió el enlace del correo. Escriba el código de 8 caracteres que ve en el computador.</p>
+    <form data-form="codigo" novalidate><div class="campo"><label for="cc-cod">Código de 8 caracteres <span class="obligatorio">(letras y números)</span></label><input id="cc-cod" type="text" maxlength="8" autocomplete="off" autocapitalize="characters" spellcheck="false" class="mono" style="font-size:1.6rem;letter-spacing:.25em;text-transform:uppercase" ${err ? 'aria-invalid="true" aria-describedby="cc-err"' : ''}>
+    <div class="error" id="cc-err" ${err ? '' : 'hidden'}>${icono('alerta')}<span>${esc(err || '')}</span></div><div class="ayuda">Pruebe con el código correcto <span class="cod">K7M4X9PQ</span> y con uno equivocado.</div></div>
+    <button class="btn primario" type="submit" style="width:100%">Entrar</button></form>
+    <p class="suave chica" style="margin-top:12px">Tras 5 intentos equivocados la espera crece (1, 2, 5 y 15 minutos). El mensaje es el mismo exista o no el código. Si no puede, vuelva al computador y pida un enlace nuevo.</p></div>`}
+  <p class="suave chica" style="margin-top:12px"><a href="#/ingreso">Volver a la pantalla de ingreso</a></p></div>`;
+} });
+ACC['cc-lado'] = (el) => { APP.tmp.ccLado = el.dataset.l; render(true); };
+ACC['cc-nuevo'] = () => { toast('Enlace nuevo enviado. El código anterior dejó de servir.'); };
+ACC['cc-listo'] = () => { APP.tmp.ccLado = 'pc'; };
+ACC['form-codigo'] = () => {
+  const v = document.getElementById('cc-cod').value.trim().toUpperCase();
+  APP.tmp.ccIntentos = (APP.tmp.ccIntentos || 0) + 1;
+  if (v === 'K7M4X9PQ') { APP.tmp.ccError = ''; APP.tmp.ccIntentos = 0; toast('Código correcto: el computador entró a la plataforma.'); location.hash = '#/empresa'; return; }
+  APP.tmp.ccError = v.length !== 8 ? 'El código tiene 8 caracteres. Revíselo e inténtelo de nuevo.' : 'Ese código no es válido o ya venció. Inténtelo de nuevo o pida un enlace nuevo en el computador.';
+  render(true); const c = document.getElementById('cc-cod'); if (c) c.focus();
+};
+
+/* ---------- PR-45 Primeros pasos ---------- */
+ruta('primeros-pasos', { id: 'PR-45', titulo: 'Primeros pasos', acceso: 'empresa.configurar', render() {
+  const pasos = pasosEmpresa();
+  const hechos = pasos.filter((p) => p[1]).length;
+  const sup = APP.tmp.suplente && APP.tmp.suplente[APP.empresa];
+  const dias = APP.tmp.diasSinSuplente || 0;
+  return `${cabeceraPantalla('Primeros pasos de ' + esc(E().corto), '<span class="id-pantalla">PR-45 · prioridad A</span>')}
+  ${E().nueva ? '' : aviso('info', 'Esta empresa ya está en uso.', 'Los primeros pasos se muestran completos en una empresa nueva. Cambie a «Clínica Santa Aurora» arriba para verlos así.')}
+  <p>Complete estos pasos para empezar a trabajar. Puede hacerlos en cualquier orden.</p>
+  <div class="fila entre"><strong>${hechos} de ${pasos.length} pasos hechos</strong></div><div class="barra-avance" role="progressbar" aria-valuenow="${Math.round(100 * hechos / pasos.length)}" aria-valuemin="0" aria-valuemax="100" aria-label="Avance de los primeros pasos"><span style="width:${Math.round(100 * hechos / pasos.length)}%"></span></div>
+  <ol class="pila" style="list-style:none;padding:0;margin:16px 0">${pasos.map((p, i) => `<li class="tarjeta fila entre ${i === pasos.length - 1 && !p[1] ? 'principal-rol' : ''}"><div>${p[1] ? chip('Hecho') : chip('Sin iniciar')} <strong>${esc(p[0])}</strong></div>${i === pasos.length - 1 ? '' : `<a class="btn chico" href="${p[2]}">${p[1] ? 'Ver' : 'Empezar'}</a>`}</li>`).join('')}</ol>
+  <section class="tarjeta" aria-label="Suplente de derechos de datos"><h2>Designar suplente de derechos de datos</h2>
+  <p>Cualquier persona puede pedir ver, corregir o eliminar sus datos personales, y la ley fija un plazo para responder. Hoy <strong>${sup ? 'ya existe una suplente' : 'solo una persona de su empresa puede atender esos pedidos'}</strong>. Si esa persona es justamente quien hace el pedido, <strong>nadie podría atenderlo</strong> y el plazo seguiría corriendo. Por eso toda empresa debe tener una segunda persona de confianza.</p>
+  ${sup ? aviso('exito', 'Suplente designada', `${esc(sup)} puede atender pedidos de derechos de datos. El cambio quedó en la auditoría.`) : `${aviso('atencion', 'Falta designar a la suplente', 'Mientras no exista, la plataforma recordará a los administradores <strong>cada 3 días</strong>. Si pasan <strong>5 días</strong> sin designarla, se avisa al <strong>contacto autorizado</strong> de la empresa y se deja constancia de que el plazo legal está corriendo.')}
+    <div class="fila"><button class="btn primario" type="button" data-acc="sup-designar" ${puede('personas.derechos_atender') || puede('roles.administrar') ? '' : 'aria-disabled="true"'}>Designar suplente</button><button class="btn" type="button" data-acc="sup-dias">Ver cómo avanzan los recordatorios (simulado)</button></div>`}
+  ${dias ? aviso(dias >= 5 ? 'alerta' : 'info', dias >= 5 ? 'Pasaron 5 días: se avisó al contacto autorizado' : `Han pasado ${dias} días sin designar`, dias >= 5 ? 'Quedó constancia de que el plazo legal corre. La salida es el procedimiento de rescate.' : 'Se envió un recordatorio a los administradores.') : ''}
+  <p class="suave chica">Es un cambio de rol de otra persona: exige su segunda verificación reciente y queda en la auditoría.</p></section>`;
+} });
+ACC['sup-designar'] = () => {
+  const cand = D().personas.filter((p) => p.estado === 'Activa' && p.vinculo && p.vinculo !== 'Empleado (portal)');
+  abrirDialogo({ titulo: 'Designar suplente de derechos de datos', cuerpo: `<p>Elija a una persona de confianza que ya tenga cuenta. Recibirá el permiso «Atender pedidos de derechos de datos», que es sensible.</p><div class="campo"><label for="sd">Persona <span class="obligatorio">(obligatoria)</span></label><select id="sd"><option value="">Elija…</option>${cand.map((p) => `<option>${esc(p.nombre)} (${esc(p.vinculo)})</option>`).join('')}</select><div class="error" id="sd-e" hidden>${icono('alerta')}<span>Elija a una persona.</span></div></div>${aviso('sensible', 'Se pedirá su segunda verificación', 'Es un cambio de rol de otra persona. Queda en la auditoría con quién, cuándo y a quién.')}<p class="suave chica">Quien presenta un pedido no puede atenderlo: por eso hace falta otra persona.</p>`, botones: [{ texto: 'Volver' }, { texto: 'Designar', clase: 'primario', alPulsar: (d) => { const v = d.querySelector('#sd').value; if (!v) { d.querySelector('#sd-e').hidden = false; d.querySelector('#sd').focus(); return false; } APP.tmp.suplente = APP.tmp.suplente || {}; APP.tmp.suplente[APP.empresa] = v.replace(/ \(.*\)$/, ''); toast('Suplente designada. Quedó en la auditoría.'); render(true); } }] });
+};
+ACC['sup-dias'] = () => { APP.tmp.diasSinSuplente = ((APP.tmp.diasSinSuplente || 0) + 3) > 6 ? 0 : (APP.tmp.diasSinSuplente || 0) + 3; if (APP.tmp.diasSinSuplente === 6) APP.tmp.diasSinSuplente = 5; render(true); };
+
+/* ---------- Nombres oficiales (P-014) dentro de la Guía visual ---------- */
+const GRUPOS_MENU = [['Inicio', 'Inicio, Por aprobar, Mi trabajo'], ['Inventario', 'Activos, Stock por cantidad, Artículos (SKU), Entregas y devoluciones, Importar datos'], ['Compras', 'Órdenes de compra, Recepciones, Proveedores, Presupuesto'], ['Servicios', 'Órdenes de servicio, Mesa de ayuda, Cambios, Mapa de servicios'], ['Vencimientos y contratos', 'Vencimientos, Licencias de software'], ['Personas y lugares', 'Personas, Catálogos y ubicaciones, Categorías y campos'], ['Administración', 'Primeros pasos, Usuarios, Roles y permisos, Auditoría, Configuración y módulos, Autorizar soporte'], ['Mi espacio', 'Mi espacio, Mis avisos, Mi cuenta y seguridad, Mis permisos']];
+const PESTANAS_ACTIVO = [['Resumen', 'Datos del artículo y de la unidad'], ['Entregas y actas', 'Quién lo tiene y su acta'], ['Servicio', 'Órdenes de servicio, casos, mantenimiento y reclamos'], ['Garantía y contratos', 'Fin de garantía y contratos que lo cubren'], ['Relaciones', 'Mapa de servicios, cambios, línea y licencias (solo si el módulo está activo)'], ['Costos', 'Solo con el permiso «Ver precios»'], ['Historial', 'Línea de tiempo de lo que le pasó']];
+ACC['guia-p014'] = () => {};
+
+CAMBIO['sin-dosf'] = (el) => { APP.tmp.sinDosF = APP.tmp.sinDosF || {}; APP.tmp.sinDosF[APP.rol] = el.checked; render(true); toast(el.checked ? 'Simulación: sin segunda verificación, no se puede aprobar dinero.' : 'Segunda verificación activa.'); };

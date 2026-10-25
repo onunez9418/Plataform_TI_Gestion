@@ -1,7 +1,7 @@
 # Registro único de permisos
 
-**Versión:** 1 (parte de la v0.3 del documento funcional) · **Fecha:** 2026-10-25 · **Autor:** Analista de Negocio
-**Base:** D-004 (reescrita), D-035, D-036, D-037, D-043, D-048, D-049, D-058, D-060, D-061. Sustituye a la matriz de la sección 7.3 de la v0.2.
+**Versión:** 1.1 (parte de la v0.3 del documento funcional; incorpora D-065 a D-076) · **Fecha:** 2026-10-25 · **Autor:** Analista de Negocio
+**Base:** D-004 (reescrita), D-035, D-036, D-037, D-043, D-048, D-049, D-058, D-060, D-061, D-065, D-066, D-068, D-073, D-074. Sustituye a la matriz de la sección 7.3 de la v0.2.
 **Quién aprueba cambios:** el Gerente de TI. Los módulos **no inventan permisos**: piden una fila nueva (D-036.1). Fuera de este registro no hay permiso.
 
 ## 1. Cómo se lee
@@ -60,15 +60,16 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-02 | `plataforma.rescatar_empresa` | Rescatar una empresa sin administrador (dos personas de plataforma, espera de 24 horas, contacto autorizado) | S | todo | 2F R A No | v1 E1 | T |
 | PS-03 | `plataforma.soporte_leer` | Ver, solo lectura, datos de una empresa autorizada por ella, hasta 24 horas, con banner visible | S | todo | 2F R A | v1 E1 | T |
 | PS-04 | `plataforma.limites_ajustar` | Subir por un periodo corto los topes de una empresa (invitaciones, importación inicial) | S | todo | 2F A | v1 E1 | T |
-| PS-05 | `plataforma.acceso_emergencia` | Emitir un acceso excepcional de un solo uso si el correo falla, tras verificar la identidad por otro medio; exige a una segunda persona de plataforma o al contacto autorizado de la empresa [SUPUESTO S-34] | S | todo | 2F R A No | v1 E1 | T |
+| PS-05 | `plataforma.acceso_emergencia` | Emitir un acceso excepcional de un solo uso si el correo falla, tras verificar la identidad por otro medio; exige a una segunda persona de plataforma o al contacto autorizado confirmado de la empresa; avisa a todos los administradores de la empresa; un uso por empresa y por semana (D-065 S-34, D-073.1) | S | todo | 2F R A No | v1 E1 | T |
 | PS-06 | `plataforma.correo_administrar` | Ver y cambiar el estado global del correo y del proveedor de envío | S | todo | 2F A | v1 E1 | T |
+| PS-233 | `plataforma.ver_conteos_seguridad` | Ver **solo conteos por empresa** de los eventos de seguridad, sin correos ni direcciones IP (D-073.3). No es sensible | | todo | A | v1 E1 | T |
 
 ## 4. Empresa, accesos, auditoría y datos (todas las empresas)
 
 | PS | Nombre técnico | Qué permite | S | Alcance | Controles | Cuándo | Adm | Jef | Téc | Alm | Sol | SL | Emp |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | PS-07 | `empresa.ver_configuracion` | Ver la configuración (moneda base, zona horaria, monto límite, calendario) | | todo | | v1 E1 | T | T | - | - | - | - | - |
-| PS-08 | `empresa.configurar` | Cambiar la configuración de la empresa | | todo | A | v1 E1 | T | - | - | - | - | - | - |
+| PS-08 | `empresa.configurar` | Cambiar la configuración general de la empresa (nombre, calendario, zona horaria, avisos). **No** incluye el monto límite, la moneda base ni la aprobación: eso es PS-232 | | todo | A | v1 E1 | T | - | - | - | - | - | - |
 | PS-09 | `empresa.configurar_modulos` | Activar o desactivar módulos (desactivar oculta, no borra) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - |
 | PS-10 | `empresa.excepciones_funciones` | Cambiar el interruptor único de "Excepciones de separación de funciones" (motivo; confirma un segundo administrador si hay dos o más) | S | todo | 2F R A | v1 E5 | T | - | - | - | - | - | - |
 | PS-11 | `usuarios.ver` | Ver los usuarios de la empresa | | todo | | v1 E1 | T | T | - | - | - | - | - |
@@ -84,6 +85,8 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-21 | `datos.importar` | Importar datos por el asistente único (todo o nada) | S | todo | 2F R A | v1 E4 | T | - | - | - | - | - | - |
 | PS-22 | `datos_personales.ver` | Ver nombre, correo y datos de contacto de las Personas; sin él se ve la referencia (`PRS-0042`) | S | todo | 2F A | v1 E2 | T | T | T | - | - | - | - |
 | PS-23 | `precios.ver` | Ver precios, totales y costos de toda la empresa | S | todo | 2F | v1 E5 | T | T | - | - | - | - | - |
+| PS-232 | `empresa.configurar_aprobacion` | Cambiar el monto límite de aprobación, la moneda base y activar o desactivar la aprobación. **Cada cambio avisa por correo a todos los administradores** (D-068) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - |
+| PS-234 | `texto.redactar` | Redactar por seguridad un texto libre de cualquier registro del núcleo (motivo, nota, observación), con el mismo mecanismo `[REDACTADO]` que PS-153, 221 y 222; motivo obligatorio (D-074.3) | S | todo | 2F A | v1 E4 | T | - | - | - | - | - | - |
 | PS-230 | `precios.ver_propios` | Ver precios y totales **solo** de las órdenes que la persona creó o editó (Técnico y Solicitante). No es sensible: no exige segunda verificación (D-037 fila 10) | | propio | | v1 E5 | - | - | P | - | P | - | - |
 
 ## 5. Personas, estructura y proveedores (núcleo)
@@ -122,7 +125,7 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-48 | `activos.reingreso` | Reactivar el mismo registro de un activo De baja o Extraviado (motivo) | S | todo | 2F A | v1 E4 | T | T | - | - | - | - | - |
 | PS-49 | `activos.cambiar_ubicacion` | Cambiar la ubicación de un activo con serie (movimiento propio) | | todo | A | v1 E4 | T | - | T | T | - | - | - |
 | PS-50 | `activos.corregir_serie` | Corregir una serie ya registrada (motivo; el historial guarda antes y después) | | todo | A | v1 E4 | T | - | T | T | - | - | - |
-| PS-51 | `activos.corregir_costo` | Corregir el costo o la moneda de un activo (activos del Excel) (motivo) | S | todo | 2F A | v1 E4 | T | - | - | - | - | - | - |
+| PS-51 | `activos.corregir_costo` | Corregir el costo o la moneda de un activo (activos del Excel) (motivo). Si el nuevo costo, con impuesto y en moneda base, supera el límite, queda "pendiente de confirmación" y lo confirma **otra persona con PS-51** (si la empresa tiene una sola, la casilla «compras»); el costo pendiente no entra al libro de costos (D-065 S-33) | S | todo | 2F A No | v1 E4 | T | - | - | - | - | - | - |
 | PS-52 | `stock.mover` | Ingresos, salidas y traslados de stock por cantidad | | todo | A | v1 E4 | T | - | T | T | - | - | - |
 | PS-53 | `stock.ajustar` | Ajustar stock por cantidad (motivo) | | todo | A | v1 E4 | T | - | T | - | - | - | - |
 | PS-54 | `entregas.ver` | Ver entregas, devoluciones y actas | | todo | | v1 E4 | T | T | T | - | - | T | - |
@@ -139,17 +142,17 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | PS-61 | `ordenes_compra.ver` | Ver órdenes de compra (Almacén sin precios) | | todo o propio | | v1 E5 | T | T | T | T | P | T | - |
 | PS-62 | `ordenes_compra.crear_editar` | Crear y editar órdenes, incluidas las solicitudes en Borrador (el Solicitante lleva SKU y cantidades; Técnico o Administrador completan precios) | | todo o propio | A | v1 E5 | T | - | T | - | P | - | - |
-| PS-63 | `ordenes_compra.aprobar` | Aprobar o rechazar (motivo al rechazar). No aprueba quien creó o editó desde la última aprobación | | todo | A No | v1 E5 | T | T | - | - | - | - | - |
+| PS-63 | `ordenes_compra.aprobar` | Aprobar o rechazar (motivo al rechazar). No aprueba quien creó o editó desde la última aprobación | S | todo | 2F A No | v1 E5 | T | T | - | - | - | - | - |
 | PS-64 | `ordenes_compra.emitir` | Emitir al proveedor (cambia el estado; imprime o genera PDF) | | todo | A | v1 E5 | T | T | - | - | - | - | - |
 | PS-65 | `ordenes_compra.anular` | Anular una orden antes de su primera recepción (motivo) | | todo o propio | A | v1 E5 | T | T | P | - | P | - | - |
 | PS-66 | `ordenes_compra.cerrar` | Cerrar a mano una orden con recepción parcial (motivo) | | todo | A | v1 E5 | T | T | - | - | - | - | - |
 | PS-67 | `recepciones.crear_confirmar` | Crear y confirmar recepciones. No recibe quien creó o aprobó la orden | | todo | A No | v1 E5 | T | - | - | T | - | - | - |
-| PS-68 | `recepciones.revertir` | Revertir una recepción confirmada (motivo) | | todo | A | v1 E5 | T | T | - | - | - | - | - |
+| PS-68 | `recepciones.revertir` | Revertir una recepción confirmada (motivo). No la revierte quien la confirmó, salvo la casilla «recepción» (D-065 S-33, D-066) | S | todo | 2F A No | v1 E5 | T | T | - | - | - | - | - |
 | PS-69 | `ordenes_servicio.ver` | Ver órdenes de servicio | | todo o propio | | v1 E6 | T | T | T | - | P | T | - |
 | PS-70 | `ordenes_servicio.crear` | Crear órdenes de servicio, incluidas las solicitudes de trabajo (OS en Creada) | | todo o propio | A | v1 E6 | T | - | T | - | P | - | - |
 | PS-71 | `ordenes_servicio.gestionar` | Asignar, ejecutar y cerrar | | todo | A | v1 E6 | T | - | T | - | - | - | - |
 | PS-72 | `ordenes_servicio.cancelar` | Cancelar antes de cerrar | | todo o propio | A | v1 E6 | T | - | T | - | P | - | - |
-| PS-73 | `ordenes_servicio.aprobar` | Aprobar una orden de servicio con costo que supera el límite | | todo | A No | v1 E6 | T | T | - | - | - | - | - |
+| PS-73 | `ordenes_servicio.aprobar` | Aprobar una orden de servicio con costo que supera el límite | S | todo | 2F A No | v1 E6 | T | T | - | - | - | - | - |
 
 ## 8. Proveedores y contratos (PRV-B), licencias, líneas y dominios
 
@@ -157,7 +160,7 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | PS-74 | `contratos.ver` | Ver contratos de proveedor y de licencia (importes con `precios.ver`) | | todo | | Fase 2 | T | T | T | - | - | T | - |
 | PS-75 | `contratos.crear_editar` | Crear y editar contratos (el de licencia es extensión 1 a 1) | | todo | A | Fase 2 | T | - | - | - | - | - | - |
-| PS-76 | `contratos.activar` | Activar un contrato de proveedor o confirmar un contrato de licencia (misma entidad `CTR-`); si supera el límite lo hace otra persona | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
+| PS-76 | `contratos.activar` | Activar un contrato de proveedor o confirmar un contrato de licencia (misma entidad `CTR-`); si supera el límite lo hace otra persona (casilla «contratos y servicios recurrentes» o «licencias» según el tipo, D-066, D-069) | S | todo | 2F A No | Fase 2 | T | T | - | - | - | - | - |
 | PS-77 | `contratos.renovar` | Renovar (la renovación automática es una acción del "sistema" con la persona que aprobó) | | todo | A | Fase 2 | T | T | - | - | - | - | - |
 | PS-78 | `contratos.terminar_anular` | Terminar o anular un contrato de proveedor o de licencia (motivo); terminar uno de licencia libera sus puestos como pendiente | | todo | A | Fase 2 | T | T | - | - | - | - | - |
 | PS-79 | `contratos.gestionar_compromisos` | Gestionar el compromiso de servicio del proveedor | | todo | A | Fase 2 | T | T | - | - | - | - | - |
@@ -184,11 +187,11 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-100 | `dominios.cambiar_titular` | Cambiar el titular de un dominio (reautenticación reciente) | S | todo | 2F R A | Fase 2 | T | - | - | - | - | - | - |
 | PS-101 | `dominios.configurar` | Configurar el módulo de dominios | | todo | A | Fase 2 | T | - | - | - | - | - | - |
 | PS-223 | `licencias.registrar_uso` | Registrar el uso real de una licencia (para el cumplimiento) | | todo | A | Fase 2 | T | - | T | - | - | - | - |
-| PS-224 | `lineas.confirmar_costo` | Confirmar el costo de una línea (si supera el límite, otra persona) | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
+| PS-224 | `lineas.confirmar_costo` | Confirmar el costo de una línea (costo comprometido, D-070.2; si supera el límite, otra persona) | S | todo | 2F A No | Fase 2 | T | T | - | - | - | - | - |
 | PS-225 | `lineas.migrar` | Ejecutar el asistente de migración del número de línea desde el campo del celular (todo o nada, deshacible) | S | todo | 2F R A | Fase 2 | T | - | - | - | - | - | - |
 | PS-226 | `lineas.recibir_avisos` | Recibir avisos de líneas (permanencia, vencimientos) | | todo o propio | | Fase 2 | T | T | T | - | - | - | - |
 | PS-227 | `dominios.registrar_renovacion` | Registrar la renovación de un dominio o certificado | | todo | A | Fase 2 | T | T | T | - | - | - | - |
-| PS-228 | `dominios.confirmar_costo` | Confirmar el costo de un dominio o certificado (si supera el límite, otra persona) | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
+| PS-228 | `dominios.confirmar_costo` | Confirmar el costo de un dominio o certificado (costo comprometido, D-070.3; si supera el límite, otra persona) | S | todo | 2F A No | Fase 2 | T | T | - | - | - | - | - |
 | PS-229 | `dominios.recibir_avisos` | Recibir avisos de dominios y certificados por vencer | | todo o propio | | Fase 2 | T | T | T | - | - | - | - |
 
 ## 9. Garantías, mantenimiento, presupuesto, reportes e integraciones
@@ -199,7 +202,7 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-103 | `garantias.registrar` | Registrar o corregir la garantía de un activo (compra + meses, o fin directo) | | todo | A | v1 E4 | T | - | T | - | - | - | - |
 | PS-104 | `garantias.anular` | Anular una garantía registrada | | todo | A | Fase 2 | T | - | - | - | - | - | - |
 | PS-105 | `garantias.gestionar_reclamos` | Gestionar reclamos de garantía (`RCL-`) | | todo | A | Fase 2 | T | - | T | - | - | - | - |
-| PS-231 | `garantias.confirmar_costo` | Confirmar el costo de una garantía extendida o de un mantenimiento sin orden de servicio (si supera el límite, otra persona) | | todo | A No | Fase 2 | T | T | - | - | - | - | - |
+| PS-231 | `garantias.confirmar_costo` | Confirmar el costo de una garantía extendida o de un mantenimiento sin orden de servicio (costo comprometido, D-070.4; si supera el límite, otra persona) | S | todo | 2F A No | Fase 2 | T | T | - | - | - | - | - |
 | PS-106 | `garantias.recibir_avisos` | Recibir avisos de garantías por vencer | | todo o propio | | Fase 2 | T | T | P | - | - | - | - |
 | PS-107 | `mantenimiento.ver` | Ver mantenimientos | | todo | | Fase 2 | T | T | T | - | - | T | - |
 | PS-108 | `mantenimiento.programar` | Programar mantenimientos | | todo | A | Fase 2 | T | - | T | - | - | - | - |
@@ -208,11 +211,11 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-111 | `mantenimiento.planes` | Administrar planes de mantenimiento | | todo | A | Fase 2 | T | - | - | - | - | - | - |
 | PS-112 | `presupuesto.ver` | Ver presupuestos y gasto (importes con `precios.ver`) | | todo o propio | | Fase 3 | T | T | - | - | - | - | - |
 | PS-113 | `presupuesto.crear_editar` | Crear y editar presupuestos | | todo | A | Fase 3 | T | - | - | - | - | - | - |
-| PS-114 | `presupuesto.aprobar` | Aprobar un presupuesto (siempre otra persona) | | todo | A No | Fase 3 | T | T | - | - | - | - | - |
+| PS-114 | `presupuesto.aprobar` | Aprobar un presupuesto (siempre otra persona) | S | todo | 2F A No | Fase 3 | T | T | - | - | - | - | - |
 | PS-115 | `presupuesto.anular` | Anular un presupuesto | | todo | A | Fase 3 | T | T | - | - | - | - | - |
-| PS-116 | `presupuesto.gasto_registrar` | Registrar un gasto manual (si supera el límite, otra persona) | | todo | A No | Fase 3 | T | - | - | - | - | - | - |
-| PS-117 | `presupuesto.gasto_anular` | Anular un gasto (otra persona) | | todo | A No | Fase 3 | T | T | - | - | - | - | - |
-| PS-118 | `presupuesto.reclasificar` | Reclasificar un costo (si supera el límite, otra persona) | | todo | A No | Fase 3 | T | - | - | - | - | - | - |
+| PS-116 | `presupuesto.gasto_registrar` | Registrar un gasto manual (si supera el límite, otra persona) | S | todo | 2F A No | Fase 3 | T | - | - | - | - | - | - |
+| PS-117 | `presupuesto.gasto_anular` | Anular un gasto (otra persona) | S | todo | 2F A No | Fase 3 | T | T | - | - | - | - | - |
+| PS-118 | `presupuesto.reclasificar` | Reclasificar un costo (si supera el límite, otra persona) | S | todo | 2F A No | Fase 3 | T | - | - | - | - | - | - |
 | PS-119 | `presupuesto.cerrar_periodo` | Cerrar el mes (guarda la depreciación) | | todo | A | Fase 3 | T | T | - | - | - | - | - |
 | PS-120 | `presupuesto.configurar` | Configurar el módulo de presupuestos | | todo | A | Fase 3 | T | - | - | - | - | - | - |
 | PS-121 | `tableros.ver_jefatura` | Ver el tablero de Jefatura | | todo | | Fase 3 | T | T | - | - | - | - | - |
@@ -229,7 +232,7 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-132 | `integraciones.ver` | Ver las integraciones configuradas | | todo | | Fase 3 | T | - | - | - | - | - | - |
 | PS-133 | `integraciones.administrar` | Crear y revocar claves de API y su alcance (reautenticación reciente) | S | todo | 2F R A | Fase 3 | T | - | - | - | - | - | - |
 | PS-134 | `integraciones.ver_uso` | Ver el uso y los registros de la API | | todo | A | Fase 3 | T | - | - | - | - | - | - |
-| PS-135 | `integraciones.administrar_webhooks` | Administrar webhooks (secreto visible una vez, anti-SSRF) | | todo | A | Fase 3 | T | - | - | - | - | - | - |
+| PS-135 | `integraciones.administrar_webhooks` | Administrar webhooks (secreto visible una vez, anti-SSRF) | S | todo | 2F R A | Fase 3 | T | - | - | - | - | - | - |
 | PS-136 | `integraciones.sap_equivalencias` | Administrar equivalencias de códigos con SAP | S | todo | 2F A | Fase 3 | T | - | - | - | - | - | - |
 | PS-137 | `integraciones.configurar_metodos_ingreso` | Activar el ingreso con Microsoft o Google | | todo | R A | Fase 3 | T | - | - | - | - | - | - |
 | PS-220 | `integraciones.sap_exportar` | Generar el archivo de lote hacia SAP (`LSAP-`); exige además `datos.exportar` | | todo | A | Fase 3 | T | - | - | - | - | - | - |
@@ -259,7 +262,7 @@ Los casos con derechos de datos son los del registro de PS-29 `personas.derechos
 | PS-154 | `ayuda.solicitud_aprobar` | Aprobar una solicitud con aprobación (quien no la pidió) | | todo | A No | T | T | - | - | - | - | - |
 | PS-155 | `ayuda.encuesta_responder` | Responder la encuesta de un caso propio | | propio | | P | P | P | P | P | - | P |
 | PS-156 | `ayuda.encuesta_ver_resultados` | Ver resultados de encuestas | | todo | | T | T | - | - | - | - | - |
-| PS-157 | `ayuda.encuesta_ver_detalle` | Ver el detalle de una encuesta | | todo | A | T | T | - | - | - | - | - |
+| PS-157 | `ayuda.encuesta_ver_detalle` | Ver el detalle de una encuesta (muestra quién respondió) | S | todo | 2F A | T | T | - | - | - | - | - |
 | PS-158 | `ayuda.catalogo_ver` | Ver el catálogo de casos | | todo | | T | T | T | T | T | T | T |
 | PS-159 | `ayuda.catalogo_administrar` | Administrar el catálogo de casos | | todo | A | T | - | - | - | - | - | - |
 | PS-160 | `ayuda.cola_administrar` | Administrar colas | | todo | A | T | T | - | - | - | - | - |
@@ -279,10 +282,10 @@ Los casos con derechos de datos son los del registro de PS-29 `personas.derechos
 | PS-169 | `cambios.pedir` | Pedir un cambio ("Pedido por") | | todo | A | T | T | T | - | - | - | - |
 | PS-170 | `cambios.pedir_estandar` | Pedir un cambio estándar con plantilla | | todo | A | T | - | T | - | - | - | - |
 | PS-171 | `cambios.editar` | Editar un cambio | | todo o propio | A | T | P | P | - | - | - | - |
-| PS-172 | `cambios.aprobar` | Aprobar un cambio (siempre otra persona) | | todo | A No | T | T | - | - | - | - | - |
-| PS-173 | `cambios.aprobar_alto` | Aprobar un cambio de riesgo Alto (distinto del implementador) | | todo | A No | T | T | - | - | - | - | - |
+| PS-172 | `cambios.aprobar` | Aprobar un cambio (siempre otra persona) | S | todo | 2F A No | T | T | - | - | - | - | - |
+| PS-173 | `cambios.aprobar_alto` | Aprobar un cambio de riesgo Alto (distinto del implementador) | S | todo | 2F A No | T | T | - | - | - | - | - |
 | PS-174 | `cambios.implementar` | Implementar un cambio | | todo | A | T | - | T | - | - | - | - |
-| PS-175 | `cambios.cerrar` | Cerrar un cambio. No lo cierra quien lo implementó (excepto con la casilla "cambios" del interruptor único) | | todo | A No | T | T | T | - | - | - | - |
+| PS-175 | `cambios.cerrar` | Cerrar un cambio. No lo cierra quien lo implementó (el responsable de implementación registrado en el cambio), salvo la casilla «cambios» del interruptor único (D-066, D-067) | | todo | A No | T | T | T | - | - | - | - |
 | PS-176 | `cambios.cancelar` | Cancelar un cambio en curso | | todo o propio | A | T | P | P | - | - | - | - |
 | PS-177 | `cambios.gestionar_plantillas` | Administrar plantillas estándar (reaprobar: otra persona) | | todo | A No | T | - | - | - | - | - | - |
 | PS-178 | `cambios.gestionar_ventanas` | Administrar ventanas de cambio | | todo | A | T | - | - | - | - | - | - |
@@ -383,7 +386,7 @@ Los nombres de **eventos** que aparecen en los módulos (por ejemplo `acceso.inv
 
 ## 16. Pendientes del registro
 
-- **Clasificación de sensibles (H-SEG-29 y 30 de Seguridad):** PS-08 (cambia el monto límite), PS-68 (revertir recepción), PS-135 (webhooks) y las aprobaciones (PS-63, 73, 76, 114, 172, 173) hoy no son sensibles. Convertirlos en sensibles pondría la segunda verificación a Jefatura TI en casi todo; lo decide el Gerente de TI. Mientras tanto quedan como están.
+- **Sin pendientes de clasificación (D-068, D-074).** Los 16 permisos de D-068 son sensibles (35 a 51); PS-234 `texto.redactar` (D-074.3) hace 52. PS-08 y PS-154 no son sensibles. PS-232 es el monto límite y la moneda base; PS-233 son los conteos de seguridad de plataforma; PS-106 `garantias.recibir_avisos` queda confirmado y los otros `recibir_avisos` (PS-81, PS-226, PS-229) siguen el mismo patrón (Administrador y Jefatura TI todo, Técnico propio).
 - **PS-23 y PS-230:** `precios.ver` es solo para todo y sensible; lo propio (Técnico y Solicitante) pasó a `precios.ver_propios` (PS-230), no sensible.
 - Los valores de las celdas de los módulos de Fase 2 y 3 son una propuesta mía (supuesto S-22 del documento funcional) hasta que cada escuadrón confirme las suyas; se resuelven en la revisión del Auditor Técnico (plan de correcciones, sección 4).
 - El nombre técnico definitivo de cada fila lo fija el Arquitecto en el catálogo del código; este registro fija el nombre funcional y el identificador PS-nn.

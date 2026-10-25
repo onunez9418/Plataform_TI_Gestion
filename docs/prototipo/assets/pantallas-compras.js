@@ -96,7 +96,7 @@ ruta('oc', { id: 'PR-19', titulo: 'Orden de compra', acceso: 'ordenes_compra.ver
   const tuya = o.creo === R().persona;
   const actual = ['Rechazada', 'Anulada'].includes(o.est) ? null : PASOS_OC.indexOf(o.est === 'Recibida total' ? 'Cerrada' : o.est);
   const decidir = o.est === 'Pendiente de aprobación';
-  const bloqueoRegla = tuya && !excepcionActiva() ? 'Usted preparó esta orden: debe aprobarla otra persona. Esta regla vale también para el Administrador.' : '';
+  const bloqueoRegla = razonDosF() || (tuya && !excepcionActiva() ? 'Usted preparó esta orden: debe aprobarla otra persona. Esta regla vale también para el Administrador.' : '');
   const sobrepasa = APP.modulos.presupuesto && o.num === 'OC-000212';
   const acciones = [];
   if (decidir) {
@@ -118,6 +118,7 @@ ruta('oc', { id: 'PR-19', titulo: 'Orden de compra', acceso: 'ordenes_compra.ver
   ${actual === null ? '' : `<div class="flujo" aria-label="Avance de la orden">${PASOS_OC.map((p, i) => `<span class="paso ${i < actual ? 'hecho' : i === actual ? 'actual' : ''}" ${i === actual ? 'aria-current="step"' : ''}>${p}</span>${i < PASOS_OC.length - 1 ? '<span class="sep" aria-hidden="true">›</span>' : ''}`).join('')}</div>`}
   ${o.est === 'Rechazada' ? aviso('alerta', 'La orden fue rechazada', 'Motivo: ' + esc(o.motivoRechazo) + ' Puede corregirla y volver a enviarla; el historial del rechazo se conserva.') : ''}
   ${o.est === 'Anulada' ? aviso('info', 'La orden fue anulada', 'Motivo: ' + esc(o.motivoAnula || '—')) : ''}
+  ${decidir && puede('ordenes_compra.aprobar') ? avisoDosF() : ''}
   ${decidir && tuya && excepcionActiva() ? aviso('sensible', 'Excepción activa', 'La empresa tiene activa la excepción de una sola persona de TI. Si usted aprueba su propia orden, quedará marcada y registrada en la auditoría (quién, cuándo, monto y orden).') : ''}
   <div class="rejilla ancha"><div class="pila">
   <section class="tarjeta"><h2>Datos de la orden</h2><dl class="lista-datos"><dt>Proveedor</dt><dd>${esc(o.prov || '—')}</dd><dt>Fecha</dt><dd>${o.fecha}</dd><dt>Pedido por</dt><dd>${esc(o.creo)}</dd><dt>Aprobada por</dt><dd>${esc(o.aprobo || '—')}</dd><dt>Centro de costo</dt><dd>${esc(o.cc || '—')}</dd><dt>Moneda</dt><dd>${o.mon}</dd></dl></section>
@@ -155,12 +156,12 @@ function normalizar(txt) {
   const bruto = txt.split(/[\n,;\t ]+/);
   let limpiadas = 0;
   const lista = [];
-  txt.split(/\r?\n/).forEach((linea) => {
+  txt.replace(/(\d),(\d+E[+-]?\d+)/gi, '$1\u0001$2').split(/\r?\n/).forEach((linea) => {
     linea.split(/[,;\t]+| {2,}/).forEach((tr) => {
       const t = tr.trim();
       if (!t) return;
-      const u = t.replace(/\s+/g, '').toUpperCase();
-      if (u !== tr) limpiadas++;
+      const u = t.replace(/\u0001/g, ',').replace(/\s+/g, '').toUpperCase();
+      if (u !== tr.replace(/\u0001/g, ',')) limpiadas++;
       lista.push(u);
     });
   });
@@ -220,7 +221,7 @@ function pintarRcp() {
     const celular = sk.cod.startsWith('CEL');
     captura = `<div class="captura"><div class="tarjeta"><h2>Pegar una lista</h2><p class="suave chica">Una serie por línea, o separadas por coma o espacio. Un lector de código de barras escribe aquí como un teclado y salta a la siguiente fila. Máximo 1.000 series.</p>
       <label for="rc-pegar" class="oculto-visual">Lista de series</label><textarea id="rc-pegar" placeholder="5CG3700001&#10;5CG3700002&#10;…"></textarea>
-      <div class="fila" style="margin-top:8px"><button type="button" class="btn primario" data-acc="rcp-agregar">Agregar a la tabla</button></div><hr style="border:0;border-top:1px solid var(--c-borde);margin:12px 0"><p class="suave chica sin-margen">Para probar:</p><div class="fila"><button type="button" class="btn chico" data-acc="rcp-ejemplo" data-t="bueno">Ejemplo correcto</button><button type="button" class="btn chico" data-acc="rcp-ejemplo" data-t="malo">Ejemplo con errores</button><button type="button" class="btn chico" data-acc="rcp-vaciar">Vaciar tabla</button></div>${s.limpiadas ? `<p class="aviso info" style="margin-top:8px">${icono('info')}<span class="cuerpo-aviso">Se limpiaron ${s.limpiadas} series (espacios sobrantes y minúsculas).</span></p>` : ''}</div>
+      <div class="fila" style="margin-top:8px"><button type="button" class="btn primario" data-acc="rcp-agregar">Agregar a la tabla</button></div><hr style="border:0;border-top:1px solid var(--c-borde);margin:12px 0"><p class="suave chica sin-margen">Para probar:</p><div class="fila"><button type="button" class="btn chico" data-acc="rcp-ejemplo" data-t="bueno">Ejemplo correcto (todas las líneas)</button><button type="button" class="btn chico" data-acc="rcp-ejemplo" data-t="malo">Ejemplo con errores (esta línea)</button><button type="button" class="btn chico" data-acc="rcp-vaciar">Vaciar tabla</button></div>${s.limpiadas ? `<p class="aviso info" style="margin-top:8px">${icono('info')}<span class="cuerpo-aviso">Se limpiaron ${s.limpiadas} series (espacios sobrantes y minúsculas).</span></p>` : ''}</div>
       <div><h2 style="margin-bottom:8px">Series capturadas</h2>${L.series.length ? tabla({ filas: L.series.map((x, i) => ({ i, x, e: r.v[i] })), claseFila: (f) => f.e.t === 'error' ? 'fila-error' : f.e.t === 'aviso' ? 'fila-aviso' : '', cols: [{ t: 'Fila', cls: 'num', k: (f) => f.i + 1 }, { t: 'Serie', k: (f) => `<span class="celda-entrada"><input type="text" aria-label="Serie de la fila ${f.i + 1}" value="${esc(f.x.v)}" maxlength="64" data-entrada="rcp-fila" data-i="${f.i}" data-c="v"></span>` }].concat(celular ? [{ t: 'IMEI (se puede completar después)', k: (f) => `<span class="celda-entrada"><input type="text" inputmode="numeric" aria-label="IMEI de la fila ${f.i + 1}" value="${esc(f.x.imei || '')}" maxlength="15" data-entrada="rcp-fila" data-i="${f.i}" data-c="imei"></span>` }] : []).concat([{ t: 'Estado', k: (f) => `<span id="rc-est-${f.i}">${estadoFila(f.e)}</span>` }, { t: 'Quitar', sin: true, k: (f) => `<button class="btn chico" type="button" data-acc="rcp-quitar" data-i="${f.i}" aria-label="Quitar la fila ${f.i + 1}">Quitar</button>` }]) }) : vacio({ titulo: 'Aún no hay series', texto: 'Pegue una lista a la izquierda o use un ejemplo.', icono: 'caja' })}</div></div>`;
   }
   return `<div class="pestanas" role="tablist" aria-label="Líneas de la orden">${tabs}</div>${comunes}${captura}<div id="rc-resumen">${resumenHTML()}</div>`;
@@ -269,20 +270,24 @@ ACC['rcp-agregar'] = () => {
   toast(`${n.lista.length} series agregadas.${n.limpiadas ? ' Se limpiaron ' + n.limpiadas + ' (espacios o minúsculas).' : ''}${n.cortada ? ' Se tomaron las primeras 1.000.' : ''}`);
 };
 ACC['rcp-ejemplo'] = (el) => {
-  const s = APP.tmp.rcp, L = s.lineas[s.linea];
-  if (!L.serie) { toast('Este artículo no lleva series.', 'alerta'); return; }
-  const n = L.pend, base = L.sku.startsWith('CEL') ? 'R58Z7' : '5CG37';
-  const arr = []; for (let i = 0; i < n; i++) arr.push(base + String(1000 + i * 3) + 'X' + i);
+  const s = APP.tmp.rcp;
+  const lineas = el.dataset.t === 'bueno' ? s.lineas : [s.lineas[s.linea]];
+  if (!lineas.some((l) => l.serie)) { toast('Este artículo no lleva series.', 'alerta'); return; }
   let limpiadas = 0;
-  if (el.dataset.t === 'malo') {
-    arr[11] = arr[4];                       // repetida
-    if (L.sku === 'LAP-0001') { arr[20] = '5CG3412H2Q'; arr[27] = 'pf3h8k21 '; arr[33] = '3,5E+14'; }       // ya existe, otro artículo, Excel dañada
-    else { arr[3] = 'R58W1A2B3C4'; }
-    arr[30] = ' ' + arr[30].toLowerCase(); limpiadas++;
-  } else { arr[5] = ' ' + arr[5].toLowerCase() + ' '; arr[9] = arr[9].toLowerCase(); limpiadas = 2; }
-  L.series = arr.map((v) => ({ v: v.replace(/\s+/g, '').toUpperCase(), imei: '' }));
+  lineas.forEach((L) => {
+    if (!L.serie) return;
+    const n = L.pend, base = L.sku.startsWith('CEL') ? 'R58Z7' : '5CG37';
+    const arr = []; for (let i = 0; i < n; i++) arr.push(base + String(1000 + i * 3) + 'X' + i);
+    if (el.dataset.t === 'malo') {
+      arr[11 % n] = arr[4 % n];                      // repetida
+      if (L.sku === 'LAP-0001') { arr[20] = '5CG3412H2Q'; arr[27] = 'pf3h8k21 '; arr[33] = '3,5E+14'; }   // ya existe, otro artículo, Excel dañada
+      else { arr[3] = 'R58W1A2B3C4'; }
+      arr[30 % n] = ' ' + String(arr[30 % n]).toLowerCase(); limpiadas++;
+    } else { arr[5 % n] = ' ' + arr[5 % n].toLowerCase() + ' '; arr[9 % n] = arr[9 % n].toLowerCase(); limpiadas += 2; }
+    L.series = arr.map((v) => ({ v: v.replace(/\s+/g, '').toUpperCase(), imei: '' }));
+  });
   s.limpiadas = limpiadas; refRcp(true);
-  toast(el.dataset.t === 'malo' ? 'Ejemplo con errores cargado: mire las filas marcadas.' : `Ejemplo correcto cargado: ${n} series.`);
+  toast(el.dataset.t === 'malo' ? 'Ejemplo con errores cargado: mire las filas marcadas.' : 'Ejemplo correcto cargado en todas las líneas con series.');
 };
 ACC['rcp-vaciar'] = () => { const s = APP.tmp.rcp; s.lineas[s.linea].series = []; s.limpiadas = 0; refRcp(true); };
 ACC['rcp-quitar'] = (el) => { const s = APP.tmp.rcp; s.lineas[s.linea].series.splice(Number(el.dataset.i), 1); refRcp(true); };
