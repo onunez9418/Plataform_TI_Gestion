@@ -378,8 +378,11 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
   3. **Anonimizar = sobrescribir los datos en el registro de Persona/Usuario** con una referencia ("Persona dada de baja 0042"). La auditoría no se toca y sigue siendo legible, porque apunta al identificador, que ahora muestra la referencia.
   4. La anonimización queda como un evento más en la auditoría (quién la ordenó o que fue automática, y cuándo).
   5. Lo que en la auditoría pueda ser dato personal indirecto (por ejemplo la dirección IP) se conserva solo hasta que venza el plazo de la auditoría (D-024.1). Al vencer, un **proceso de mantenimiento separado de la aplicación** (no un botón del administrador) archiva o elimina las entradas vencidas y deja constancia. Es el único borrado permitido sobre la auditoría.
-- **Motivo:** Separar "quién fue" (identificador, permanente) de "cómo se llama" (dato personal, anonimizable) permite cumplir las dos cosas sin excepciones a la regla de solo agregar.
-- **Recomendó:** Auditor de Cumplimiento (H-CUM-01). Decide el Gerente de TI con base en D-018.5 y D-006.
+  6. **Ampliación (H-CUM-01): lista cerrada de campos personales que la auditoría nunca guarda por valor.** Son: nombre, correo, área, **código de empleado**, teléfono y correo laborales de **contactos de proveedor**, **titular persona natural** de un dominio o contrato, y cualquier **texto libre** (comentarios, motivos, descripciones) donde una persona pueda escribir datos personales. De estos, la auditoría guarda solo "el campo X cambió". En los motivos, que son texto libre, el sistema avisa al escribir que no se pongan datos personales ni claves. La lista la mantiene el Arquitecto en un solo lugar del código y todos los módulos la usan; un campo nuevo con dato personal no pasa a desarrollo sin declararse en ella. Se revisa al abrir cada etapa. Mientras legal no diga lo contrario, IMEI, número de línea asignado y dirección IP se tratan como datos personales.
+  7. **Eventos de seguridad aparte.** La IP, los inicios de sesión fallidos y el correo escrito en un intento fallido (que puede ser de un desconocido) van en un **registro de seguridad separado**, con plazo corto de **12 meses** (propuesta, legal lo confirma), no en los 5 años de la auditoría de negocio.
+  8. La purga a los 5 años se hace por **partición anual**, por un rol de mantenimiento fuera de la aplicación, con **dos personas autorizadas** y constancia (partición, fecha, quién).
+- **Motivo:** Separar "quién fue" (identificador, permanente) de "cómo se llama" (dato personal, anonimizable) permite cumplir las dos cosas sin excepciones a la regla de solo agregar. La lista cerrada evita que cada módulo decida por su cuenta qué es dato personal.
+- **Recomendó:** Auditor de Cumplimiento (H-CUM-01). Decide el Gerente de TI con base en D-018.5 y D-006. La ampliación 6 a 8 la pidió el mismo auditor y se acepta completa.
 - **Qué cambia:** Diseño de auditoría (Arquitecto, Ingeniero de Datos): nunca guardar valores de campos personales. Se actualiza D-018 y la sección "Datos personales" del documento. QA agrega una prueba: anonimizar y comprobar que la auditoría sigue completa y sin nombres.
 
 ### D-031 · Un solo interruptor central para las excepciones de separación de funciones
@@ -390,7 +393,10 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
   3. Solo un Administrador puede cambiarlo y se pide la segunda verificación reciente. Activarlo o apagarlo queda en la auditoría con motivo obligatorio.
   4. Cada vez que se usa la excepción, la orden muestra un aviso visible y se registra un evento en la auditoría.
   5. El Administrador de plataforma no puede activarlo en nombre de una empresa.
-- **Motivo:** Una excepción dispersa es un hueco de control; centralizada es auditable y probable.
+  6. **Ampliación (H-CUM-02): vale para todas las áreas con separación de funciones**, no solo compras y recepción: compras, recepción, presupuestos, contratos, licencias, mesa de ayuda y cambios. Una casilla por área, todas consultadas por la misma función. Ningún módulo puede tener una excepción propia (se retira la regla propia de cambios, RN-CAM-004).
+  7. **Cada casilla vence a los 90 días** y se renueva solo con motivo. Si la empresa tiene dos o más administradores, uno la activa y **otro la confirma**. Cada mes se envía un **resumen de usos** a los administradores y a Jefatura TI. El aviso visible aparece en cada documento que use la excepción.
+  8. QA prueba cada área con la casilla apagada, incluso llamando directo al servidor, y prueba que la casilla vencida deja de funcionar.
+- **Motivo:** Una excepción dispersa es un hueco de control; centralizada es auditable y probable. Sin vencimiento, en una empresa de una persona quien la activa es quien se beneficia y se olvida.
 - **Recomendó:** Auditor de Cumplimiento (H-CUM-02), alineado con D-015.4.
 - **Qué cambia:** Documento §5 y §9. QA prueba que, con el ajuste apagado, ninguna ruta permite la excepción, incluso llamando directamente al servidor.
 
@@ -399,12 +405,25 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Decisión (propuesta, a confirmar con legal):**
   1. **No.** Guardar respaldos 5 años mantendría datos personales ya anonimizados y costaría mucho. Plan: respaldos diarios durante **30 días** y uno mensual durante **12 meses**.
   2. Como el respaldo más antiguo vive hasta 12 meses, un dato anonimizado puede seguir existiendo en respaldos hasta ese plazo. Se acepta y se declara en el aviso de privacidad.
-  3. **Al restaurar** cualquier respaldo, antes de abrir el sistema se **reaplica el registro de anonimizaciones** (una lista aparte que solo guarda el identificador y la fecha, sin datos personales y que se conserva en el sistema vivo). Nadie anonimizado reaparece.
+  3. **Al restaurar** cualquier respaldo, antes de abrir el sistema se **reaplica el registro de anonimizaciones** (una lista aparte que solo guarda el identificador y la fecha, sin datos personales). Nadie anonimizado reaparece. **Ampliación (H-CUM-04):** ese registro vive en un **almacén propio, fuera de la base de datos que se restaura**, sin rotación, replicado, de modo que sobreviva a la pérdida total del sistema. Se corrigen RF-DAT-005, RNF-014 y D-029 (que decían "mismo plazo que los datos"). La prueba de restauración (CA-053) incluye reaplicar las anonimizaciones y comprobar que nadie anonimizado reaparece. El aviso de privacidad declara los 12 meses de respaldos. DevOps reestima el costo con 30 diarios y 12 mensuales. La copia externa de la auditoría, si existe, sigue el plazo de la auditoría.
   4. La auditoría de 5 años vive en el sistema, no depende de los respaldos.
   5. Respaldos cifrados y sin mezclar empresas (D-029). Una prueba de restauración incluye la reaplicación de anonimizaciones.
 - **Motivo:** El respaldo existe para recuperarse de un error reciente, no para archivo histórico. Menos retención reduce costo y exposición de datos.
 - **Recomendó:** Auditor de Cumplimiento (H-CUM-04 pidió definirlo). Plazo: propuesta del Gerente de TI; DevOps estima el costo y legal confirma si 12 meses es aceptable.
 - **Qué cambia:** Reemplaza D-024.4 y ajusta D-029. Entra en el escalado como tema legal y de costo.
+
+### D-033 · Regla provisional: nombre en las actas y anonimización (H-CUM-08, H-CUM-17)
+- **Pregunta:** D-024.2 anonimiza a una Persona a los 2 años del cese, pero las actas de entrega se conservan mientras exista el activo más 5 años. El nombre desaparecería antes de que termine el plazo de la constancia. ¿Qué regla rige mientras legal no responde (L-05)?
+- **Decisión (provisional, hasta la respuesta escrita de legal):**
+  1. **El nombre en las actas y registros de entrega no se anonimiza** mientras dure el plazo de la constancia (activo más 5 años). Pasado ese plazo, el nombre del acta se reemplaza por la referencia.
+  2. Al anonimizar a una Persona se quitan **correo, código de empleado, puesto y demás datos de contacto** del registro de Persona. El nombre en el registro de Persona se reemplaza por la referencia, pero **la copia del nombre dentro de las actas se mantiene** según el punto 1. Es el único lugar donde queda el nombre, y se declara así en la tabla de datos personales y en el aviso de privacidad.
+  3. **No se anonimiza a una Persona** que tenga equipos en "Extraviado o robado" o "No devuelto" sin cerrar. El plazo se cuenta desde el cese y no vence antes del cierre de esos casos (rige el mayor de los dos).
+  4. **La anonimización automática queda apagada** hasta que legal confirme los plazos por escrito. No se activa nada irreversible sin esa confirmación (ver "Escalado al CEO").
+  5. **La anonimización manual** solo se hace para pedidos de derechos documentados en el registro de solicitudes de derechos, con **dos personas** (una propone, otra ejecuta) y con vista previa de lo que se afectará. Quien presenta el pedido no lo atiende. El plazo configurable por empresa solo puede moverse dentro de límites fijados por la plataforma.
+  6. Si legal responde que hay que anonimizar también el nombre en las actas, se reaplica sobre lo existente y se actualiza esta decisión.
+- **Motivo:** Es una decisión irreversible que podría destruir la prueba de una entrega (la palabra de uno contra otro, como advirtió Cumplimiento). Conservar el nombre en el acta hasta fin de plazo es lo más prudente y se puede endurecer después; lo contrario no se puede deshacer.
+- **Recomendó:** Auditor de Cumplimiento (H-CUM-08, H-CUM-17). Decide el Gerente de TI.
+- **Qué cambia:** `personas-ubicaciones.md` RN-PER-021 y RN-PER-018 a 020, `entregas-devoluciones.md` RN-ENT-021 y CA-ENT-13; sección "Datos personales" del documento. **No decidido aquí:** el cese con equipos pendientes de devolución (H-CUM-15), que sigue abierto para el Gerente de TI y el Analista.
 
 ---
 

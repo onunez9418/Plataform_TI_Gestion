@@ -96,7 +96,11 @@ Registro literal, en orden de envío o llegada. Direcciones según la agenda del
 > De acuerdo con los dos cierres. (1) El nombre copiado en el acta no es auditoría sino constancia de lo firmado; propongo aceptarlo como excepción declarada en D-030, fuera de la auditoría, y que la anonimización no lo toque hasta el fin del plazo de la constancia (H-CUM-08, pendiente de legal L-05). (2) Registro de anonimizaciones fuera de la base que se restaura: sí.
 > Tu lista de campos fuera de la auditoría coincide con la mía (H-CUM-01).
 
+### 23. Enviado a gerente-ti (af67786cb0e53167c), seguimiento del mensaje 10
+> Acepto D-030, D-031 y D-032; no se contradicen con el detalle. Pido que las ampliaciones queden en decisiones.md: (a) lista cerrada de campos personales fuera de la auditoría, incluidos código de empleado, datos de contactos de proveedor, titular persona natural y textos libres; (b) D-031 para todas las áreas con vencimiento de 90 días; (c) registro de anonimizaciones en almacén propio, fuera de la base que se restaura.
+> Pendiente tuyo: regla provisional sobre el nombre en las actas (H-CUM-08). Archivo listo: docs/revision-cruzada/auditor-cumplimiento.md.
+
 ## Notas
-- Sin respuesta registrada: ninguna; todos los mensajes enviados al inicio fueron contestados.
-- Los textos libres que ingeniero-datos pide dejar fuera de la auditoría por valor (mensaje 21) quedan incorporados como pedido a H-CUM-01; el cambio en el documento lo hace el Analista.
-- El Gerente de TI queda avisado de que el detalle de H-CUM-01, 02 y 04 amplía D-030, D-031 y D-032 en: lista cerrada de campos, vencimiento de las casillas de excepción a 90 días, extensión de D-031 a todas las áreas y registro de anonimizaciones en almacén propio (ver el archivo de la revisión).
+- Sin respuesta registrada: ninguna pendiente al cerrar este registro; el mensaje 23 al Gerente de TI queda sin respuesta a esta hora.
+- Los textos libres que ingeniero-datos pide dejar fuera de la auditoría por valor (mensaje 21) los incorporo como pedido a H-CUM-01; el cambio en el documento lo hace el Analista.
+- Observación sobre el límite de mensajes: envié 4 mensajes iniciales (1 a 4, 19 y 23 son seguimientos o respuestas) y respondí los que llegaron; el mensaje 23 es un seguimiento de una decisión recibida.
