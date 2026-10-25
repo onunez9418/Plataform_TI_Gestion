@@ -22,7 +22,7 @@
 **No entra:** constructor de reportes, tableros a medida, análisis predictivo, reportes contables (sección 13).
 
 **Fase (D-056).** **REP-A** (Almacén y Técnico, inventario, ciclo de vida, vencimientos): Fase 3, ola F, solo pide el núcleo. **REP-B** (costos, tablero de Jefatura): después de PRE. **REP-C** (SLA y licencias, programación por correo): después de AYU, LIC y NOT-completo.
-**Ya existe en la v1:** toda lista tiene buscador, filtros y exportación (D-021.3) y el Inicio por tarjetas (RNF-008). **REP-A no construye una segunda pantalla de inicio**: aporta tarjetas y pantallas de detalle al Inicio existente. La prueba de carga corre en integración nocturna desde la Etapa 4. Nada de REP se construye antes de aprobar la Etapa 7, salvo decisión del Gerente de TI.
+**Ya existe en la v1:** toda lista tiene buscador, filtros y exportación (D-021.3) y el Inicio por tarjetas (RNF-008 del núcleo). **REP-A no construye una segunda pantalla de inicio**: aporta tarjetas y pantallas de detalle al Inicio existente. La prueba de carga corre en integración nocturna desde la Etapa 4. Nada de REP se construye antes de aprobar la Etapa 7, salvo decisión del Gerente de TI.
 
 ---
 
@@ -60,7 +60,7 @@ Solo nombres y PS-nn de `docs/registro-permisos.md` (D-036). Un reporte muestra 
 | Ver cumplimiento de licencias | `reportes.ver_licencias` (PS-128) | Sí | Sí | No | No | No | No |
 | Guardar vistas de filtros | Ninguno propio: quien ve el reporte puede guardar vistas | Sí | Sí | Sí | Sí | No | Sí |
 | Exportar cualquier reporte | `datos.exportar` (PS-20; sensible, único) | Sí | No | No | No | No | No |
-| Crear y editar programaciones | `reportes.programar` (PS-129; todo / propio) | Sí (todas) | Sí (propias) | No | No | No | No |
+| Crear y editar programaciones | `reportes.programar` (PS-129; todo / propio) | T | P | No | No | No | No |
 | Ver todas las programaciones | `reportes.ver_programaciones` (PS-130) | Sí | No | No | No | No | No |
 | Cambiar parámetros de indicadores | `reportes.configurar` (PS-131) | Sí | No | No | No | No | No |
 | Ver el registro de exportaciones | `auditoria.ver` (PS-18) | Sí | Sí | No | No | No | No |
@@ -147,7 +147,7 @@ Notas
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RNF-REP-001 | Con el volumen de referencia de RNF-010, un tablero carga en 3 s o menos (percentil 95). La prueba de carga corre en integración nocturna desde la Etapa 4. | A | CA-REP-17 |
+| RNF-REP-001 | Con el volumen de referencia (RNF-010 del núcleo), un tablero carga en 3 s o menos (percentil 95). La prueba de carga corre en integración nocturna desde la Etapa 4. | A | CA-REP-17 |
 | RNF-REP-002 | Un reporte con filtros muestra su primera página en 5 s o menos con ese volumen. | A | CA-REP-17 |
 | RNF-REP-003 | Una exportación de 50.000 filas termina en 60 s o menos, en segundo plano con barra de avance (D-038.7). | A | CA-REP-09 |
 | RNF-REP-004 | Tras cada precálculo, la cifra de una tarjeta coincide con su lista (diferencia cero). | A | CA-REP-01 |
@@ -266,7 +266,7 @@ Los correos salen por el motor único de Notificaciones (plantilla, 3 reintentos
 
 ## 9. Integración con el núcleo y con otros módulos
 
-- **Núcleo:** empresa y zona horaria, membresías y Personas, roles y permisos, auditoría (con autor "sistema" y lecturas masivas), inventario, estados (D-012), OC y recepciones, Inicio por tarjetas (RNF-008), puerta única de exportación, calendario de empresa, interruptor de módulos.
+- **Núcleo:** empresa y zona horaria, membresías y Personas, roles y permisos, auditoría (con autor "sistema" y lecturas masivas), inventario, estados (D-012), OC y recepciones, Inicio por tarjetas (RNF-008 del núcleo), puerta única de exportación, calendario de empresa, interruptor de módulos.
 - **Pedidos al núcleo:** stock mínimo opcional en el SKU (S-26, aceptado); fecha de compra y fin de garantía del activo consultables; resolvedor de "propio" para programaciones de reportes (las que creó la membresía), a agregar al registro de permisos.
 - **presupuesto-costos (PRE):** REP llama a sus servicios y lee la copia de parámetros del activo (no la vida útil de la categoría).
 - **proveedores-contratos y garantias-mantenimiento (A):** aportan fechas (fin de garantía, fin de contrato, preaviso, mantenimiento programado) a la pantalla única de Vencimientos; GAR no tiene calendario propio (confirmado por mensaje).
@@ -298,7 +298,7 @@ Cada criterio cita el requisito que cubre. Fechas día/mes/año.
 - **CA-REP-14 Ciclo de vida con copia de parámetros.** *Cubre RF-REP-006, RN-REP-023, 029, 037, 039, 040.* Dado un activo con copia de vida útil de 36 meses y su categoría cambiada después a 48, cuando se calcula "fin de vida útil", entonces se usa 36; un activo sin fecha de compra aparece en "sin dato".
 - **CA-REP-15 Vistas guardadas.** *Cubre RF-REP-012, RN-REP-025.* Dado una vista de Ana, cuando Luis abre el listado de vistas, entonces no la ve.
 - **CA-REP-16 Foto mensual.** *Cubre RF-REP-019, RN-REP-018, 019.* Dado que el trabajador estuvo caído el último día del mes, cuando vuelve, entonces toma la foto marcada "tomada con retraso" con su fecha de corte real, y una segunda corrida no la duplica.
-- **CA-REP-17 Procesos y rendimiento con dos empresas.** *Cubre RF-REP-023, RN-REP-027, 059, RNF-REP-001, 002, 007.* Dado dos empresas con zonas distintas (una suspendida) y el volumen de RNF-010, cuando el precálculo corre dos veces y tras una caída de dos días, entonces no hay duplicados, cada agregado queda en su empresa, la suspendida se salta, el tablero carga en 3 s o menos (percentil 95) y tarjeta y lista coinciden.
+- **CA-REP-17 Procesos y rendimiento con dos empresas.** *Cubre RF-REP-023, RN-REP-027, 059, RNF-REP-001, 002, 007.* Dado dos empresas con zonas distintas (una suspendida) y el volumen de referencia (RNF-010 del núcleo), cuando el precálculo corre dos veces y tras una caída de dos días, entonces no hay duplicados, cada agregado queda en su empresa, la suspendida se salta, el tablero carga en 3 s o menos (percentil 95) y tarjeta y lista coinciden.
 - **CA-REP-18 Cruce de módulos sin permiso.** *Cubre RN-REP-002.* Dado un reporte que combina inventario y costos y un usuario sin `reportes.ver_costos`, entonces ve inventario sin columnas de costo.
 - **CA-REP-19 Topes.** *Cubre RN-REP-010.* Dado un usuario que hizo 10 exportaciones en una hora, cuando intenta la 11, entonces se rechaza informando cuándo podrá repetir; con la sexta en una hora los administradores reciben alerta.
 - **CA-REP-20 Casos restringidos.** *Cubre RN-REP-028, 052.* Dado un caso restringido, cuando se calculan casos abiertos y SLA, entonces no cuenta ni aparece en ninguna lista, exportación o tablero.
@@ -373,7 +373,7 @@ Cada criterio cita el requisito que cubre. Fechas día/mes/año.
 | Hoja "Aviso" y lectura masiva desde 5.000 filas (RN-REP-007, 061) | D-061.1, D-061.6 |
 | Fechas día/mes/año, páginas de 50 con selector 25/50/100 | D-049.8; H-UX-17, H-UX (b) |
 | Permisos reemplazados por PS-nn (PS-121 a 131); valores por rol del registro: Técnico ve el tablero de Técnico sin alcance propio, Técnico sin cumplimiento de licencias, Jefatura TI sin ver todas las programaciones y con `reportes.programar` solo propio; se declara "Empleado (portal): no aplica"; alcance "propio" sin Persona = lista vacía | D-036, D-037; `docs/registro-permisos.md`; H-QA-20 |
-| REP-A reutiliza el Inicio por tarjetas de RNF-008 y no construye uno segundo (RF-REP-024) | H-AUD (fila 24); plan de correcciones |
+| REP-A reutiliza el Inicio por tarjetas de RNF-008 del núcleo y no construye uno segundo (RF-REP-024) | H-AUD (fila 24); plan de correcciones |
 | Calendario propio sustituido por la pantalla única de Vencimientos, confirmada con A y C (RF-REP-007) | DS-07 (D-053); H-AUD (calendarios) |
 | Fin de vida útil usa la copia de parámetros del activo, no la de la categoría (RN-REP-039) | H-QA-22 (4); D-044.9 |
 | Solo "equipo físico" cuenta como activo vigente (RN-REP-029) | D-045; H-ARQ-06 |
@@ -384,7 +384,8 @@ Cada criterio cita el requisito que cubre. Fechas día/mes/año.
 | Se llena el hueco de numeración RN-REP-026 a 029 | H-AUD (saltos de numeración) |
 | Estados de licencias de LIC (En regla, Déficit, Excedente, Sin verificar) y resultados de SLA de AYU, confirmados por mensaje | Coordinación Oleada B |
 | Módulo apagado: reportes ocultos y API "no encontrado" (RN-REP-060) | D-037 fila 12 |
-| Volumen citado desde RNF-010 y prueba de carga nocturna desde la Etapa 4 (RNF-REP-001) | D-057 S-19 |
+| Volumen citado desde RNF-010 del núcleo y prueba de carga nocturna desde la Etapa 4 (RNF-REP-001) | D-057 S-19 |
+| Se corrigen las citas de RNF-008 y RNF-010 sin código de módulo: ahora dicen "del núcleo"; la celda de `reportes.programar` se escribe "T" (Administrador) y "P" (Jefatura TI) como en el registro | N-AUD-01 y N-AUD-04 de la ronda 3 del Auditor Técnico |
 | Columnas "Cuándo" y "CA"; cada CA cita lo que cubre; 22 criterios (nuevos: fórmulas con tabulador, topes, casos restringidos, módulo apagado, copia de parámetros, procesos con dos empresas, foto con retraso, accesibilidad) | Plan de correcciones regla 2; H-AUD-21; QA y Seguridad |
 | Pantallas con ID `PAN-REP-nn`; prefijo `PRG-` reservado; "usted" y "Cliente (CEO)"; "Persona anonimizada 0042" | D-049, D-053 |
 | La auditoría de exportaciones guarda solo los nombres de los campos filtrados, sin el texto buscado (RF-REP-015, sección 6, CA-REP-06) | D-030; Auditor de Cumplimiento R-07 (ronda 3) |

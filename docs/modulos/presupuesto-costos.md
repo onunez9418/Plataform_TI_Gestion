@@ -21,7 +21,7 @@
 **No entra:** contabilidad oficial, impuestos, conversión de monedas, pagos (sección 13).
 
 **Fase (D-056).** PRE-A es de la Fase 3, ola F. PRE-B llega después de los módulos de los que lee costos. Nada de PRE se construye antes de que el Cliente (CEO) apruebe la Etapa 7, salvo decisión del Gerente de TI.
-**Preparaciones del núcleo en la v1** (el diseño se hace desde la Etapa 1): tipo de autor "sistema" (Etapa 1); centro de costo con Persona responsable y código externo, y moneda base de la empresa (Etapas 1 y 2); costo y moneda del activo corregibles (Etapa 4); centro de costo en la OC y punto de extensión en la pantalla de aprobación (Etapa 5); campo `fuente_costo` en toda obligación de pago.
+**Preparaciones del núcleo en la v1** (el diseño se hace desde la Etapa 1): tipo de autor "sistema" (Etapa 1); centro de costo con Persona responsable y código externo, y moneda base de la empresa (Etapas 1 y 2); costo y moneda del activo corregibles (Etapa 4); centro de costo en la OC (Etapa 5) y, **[SUPUESTO] pendiente del Analista**, un punto de extensión en la pantalla de aprobación de la OC; campo `fuente_costo` en toda obligación de pago.
 
 ---
 
@@ -94,7 +94,7 @@ Notas
 | RF-PRE-012 | Registrar gasto manual (rubro, centro, fecha, importe sin impuesto, % de impuesto, moneda, descripción, motivo) y anularlo con otro registro. | A | CA-PRE-15 |
 | RF-PRE-013 | Reclasificar un costo a otro centro o rubro, con motivo; genera un registro contrario y uno nuevo. | A | CA-PRE-15 |
 | RF-PRE-014 | Alertar cuando la ejecución llegue a los umbrales de atención y excedido, por línea, centro y presupuesto. | A | CA-PRE-06 |
-| RF-PRE-015 | En la pantalla de aprobación de la OC (punto de extensión del núcleo) mostrar el efecto en el presupuesto y exigir una justificación escrita si lo excede, sin segundo nivel. | A | CA-PRE-07 |
+| RF-PRE-015 | **[SUPUESTO]** En la pantalla de aprobación de la OC (punto de extensión que el núcleo aún no declara) mostrar el efecto en el presupuesto y exigir una justificación escrita si lo excede, sin segundo nivel. | A | CA-PRE-07 |
 | RF-PRE-016 | Cerrar un periodo mensual: congela ejecutado, comprometido y cuotas de depreciación de ese mes. | A | CA-PRE-09 |
 | RF-PRE-017 | Proyección de renovaciones de los próximos 12 meses por mes, rubro y moneda, desde los vencimientos y el último importe conocido. | B | CA-PRE-22 |
 | RF-PRE-018 | Porcentaje de incremento esperado por rubro para la proyección (por defecto 0 %). | B | CA-PRE-22 |
@@ -254,7 +254,7 @@ Los avisos salen por el motor único de Notificaciones (hora de envío configura
 ## 9. Integración con el núcleo y con otros módulos
 
 - **Núcleo:** empresa, zona horaria, moneda base y monedas; membresías y Personas; roles y permisos; auditoría con autor "sistema" (D-041); catálogo de centros de costo y categorías (con naturaleza); costo, moneda y centro de costo del activo; líneas de OC con impuesto, recepción y su reversión; interruptor central de excepciones; puerta de exportación; calendario de empresa.
-- **Pedidos al núcleo:** (a) punto de extensión en la pantalla de aprobación de la OC en la Etapa 5 (RF-PRE-015); (b) centro de costo en la OC, opcional (RF-OC-007); (c) `activos.corregir_costo` (D-044.9). Confirmados o decididos.
+- **Pedidos al núcleo:** (a) **[SUPUESTO] no confirmado:** punto de extensión en la pantalla de aprobación de la OC en la Etapa 5 (RF-PRE-015). El documento funcional v0.3 todavía no lo contiene; se pidió al Analista que lo incorpore al núcleo o decida retirarlo. Si se retira, RF-PRE-015 y CA-PRE-07 pasan a una pantalla propia de PRE sin tocar la aprobación; (b) centro de costo en la OC, opcional (RF-OC-007), confirmado; (c) `activos.corregir_costo` (PS-51), decidido en D-044.9.
 - **Registro de módulo (D-038.6):** permisos `presupuesto.*`; escucha `compras.recepcion_confirmada`, `compras.recepcion_revertida`, `compras.orden_aprobada`, `inventario.activo_estado_cambiado`, `personas.persona_cesada`; emite `presupuesto.umbral_superado`, `presupuesto.aprobado` y `presupuesto.periodo_cerrado`; declara como pendiente de la persona "centros de costo de los que es responsable"; proveedor de fuentes de costo e indicadores para REP.
 - **proveedores-contratos y garantias-mantenimiento (A):** contrato con proveedor, moneda, valor del periodo sin impuesto, frecuencia, inicio, fin, centro, y "OC relacionada"; las fechas de cobro se derivan de inicio más frecuencia; garantía extendida y mantenimiento sin OS guardan costo y moneda; con OS, el costo vive en la OS.
 - **licencias-software, lineas-moviles, dominios-certificados (B):** patrón de costo común (importe sin impuesto, % de impuesto, moneda, periodicidad, inicio, fin, centro, `fuente_costo`), "costo mensual equivalente" calculado por la función única y "orden de compra vinculada" opcional.

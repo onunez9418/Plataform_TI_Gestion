@@ -96,7 +96,7 @@ Columnas: **Cuándo** = `v1, Etapa 4` / `v1, Etapa 5` (GAR-A) o `Fase 2` (GAR-B)
 | RF-GAR-026 | Tarjetas de Inicio: garantías por vencer, mantenimientos atrasados, activos en reparación y preventivos realizados a tiempo (%). Los reportes avanzados son de `reportes-tableros`. | Fase 2 | 16 |
 | RF-GAR-027 | Botón opcional "Crear cambio estándar" desde un mantenimiento (precarga activo y fecha); GAR guarda solo el vínculo. | Fase 2 | 16 |
 | RF-GAR-028 | Mostrar en un correctivo el contrato de PRV que cubre el activo, si existe. | Fase 2 | 02 |
-| RF-GAR-029 | Parámetros por empresa: días de "reparación prolongada" y de reclamo sin novedad. Los umbrales de aviso se configuran en NOT-05. | Fase 2 | 16 |
+| RF-GAR-029 | Parámetros por empresa: días de "reparación prolongada" y de reclamo sin novedad. Los umbrales de aviso se configuran en PAN-NOT-05. | Fase 2 | 16 |
 | RF-GAR-031 | Confirmar el costo de una garantía extendida o de un mantenimiento sin OS cuando supera el límite (RN-GAR-041). | Fase 2 | 20 |
 | RF-GAR-030 | Declarar en el registro de módulo: cancelar mantenimientos al dar de baja el activo (síncrono) y los mantenimientos de una Persona como pendientes (D-038.5, D-061.7). | Fase 2 | 11, 19 |
 
@@ -222,7 +222,7 @@ Los avisos usan la tabla única de Notificaciones; GAR no tiene tabla de avisos 
 | PAN-GAR-06 | Registro y ejecución de mantenimiento | Programar, ejecutar, cerrar; versión celular. | Técnico |
 | PAN-GAR-07 | Parámetros del módulo | Umbrales propios de GAR. | Administrador |
 
-Los mantenimientos del Técnico aparecen en su bandeja única "Mi trabajo" (pestaña Mantenimientos); los vencimientos, en la pantalla única "Vencimientos"; los avisos se configuran en NOT-05.
+Los mantenimientos del Técnico aparecen en su bandeja única "Mi trabajo" (pestaña Mantenimientos); los vencimientos, en la pantalla única "Vencimientos"; los avisos se configuran en PAN-NOT-05.
 
 ## 8. Notificaciones y automatismos
 
@@ -337,6 +337,7 @@ Los avisos de GAR-B no entran a la v1 (D-023, D-061.4). Un proveedor de servicio
 | Cancelación de mantenimientos al dar de baja en la misma transacción | D-038.5, H-ARQ-11, H-DAT-09 |
 | Ejecutor y pendientes como Persona con vínculo opcional | D-044.5, D-041, D-061.7 |
 | Acto de dinero S-33 (garantía extendida y mantenimiento sin OS sobre el límite): RF-GAR-031, RN-GAR-041, permiso `garantias.confirmar_costo` solicitado, evento y CA-GAR-20 | S-33 del núcleo, RN-017, D-043.4, H-CUM-03 |
+| Dos citas viejas de pantalla `NOT-05` pasan a `PAN-NOT-05`; las pantallas propias ya eran `PAN-GAR-nn` | D-049.4, N-AUD-01 (ronda 3) |
 | Eventos renombrados al catálogo de NOT (`vencimiento.umbral_alcanzado`, `mantenimiento.activo_reparacion_prolongada`) | D-038.5, D-049, notificaciones.md |
 | Permisos migrados a los PS-nn del registro (PS-102 a PS-111, PS-23, PS-44, PS-45, PS-47, PS-20, PS-09); `mantenimiento.planes` y `garantias.recibir_avisos` con el nombre del registro; Almacén y Jefatura TI según sus valores por defecto; `datos.exportar` único; columna "Empleado (portal): no aplica" | D-036, D-037, H-AUD-05, H-SEG-07, registro de permisos |
 | Volumen de referencia citado de RNF-010; RNF-GAR-007 definido | S-19 (D-057), H-AUD-24, H-QA-22 |

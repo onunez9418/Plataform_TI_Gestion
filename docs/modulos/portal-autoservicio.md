@@ -65,7 +65,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen (`Fase 3`).
 | RF-POR-003 | Líneas: líneas móviles a su nombre (número, operador, equipo asociado), sin costos. Con LIN activo vienen de ese módulo; sin LIN, el número es el campo de la unidad del celular (D-042). | Fase 3 | CA-POR-01 |
 | RF-POR-004 | Licencias: productos de software asignados a su nombre; nunca claves. Solo si el módulo de licencias asigna puestos a Personas (S-POR-04). | Fase 3 | CA-POR-06 |
 | RF-POR-005 | Actas: lista y PDF reimprimible de sus actas de entrega y devolución. | Fase 3 | CA-POR-01 |
-| RF-POR-006 | Casos: lista y detalle de sus casos de AYU, solo con comentarios públicos. Abre AYU-01, AYU-02 y AYU-14. | Fase 3 | CA-POR-04 |
+| RF-POR-006 | Casos: lista y detalle de sus casos de AYU, solo con comentarios públicos. Abre PAN-AYU-01, PAN-AYU-02 y PAN-AYU-14. | Fase 3 | CA-POR-04 |
 | RF-POR-007 | Botón **"Pedir ayuda"**: abre el catálogo de casos de AYU. "Reportar un problema" se prellena con el equipo elegido de su lista. | Fase 3 | CA-POR-04 |
 | RF-POR-008 | Reportar extravío o robo de un equipo propio: crea un caso urgente en AYU y avisa a TI; **no cambia el estado del equipo**. | Fase 3 | CA-POR-11 |
 | RF-POR-009 | Solicitar un equipo o accesorio: categoría solicitable, motivo, urgencia y fecha deseada. Crea un caso del servicio "Solicitar equipo", **no una orden de compra**. | Fase 3 | CA-POR-10 |

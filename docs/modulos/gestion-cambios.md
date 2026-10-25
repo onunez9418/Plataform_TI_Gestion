@@ -166,7 +166,7 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 | Aprobado | En implementación | Responsable (`cambios.implementar`) | RN-CAM-012 |
 | Aprobado | Cancelado | `cambios.cancelar` | Motivo; RN-CAM-015 |
 | En implementación | Implementado | Responsable (`cambios.implementar`) | Resultado, horas reales y notas |
-| Implementado | Cerrado | `cambios.cerrar`, otra persona que quien implementó | Revisión posterior si es obligatoria; si no, un comentario |
+| Implementado | Cerrado | `cambios.cerrar`, persona distinta de quien implementó | Revisión posterior si es obligatoria; si no, un comentario |
 
 Ninguna otra transición. Cerrado y Cancelado son finales. Un resultado mal registrado lo corrige `cambios.cerrar` en Implementado, con motivo y valor anterior en el historial.
 

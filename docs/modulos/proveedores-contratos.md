@@ -93,7 +93,7 @@ Columnas: **Cuándo** = `v1, Etapa 2` (PRV-A) o `Fase 2` (PRV-B). **CA** = crite
 | RF-PRV-021 | Registrar documentos de referencia de un proveedor o contrato. | Fase 2 | 11 |
 | RF-PRV-022 | Lista de contratos con filtros (estado mostrado, proveedor, tipo, responsable, vence en N días, preaviso próximo) y exportación por la puerta única. | Fase 2 | 10 |
 | RF-PRV-023 | Los contratos por activar aparecen en la bandeja única "Por aprobar" (D-053), con el verbo "Aprobar". | Fase 2 | 05 |
-| RF-PRV-024 | Administrar los tipos de contrato de la empresa. La configuración de avisos vive solo en Notificaciones (NOT-05). | Fase 2 | 10 |
+| RF-PRV-024 | Administrar los tipos de contrato de la empresa. La configuración de avisos vive solo en Notificaciones (PAN-NOT-05). | Fase 2 | 10 |
 | RF-PRV-025 | En la orden de compra o de servicio, mostrar (informativo) los contratos vigentes del proveedor y sus compromisos. | Fase 2 | 12 |
 | RF-PRV-026 | Al cerrar una orden de servicio con compromiso aplicable, mostrar el tiempo real frente al objetivo, en horas corridas, solo como dato. | Fase 2 | 12 |
 | RF-PRV-027 | Historial del contrato: cambios de estado, renovaciones y adendas, con quién y cuándo. | Fase 2 | 07 |
@@ -139,7 +139,7 @@ Columnas: **Cuándo** = `v1, Etapa 2` (PRV-A) o `Fase 2` (PRV-B). **CA** = crite
 | RN-PRV-033 | Los importes no aparecen en pantallas, exportaciones, correos ni avisos de quien no tenga `precios.ver`; las columnas se omiten. |
 | RN-PRV-034 | Los datos de contactos están en la lista cerrada de campos personales (D-030.6): la auditoría guarda "el campo cambió" sin valor. Un contacto inactivo se anonimiza a los 2 años; la anonimización automática permanece apagada hasta la confirmación legal (D-033.4), y entonces se sobrescribe la fila. |
 | RN-PRV-035 | El número interno no se reutiliza ni se edita (D-007). |
-| RN-PRV-036 | Las reglas de aviso se declaran a Notificaciones con los umbrales por defecto de NOT: 90, 60, 30, 15 y 7 días; la empresa los edita en NOT-05. |
+| RN-PRV-036 | Las reglas de aviso se declaran a Notificaciones con los umbrales por defecto de NOT: 90, 60, 30, 15 y 7 días; la empresa los edita en PAN-NOT-05. |
 | RN-PRV-037 | Los datos de contacto no salen en exportaciones generales ni en el visor de la auditoría; solo se ven en pantalla con `proveedores.ver_contactos`. |
 | RN-PRV-038 | Las fechas de cobro no se guardan: se derivan de inicio y periodicidad. Presupuesto lee las columnas del patrón de costo (RN-PRV-012). |
 | RN-PRV-039 | Si el proveedor es Persona natural, su nombre, nombre comercial e identificación fiscal son campos personales: la auditoría guarda solo "el campo cambió" y la exportación los omite sin `datos_personales.ver`. |
@@ -213,7 +213,7 @@ Los avisos usan la tabla única de Notificaciones (empresa, regla, entidad, umbr
 | PAN-PRV-07 | Diálogos de renovar, adenda, terminar, anular y "no renovar" | Usan el diálogo único de motivo (D-053). | Jefatura TI |
 | PAN-PRV-08 | Tipos de contrato | Ajuste de la empresa. | Administrador |
 
-La bandeja de activación es la pestaña "Contratos" de "Por aprobar"; los vencimientos se ven en la pantalla única "Vencimientos" y su configuración en NOT-05; ambas pertenecen al núcleo y a NOT.
+La bandeja de activación es la pestaña "Contratos" de "Por aprobar"; los vencimientos se ven en la pantalla única "Vencimientos" y su configuración en PAN-NOT-05; ambas pertenecen al núcleo y a NOT.
 
 ## 8. Notificaciones y automatismos
 
@@ -335,6 +335,7 @@ Reglas: los avisos de PRV-B no entran a la v1 (D-023, D-061.4); los de la misma 
 | Pantallas `PAN-PRV-nn`; bandeja única "Por aprobar"; sin pantalla de avisos propia | D-049.4, H-UX-06, H-UX-11 |
 | Orden de RN-PRV-036 a 038 corregido | H-AUD-24 |
 | Evento renombrado a `vencimiento.umbral_alcanzado` (catálogo de NOT) | D-038.5, notificaciones.md |
+| Tres citas viejas de pantalla `NOT-05` pasan a `PAN-NOT-05`; las pantallas propias ya eran `PAN-PRV-nn` | D-049.4, N-AUD-01 (ronda 3) |
 | Reglas de proceso diario, concurrencia y aislamiento; CA-PRV-14 a 22 (dos empresas, reloj fijable, referencia cruzada, concurrencia, borde, canario) | D-038.4, D-039.6, D-063.6, H-SEG-02, H-QA-12, H-ARQ-17, QA fila PRV |
 | Volumen de referencia citado de RNF-010; hora única de avisos | S-19 (D-057), H-AUD-24, H-QA-22 |
 | Supuestos resueltos como confirmados, cambiados o nuevos | D-057, D-058 |
