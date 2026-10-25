@@ -3,17 +3,17 @@
 **Rol:** auditor-codigo · **Fecha:** 2026-10-25
 **Qué revisé:** `docs/documento-funcional.md` (v0.3), `docs/registro-permisos.md` (PS-01 a PS-231), `docs/equipo/decisiones.md` (D-001 a D-064), `docs/equipo/plan-correcciones.md` y los 17 módulos de `docs/modulos/` (v0.2). No edité ningún documento revisado.
 **Cómo lo comprobé:** con búsquedas y guiones sobre los archivos, no leyendo a ojo. Cada afirmación dice el archivo o el identificador donde se ve. Lo que es juicio mío va marcado **OPINIÓN**.
-**Advertencia de corte:** los documentos se siguieron editando mientras revisaba (el registro pasó de PS-229 a PS-231 y los escuadrones corrigieron varios módulos tras mis avisos). Este informe está al corte **commit `10ed659` (17:24) más cuatro módulos con cambios sin confirmar** (dominios, garantías, líneas, mesa de ayuda). Lo que cambie después no está cubierto. Los guiones son repetibles: volver a correrlos da el estado vigente.
+**Advertencia de corte:** los documentos se siguieron editando mientras revisaba (el registro pasó de PS-229 a PS-231 y los escuadrones corrigieron varios módulos tras mis avisos). Este informe está al corte **commit `215f469` (17:26)**. Lo que cambie después no está cubierto. Los guiones son repetibles: volver a correrlos da el estado vigente.
 **[ESCALAR AL CEO]:** ninguno. Nada de lo que encontré es dinero, legal o irreversible nuevo.
 
 ---
 
 ## 1. Resumen en lenguaje simple
 
-- **Las dos listas grandes quedaron cerradas.** De mis 24 hallazgos, 19 están cerrados, 5 parciales y ninguno abierto. De mis 28 conflictos entre documentos, 26 ya no se contradicen, 2 siguen en parte.
+- **Las dos listas grandes quedaron casi cerradas.** De mis 24 hallazgos, 21 están cerrados, 3 parciales y ninguno abierto. De mis 28 conflictos entre documentos, 27 ya no se contradicen y 1 sigue en parte.
 - **Las comprobaciones mecánicas salen limpias donde más importaba:** el registro de permisos no tiene saltos ni repetidos; ningún módulo cita un permiso que no exista en el registro; de 1.380 celdas de matrices de los módulos comparadas con el registro, 1.378 coinciden; no hay identificadores repetidos en ningún documento; todas las decisiones D-001 a D-064 existen y ninguna cita apunta a una decisión, supuesto, permiso, requisito o criterio inexistente.
-- **Lo que queda es de forma, no de fondo:** 170 citas de criterios sin el prefijo `CA-` en tres módulos (cambios, problemas, CMDB), unas 76 citas de reglas sin código de módulo en mesa de ayuda y notificaciones (se confunden con las reglas del núcleo), unos identificadores de pantalla viejos, y dos decisiones de reparto de casillas de excepción que hay que escribir.
-- **Veredicto del conjunto: conforme con observaciones.** El núcleo v0.3 está conforme con observaciones; de los 17 módulos, 5 están conformes y 12 conformes con observaciones; ninguno no conforme. Las condiciones mínimas para pasar a "conforme" están en la sección 6 (seis ítems, todos de edición).
+- **Lo que queda es de forma, no de fondo:** 112 citas de criterios sin el prefijo `CA-` en cambios y problemas, 11 identificadores de pantalla viejos (portal, proveedores, garantías), 2 citas de reglas sin código de módulo en reportes, y una decisión del Gerente sobre a qué casilla de excepción pertenecen dominios, líneas y garantías. Mesa de ayuda, notificaciones y CMDB corrigieron sus citas mientras yo revisaba.
+- **Veredicto del conjunto: conforme con observaciones.** El núcleo v0.3 está conforme con observaciones; de los 17 módulos, 8 están conformes y 9 conformes con observaciones; ninguno no conforme. Las condiciones mínimas para pasar a "conforme" están en la sección 6 (seis ítems, todos de edición).
 
 ---
 
@@ -43,12 +43,12 @@ Estado: **Cerrado** (la contradicción ya no existe), **Parcial** (quedan restos
 | H-AUD-18 · RN-NOT-002 contra RF-NOT-030 | **Cerrado** | `notificaciones.md` RN-NOT-002 ahora dice "ningún **usuario**" y remite a RN-NOT-027 para Personas; RF-NOT-030. Núcleo RF-ACC-021 = NOT-base (única fuente). |
 | H-AUD-19 · Conceptos con dos dueños | **Cerrado** | Extravío: `entregas-devoluciones.md` RF-ENT-010 (ENT guarda solo la asignación cerrada; con AYU es un caso). SLA: `proveedores-contratos.md` glosario ("Compromiso de servicio del proveedor"). Calendarios: "pantalla única de Vencimientos" en REP RF-REP-007 y GAR RF-GAR-024. Umbrales: LIN y DOM usan los de NOT; DOM justifica su apartamiento (sec. 8, D-058 fila 3). |
 | H-AUD-20 · Datos de Persona más allá de D-006 | **Cerrado** | D-058 #7. Núcleo RF-PER-002 y tabla 18.1 listan cada dato con finalidad; `personas-ubicaciones.md` RN-PRS-031 (motivo de cese como lista cerrada sin texto libre). |
-| H-AUD-21 · Trazabilidad de los módulos | **Parcial** | Resuelto: todos los módulos tienen columna "Cuándo" por requisito y sus criterios citan los requisitos que cubren (comprobado en los 17; solo CA-AYU-26 y CA-PRE-12 dicen "cubre la sección 3", que es válido). Pendiente: 170 citas sin "CA-" y unas 76 citas de reglas sin código de módulo (N-AUD-01), y `docs/trazabilidad.md` todavía no existe (N-AUD-07). |
+| H-AUD-21 · Trazabilidad de los módulos | **Parcial** | Resuelto: todos los módulos tienen columna "Cuándo" por requisito y sus criterios citan los requisitos que cubren (comprobado en los 17; solo CA-AYU-26 y CA-PRE-12 dicen "cubre la sección 3", que es válido). Pendiente: 112 citas sin "CA-" (CAM, PRB) y 2 citas de reglas sin código de módulo (REP) (N-AUD-01), y `docs/trazabilidad.md` todavía no existe (N-AUD-07). |
 | H-AUD-22 · Prefijos que chocan | **Cerrado** | D-049; núcleo §26.2. 0 apariciones de `E-0000`, `D-0000`, `P-0042`, `CLI-`, `P-PRV`, `P-GAR` fuera de las notas explicativas. |
 | H-AUD-23 · Contradicciones menores dentro del núcleo | **Parcial** | Resuelto: glosario "Activo" ("unidad física o digital", incluye licencia sin llamarla física); RF-USR-004 "Retirado"; RNF-008 ya no promete pantallas de etapas posteriores; RF-PER-010 separa Etapa 2 (alta manual) y Etapa 4 (importación). Pendiente (bajo): RF-INV-012 y RF-OS-007 dicen lo mismo con dos identificadores; en las tablas de RF-OC, RF-CAT y RF-INV los números no van en orden de lectura (no hay saltos ni repetidos); el resumen de §26.1 omite CA-041 (de RF-USR-007) y CA-050 (de RF-ACC-025). |
 | H-AUD-24 · Detalles de forma en los módulos | **Parcial** | Resuelto: RN-ENT-016 bien citado, RNF-GAR-007 definido, RN-PRV-036 a 038 en orden, RN-REP sin saltos, cero "el CEO" en los módulos, cifra de volumen única (RNF-010: 100.000 activos). Pendiente: `docs/trazabilidad.md` y `docs/calidad/` no existen (D-061.9 y D-064 condición 12 los exigen). |
 
-**Resumen:** 19 cerrados · 5 parciales (H-AUD-21, 23, 24 y, por lo que pasó tras la ronda, ver N-AUD-01 a 07) · 0 abiertos. Corrección de la cuenta: los parciales son tres de mis hallazgos originales (H-AUD-21, H-AUD-23, H-AUD-24); contando mal los había dado como 5. Cifra correcta: **21 cerrados, 3 parciales, 0 abiertos**.
+**Resumen:** **21 cerrados, 3 parciales (H-AUD-21, 23 y 24), 0 abiertos.** Lo nuevo que apareció en esta ronda está en la sección 5.
 
 ---
 
@@ -95,10 +95,20 @@ Estado: **Cerrado** (la contradicción ya no existe), **Parcial** (quedan restos
 - **Ciclo de vida (D-049.5):** 0 usos de "dar de baja un contrato / una Persona / una orden", "cesar un usuario", "cerrar un contrato" ni "Persona inactiva". Única mención de "desactivar Personas" en `integraciones-api.md`, dentro de la lista de acciones que una clave no puede hacer.
 
 ### 3.7 Citas con atajos (lo que sigue pendiente)
-Conteo con el guion, sin contar `RN-017` ni `RNF-010`, que sí son del núcleo.
+Conteo con el guion, sin contar `RN-017` ni `RNF-010`, que sí son del núcleo. Al empezar la ronda había además 58 citas sin "CA-" en CMDB, 54 de RN/RF sin código en mesa de ayuda y 34 en notificaciones: **esos tres módulos ya las corrigieron** (el guion da 0).
 
-| Módulo | Citas de criterios sin "CA-" (por ejemplo `CAM-01` en vez de `CA-CAM-01`) | Citas de RN/RF sin código de módulo (por ejemplo `RN-003`) |
+| Módulo | Citas de criterios sin "CA-" (por ejemplo `CAM-01` en vez de `CA-CAM-01`) | Citas de RN/RF sin código de módulo |
 |---|---|---|
+| `gestion-cambios.md` | 62 | 0 |
+| `gestion-problemas.md` | 50 | 0 |
+| `portal-autoservicio.md` | 6 (`AYU-01`, `AYU-02`, `AYU-14`: pantallas, deberían ser `PAN-AYU-nn`) | 0 |
+| `proveedores-contratos.md` | 3 (`NOT-05`, pantalla) | 0 |
+| `garantias-mantenimiento.md` | 2 (`NOT-05`, pantalla) | 0 |
+| `reportes-tableros.md` | 0 | 2 |
+
+Estas citas se confunden con identificadores reales: `CAM-01` puede leerse como el cambio número 1 (prefijo de documento `CAM-`). Avisé al Analista; los escuadrones C y E las corrigieron o están en ello.
+
+---|---|---|
 | `gestion-cambios.md` | 62 | 0 |
 | `cmdb-ligera.md` | 58 | 0 |
 | `gestion-problemas.md` | 50 | 0 |
@@ -148,7 +158,7 @@ Estas citas se confunden con identificadores reales: `CAM-01` puede leerse como 
 | 27 | Garantía: fecha de fin (núcleo) contra meses (GAR) | No | RF-INV-008 (compra más meses, o fin directo) y S-35 (fin = compra más meses menos un día) coinciden con RN-GAR-003. |
 | 28 | PRE necesita un gancho en la pantalla de aprobación de la OC que el núcleo no tiene | **Sigue en parte** | `presupuesto-costos.md` sec. 9 dice "Confirmados o decididos" y RF-PRE-015 lo supone, pero no existe un requisito en el núcleo (RF-OC) ni una decisión que lo registre; `plan-correcciones.md` solo dice "justificar si excede". Falta un RF en la Etapa 5. |
 
-**Resultado:** 27 de 28 sin contradicción; 1 en parte (fila 28). (Corrección a la cuenta de la sección 1: léase "27 y 1".)
+**Resultado:** 27 de 28 sin contradicción; 1 en parte (fila 28).
 
 ---
 
@@ -158,8 +168,8 @@ Ninguno es crítico ni alto. Todos se corrigen editando.
 
 | ID | Gravedad | Dónde | Hecho / opinión | Qué cambiar | Quién |
 |---|---|---|---|---|---|
-| N-AUD-01 | Media | Ver tabla 3.7. | **HECHO.** 170 citas de criterios sin "CA-" (CMD, CAM, PRB), unas 76 citas de RN/RF sin código de módulo (AYU 40, NOT 34, REP 2) y 11 identificadores de pantalla viejos (POR 6, PRV 3, GAR 2). Se confunden con prefijos de documento (`CAM-`, `PRB-`, `AYU-`) y con RN-001 a 022 del núcleo, y rompen la búsqueda automática de trazabilidad. | Reemplazar por el identificador completo (`CA-CAM-01`, `RN-AYU-003`, `PAN-AYU-01`, `PAN-NOT-05`). Es mecánico. | Escuadrones E (CMD, CAM, PRB), C (AYU, NOT), D (POR), A (PRV, GAR), F (REP) |
-| N-AUD-02 | Media (ya en trámite) | `garantias-mantenimiento.md` RN-GAR-041 y RF-GAR-031; `registro-permisos.md` PS-231. Núcleo RN-017 (S-33). | **HECHO.** El núcleo sumó tres actos de dinero (S-33) y GAR no los recogía. Tras mi aviso, GAR agregó RN-GAR-041, RF-GAR-031, CA-GAR-20 y pidió `garantias.confirmar_costo`; el registro ya lo trae como PS-231 y el módulo lo cita. Falta que el Gerente confirme S-33 (sigue como supuesto) y que GAR cite "PS-231" en la fila de su tabla (hoy dice "PS pendiente"). | Cerrar al confirmar S-33; GAR cambia "PS pendiente" por PS-231. | gerente-ti; Escuadrón A |
+| N-AUD-01 | Media | Ver tabla 3.7. | **HECHO.** Quedan 112 citas de criterios sin "CA-" (CAM 62, PRB 50), 11 identificadores de pantalla viejos (POR 6, PRV 3, GAR 2) y 2 citas de RN/RF sin código de módulo (REP). Se confunden con prefijos de documento (`CAM-`, `PRB-`, `AYU-`) y rompen la búsqueda automática de trazabilidad. | Reemplazar por el identificador completo (`CA-CAM-01`, `PAN-AYU-01`, `PAN-NOT-05`). Es mecánico. | Escuadrones E (CAM, PRB), D (POR), A (PRV, GAR), F (REP) |
+| N-AUD-02 | Baja (cerrado salvo confirmación) | `garantias-mantenimiento.md` RN-GAR-041, RF-GAR-031, CA-GAR-20 y fila de la sec. 3; `registro-permisos.md` PS-231. Núcleo RN-017 (S-33). | **HECHO.** El núcleo sumó tres actos de dinero (S-33) y GAR no los recogía. Tras mi aviso GAR agregó la regla, el requisito y el criterio, el registro creó PS-231 `garantias.confirmar_costo` y la tabla de GAR ya lo cita con su número. Solo falta que el Gerente confirme S-33 (sigue como supuesto). | Confirmar S-33. | gerente-ti |
 | N-AUD-03 | Media | D-043.2 (ocho casillas); `dominios-certificados.md` RN-DOM-017; `lineas-moviles.md` RN-LIN-016; S-33. | **HECHO.** Dominios y líneas mandan su excepción a la casilla «contratos», y las garantías con costo (S-33) no tienen casilla asignada. D-043 no dice a qué casilla pertenece cada uno de esos tres actos. **OPINIÓN:** reutilizar «contratos» es razonable, pero es una decisión del Gerente, no de los módulos. | Escribir en D-043 o en una decisión nueva el mapa acto → casilla para dominio/certificado, línea, garantía extendida/mantenimiento con costo y corrección de costo del activo. | gerente-ti |
 | N-AUD-04 | Baja | `entregas-devoluciones.md` fila `entregas.imprimir_acta`, columna Empleado; `reportes-tableros.md` fila `reportes.programar`. | **HECHO.** Dos celdas escritas distinto al registro (3.4), aunque con el mismo sentido. | Poner "-" y "P" como en el registro. | Escuadrones D y F |
 | N-AUD-05 | Media | `entregas-devoluciones.md` RN-ENT-021 (línea 114) contra núcleo RF-DAT-006 y S-36. | **HECHO.** Tras mi aviso el núcleo fijó que el plazo de cinco años del nombre en el acta corre desde el cierre de la asignación (RF-DAT-006, S-36, pendiente del Gerente). Pero ENT sigue diciendo "mientras exista el activo más 5 años", frase que no tiene fecha de arranque porque el activo nunca desaparece (glosario: "un solo registro para siempre"). | Alinear RN-ENT-021 con RF-DAT-006; el Gerente confirma S-36. | Escuadrón D; gerente-ti |
@@ -177,22 +187,22 @@ Ninguno es crítico ni alto. Todos se corrigen editando.
 | Personas y ubicaciones (PRS) | **Conforme** | RF-PRS; permisos y celdas coinciden; árbol de ubicaciones y D-030/D-051 aplicados. |
 | Entregas y devoluciones (ENT) | Conforme con observaciones | N-AUD-04 (una celda) y N-AUD-05 (plazo de retención sin fecha de arranque). |
 | Proveedores y contratos (PRV) | Conforme con observaciones | 3 identificadores de pantalla viejos (`NOT-05`); casilla «contratos» bien asignada. |
-| Garantías y mantenimiento (GAR) | Conforme con observaciones | N-AUD-02 (PS-231 recién creado) y N-AUD-03 (casilla); 2 pantallas viejas. |
-| Notificaciones (NOT) | Conforme con observaciones | 34 citas de RN/RF sin código de módulo. |
+| Garantías y mantenimiento (GAR) | Conforme con observaciones | N-AUD-03 (casilla) y 2 pantallas viejas (`NOT-05`). S-33 ya recogido con PS-231. |
+| Notificaciones (NOT) | **Conforme** | Corrigió sus 34 citas sin código de módulo durante la ronda; RN-NOT-002 y RF-NOT-030 coherentes. |
 | Dominios y certificados (DOM) | Conforme con observaciones | N-AUD-03 (casilla de la excepción no definida en D-043). |
 | Licencias de software (LIC) | **Conforme** | Clave como campo secreto, contrato `CTR-`, casilla «licencias», celdas coinciden. |
 | Líneas móviles (LIN) | Conforme con observaciones | N-AUD-03 (casilla). |
-| Mesa de ayuda (AYU) | Conforme con observaciones | 40 citas sin código de módulo (iba en 54 y bajando); restos de "solicitante". |
+| Mesa de ayuda (AYU) | **Conforme** | Corrigió sus citas sin código de módulo durante la ronda; quedan restos de la palabra "solicitante" en un estado y un evento (N-AUD-06). |
 | Onboarding y offboarding (ONB) | **Conforme** | Sin diferencias mecánicas; cese sin bloqueo coherente. |
 | Portal de autoservicio (POR) | Conforme con observaciones | 6 identificadores de pantalla viejos (`AYU-01`, `AYU-02`, `AYU-14`). |
-| CMDB ligera (CMD) | Conforme con observaciones | 58 citas de criterios sin "CA-"; evento de baja con nombre distinto a INT. |
+| CMDB ligera (CMD) | **Conforme** | Corrigió sus 58 citas de criterios; observación de forma: el evento de baja del activo se llama distinto que en INT y PRE (N-AUD-06). |
 | Gestión de cambios (CAM) | Conforme con observaciones | 62 citas de criterios sin "CA-". |
 | Gestión de problemas (PRB) | Conforme con observaciones | 50 citas de criterios sin "CA-". |
 | Presupuesto y costos (PRE) | **Conforme** | Sin diferencias de permiso; observación de forma (evento `presupuesto.aprobado`, N-AUD-06) y el gancho en la aprobación de la OC (conflicto 28) que se corrige en el núcleo, no aquí. |
 | Reportes y tableros (REP) | Conforme con observaciones | 2 citas sin código de módulo; una celda con notación distinta. |
 | Integraciones y API (INT) | **Conforme** | Sin diferencias mecánicas; alcances de clave con los nombres del registro. |
 
-Resumen: 5 conformes, 12 conformes con observaciones, 0 no conformes.
+Resumen: 8 conformes, 9 conformes con observaciones, 0 no conformes.
 
 **Núcleo (`documento-funcional.md` v0.3 y `registro-permisos.md`): conforme con observaciones** (H-AUD-23 parcial, conflicto 28, N-AUD-05 y N-AUD-07; S-33 a S-36 siguen como supuestos a confirmar por el Gerente).
 
@@ -202,20 +212,20 @@ Para D-064 condición 2 ("Los 17 módulos corregidos, sin choques con el núcleo
 
 | # | Condición | Hallazgo |
 |---|---|---|
-| C1 | Reemplazar las citas de criterios sin "CA-" (CMD, CAM, PRB), las de RN/RF sin código de módulo (AYU, NOT, REP) y las pantallas viejas (POR, PRV, GAR) | N-AUD-01 |
+| C1 | Reemplazar las citas de criterios sin "CA-" (CAM, PRB), las de RN/RF sin código de módulo (REP) y las pantallas viejas (POR, PRV, GAR) | N-AUD-01 |
 | C2 | Decisión del Gerente sobre el mapa acto → casilla para dominios, líneas, garantías y corrección de costo, y confirmación de S-33 a S-36 | N-AUD-02, 03, 05 |
 | C3 | Alinear ENT con RF-DAT-006 (inicio del plazo del nombre en el acta) y las dos celdas (ENT y REP) con el registro | N-AUD-04, 05 |
 | C4 | Agregar en el núcleo (Etapa 5) el requisito del gancho de presupuesto en la aprobación de la OC | Conflicto 28 |
 | C5 | Crear `docs/trazabilidad.md` y `docs/calidad/` con la matriz inicial | N-AUD-07 |
 | C6 | Unificar el nombre del evento de baja del activo y el formato de `presupuesto.aprobado` | N-AUD-06 |
 
-C1 es lo único voluminoso, pero es mecánico y se puede verificar con los mismos guiones. Cuando C1 a C6 estén hechas, vuelvo a correr las comprobaciones y doy el visto bueno por escrito.
+C1 es lo único voluminoso (123 citas), pero es mecánico y se puede verificar con los mismos guiones. Cuando C1 a C6 estén hechas, vuelvo a correr las comprobaciones y doy el visto bueno por escrito.
 
 ---
 
 ## 7. Mensajes enviados
 
-Tres mensajes, registrados en `docs/revision-cruzada/mensajes-ronda3-auditor-codigo.md`. Resultado: B corrigió `precios.ver` en LIC, LIN y DOM; A recogió S-33 en GAR y renombró los eventos; el Analista confirmó que RF-PER-010 queda separado y fijó el arranque de `retener_hasta` (RF-DAT-006, S-36); las citas sin prefijo quedan para los escuadrones C, D y E, que no pude avisar directamente (límite de tres mensajes).
+Tres mensajes, registrados en `docs/revision-cruzada/mensajes-ronda3-auditor-codigo.md`. Resultado: B corrigió `precios.ver` en LIC, LIN y DOM; A recogió S-33 en GAR (con PS-231) y renombró los eventos; el Analista confirmó que RF-PER-010 queda separado y fijó el arranque de `retener_hasta` (RF-DAT-006, S-36); los escuadrones C y E corrigieron citas por el aviso reenviado. Los escuadrones C, D y E no recibieron mensaje mío directo (límite de tres).
 
 ## 8. Limitaciones
 

@@ -77,75 +77,75 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RF-CAM-001 | Crear una solicitud de cambio con título, motivo, tipo, elementos afectados, impacto, probabilidad, inicio y fin planificados, plan de implementación, plan de reversa, criterio de éxito y responsable de implementación. | Fase 3 | CAM-01 |
-| RF-CAM-002 | Calcular el riesgo desde impacto y probabilidad y mostrarlo con texto, no solo color. | Fase 3 | CAM-01 |
-| RF-CAM-003 | Sugerir el impacto con la CMDB: criticidad más alta entre elementos afectados directos e indirectos y número de personas alcanzadas. | Fase 3 | CAM-08 |
-| RF-CAM-004 | Crear un cambio estándar eligiendo una plantilla Vigente; hereda plan, reversa y criterio de éxito, que no se modifican. | Fase 3 | CAM-05 |
-| RF-CAM-005 | Una plantilla la crea un usuario con permiso y la aprueba otro con `cambios.aprobar`; solo las Vigentes se usan. | Fase 3 | CAM-11 |
-| RF-CAM-006 | El aprobador ve en una pantalla: el cambio, el riesgo, los elementos afectados, los choques de calendario y los casos vinculados. | Fase 3 | CAM-01 |
-| RF-CAM-007 | Aprobar o rechazar; el rechazo exige motivo. Se guarda quién, cuándo, el riesgo y el comentario. | Fase 3 | CAM-13 |
-| RF-CAM-008 | Un cambio Rechazado se corrige y vuelve a pedir aprobación; cada rechazo queda en el historial. | Fase 3 | CAM-13 |
-| RF-CAM-009 | Calendario por mes, semana y día con cambios Aprobados y En implementación, ventanas y congelamientos. | Fase 3 | CAM-14 |
-| RF-CAM-010 | Avisar de conflictos: dos cambios programados que se solapan y comparten un elemento. | Fase 3 | CAM-14 |
-| RF-CAM-011 | Impedir programar un cambio normal o estándar dentro de un congelamiento; avisar si queda fuera de toda ventana (cuando la empresa tiene ventanas). | Fase 3 | CAM-06 |
-| RF-CAM-012 | El responsable inicia el cambio y registra resultado, horas reales de inicio y fin, y notas. | Fase 3 | CAM-01, CAM-18 |
-| RF-CAM-013 | Con resultado Revertido o Fallido se exigen notas de qué pasó y cómo quedó el servicio. | Fase 3 | CAM-10 |
-| RF-CAM-014 | Revisión posterior de cuatro preguntas, obligatoria en urgentes, riesgo Alto y resultado Revertido o Fallido. | Fase 3 | CAM-09 |
-| RF-CAM-015 | Vincular el cambio con casos de la mesa de ayuda (origen o causado por el cambio) y con problemas. | Fase 3 | CAM-04 |
-| RF-CAM-016 | La ficha de un elemento de la CMDB lista los cambios que lo afectaron. | Fase 3 | CAM-08 |
-| RF-CAM-017 | Comentarios que solo se agregan; se pueden redactar por seguridad. | Fase 3 | CAM-19 |
-| RF-CAM-018 | Listas con buscador, filtros (tipo, estado, riesgo, quién pide, fecha, elemento) y exportación por la puerta única (D-021, D-061.1). | Fase 3 | CAM-03 |
-| RF-CAM-019 | Pantalla "Por aprobar" con lo que la persona puede aprobar, por fecha de inicio. | Fase 3 | CAM-01 |
-| RF-CAM-020 | La marca "Vencido" (Aprobado cuyo fin pasó sin iniciarse) se calcula al leer con la fecha y zona de la empresa. | Fase 3 | CAM-15 |
+| RF-CAM-001 | Crear una solicitud de cambio con título, motivo, tipo, elementos afectados, impacto, probabilidad, inicio y fin planificados, plan de implementación, plan de reversa, criterio de éxito y responsable de implementación. | Fase 3 | CA-CAM-01 |
+| RF-CAM-002 | Calcular el riesgo desde impacto y probabilidad y mostrarlo con texto, no solo color. | Fase 3 | CA-CAM-01 |
+| RF-CAM-003 | Sugerir el impacto con la CMDB: criticidad más alta entre elementos afectados directos e indirectos y número de personas alcanzadas. | Fase 3 | CA-CAM-08 |
+| RF-CAM-004 | Crear un cambio estándar eligiendo una plantilla Vigente; hereda plan, reversa y criterio de éxito, que no se modifican. | Fase 3 | CA-CAM-05 |
+| RF-CAM-005 | Una plantilla la crea un usuario con permiso y la aprueba otro con `cambios.aprobar`; solo las Vigentes se usan. | Fase 3 | CA-CAM-11 |
+| RF-CAM-006 | El aprobador ve en una pantalla: el cambio, el riesgo, los elementos afectados, los choques de calendario y los casos vinculados. | Fase 3 | CA-CAM-01 |
+| RF-CAM-007 | Aprobar o rechazar; el rechazo exige motivo. Se guarda quién, cuándo, el riesgo y el comentario. | Fase 3 | CA-CAM-13 |
+| RF-CAM-008 | Un cambio Rechazado se corrige y vuelve a pedir aprobación; cada rechazo queda en el historial. | Fase 3 | CA-CAM-13 |
+| RF-CAM-009 | Calendario por mes, semana y día con cambios Aprobados y En implementación, ventanas y congelamientos. | Fase 3 | CA-CAM-14 |
+| RF-CAM-010 | Avisar de conflictos: dos cambios programados que se solapan y comparten un elemento. | Fase 3 | CA-CAM-14 |
+| RF-CAM-011 | Impedir programar un cambio normal o estándar dentro de un congelamiento; avisar si queda fuera de toda ventana (cuando la empresa tiene ventanas). | Fase 3 | CA-CAM-06 |
+| RF-CAM-012 | El responsable inicia el cambio y registra resultado, horas reales de inicio y fin, y notas. | Fase 3 | CA-CAM-01, CA-CAM-18 |
+| RF-CAM-013 | Con resultado Revertido o Fallido se exigen notas de qué pasó y cómo quedó el servicio. | Fase 3 | CA-CAM-10 |
+| RF-CAM-014 | Revisión posterior de cuatro preguntas, obligatoria en urgentes, riesgo Alto y resultado Revertido o Fallido. | Fase 3 | CA-CAM-09 |
+| RF-CAM-015 | Vincular el cambio con casos de la mesa de ayuda (origen o causado por el cambio) y con problemas. | Fase 3 | CA-CAM-04 |
+| RF-CAM-016 | La ficha de un elemento de la CMDB lista los cambios que lo afectaron. | Fase 3 | CA-CAM-08 |
+| RF-CAM-017 | Comentarios que solo se agregan; se pueden redactar por seguridad. | Fase 3 | CA-CAM-19 |
+| RF-CAM-018 | Listas con buscador, filtros (tipo, estado, riesgo, quién pide, fecha, elemento) y exportación por la puerta única (D-021, D-061.1). | Fase 3 | CA-CAM-03 |
+| RF-CAM-019 | Pantalla "Por aprobar" con lo que la persona puede aprobar, por fecha de inicio. | Fase 3 | CA-CAM-01 |
+| RF-CAM-020 | La marca "Vencido" (Aprobado cuyo fin pasó sin iniciarse) se calcula al leer con la fecha y zona de la empresa. | Fase 3 | CA-CAM-15 |
 
 ### 4.2 Reglas de negocio
 
 | ID | Regla | Cuándo | CA |
 |---|---|---|---|
-| RN-CAM-001 | No aprueba ni rechaza un cambio quien lo creó o editó desde la última aprobación (definición única, D-043.1). Vale para todos los roles. | Fase 3 | CAM-02 |
-| RN-CAM-002 | En riesgo Alto, el aprobador tampoco es el responsable de implementación. | Fase 3 | CAM-03 |
-| RN-CAM-003 | Nadie reaprueba una plantilla que creó o editó (acto "Reaprobar plantilla estándar", RN-017). | Fase 3 | CAM-11 |
+| RN-CAM-001 | No aprueba ni rechaza un cambio quien lo creó o editó desde la última aprobación (definición única, D-043.1). Vale para todos los roles. | Fase 3 | CA-CAM-02 |
+| RN-CAM-002 | En riesgo Alto, el aprobador tampoco es el responsable de implementación. | Fase 3 | CA-CAM-03 |
+| RN-CAM-003 | Nadie reaprueba una plantilla que creó o editó (acto "Reaprobar plantilla estándar", RN-017). | Fase 3 | CA-CAM-11 |
 | RN-CAM-004 | **Retirada** (excepción propia de cambios). Se usa la casilla "cambios" del interruptor único (RN-CAM-024). | n/a | n/a |
-| RN-CAM-005 | Estándar nace Aprobado desde una plantilla Vigente; Normal exige un aprobador; Urgente exige un aprobador con `cambios.aprobar_alto`. Aprobar un cambio exige siempre a otra persona (tabla de actos, RN-017). | Fase 3 | CAM-05 |
-| RN-CAM-006 | Riesgo = impacto por probabilidad. Impacto Bajo: Bajo, Bajo, Medio (probabilidad Baja, Media, Alta). Impacto Medio: Bajo, Medio, Alto. Impacto Alto: Medio, Alto, Alto. | Fase 3 | CAM-01 |
-| RN-CAM-007 | Normal de riesgo Bajo o Medio: `cambios.aprobar`. Riesgo Alto: `cambios.aprobar_alto`. Un solo nivel (D-023). | Fase 3 | CAM-03 |
-| RN-CAM-008 | El impacto sugerido se puede subir. Bajarlo exige un motivo que el aprobador ve. | Fase 3 | CAM-08 |
-| RN-CAM-009 | Plan de implementación, de reversa y criterio de éxito son obligatorios en normal y urgente; en estándar vienen de la plantilla. | Fase 3 | CAM-05 |
-| RN-CAM-010 | Debe haber al menos un elemento afectado; si el cambio toca algo no registrado se indica "Otro elemento" con descripción y se avisa a Jefatura TI. | Fase 3 | CAM-01 |
-| RN-CAM-011 | Editar fecha, planes, tipo, riesgo o elementos de un cambio Aprobado lo devuelve a Pendiente y anula la aprobación (D-013.5, D-043.1). En estándar solo la fecha y los elementos dentro del alcance de la plantilla no obligan a reaprobar. | Fase 3 | CAM-07 |
-| RN-CAM-012 | Se inicia solo entre el inicio y el fin planificados (hora de la empresa); fuera de ese rango se reprograma. Un urgente aprobado se puede iniciar de inmediato. | Fase 3 | CAM-18 |
-| RN-CAM-013 | El congelamiento bloquea estándar y normal. Un urgente se permite con aviso visible al aprobador. | Fase 3 | CAM-06 |
-| RN-CAM-014 | Sin ventanas definidas no hay restricción; con ventanas y fuera de ellas se avisa y el aprobador decide con motivo. Una ventana puede excluir los feriados del calendario de empresa (D-062.4). | Fase 3 | CAM-06 |
-| RN-CAM-015 | Se cancela antes de iniciar, con motivo. Iniciado, termina con resultado Revertido o Fallido, nunca cancelado. | Fase 3 | CAM-10 |
-| RN-CAM-016 | "Exitoso con observaciones" exige anotar la observación. | Fase 3 | CAM-09 |
-| RN-CAM-017 | La revisión posterior se completa en 7 días corridos desde "Implementado"; solo genera avisos. | Fase 3 | CAM-09 |
-| RN-CAM-018 | Un estándar con resultado Fallido o Revertido deja su plantilla Suspendida, en la misma operación, hasta que otra persona con `cambios.aprobar` la reapruebe. | Fase 3 | CAM-11 |
-| RN-CAM-019 | Cerrado o Cancelado no se reabre; se crea uno nuevo y se anota el anterior. | Fase 3 | CAM-13 |
-| RN-CAM-020 | Un cambio no se borra (D-019); un borrador nunca enviado lo puede borrar quien lo creó. | Fase 3 | CAM-13 |
-| RN-CAM-021 | Todo cambio de estado guarda quién, cuándo y motivo (obligatorio en rechazo, cancelación y reversa). | Fase 3 | CAM-01, CAM-13 |
-| RN-CAM-022 | Un elemento De baja no se agrega a un cambio nuevo. | Fase 3 | CAM-04 |
-| RN-CAM-023 | Fechas en la zona de la empresa; se guardan en hora universal (D-021.4). | Fase 3 | CAM-15 |
-| RN-CAM-024 | La casilla "cambios" del interruptor único (D-043.2) está apagada por defecto, vence a los 90 días y la activa un Administrador con reautenticación (y la confirma otro si hay dos). Encendida permite que quien creó o editó apruebe (RN-CAM-001, 002, 003); nunca exime del permiso. Cada uso muestra un aviso en el cambio y queda en la auditoría. | Fase 3 | CAM-12, CAM-17 |
-| RN-CAM-025 | Un cambio solo se vincula con elementos, casos, problemas y proveedores de su empresa; la base lo impone con clave compuesta (D-039). | Fase 3 | CAM-04 |
-| RN-CAM-026 | En el calendario, el título se muestra solo a quien puede ver el cambio; los demás ven "Cambio programado" (D-063.5). | Fase 3 | CAM-14 |
-| RN-CAM-027 | La auditoría guarda "el campo X cambió" para motivos, planes, comentarios y notas (texto libre); las Personas solo por `PRS-NNNN`. El texto vive en el historial del módulo (D-030). | Fase 3 | CAM-19 |
-| RN-CAM-028 | Todo texto pasa por el validador común (rechaza claves privadas y patrones de claves) y advierte no escribir datos personales ni claves (D-063.2). | Fase 3 | CAM-19 |
-| RN-CAM-029 | Redactar por seguridad reemplaza el texto por `[REDACTADO]` y registra quién, cuándo y por qué, sin el texto (D-061.5). | Fase 3 | CAM-19 |
+| RN-CAM-005 | Estándar nace Aprobado desde una plantilla Vigente; Normal exige un aprobador; Urgente exige un aprobador con `cambios.aprobar_alto`. Aprobar un cambio exige siempre a otra persona (tabla de actos, RN-017). | Fase 3 | CA-CAM-05 |
+| RN-CAM-006 | Riesgo = impacto por probabilidad. Impacto Bajo: Bajo, Bajo, Medio (probabilidad Baja, Media, Alta). Impacto Medio: Bajo, Medio, Alto. Impacto Alto: Medio, Alto, Alto. | Fase 3 | CA-CAM-01 |
+| RN-CAM-007 | Normal de riesgo Bajo o Medio: `cambios.aprobar`. Riesgo Alto: `cambios.aprobar_alto`. Un solo nivel (D-023). | Fase 3 | CA-CAM-03 |
+| RN-CAM-008 | El impacto sugerido se puede subir. Bajarlo exige un motivo que el aprobador ve. | Fase 3 | CA-CAM-08 |
+| RN-CAM-009 | Plan de implementación, de reversa y criterio de éxito son obligatorios en normal y urgente; en estándar vienen de la plantilla. | Fase 3 | CA-CAM-05 |
+| RN-CAM-010 | Debe haber al menos un elemento afectado; si el cambio toca algo no registrado se indica "Otro elemento" con descripción y se avisa a Jefatura TI. | Fase 3 | CA-CAM-01 |
+| RN-CAM-011 | Editar fecha, planes, tipo, riesgo o elementos de un cambio Aprobado lo devuelve a Pendiente y anula la aprobación (D-013.5, D-043.1). En estándar solo la fecha y los elementos dentro del alcance de la plantilla no obligan a reaprobar. | Fase 3 | CA-CAM-07 |
+| RN-CAM-012 | Se inicia solo entre el inicio y el fin planificados (hora de la empresa); fuera de ese rango se reprograma. Un urgente aprobado se puede iniciar de inmediato. | Fase 3 | CA-CAM-18 |
+| RN-CAM-013 | El congelamiento bloquea estándar y normal. Un urgente se permite con aviso visible al aprobador. | Fase 3 | CA-CAM-06 |
+| RN-CAM-014 | Sin ventanas definidas no hay restricción; con ventanas y fuera de ellas se avisa y el aprobador decide con motivo. Una ventana puede excluir los feriados del calendario de empresa (D-062.4). | Fase 3 | CA-CAM-06 |
+| RN-CAM-015 | Se cancela antes de iniciar, con motivo. Iniciado, termina con resultado Revertido o Fallido, nunca cancelado. | Fase 3 | CA-CAM-10 |
+| RN-CAM-016 | "Exitoso con observaciones" exige anotar la observación. | Fase 3 | CA-CAM-09 |
+| RN-CAM-017 | La revisión posterior se completa en 7 días corridos desde "Implementado"; solo genera avisos. | Fase 3 | CA-CAM-09 |
+| RN-CAM-018 | Un estándar con resultado Fallido o Revertido deja su plantilla Suspendida, en la misma operación, hasta que otra persona con `cambios.aprobar` la reapruebe. | Fase 3 | CA-CAM-11 |
+| RN-CAM-019 | Cerrado o Cancelado no se reabre; se crea uno nuevo y se anota el anterior. | Fase 3 | CA-CAM-13 |
+| RN-CAM-020 | Un cambio no se borra (D-019); un borrador nunca enviado lo puede borrar quien lo creó. | Fase 3 | CA-CAM-13 |
+| RN-CAM-021 | Todo cambio de estado guarda quién, cuándo y motivo (obligatorio en rechazo, cancelación y reversa). | Fase 3 | CA-CAM-01, CA-CAM-13 |
+| RN-CAM-022 | Un elemento De baja no se agrega a un cambio nuevo. | Fase 3 | CA-CAM-04 |
+| RN-CAM-023 | Fechas en la zona de la empresa; se guardan en hora universal (D-021.4). | Fase 3 | CA-CAM-15 |
+| RN-CAM-024 | La casilla "cambios" del interruptor único (D-043.2) está apagada por defecto, vence a los 90 días y la activa un Administrador con reautenticación (y la confirma otro si hay dos). Encendida permite que quien creó o editó apruebe (RN-CAM-001, RN-CAM-002, RN-CAM-003); nunca exime del permiso. Cada uso muestra un aviso en el cambio y queda en la auditoría. | Fase 3 | CA-CAM-12, CA-CAM-17 |
+| RN-CAM-025 | Un cambio solo se vincula con elementos, casos, problemas y proveedores de su empresa; la base lo impone con clave compuesta (D-039). | Fase 3 | CA-CAM-04 |
+| RN-CAM-026 | En el calendario, el título se muestra solo a quien puede ver el cambio; los demás ven "Cambio programado" (D-063.5). | Fase 3 | CA-CAM-14 |
+| RN-CAM-027 | La auditoría guarda "el campo X cambió" para motivos, planes, comentarios y notas (texto libre); las Personas solo por `PRS-NNNN`. El texto vive en el historial del módulo (D-030). | Fase 3 | CA-CAM-19 |
+| RN-CAM-028 | Todo texto pasa por el validador común (rechaza claves privadas y patrones de claves) y advierte no escribir datos personales ni claves (D-063.2). | Fase 3 | CA-CAM-19 |
+| RN-CAM-029 | Redactar por seguridad reemplaza el texto por `[REDACTADO]` y registra quién, cuándo y por qué, sin el texto (D-061.5). | Fase 3 | CA-CAM-19 |
 
 ### 4.3 De calidad medible
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RNF-CAM-001 | La lista carga en 2 s o menos con 10.000 cambios por empresa. | Fase 3 | CAM-03 |
-| RNF-CAM-002 | El calendario mensual carga en 3 s o menos con 500 cambios en el mes. | Fase 3 | CAM-14 |
-| RNF-CAM-003 | El impacto sugerido tarda 3 s o menos con hasta 20 elementos afectados. | Fase 3 | CAM-08 |
-| RNF-CAM-004 | Las reglas de segunda persona se comprueban en el servidor; una prueba intenta cada violación por la API, con la casilla apagada y vencida (D-043.6). | Fase 3 | CAM-02, CAM-17 |
-| RNF-CAM-005 | Ninguna consulta ni escritura cruza empresas; pruebas por identificador interno y con dos empresas (D-039, D-063.6). | Fase 3 | CAM-04 |
-| RNF-CAM-006 | El aviso al aprobador sale en 1 minuto o menos desde que el cambio pasa a Pendiente. | Fase 3 | CAM-01 |
-| RNF-CAM-007 | El 100 % de transiciones, aprobaciones, usos de la casilla y exportaciones queda en la auditoría. | Fase 3 | CAM-12 |
-| RNF-CAM-008 | Aprobación y calendario sirven en celular, a 360 px y con teclado (D-021.1). | Fase 3 | CAM-01 |
-| RNF-CAM-009 | Los vencimientos, avisos y la marca "Vencido" se prueban con el reloj fijable de la plataforma (D-038.8). | Fase 3 | CAM-15 |
-| RNF-CAM-010 | Los procesos automáticos corren por empresa, son idempotentes y recuperables; se prueban con dos empresas (D-038.4, D-039.6). | Fase 3 | CAM-16 |
+| RNF-CAM-001 | La lista carga en 2 s o menos con 10.000 cambios por empresa. | Fase 3 | CA-CAM-03 |
+| RNF-CAM-002 | El calendario mensual carga en 3 s o menos con 500 cambios en el mes. | Fase 3 | CA-CAM-14 |
+| RNF-CAM-003 | El impacto sugerido tarda 3 s o menos con hasta 20 elementos afectados. | Fase 3 | CA-CAM-08 |
+| RNF-CAM-004 | Las reglas de segunda persona se comprueban en el servidor; una prueba intenta cada violación por la API, con la casilla apagada y vencida (D-043.6). | Fase 3 | CA-CAM-02, CA-CAM-17 |
+| RNF-CAM-005 | Ninguna consulta ni escritura cruza empresas; pruebas por identificador interno y con dos empresas (D-039, D-063.6). | Fase 3 | CA-CAM-04 |
+| RNF-CAM-006 | El aviso al aprobador sale en 1 minuto o menos desde que el cambio pasa a Pendiente. | Fase 3 | CA-CAM-01 |
+| RNF-CAM-007 | El 100 % de transiciones, aprobaciones, usos de la casilla y exportaciones queda en la auditoría. | Fase 3 | CA-CAM-12 |
+| RNF-CAM-008 | Aprobación y calendario sirven en celular, a 360 px y con teclado (D-021.1). | Fase 3 | CA-CAM-01 |
+| RNF-CAM-009 | Los vencimientos, avisos y la marca "Vencido" se prueban con el reloj fijable de la plataforma (D-038.8). | Fase 3 | CA-CAM-15 |
+| RNF-CAM-010 | Los procesos automáticos corren por empresa, son idempotentes y recuperables; se prueban con dos empresas (D-038.4, D-039.6). | Fase 3 | CA-CAM-16 |
 
 ## 5. Estados y transiciones
 
@@ -155,9 +155,9 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10). Lo
 |---|---|---|---|
 | (nuevo) | Borrador | `cambios.pedir` | Título y tipo |
 | (nuevo, estándar) | Aprobado | Sistema, al crear con `cambios.pedir_estandar` | Plantilla Vigente; fuera de congelamiento; RN-CAM-005 |
-| Borrador | Pendiente de aprobación | Quien lo creó | Obligatorios completos (RN-CAM-009, 010); RF-CAM-011 |
+| Borrador | Pendiente de aprobación | Quien lo creó | Obligatorios completos (RN-CAM-009, RN-CAM-010); RF-CAM-011 |
 | Borrador | Cancelado | Quien lo creó o `cambios.cancelar` | Motivo |
-| Pendiente de aprobación | Aprobado | Aprobador (RN-CAM-007) | RN-CAM-001, 002, 013, 014 |
+| Pendiente de aprobación | Aprobado | Aprobador (RN-CAM-007) | RN-CAM-001, RN-CAM-002, RN-CAM-013, RN-CAM-014 |
 | Pendiente de aprobación | Rechazado | Aprobador (RN-CAM-007) | Motivo; RN-CAM-001 |
 | Pendiente de aprobación | Borrador | Quien lo creó | Retira la solicitud; queda en auditoría |
 | Rechazado | Pendiente de aprobación | Quien lo creó | Con comentario de respuesta; se conserva el historial |
@@ -246,33 +246,33 @@ Todos los avisos usan el motor y la tabla únicos de Notificaciones (D-062.3). A
 
 Cada criterio indica el requisito que cubre.
 
-**CA-CAM-01** (RF-CAM-001, 002, 006, 012, 019, RN-CAM-006, 010, 021, RNF-CAM-006, 008). Dado un Técnico con `cambios.pedir` y un Jefatura TI con `cambios.aprobar`, cuando el Técnico completa y envía un cambio de riesgo Medio, Jefatura lo aprueba, el Técnico lo inicia en su horario y registra "Exitoso", y quien tiene `cambios.cerrar` lo cierra, entonces recorre Borrador, Pendiente, Aprobado, En implementación, Implementado y Cerrado, cada paso en la línea de tiempo y la auditoría, y el aviso al aprobador sale en menos de 1 minuto.
+**CA-CAM-01** (RF-CAM-001, RF-CAM-002, RF-CAM-006, RF-CAM-012, RF-CAM-019, RN-CAM-006, RN-CAM-010, RN-CAM-021, RNF-CAM-006, RNF-CAM-008). Dado un Técnico con `cambios.pedir` y un Jefatura TI con `cambios.aprobar`, cuando el Técnico completa y envía un cambio de riesgo Medio, Jefatura lo aprueba, el Técnico lo inicia en su horario y registra "Exitoso", y otra persona con `cambios.cerrar` lo cierra, entonces recorre Borrador, Pendiente, Aprobado, En implementación, Implementado y Cerrado, cada paso en la línea de tiempo y la auditoría, y el aviso al aprobador sale en menos de 1 minuto.
 
 **CA-CAM-02** (RN-CAM-001, RNF-CAM-004). Dado un Administrador que creó CAM-000020, cuando intenta aprobarlo por pantalla o directo al servidor con la casilla "cambios" apagada, entonces el servidor responde "No puede aprobar un cambio que usted creó o editó" y sigue Pendiente. Igual si otra persona aprobó y luego este lo editó.
 
-**CA-CAM-03** (RN-CAM-002, 007, RF-CAM-018; permiso denegado). Dado un cambio de riesgo Alto y un usuario con `cambios.aprobar` pero sin `cambios.aprobar_alto`, cuando intenta aprobarlo, entonces el servidor responde "No tiene permiso para aprobar cambios de riesgo Alto" y queda el intento en la auditoría; con el permiso, si es el responsable de implementación, también se rechaza.
+**CA-CAM-03** (RN-CAM-002, RN-CAM-007, RF-CAM-018, RNF-CAM-001; permiso denegado). Dado un cambio de riesgo Alto y un usuario con `cambios.aprobar` pero sin `cambios.aprobar_alto`, cuando intenta aprobarlo, entonces el servidor responde "No tiene permiso para aprobar cambios de riesgo Alto" y queda el intento en la auditoría; con el permiso, si es el responsable de implementación, también se rechaza.
 
-**CA-CAM-04** (RN-CAM-025, RF-CAM-015, RNF-CAM-005; aislamiento). Dado un Jefatura TI de la Empresa B, cuando abre por identificador interno un cambio de la Empresa A, le agrega un comentario o vincula a su cambio un elemento, caso o proveedor de la Empresa A, entonces recibe "no encontrado" y la base rechaza la escritura aunque se salte la aplicación.
+**CA-CAM-04** (RF-CAM-015, RN-CAM-022, RN-CAM-025, RNF-CAM-005; aislamiento entre empresas). Dado un Jefatura TI de la Empresa B, cuando abre por identificador interno un cambio de la Empresa A, le agrega un comentario o vincula a su cambio un elemento, caso o proveedor de la Empresa A, entonces recibe "no encontrado" y la base rechaza la escritura aunque se salte la aplicación.
 
-**CA-CAM-05** (RF-CAM-004, RN-CAM-005, 009). Dado una plantilla Vigente "Reemplazo de laptop", cuando un Técnico crea un estándar con ella, entonces nace Aprobado, sin aprobador, con plan y reversa heredados que no puede editar.
+**CA-CAM-05** (RF-CAM-004, RN-CAM-005, RN-CAM-009). Dado una plantilla Vigente "Reemplazo de laptop", cuando un Técnico crea un estándar con ella, entonces nace Aprobado, sin aprobador, con plan y reversa heredados que no puede editar.
 
-**CA-CAM-06** (RF-CAM-011, RN-CAM-013, 014). Dado un congelamiento del 28/10 al 31/10, cuando un Técnico envía un normal para el 29/10, entonces se impide con "Esa fecha está en congelamiento"; un urgente se permite y el aprobador ve el aviso.
+**CA-CAM-06** (RF-CAM-011, RN-CAM-013, RN-CAM-014). Dado un congelamiento del 28/10 al 31/10, cuando un Técnico envía un normal para el 29/10, entonces se impide con "Esa fecha está en congelamiento"; un urgente se permite y el aprobador ve el aviso.
 
 **CA-CAM-07** (RN-CAM-011). Dado un cambio Aprobado, cuando quien lo pidió cambia la fecha de inicio, entonces vuelve a Pendiente, la aprobación anterior queda anulada pero visible y se avisa al aprobador.
 
-**CA-CAM-08** (RF-CAM-003, 016, RN-CAM-008, RNF-CAM-003). Dado un cambio sobre un servidor del que depende "Correo corporativo" (criticidad Alta), cuando el Técnico guarda, entonces el impacto sugerido es Alto; si lo baja a Medio sin motivo, no se guarda.
+**CA-CAM-08** (RF-CAM-003, RF-CAM-016, RN-CAM-008, RNF-CAM-003). Dado un cambio sobre un servidor del que depende "Correo corporativo" (criticidad Alta), cuando el Técnico guarda, entonces el impacto sugerido es Alto; si lo baja a Medio sin motivo, no se guarda.
 
-**CA-CAM-09** (RF-CAM-014, RN-CAM-016, 017). Dado un urgente en Implementado, cuando quien tiene `cambios.cerrar` intenta cerrarlo sin las cuatro respuestas, entonces se impide; con las cuatro lo cierra. Con la revisión sin completar al día 7 sale el aviso, sin bloquear nada.
+**CA-CAM-09** (RF-CAM-014, RN-CAM-016, RN-CAM-017). Dado un urgente en Implementado, cuando quien tiene `cambios.cerrar` intenta cerrarlo sin las cuatro respuestas, entonces se impide; con las cuatro lo cierra. Con la revisión sin completar al día 7 sale el aviso, sin bloquear nada.
 
 **CA-CAM-10** (RF-CAM-013, RN-CAM-015). Dado un cambio En implementación, cuando el Técnico registra "Revertido" sin notas, entonces se le piden; con notas pasa a Implementado y avisa a Jefatura. No hay opción "Cancelar".
 
-**CA-CAM-11** (RF-CAM-005, RN-CAM-003, 018). Dado un estándar con resultado Fallido, cuando se registra, entonces su plantilla pasa a Suspendida en la misma operación y no se ofrece al crear estándares hasta que otra persona con `cambios.aprobar` la reapruebe; quien la creó no puede reaprobarla.
+**CA-CAM-11** (RF-CAM-005, RN-CAM-003, RN-CAM-018). Dado un estándar con resultado Fallido, cuando se registra, entonces su plantilla pasa a Suspendida en la misma operación y no se ofrece al crear estándares hasta que otra persona con `cambios.aprobar` la reapruebe; quien la creó no puede reaprobarla.
 
 **CA-CAM-12** (RN-CAM-024, RNF-CAM-007). Dado que el Administrador, único con permisos, activó la casilla "cambios", cuando aprueba su propio cambio normal, entonces se permite, el cambio muestra el aviso y la auditoría registra el uso; con la casilla apagada se rechaza.
 
-**CA-CAM-13** (RF-CAM-007, 008, RN-CAM-019, 020, 021). Dado un cambio Pendiente, cuando el aprobador rechaza sin motivo, entonces no se permite; con motivo pasa a Rechazado y quien pidió recibe el aviso; un Cerrado no ofrece "reabrir".
+**CA-CAM-13** (RF-CAM-007, RF-CAM-008, RN-CAM-019, RN-CAM-020, RN-CAM-021). Dado un cambio Pendiente, cuando el aprobador rechaza sin motivo, entonces no se permite; con motivo pasa a Rechazado y quien pidió recibe el aviso; un Cerrado no ofrece "reabrir".
 
-**CA-CAM-14** (RF-CAM-009, 010, RN-CAM-026, RNF-CAM-002). Dado un cambio Aprobado y un usuario Almacén sin `cambios.ver`, cuando abre el calendario, entonces ve "Cambio programado" con fecha y estado, nunca el título; con `cambios.ver` ve el título. Si dos cambios comparten elemento y se solapan, ambos muestran el aviso de choque.
+**CA-CAM-14** (RF-CAM-009, RF-CAM-010, RN-CAM-026, RNF-CAM-002). Dado un cambio Aprobado y un usuario Almacén sin `cambios.ver`, cuando abre el calendario, entonces ve "Cambio programado" con fecha y estado, nunca el título; con `cambios.ver` ve el título. Si dos cambios comparten elemento y se solapan, ambos muestran el aviso de choque.
 
 **CA-CAM-15** (RF-CAM-020, RN-CAM-023, RNF-CAM-009). Dado un cambio Aprobado con fin el 10/11 a las 23:00 en la zona de la empresa, cuando el reloj de pruebas se fija a las 23:01 de ese día, entonces aparece "Vencido" sin que corra ningún proceso; con el reloj a las 22:59 no aparece.
 
@@ -280,9 +280,9 @@ Cada criterio indica el requisito que cubre.
 
 **CA-CAM-17** (RN-CAM-024, RNF-CAM-004). Dado que la casilla "cambios" venció a los 90 días, cuando alguien intenta aprobar lo propio llamando al servidor, entonces se rechaza como con la casilla apagada.
 
-**CA-CAM-18** (RN-CAM-012, RF-CAM-012). Dado un cambio con inicio planificado a las 22:00, cuando el responsable lo inicia a las 21:59, entonces se rechaza; a las 22:00 se permite; a la hora del fin planificado más un minuto, se rechaza.
+**CA-CAM-18** (RF-CAM-012, RN-CAM-012). Dado un cambio con inicio planificado a las 22:00, cuando el responsable lo inicia a las 21:59, entonces se rechaza; a las 22:00 se permite; a la hora del fin planificado más un minuto, se rechaza.
 
-**CA-CAM-19** (RN-CAM-027, 028, 029, RF-CAM-017). Dado un comentario con un dato personal, cuando el Administrador lo redacta por seguridad, entonces el texto pasa a `[REDACTADO]`, la auditoría registra quién, cuándo y por qué sin el texto; un plan con un bloque de clave privada se rechaza al guardar.
+**CA-CAM-19** (RF-CAM-017, RN-CAM-027, RN-CAM-028, RN-CAM-029). Dado un comentario con un dato personal, cuando el Administrador lo redacta por seguridad, entonces el texto pasa a `[REDACTADO]`, la auditoría registra quién, cuándo y por qué sin el texto; un plan con un bloque de clave privada se rechaza al guardar.
 
 ## 11. Casos límite
 
@@ -334,7 +334,7 @@ Cada criterio indica el requisito que cubre.
 | "Solicitante" pasa a "Pedido por" / "quien pide"; permiso `cambios.solicitar` pasa a `cambios.pedir` | D-049.6 |
 | Calendario: título solo a quien ve el cambio (RN-CAM-026) | D-063.5, H-SEG-25d |
 | Ventanas con el calendario de empresa (feriados) | D-062.4 |
-| Permisos con PS-nn del registro y sus celdas (PS-167 a 179, 221, 20); `cambios.exportar` pasa a `datos.exportar`; `cambios.configurar` ya no activa excepciones | D-036, D-037 fila 1, H-SEG |
+| Permisos con PS-nn (PS-167 a PS-179, PS-221, PS-20); `cambios.exportar` pasa a `datos.exportar`; `cambios.configurar` ya no activa excepciones; `cambios.cerrar` con la condición "No" | D-036, D-037 fila 1, H-SEG, registro de permisos |
 | Permiso `cambios.redactar` y RN-CAM-029; validador común de texto | D-061.5, D-063.2 |
 | Auditoría sin valores de texto libre ni nombres (RN-CAM-027) | D-030 |
 | Prefijo `CAM-` con 6 dígitos; pantallas `PAN-CAM-nn`; supuestos `S-CAM-nn` | D-049.2 y 4, H-AUD-03 |
@@ -345,6 +345,6 @@ Cada criterio indica el requisito que cubre.
 | Vínculos con clave compuesta con la empresa (RN-CAM-025) | D-039.1 y 7 |
 | Consume la CMDB delgada (impacto vía operación del módulo CMD) | D-062.1 |
 | Columna "Empleado (portal)": no aplica; Almacén sin cambios | D-037.11 |
-| Columna Cuándo y CA por requisito; criterios citan su requisito | plan sección 0 (2), H-AUD-21 |
-| Pruebas nuevas: dos empresas, escritura cruzada, reloj fijable, borde exacto, casilla vencida (CA-CAM-04, 15 a 18) | D-039.6, D-043.6, D-063.6, QA y Seguridad |
-| Fase: Fase 3, ola E, después de CMD | D-056 |
+| Columna Cuándo y CA por requisito; criterios citan su requisito; fase Fase 3, ola E, después de CMD | plan sección 0 (2), H-AUD-21, D-056 |
+| Pruebas nuevas: dos empresas, escritura cruzada, reloj fijable, borde exacto, casilla vencida (CA-CAM-04, CA-CAM-15 a CA-CAM-18) | D-039.6, D-043.6, D-063.6, QA y Seguridad |
+| Todas las citas escritas completas: CA-CAM-nn en la columna CA, y RF-, RN- y RNF-CAM-nnn sin abreviar | Auditor Técnico, ronda 3 |
