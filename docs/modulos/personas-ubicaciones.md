@@ -1,6 +1,6 @@
 # Módulo: Personas, áreas y ubicaciones (PRS)
 
-**Versión:** 0.2 (corregida tras la revisión cruzada, Mesa #002; Oleada D, Escuadrón D)
+**Versión:** 0.3 (aplicación de D-065 a D-076; Oleada D, Escuadrón D)
 **Sigla de requisitos:** PRS (antes PER; el núcleo conserva `RF-PER-001` a `RF-PER-010`, D-049.1). Los identificadores de supuestos `S-PER-nn` se conservan porque `decisiones.md` los cita.
 **Fuente de verdad:** `docs/documento-funcional.md` y `docs/equipo/decisiones.md` (D-001 a D-064). Si este módulo dice algo distinto, manda `decisiones.md`; si choca con el núcleo, el módulo agrega filas pero no cambia celdas (D-037).
 **Marcas:** **[SUPUESTO]** = propuesta mía que confirma el Gerente de TI. **[ESCALAR AL CEO]** = solo dinero, tema legal o algo irreversible. "Cuándo" = `v1, Etapa N`, `Fase 2` o `Fase 3` (D-056).
@@ -217,7 +217,7 @@ Se reutilizan la pantalla genérica **Catálogos** (con vista de árbol para ubi
 - **ENT.** Crea asignaciones y actas; consume Personas y ubicaciones; aporta las pestañas de historial.
 - **ONB.** Usa puesto, fechas y cese; el cese es el paso final de una salida.
 - **POR.** Se apoya en el vínculo Persona-membresía y en el registro de solicitudes de derechos.
-- **Mesa de ayuda.** Un caso "restringido" de derechos guarda solo una referencia al registro de PRS (D-061.2). El solicitante es una Persona.
+- **Mesa de ayuda.** Un caso "restringido" de derechos guarda solo una referencia al registro de PRS (D-061.2). La Persona atendida es una Persona del directorio.
 - **LIN, LIC, DOM, CMD.** Declaran sus pendientes en el registro de módulo; ninguno bloquea el cese (acordado con los Escuadrones B y E). Las líneas ya no bloquean (cambia S-PER-05).
 - **Presupuesto y reportes.** Consumen área y centro de costo.
 
@@ -255,7 +255,7 @@ Se reutilizan la pantalla genérica **Catálogos** (con vista de árbol para ubi
 11. **Mover un Piso con 40 equipos.** Los equipos van con el Piso; el historial de cada uno conserva la ruta en texto de cuando se movió (RF-PRS-007).
 12. **Persona externa que también es empleada de otra empresa.** Son dos registros independientes (RN-PRS-007); si hay obligación legal distinta, es pregunta legal (L-13).
 13. **Cese por Jefatura TI de alguien con cuenta.** Se rechaza hasta que alguien con `usuarios.suspender` lo haga; el mensaje lo explica.
-14. **Empresa con un solo administrador.** No puede anonimizar a mano ni atender su propio pedido de derechos: debe designar a otra persona con `personas.derechos_atender` y segunda verificación (RN-PRS-033). Mientras no exista, el pedido queda "En espera de persona designada" y se avisa al contacto autorizado; el plazo legal sigue corriendo (E-PRS-01).
+14. **Empresa con un solo administrador o sin suplente de derechos.** No puede anonimizar a mano ni atender su propio pedido: el pedido queda "En espera de persona designada" y el Administrador designa a otra membresía con `personas.derechos_atender` (PS-29) y segunda verificación (RN-PRS-033). Sin suplente: "Primeros pasos" muestra la tarea "Designar suplente de derechos de datos", se recuerda a los administradores cada 3 días, a los 5 días se avisa al contacto autorizado con constancia de que el plazo legal corre, y la salida es el procedimiento de rescate (D-048.5), que habilita a quien atiende (E-PRS-01).
 
 ## 12. Decisiones propuestas y supuestos
 
@@ -274,7 +274,7 @@ Se reutilizan la pantalla genérica **Catálogos** (con vista de árbol para ubi
 | S-PRS-11 | [SUPUESTO] | Límites del plazo de anonimización configurable: de 1 a 5 años, fijados por la plataforma; los confirma el Gerente de TI con legal. |
 | S-PRS-12 | [SUPUESTO] | Al anonimizar se conserva el área (no es dato de contacto, D-033.2) para reportes. Cumplimiento confirma. |
 | S-PRS-13 | [SUPUESTO] | Pedir la marca "almacén de TI" al catálogo de ubicaciones del núcleo. |
-| S-PRS-14 | [SUPUESTO] | Cuando quien presenta el pedido de derechos es el único con PS-29, lo atiende una persona **designada** por el Administrador; sin ella, el pedido espera y se avisa al contacto autorizado. Motivo: D-061.2 dice "la plataforma", pero esta no ve datos del negocio. Lo confirma el Gerente de TI con Cumplimiento (hallazgo R-08). |
+| S-PRS-14 | **Aceptado (D-071)** | Si quien presenta el pedido es el único con PS-29, no lo atiende ni él ni la plataforma: queda "En espera de persona designada" y el Administrador designa a otra membresía. **Toda empresa debe tener un suplente con PS-29**: "Primeros pasos" lo pide, recordatorio cada 3 días, a los 5 días aviso al contacto autorizado con constancia de que el plazo corre, y salida por rescate (D-048.5). |
 | E-PRS-01 | [ESCALAR AL CEO] | **Legal e irreversible.** Plazos de anonimización (2 años tras el cese, mayor con pendientes), de auditoría (5 años) y de respaldos (30 días y 12 meses) son provisionales (D-024, D-032, D-033). Hasta la respuesta escrita de legal no se activa nada automático. Preguntas: si el directorio exige registro ante la autoridad, si el código de empleado y el correo son datos personales en el país de cada empresa, si el nombre del acta debe anonimizarse antes (L-05, L-12), si se puede condicionar la eliminación a devolver equipos (L-06); qué pasa con el plazo legal de un pedido cuando la empresa no tiene una segunda persona para atenderlo (RN-PRS-033). |
 
 ## 13. Fuera de alcance
@@ -312,4 +312,5 @@ Se reutilizan la pantalla genérica **Catálogos** (con vista de árbol para ubi
 | Columna "Cuándo" y CA que cita el requisito; CA de aislamiento por identificador interno, de alcance propio sin Persona, de canario y de doble control | H-AUD-21, D-063.6, D-036.4, H-SEG-25f, H-QA-05 |
 | Etiqueta "Persona anonimizada 0042" | H-UX-25(d), D-049.2 |
 | RN-PRS-021: `retener_hasta` corre desde el cierre de la asignación del acta (no "activo más 5 años") | D-033, D-051, S-36 del núcleo, ronda 3 del Auditor Técnico |
+| v0.3: S-PRS-14 aceptado; suplente obligatorio con PS-29, recordatorios cada 3 días, aviso a los 5 días y salida por rescate en RN-PRS-033 y caso límite 14; "solicitante" sin sentido de rol cambiado a "Persona atendida" | D-071, D-075, R-08 de Cumplimiento |
 | RN-PRS-033: quién atiende un pedido de derechos cuando quien lo presenta es el único con el permiso (persona designada; si no hay, aviso al contacto autorizado) | Hallazgo R-08 de Cumplimiento (ronda 3), D-061.2, D-048.5, RF-PLA-004 |

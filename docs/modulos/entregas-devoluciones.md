@@ -1,6 +1,6 @@
 # Módulo: Entregas y devoluciones de activos (ENT)
 
-**Versión:** 0.2 (corregida tras la revisión cruzada, Mesa #002; Oleada D, Escuadrón D)
+**Versión:** 0.3 (aplicación de D-065 a D-076; Oleada D, Escuadrón D)
 **Sigla de requisitos:** ENT
 **Fuente de verdad:** `docs/documento-funcional.md` y `docs/equipo/decisiones.md`. Aplican D-006 (Persona), D-012 (estados y constancia), D-033 y D-051 (nombre en el acta), D-034 (cese), D-037 (permisos), D-043 (autoentrega), D-060 (estado y asignación), D-061.4 (correos), D-063.1 (PDF).
 **Marcas:** **[SUPUESTO]** = propuesta mía que confirma el Gerente de TI. **[ESCALAR AL CEO]** = solo dinero, tema legal o algo irreversible. "Cuándo": `v1, Etapa N`, `Fase 2` o `Fase 3` (D-056).
@@ -46,7 +46,7 @@ Solo nombres del registro `docs/registro-permisos.md`. * = sensible. Todo se com
 | Registrar devolución | PS-56 | `entregas.devolver` | v1, E4 | Sí | No | Sí | **No** | No | No | No |
 | Traspasar entre Personas | PS-57 | `entregas.traspasar` | v1, E4 | Sí | No | Sí | No | No | No | No |
 | Anular un acta por error | PS-58 | `entregas.anular` | v1, E4 | Sí | No | No | No | No | No | No |
-| Imprimir o reimprimir acta | PS-59 | `entregas.imprimir_acta` | v1, E4 | Sí | Sí | Sí | No | No | Sí (PDF sin nombre ni área) | Propio, por el portal |
+| Imprimir o reimprimir acta | PS-59 | `entregas.imprimir_acta` | v1, E4 | Sí | Sí | Sí | No | No | Sí (PDF sin nombre ni área) | - |
 | Marcar conformidad | PS-60 | `entregas.marcar_conformidad` | Fase 2 | Sí | No | Sí | No | No | No | No |
 | Extravío o robo (diálogo "Cambiar estado") | PS-46 | `activos.registrar_extravio` | v1, E4 | Sí | Sí | Sí | No | No | No | No |
 | Reingreso de un equipo hallado | PS-48 | `activos.reingreso`* | v1, E4 | Sí | Sí | No | No | No | No | No |
@@ -58,7 +58,7 @@ Solo nombres del registro `docs/registro-permisos.md`. * = sensible. Todo se com
 
 Notas:
 - Resuelto por D-037 filas 6, 8 y 9: **Almacén no entrega ni devuelve por defecto**; la empresa puede concedérselo y entonces necesita también `datos_personales.ver`. Quien no tiene `datos_personales.ver` ve `PRS-0042` y el PDF omite nombre y área.
-- Solicitante y Empleado (portal) ven y reimprimen **sus** actas desde el portal (PS-205), no con estos permisos.
+- `entregas.imprimir_acta` (PS-59) da "-" a Empleado (portal) y a Solicitante, como el registro. Sus actas propias las ven y reimprimen desde el portal con `portal.ver_propio` (PS-205), no con este permiso.
 - La autoentrega no tiene excepción: ninguna casilla del interruptor único de excepciones la cubre (D-043.2).
 
 ## 4. Requisitos
@@ -313,4 +313,5 @@ Se reutilizan el **asistente "Entregar"** y el **diálogo "Cambiar estado"** (D-
 | Aislamiento probado por identificador interno y por número de acta repetido en otra empresa | D-063.6, H-SEG-25f |
 | Permisos migrados a PS-nn; `datos.exportar` único; cita RN-ENT-016 corregida | D-036, registro de permisos, H-AUD-24 |
 | Datos personales del módulo declarados; aviso de privacidad configurable por empresa | D-061.3, D-061.8, H-CUM-09, H-CUM-12 |
+| v0.3: `entregas.imprimir_acta` con "-" para Empleado (portal) y Solicitante (sus actas, por PS-205); RN-ENT-021 confirmada con S-36 (cierre de la asignación + 5 años, provisional) | D-065, D-075, plan de aplicación |
 | RN-ENT-021 y fila de datos personales: el plazo de 5 años corre desde el cierre de la asignación, no "mientras exista el activo"; `retener_hasta` vacía mientras la asignación está abierta | D-033, D-051, S-36 del núcleo (RF-DAT-006), ronda 3 del Auditor Técnico |

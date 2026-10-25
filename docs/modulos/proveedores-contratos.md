@@ -1,6 +1,6 @@
 # Módulo: Proveedores y contratos (PRV)
 
-**Slug:** `proveedores-contratos` · **Sigla:** PRV · **Versión:** 0.2 (corregida tras la revisión cruzada, Oleada D)
+**Slug:** `proveedores-contratos` · **Sigla:** PRV · **Versión:** 0.3 (aplica D-065 a D-076)
 **Base:** `docs/equipo/decisiones.md` (D-001 a D-064, vinculantes), `docs/documento-funcional.md` y `docs/equipo/plan-correcciones.md`.
 **Marcas:** **[SUPUESTO]** = propuesta del analista que el Gerente de TI confirma. **[ESCALAR AL CEO]** = implica dinero, tema legal o algo irreversible. "Cliente (CEO)" es quien pidió la plataforma.
 
@@ -49,9 +49,9 @@ Los permisos son los del registro único `docs/registro-permisos.md` (PS-nn, D-0
 | Ver contratos y compromisos | PS-74 `contratos.ver` | Todo | Todo | Todo | No | No | Todo |
 | Ver importes (sensible) | PS-23 `precios.ver` | Sí | Sí | No | No | No | No |
 | Crear y editar contratos en Borrador | PS-75 `contratos.crear_editar` | Sí | No | No | No | No | No |
-| Activar contrato (RN-PRV-015) | PS-76 `contratos.activar` | Sí | Sí | No | No | No | No |
+| Activar un contrato, o confirmar uno de licencia (sensible: 2F, A, No; RN-PRV-015) | PS-76 `contratos.activar` | Sí | Sí | No | No | No | No |
 | Renovar, adenda, marcar "no renovar" | PS-77 `contratos.renovar` | Sí | Sí | No | No | No | No |
-| Terminar o anular | PS-78 `contratos.terminar_anular` | Sí | Sí | No | No | No | No |
+| Terminar o anular un contrato de proveedor o de licencia | PS-78 `contratos.terminar_anular` | Sí | Sí | No | No | No | No |
 | Gestionar compromisos de servicio | PS-79 `contratos.gestionar_compromisos` | Sí | Sí | No | No | No | No |
 | Gestionar documentos de referencia | PS-80 `contratos.gestionar_referencias` | Sí | Sí | Sí | No | No | No |
 | Recibir avisos de contratos | PS-81 `contratos.recibir_avisos` | Todo | Todo | Propio | No | No | No |
@@ -120,7 +120,8 @@ Columnas: **Cuándo** = `v1, Etapa 2` (PRV-A) o `Fase 2` (PRV-B). **CA** = crite
 | RN-PRV-014 | Valor total comprometido = valor del periodo con impuesto × periodos entre inicio y fin (hacia arriba); con periodicidad Única, el importe único con impuesto. Redondeo según D-044.7. |
 | RN-PRV-015 | Activar exige a otra persona cuando RN-017 (núcleo) lo dispone: el valor total comprometido, en moneda base, supera estrictamente el límite; con límite 0 siempre; en otra moneda siempre. Se calcula con la función única `requiereSegundaPersona` (D-043.3). Este módulo no define otra regla de monto. |
 | RN-PRV-016 | El servicio único de doble control aplica la definición única: no activa quien haya creado o editado el contrato desde la última aprobación, ni siquiera el Administrador (D-043.1). |
-| RN-PRV-017 | La excepción de una sola persona de TI es la casilla "contratos" del interruptor único de la empresa (apagada, vence a los 90 días, con aviso visible y uso auditado). Este módulo no tiene excepción propia (D-031, D-043.2). |
+| RN-PRV-017 | La excepción de una sola persona de TI depende del tipo de contrato (D-066, D-069): la casilla «contratos y servicios recurrentes» del interruptor único para un contrato de proveedor, y la casilla «licencias» cuando el contrato es de licencia. Siguen apagadas por defecto, vencen a los 90 días y su uso queda con aviso visible y auditado. Este módulo no tiene excepción propia (D-031, D-043.2). |
+| RN-PRV-044 | PS-76 `contratos.activar` es sensible (2F, A, No; D-068) y sirve para activar un contrato de proveedor y para confirmar uno de licencia (extensión 1 a 1 del CTR-). PS-78 `contratos.terminar_anular` termina o anula uno u otro; terminar uno de licencia libera sus puestos como pendiente. Los permisos retirados PS-84 y PS-85 no se usan (D-069). |
 | RN-PRV-018 | Para activar se exige responsable: una Persona activa con vínculo a una membresía que tenga `contratos.ver`. |
 | RN-PRV-019 | Un contrato activado no cambia valor, fechas ni alcance editando: se usa renovación o adenda. Sí se editan responsable, notas y activos cubiertos. |
 | RN-PRV-020 | Una renovación o adenda que sube el valor total comprometido o alarga el fin vuelve a aplicar RN-PRV-015 con las cifras nuevas. |
@@ -237,7 +238,7 @@ Reglas: los avisos de PRV-B no entran a la v1 (D-023, D-061.4); los de la misma 
 |---|---|
 | Catálogos (Etapa 2) | Una sola tabla de proveedor (D-040.3). Centro de costo y moneda del núcleo. El maestro de proveedores se importa por el marco único (clave: identificación fiscal normalizada); la carga SAP exige `proveedores.crear_editar` (D-063.6). |
 | Órdenes de compra y de servicio (Etapas 5 y 6) | Solo proveedores activos con "vende bienes" o "presta servicios". Una orden de compra puede originar un contrato y entonces la orden es la fuente de costo (RN-PRV-013). |
-| Doble control y excepciones | Servicio único y casilla "contratos" (D-043); ninguna regla propia. |
+| Doble control y excepciones | Servicio único y casilla según el tipo de contrato: «contratos y servicios recurrentes» o «licencias» (D-043, D-066); ninguna regla propia. |
 | Libro de costos (`presupuesto-costos`) | PRE lee solo el patrón de costo y su `fuente_costo`; PRV no captura presupuesto (D-044.2). |
 | `licencias-software` (B) | Acordado: el contrato de licencia es la extensión 1 a 1 del CTR-; LIC guarda puestos y derecho de uso. Soporte de software contratado va aquí. |
 | `lineas-moviles`, `dominios-certificados` (B) | Usan el proveedor (operador, registrador); pueden enlazar un contrato de PRV; su vencimiento propio es de cada módulo. |
@@ -325,6 +326,7 @@ Reglas: los avisos de PRV-B no entran a la v1 (D-023, D-061.4); los de la misma 
 | Contrato único `CTR-` de 6 dígitos con extensión de licencia | D-044.4, D-049.2, H-DAT-08 |
 | Regla de segunda persona remitida a RN-017 (estrictamente mayor, con impuesto, moneda base); borde exacto | D-043.3, D-043.4, D-057 (S-30), H-QA-09, H-ARQ-10 |
 | Retirada la excepción propia (RN-PRV-017); casilla "contratos" del interruptor único | D-031.6, D-043.2, H-AUD-07, H-CUM-02 |
+| v0.3: casilla «contratos y servicios recurrentes» o «licencias» según el tipo (RN-PRV-017); PS-76 sensible y remisión a PS-76 y PS-78 para licencias (RN-PRV-044) | D-066, D-068, D-069, plan-aplicacion |
 | Definición única de creó o editó | D-043.1, H-ARQ-10 |
 | Renovación automática como acción del autor "sistema" | D-041.4, D-043.5, H-CUM-03 |
 | Estados guardados vs calculados; retirado "Pendiente de activación"; Vencido sin proceso nocturno | D-062.2, D-049.5, H-ARQ-16, H-DAT-17 |

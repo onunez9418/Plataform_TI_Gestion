@@ -1,6 +1,6 @@
 # Módulo: Portal de autoservicio (POR)
 
-**Versión:** 0.2 (corregida tras la revisión cruzada, Mesa #002; Oleada D, Escuadrón D)
+**Versión:** 0.3 (aplicación de D-065 a D-076; Oleada D, Escuadrón D)
 **Sigla de requisitos:** POR
 **Fuente de verdad:** `docs/documento-funcional.md` y `docs/equipo/decisiones.md`. Aplican D-001 y D-002 (acceso por invitación), D-036 y D-037 (permisos y plantilla "Empleado (portal)"), D-039.8 (aislamiento entre Personas), D-053 (Pedir ayuda, tono), D-054 (topes), D-058 (supuestos), D-061.2 (derechos), D-063.5.
 **Marcas:** **[SUPUESTO]** = propuesta mía que confirma el Gerente de TI. **[ESCALAR AL CEO]** = solo dinero, tema legal o algo irreversible. "Cuándo": `Fase 3, ola D` (D-056.3).
@@ -190,7 +190,7 @@ Todo es `Fase 2` o posterior y sale por el motor único de NOT; en la v1 solo ha
 | Se suma una empresa a una cuenta | El usuario | "Se le sumó la empresa [Empresa]." |
 | Faltan 2 días para vencer invitaciones | Quien invitó | "N invitaciones vencen en 2 días." |
 | Se acepta la invitación | Quien invitó | "PRS-0042 ya tiene acceso al portal." |
-| El empleado envía un caso | El empleado | Confirmación y número del caso (la envía AYU; el solicitante siempre la recibe). |
+| El empleado envía un caso | El empleado | Confirmación y número del caso (la envía AYU; quien abrió el caso siempre la recibe). |
 | Reporte de extravío | Técnicos y Jefatura TI | "PRS-0042 reportó un extravío." (la envía AYU) |
 | Pedido de datos | Administradores con PS-29 que no presentaron el pedido | "Hay un pedido de [tipo] de PRS-0042." |
 | Reparo en un acuse | Técnico que entregó | "PRS-0042 tiene un reparo sobre el acta ACT-E-000123." |
@@ -241,7 +241,7 @@ Los avisos a Personas sin Usuario los define cada módulo; el portal no envía a
 10. **Reporta el extravío de un equipo ajeno.** No puede elegirlo: solo ve los suyos.
 11. **La invitación vence.** Se envía una nueva; la anterior queda Vencida.
 12. **Restaurar un respaldo antiguo.** Se revocan sesiones y enlaces y se reaplican anonimizaciones y suspensiones (D-052.4); las Personas anonimizadas no entran.
-13. **Quien pide sus datos es el único con PS-29.** No puede atender su propio pedido ni lo atiende la plataforma (no ve datos del negocio); el pedido queda "En espera de persona designada" hasta que el Administrador designe a otra persona, y se avisa al contacto autorizado (RN-PRS-033).
+13. **Quien pide sus datos es el único con PS-29 (o la empresa no tiene suplente de derechos).** No puede atender su propio pedido ni lo atiende la plataforma (no ve datos del negocio); el pedido queda "En espera de persona designada" hasta que el Administrador designe al suplente con PS-29. Si pasan 5 días sin designar, se avisa al contacto autorizado y se deja constancia de que el plazo legal corre; la salida es el rescate (RN-PRS-033, D-071). La Persona sigue viendo el estado de su pedido.
 14. **Línea sin módulo LIN.** Se muestra el número como campo de la unidad del celular, con la etiqueta de qué módulo la gestiona cuando se active.
 
 ## 12. Decisiones propuestas y supuestos
@@ -292,4 +292,5 @@ Los avisos a Personas sin Usuario los define cada módulo; el portal no envía a
 | Datos personales del módulo declarados; aviso de privacidad con reaceptación | D-061.3, D-061.8, H-CUM-09, H-CUM-12 |
 | Aislamiento probado por identificador interno | D-063.6, H-SEG-25f |
 | Aceptación en pantalla marcada como Fase 3 (acuse informativo) | D-023.2, D-056.4 |
+| v0.3: caso límite 13 con el suplente de derechos (recordatorios, aviso a los 5 días, rescate); "el solicitante" sin sentido de rol cambiado a "quien abrió el caso" | D-071, D-075 |
 | Las seis citas `AYU-01`, `AYU-02` y `AYU-14` pasan al formato `PAN-AYU-nn` (sin citas cruzadas de otros módulos a pantallas del portal) | N-AUD-01, ronda 3 del Auditor Técnico |

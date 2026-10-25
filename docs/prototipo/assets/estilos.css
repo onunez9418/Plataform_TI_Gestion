@@ -123,6 +123,7 @@ small, .chica { font-size: var(--f-chica); }
 .oculto-visual { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 [hidden] { display: none !important; }
 :focus-visible { outline: 3px solid var(--c-foco); outline-offset: 2px; border-radius: 4px; }
+[tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; }
 .saltar { position: absolute; left: -999px; top: 8px; background: var(--c-superficie); color: var(--c-texto); padding: var(--e3) var(--e4); border: 2px solid var(--c-foco); z-index: 1000; border-radius: var(--radio); }
 .saltar:focus { left: 8px; }
 
@@ -146,9 +147,10 @@ small, .chica { font-size: var(--f-chica); }
 .barra .marca { font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: var(--e2); white-space: nowrap; }
 .barra .marca svg { width: 22px; height: 22px; }
 .barra-buscar { flex: 1; max-width: 460px; position: relative; }
-.barra-buscar input { width: 100%; padding-left: 38px; border-radius: var(--radio-pildora); border: 1px solid transparent; background: rgba(255,255,255,.14); color: #fff; }
-.barra-buscar input::placeholder { color: rgba(255,255,255,.78); }
-.barra-buscar input:focus { background: #fff; color: #17202B; outline-color: #fff; }
+.barra .barra-buscar input { width: 100%; min-height: 40px; padding-left: 38px; border-radius: var(--radio-pildora); border: 1px solid transparent; background: rgba(255,255,255,.14); color: #fff; }
+.barra .barra-buscar input::placeholder { color: rgba(255,255,255,.78); }
+.barra .barra-buscar input:focus { background: #fff; color: #17202B; outline-color: #fff; }
+.barra .barra-buscar input:focus::placeholder { color: #4A5663; }
 .barra-buscar svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; pointer-events: none; }
 .btn-barra {
   flex: none; min-width: 40px; justify-content: center;
@@ -156,6 +158,9 @@ small, .chica { font-size: var(--f-chica); }
   font: inherit; font-size: var(--f-chica); cursor: pointer; display: inline-flex; align-items: center; gap: var(--e2); white-space: nowrap;
 }
 .btn-barra:hover { background: rgba(255,255,255,.14); }
+.btn-barra svg { width: 18px; height: 18px; flex: none; }
+.btn-barra, .barra a.btn-barra { text-decoration: none; }
+.empresa-activa svg { display: none; }
 .btn-barra.relleno { background: #fff; color: #0F2A43; border-color: #fff; font-weight: 650; }
 .btn-barra.relleno:hover { background: #E8EEF5; }
 .barra .btn-barra.relleno { color: #0F2A43; }
@@ -410,7 +415,7 @@ dl { margin: 0; }
 .contador-grande { font-size: 1.5rem; font-weight: 700; }
 .barra-avance { height: 12px; border-radius: 6px; background: var(--c-superficie-2); border: 1px solid var(--c-borde-control); overflow: hidden; }
 .barra-avance > span { display: block; height: 100%; background: var(--c-primario); }
-.celda-entrada input { min-height: 36px; font-family: var(--f-mono); font-size: var(--f-chica); }
+.celda-entrada input { min-width: 150px; min-height: 36px; font-family: var(--f-mono); font-size: var(--f-chica); }
 .matriz td, .matriz th { text-align: center; }
 .matriz td:first-child, .matriz th:first-child { text-align: left; }
 .matriz .t { color: var(--s-exito-t); font-weight: 700; }

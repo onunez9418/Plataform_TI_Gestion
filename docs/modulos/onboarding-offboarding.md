@@ -1,6 +1,6 @@
 # Módulo: Onboarding y offboarding (ONB)
 
-**Versión:** 0.2 (corregida tras la revisión cruzada, Mesa #002; Oleada D, Escuadrón D)
+**Versión:** 0.3 (aplicación de D-065 a D-076; Oleada D, Escuadrón D)
 **Sigla de requisitos:** ONB
 **Fuente de verdad:** `docs/documento-funcional.md` y `docs/equipo/decisiones.md`. Aplican D-034 y D-061.7 (el cese nunca se bloquea por recursos), D-002.6 (baja de acceso), D-044.6 y D-035 (licencias), D-053 (Mi trabajo), D-061.4 (correos), D-062 (vigencias, avisos, calendario).
 **Marcas:** **[SUPUESTO]** = propuesta mía que confirma el Gerente de TI. **[ESCALAR AL CEO]** = solo dinero, tema legal o algo irreversible. "Cuándo": `Fase 2, ola C` (D-056.3).
@@ -192,7 +192,7 @@ Todo es `Fase 2`, por el motor único de NOT (una tabla de avisos, hora única d
 - **ENT-A.** Las tareas "Entregar equipo" y "Devolver equipo" abren el asistente con la Persona cargada y se completan solas.
 - **Registro de módulo (D-038.6).** El panel consulta los "pendientes de la persona" que declaran Inventario, Líneas (LIN), Licencias (LIC), Dominios (DOM), CMDB (CMD), Cambios (CAM) y Problemas (PRB); ninguno bloquea el cese, todos bloquean la anonimización.
 - **Licencias.** Liberan los puestos al cesar (RN-LIC-011). **Dominios y CMDB:** "responsable inactivo".
-- **Mesa de ayuda.** Una tarea puede enlazar un servicio del catálogo de AYU con la Persona como solicitante; el flujo del caso es de AYU.
+- **Mesa de ayuda.** Una tarea puede enlazar un servicio del catálogo de AYU con la Persona como Persona atendida; el flujo del caso es de AYU.
 - **Usuarios.** "Suspender acceso" usa la suspensión del núcleo.
 - **Notificaciones.** Entrega todos los avisos.
 - **Reportes.** Tiempo de ingreso, salidas atrasadas, tareas vencidas.
@@ -272,4 +272,5 @@ Todo es `Fase 2`, por el motor único de NOT (una tabla de avisos, hora única d
 | Datos personales del módulo declarados; notas con validador común | D-061.3, D-063.2, H-CUM-09, H-CUM-10 |
 | Aislamiento por identificador interno y proceso diario con dos empresas | D-063.6, D-039.6, H-SEG-02 |
 | Referencias de Persona `PRS-0042` y tono "usted" en avisos | D-049.2, DS-09 |
+| v0.3: "solicitante" sin sentido de rol cambiado a "Persona atendida" (sección 9) | D-075 |
 | Revisado en la ronda 3: sin identificadores de pantalla viejos (solo `PAN-ONB-nn`); E-ONB-01 cita L-11 | N-AUD-01, R-13 de Cumplimiento |

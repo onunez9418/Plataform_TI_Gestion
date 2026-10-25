@@ -1,6 +1,6 @@
 # Módulo: Garantías y mantenimiento (GAR)
 
-**Slug:** `garantias-mantenimiento` · **Sigla:** GAR · **Versión:** 0.2 (corregida tras la revisión cruzada, Oleada D)
+**Slug:** `garantias-mantenimiento` · **Sigla:** GAR · **Versión:** 0.3 (aplica D-065 a D-076)
 **Base:** `docs/equipo/decisiones.md` (D-001 a D-064, vinculantes), `docs/documento-funcional.md` y `docs/equipo/plan-correcciones.md`.
 **Marcas:** **[SUPUESTO]** = propuesta del analista que el Gerente de TI confirma. **[ESCALAR AL CEO]** = implica dinero, tema legal o algo irreversible.
 
@@ -51,7 +51,7 @@ Los permisos son los del registro único `docs/registro-permisos.md` (PS-nn, D-0
 | Reprogramar o cancelar | PS-110 `mantenimiento.reprogramar` | Sí | No | Sí | No | No | No |
 | Gestionar planes | PS-111 `mantenimiento.planes` | Sí | No | No | No | No | No |
 | Ver costos (sensible) | PS-23 `precios.ver` | Sí | Sí | No | No | No | No |
-| Confirmar un costo que supera el límite | PS-231 `garantias.confirmar_costo` | Sí | Sí | No | No | No | No |
+| Confirmar un costo que supera el límite (sensible: 2F, A, No) | PS-231 `garantias.confirmar_costo` | Sí | Sí | No | No | No | No |
 | Cambiar el estado del activo | PS-45 `activos.cambiar_estado` | Sí | No | Sí | No | No | No |
 | Dar de baja el activo original | PS-47 `activos.dar_baja` | Sí | No | Sí | No | No | No |
 | Ingreso manual del activo de reemplazo | PS-44 `activos.ingreso_manual` | Sí | No | Sí | No | No | No |
@@ -106,7 +106,7 @@ Columnas: **Cuándo** = `v1, Etapa 4` / `v1, Etapa 5` (GAR-A) o `Fase 2` (GAR-B)
 |---|---|
 | RN-GAR-001 | Garantía, reclamo y mantenimiento aplican solo a activos con serie de naturaleza "equipo físico" (D-045). |
 | RN-GAR-002 | El fin no es anterior al inicio. |
-| RN-GAR-003 | Con meses, fin = (inicio menos 1 día) más esos meses; si el día resultante no existe en el mes final, el último día de ese mes. Se resta el día primero (31/01 más 1 mes da 28/02, o 29/02 en bisiesto). El cálculo vive en el núcleo (D-060.8). |
+| RN-GAR-003 | Fin = (fecha de inicio menos 1 día) más los meses, ajustando al último día del mes (S-35, D-065). Ejemplos: 15/01/2026 + 24 meses = 14/01/2028; 15/03/2024 + 36 meses = 14/03/2027; 31/01 + 1 mes = 28/02 (29/02 si es bisiesto). Es la misma fórmula de RF-INV-008; el cálculo vive en el núcleo (D-060.8). |
 | RN-GAR-004 | La garantía vale hasta el final del día de su fin, en la zona de la empresa; "hoy" sale de `hoyEnEmpresa()`. |
 | RN-GAR-005 | El inicio de la garantía del fabricante es la fecha de compra del activo, salvo otra indicada con motivo. |
 | RN-GAR-006 | Varias garantías pueden superponerse; la efectiva es la vigente con fin más lejano. |
@@ -143,7 +143,7 @@ Columnas: **Cuándo** = `v1, Etapa 4` / `v1, Etapa 5` (GAR-A) o `Fase 2` (GAR-B)
 | RN-GAR-037 | Los procesos diarios (avisos, programaciones) son idempotentes y recuperables, corren empresa por empresa con la empresa fijada en la transacción, saltan empresas suspendidas y registran cada corrida (D-038.4). |
 | RN-GAR-038 | Una decisión simultánea (cerrar, cancelar, resolver un reclamo) usa actualización condicional y `version`: gana una y la otra recibe "ya fue decidido". |
 | RN-GAR-039 | Falla, notas y descripciones son texto libre: pasan por el validador común, la auditoría guarda "el campo cambió" sin el texto, y la pantalla avisa que no se escriban datos personales ni claves. Los motivos sí se guardan (D-030.6). |
-| RN-GAR-041 | Acto de dinero de RN-017 (S-33): registrar una garantía extendida con costo, o un mantenimiento con costo sin OS, no pide aprobación; si el costo con impuesto, en moneda base, supera estrictamente el límite (o está en otra moneda), lo confirma otra persona con `garantias.confirmar_costo`, según la función única `requiereSegundaPersona`; sin orden de compra queda la marca "sin respaldo de compra". La excepción es la casilla "compras" del interruptor único; GAR no tiene regla propia. |
+| RN-GAR-041 | Acto de dinero de RN-017 (S-33): registrar una garantía extendida con costo, o un mantenimiento con costo sin OS, no pide aprobación; si el costo con impuesto, en moneda base, supera estrictamente el límite (o está en otra moneda), lo confirma otra persona con `garantias.confirmar_costo`, según la función única `requiereSegundaPersona`; sin orden de compra queda la marca "sin respaldo de compra". La excepción es la casilla «contratos y servicios recurrentes» del interruptor único (D-066: apagada, vence a los 90 días, uso auditado); GAR no tiene regla propia. PS-231 es sensible (2F, A, No, D-068). |
 | RN-GAR-040 | La depreciación, el costo del activo y el libro de costos no son de este módulo; PRE toma el costo con `fuente_costo` (OS, orden de compra, propia). |
 
 ### 4.3 Requisitos de calidad
@@ -231,16 +231,16 @@ Reglas declaradas al motor único de Notificaciones (RF-NOT-024); NOT envía, ag
 | Evento | Cuándo | A quién | Qué dice |
 |---|---|---|---|
 | `garantias.costo_pendiente_confirmacion` | Al registrar un costo sobre el límite | Quienes tienen `garantias.confirmar_costo`, excepto quien lo registró | "Hay un costo de garantía o mantenimiento pendiente de confirmación." |
-| `vencimiento.umbral_alcanzado` (garantía) | A los umbrales por defecto de NOT: 90, 60, 30, 15 y 7 días antes del fin | Quienes tienen `garantias.recibir_avisos` | "La garantía del activo con serie 8H2K9 vence el 15/03/2027 (faltan 30 días). Revise si necesita un reclamo o una extensión." |
-| `garantias.garantia_vencida` | Un día después del fin | Igual | "La garantía del activo con serie 8H2K9 venció el 15/03/2027." |
+| `vencimiento.umbral_alcanzado` (garantía) | A los umbrales por defecto de NOT: 90, 60, 30, 15 y 7 días antes del fin | Quienes tienen `garantias.recibir_avisos` | "La garantía del activo [código del activo] vence el 15/03/2027 (faltan 30 días). Revise si necesita un reclamo o una extensión." |
+| `garantias.garantia_vencida` | Un día después del fin | Igual | "La garantía del activo [código del activo] venció el 15/03/2027." |
 | `vencimiento.umbral_alcanzado` (mantenimiento) | Los días de aviso del plan y el mismo día (se aparta del umbral general porque es una tarea y no un vencimiento) | Ejecutor y quienes tienen `garantias.recibir_avisos` | "MNT-000045 está programado para el 20/11/2026." |
 | `mantenimiento.mantenimiento_atrasado` | Un día después de la fecha y luego cada lunes | Ejecutor y Jefatura TI | "MNT-000045 está atrasado 9 días." |
-| `mantenimiento.activo_reparacion_prolongada` | Con más de 30 días En reparación y cada 30 días | Jefatura TI | "El activo con serie 8H2K9 lleva 34 días En reparación." |
+| `mantenimiento.activo_reparacion_prolongada` | Con más de 30 días En reparación y cada 30 días | Jefatura TI | "El activo [código del activo] lleva 34 días En reparación." |
 | `garantias.reclamo_sin_novedad` | 15 días sin cambios en un reclamo En el garante | Quien lo abrió | "El reclamo RCL-000007 no tiene novedades hace 15 días." |
 | `mantenimiento.mantenimiento_asignado` | Al asignar | Ejecutor | "Se le asignó MNT-000045." |
 | `mantenimiento.mantenimiento_cancelado` | Al cancelar el sistema | Ejecutor | "MNT-000045 se canceló: activo dado de baja." |
 
-Los avisos de GAR-B no entran a la v1 (D-023, D-061.4). Un proveedor de servicio no recibe correo de la plataforma.
+Los correos nunca llevan la serie: usan el código del activo, el código del documento (MNT-, RCL-), la fecha y el nombre de la empresa (D-075, H-SEG-32 g); la serie se ve dentro de la plataforma. Los avisos de GAR-B no entran a la v1 (D-023, D-061.4). Un proveedor de servicio no recibe correo de la plataforma.
 
 ## 9. Integración con el núcleo y con otros módulos
 
@@ -313,6 +313,7 @@ Los avisos de GAR-B no entran a la v1 (D-023, D-061.4). Un proveedor de servicio
 | S-GAR-08 | Aceptado | Un solo preventivo pendiente por plan y activo. |
 | S-GAR-09 | Aceptado | Los proveedores de servicio no reciben correos. |
 | S-GAR-10 | Confirmado (D-053, S-31) | Los reportes de falla entran por "Pedir ayuda" (OS "Creada" en la v1, caso en Fase 2); GAR no tiene pantalla para Solicitante. |
+| S-GAR-12 | **[SUPUESTO]** | "Código del activo" en los correos es el identificador visible del activo en la plataforma (no la serie); el Analista del núcleo define su formato y, si no existe, se usa el código del SKU más la referencia interna del activo. |
 | S-GAR-11 | Aceptado | El tiempo real frente al compromiso del proveedor se muestra en horas corridas y solo como dato. |
 | E-GAR | Ninguno por ahora | Seguros, pólizas o archivos de garantía activarían D-022 (costo de almacenamiento) y una opinión legal. |
 
@@ -336,6 +337,7 @@ Los avisos de GAR-B no entran a la v1 (D-023, D-061.4). Un proveedor de servicio
 | Reemplazo por garantía usa el ingreso manual del núcleo | D-060.7, H-AUD-15 |
 | Cancelación de mantenimientos al dar de baja en la misma transacción | D-038.5, H-ARQ-11, H-DAT-09 |
 | Ejecutor y pendientes como Persona con vínculo opcional | D-044.5, D-041, D-061.7 |
+| v0.3: RN-GAR-003 con la fórmula exacta de S-35; RN-GAR-041 con la casilla «contratos y servicios recurrentes» y PS-231 sensible; PS-231 citado como definitivo; PS-106 confirmado; correos con el código del activo en lugar de la serie (S-GAR-12) | D-065, D-066, D-068, D-074, D-075 (H-SEG-32 g), plan-aplicacion |
 | Acto de dinero S-33 (garantía extendida y mantenimiento sin OS sobre el límite): RF-GAR-031, RN-GAR-041, permiso `garantias.confirmar_costo` solicitado, evento y CA-GAR-20 | S-33 del núcleo, RN-017, D-043.4, H-CUM-03 |
 | Dos citas viejas de pantalla `NOT-05` pasan a `PAN-NOT-05`; las pantallas propias ya eran `PAN-GAR-nn` | D-049.4, N-AUD-01 (ronda 3) |
 | Eventos renombrados al catálogo de NOT (`vencimiento.umbral_alcanzado`, `mantenimiento.activo_reparacion_prolongada`) | D-038.5, D-049, notificaciones.md |
