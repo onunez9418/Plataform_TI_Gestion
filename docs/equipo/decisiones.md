@@ -79,7 +79,7 @@ Etapa que bloquea cada una, según la revisión de la Ronda 1.
 
 ### B8. Importación inicial desde Excel
 - Opciones: (a) todo o nada (ingeniero-datos); (b) importar válidas y reportar malas (qa).
-- Recomendación del analista: vista previa obligatoria; el usuario confirma importar solo las filas válidas; el lote queda registrado y se puede deshacer completo; el reporte de filas rechazadas se descarga. Entra al alcance de la v1, en la Etapa 4.
+- Recomendación del analista, aceptada por ingeniero-datos: vista previa obligatoria; lo predeterminado es todo o nada; importar solo las filas válidas exige aceptación explícita tras la vista previa; las válidas se guardan en una sola operación; las rechazadas se devuelven en un archivo con el motivo, listo para corregir y recargar; el lote queda registrado (quién, cuándo, archivo, filas cargadas y rechazadas) y se puede deshacer completo mientras no tenga movimientos posteriores. QA debe ajustar CA-10. Entra al alcance de la v1, en la Etapa 4.
 - DECISIÓN: [pendiente] · Bloquea: Etapa 4.
 
 ### B9. Auditoría y retención
