@@ -19,13 +19,13 @@ Esta matriz la revisa el Auditor Técnico al cerrar cada etapa (D-026.4): un req
 | Con un criterio citado que existe | 311 |
 | Citas rotas | 0 |
 | Cubiertos (el criterio los lista) | 287 |
-| No probados de verdad (lista abajo) | 13 del núcleo y 2 de módulos |
-| Para verificar leyendo el texto | 11 |
+| No probados de verdad (lista abajo) | 15 del núcleo y 2 de módulos |
+| Para verificar leyendo el texto | 9 |
 | Reglas RN sin criterio que las cite | 18 de 22 (ver tabla de RN) |
 
 ### Requisitos cuyo criterio no los prueba de verdad
 
-En el informe de la ronda 3 conté 14; la lista exacta tiene 15 (13 del núcleo y 2 del módulo de entregas).
+En el informe de la ronda 3 conté 14. La lista exacta de hoy tiene 17: 15 del núcleo (13 que ya tenía y 2 que el Analista agregó a la v0.3 después de mi revisión, RF-PLA-011 y 012) y 2 del módulo de entregas.
 
 | Requisito | Etapa | Criterio citado | Qué falta probar |
 |---|---|---|---|
@@ -42,6 +42,8 @@ En el informe de la ronda 3 conté 14; la lista exacta tiene 15 (13 del núcleo 
 | RF-OC-048 | E5 | CA-055 | CA-055 prueba el borde del límite; no prueba el informe mensual "sin respaldo de compra" ni el aviso de compra fraccionada. |
 | RF-ROL-015 | E1 | CA-077 | CA-077 prueba procesos diarios; no prueba la falla por dependencias circulares entre módulos. |
 | RF-OC-049 | E5 | CA-061 | CA-061 prueba que el borrador no reserva; no prueba qué ocurre a los 7 días. |
+| RF-PLA-011 | E1 | CA-015c | CA-015c no prueba que el primer administrador confirma el contacto autorizado ni que cambiarlo exige espera de 24 horas y aviso a todos los administradores (agregado a la v0.3 después de mi revisión). |
+| RF-PLA-012 | E1 | CA-015c | CA-015c no prueba el veto de un administrador activo durante la espera de 24 horas del rescate (agregado a la v0.3 después de mi revisión). |
 | RF-ENT-002 (entregas-devoluciones) | E4 | CA-ENT-01 | CA-ENT-01 no prueba el borrador automático de la entrega. |
 | RF-ENT-016 (entregas-devoluciones) | E4 | CA-ENT-01 | CA-ENT-01 no prueba renovar un préstamo. |
 
@@ -320,8 +322,8 @@ Etapas: E0 a E7 son las de la v1; F2 y F3 son fases posteriores. Una fila con do
 | RF-PLA-008 | No puede activar en nombre de una empresa el interruptor único de excepciones. | E5 | CA-070 | cubierto |  |
 | RF-PLA-009 | Acceso de emergencia (PS-05): si el correo falla, emite un acceso excepcional de un solo u… | E1 | CA-015c | no probado de verdad | CA-015c prueba el rescate; no prueba el acceso de emergencia (un solo uso, identidad verificada, segunda verificación). |
 | RF-PLA-010 | Puede subir por un periodo corto los topes de una empresa (invitaciones, carga inicial) (P… | E1 | CA-067 | no probado de verdad | CA-067 no prueba que la plataforma sube el tope de una empresa por un periodo corto. |
-| RF-PLA-011 | Contacto autorizado [SUPUESTO S-34]: lo registra el Administrador de plataforma al crear l… | E1 | CA-015c | verificar | El criterio citado no lista este requisito en su cabecera; leer su texto. |
-| RF-PLA-012 | Veto durante el rescate [SUPUESTO S-34]: durante la espera de 24 horas de un rescate, cual… | E1 | CA-015c | verificar | El criterio citado no lista este requisito en su cabecera; leer su texto. |
+| RF-PLA-011 | Contacto autorizado [SUPUESTO S-34]: lo registra el Administrador de plataforma al crear l… | E1 | CA-015c | no probado de verdad | CA-015c no prueba que el primer administrador confirma el contacto autorizado ni que cambiarlo exige espera de 24 horas y aviso a todos los administradores (agregado a la v0.3 después de mi revisión). |
+| RF-PLA-012 | Veto durante el rescate [SUPUESTO S-34]: durante la espera de 24 horas de un rescate, cual… | E1 | CA-015c | no probado de verdad | CA-015c no prueba el veto de un administrador activo durante la espera de 24 horas del rescate (agregado a la v0.3 después de mi revisión). |
 | RF-PLA-013 | Cómo lee soporte los datos [SUPUESTO S-34]: la sesión de soporte usa una lectura de solo l… | E1 | CA-015b | verificar | El criterio citado no lista este requisito en su cabecera; leer su texto. |
 | RF-ROL-001 | Cada usuario tiene un solo rol en cada empresa. El rol vive en la membresía: la misma pers… | E1 | CA-047 | cubierto |  |
 | RF-ROL-002 | Hay siete plantillas de rol (Administrador, Jefatura TI, Técnico, Almacén, Solicitante, So… | E1 | CA-047 | cubierto |  |

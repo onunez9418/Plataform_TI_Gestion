@@ -13,7 +13,7 @@ function zonaLista(id) {
   const filas = todos.filter((d) => o.filtrar(d, f));
   const hay = Object.values(f).some((v) => v);
   return `<p class="suave chica" aria-live="polite">Mostrando ${filas.length} de ${todos.length}${hay ? ' · hay filtros activos' : ''}</p>` +
-    (filas.length ? tabla({ cols: o.cols, filas, claseFila: o.claseFila }) + `<div class="paginacion"><span>Página 1 de 1 · 50 filas por página</span><span>${btnAcc({ texto: 'Anterior', clase: 'chico', bloqueo: 'Está en la primera página.' }).replace(/<span class="razon".*<\/span><\/span>$/, '</span>')}</span></div>`
+    (filas.length ? tabla({ cols: o.cols, filas, claseFila: o.claseFila }) + `<div class="paginacion"><span>Página 1 de 1 · 50 filas por página (selector 25 / 50 / 100)</span></div>`
       : vacio({ titulo: 'No hay resultados', texto: 'Cambie los filtros o limpie la búsqueda.', boton: `<button class="btn" type="button" data-acc="lista-limpiar" data-lista="${id}">Limpiar filtros</button>` }));
 }
 function listaHTML(id, o, ini) {
