@@ -1,334 +1,340 @@
 # Módulo: Proveedores y contratos (PRV)
 
-**Slug:** `proveedores-contratos` · **Sigla:** PRV · **Versión:** 0.1 (borrador del analista funcional, Oleada B)
-**Base:** `docs/equipo/decisiones.md` (D-001 a D-029, vinculantes) y `docs/documento-funcional.md` v0.1.
-**Marcas:** **[SUPUESTO]** = propuesta del analista que el Gerente de TI confirma. **[ESCALAR AL CEO]** = implica dinero, tema legal o algo irreversible.
+**Slug:** `proveedores-contratos` · **Sigla:** PRV · **Versión:** 0.2 (corregida tras la revisión cruzada, Oleada D)
+**Base:** `docs/equipo/decisiones.md` (D-001 a D-064, vinculantes), `docs/documento-funcional.md` y `docs/equipo/plan-correcciones.md`.
+**Marcas:** **[SUPUESTO]** = propuesta del analista que el Gerente de TI confirma. **[ESCALAR AL CEO]** = implica dinero, tema legal o algo irreversible. "Cliente (CEO)" es quien pidió la plataforma.
 
 ---
 
 ## 1. Propósito, alcance y fase
 
-**Propósito.** Que el área de TI sepa en un solo lugar a quién le compra, a quién le contrata servicios, qué contratos tiene firmados, hasta cuándo valen, qué nivel de servicio prometió cada proveedor y cuándo hay que actuar (renovar o avisar que no se renueva) antes de perder dinero o quedarse sin soporte.
+**Propósito.** Que el área de TI sepa a quién le compra y a quién le contrata servicios, qué contratos tiene, hasta cuándo valen, qué compromiso de servicio asumió cada proveedor y cuándo actuar (renovar o avisar que no se renueva) antes de perder dinero o soporte.
 
-**Fases (propuesta).** Los avisos automáticos de vencimiento están fuera de la v1 (D-023), por eso el módulo se parte en dos:
+| Parte | Qué contiene | Cuándo (D-056) |
+|---|---|---|
+| **PRV-A** | Proveedor ampliado y contactos: una sola tabla del núcleo desde la Etapa 2; la orden de compra y la de servicio la usan en las Etapas 5 y 6. | `v1, Etapa 2` |
+| **PRV-B** | Contratos, renovaciones, compromisos de servicio, documentos de referencia y avisos de vencimiento. | `Fase 2`, ola B (después de NOT-completo y antes de GAR-B, LIC, LIN) |
 
-| Parte | Qué contiene | Cuándo | Por qué |
-|---|---|---|---|
-| **Fase A** | Ficha ampliada del proveedor y contactos | Etapa 2 (catálogos) y Etapa 5 (compras) | La orden de compra y la orden de servicio ya necesitan proveedor (D-008, D-013, D-027). |
-| **Fase B** | Contratos, renovaciones, SLA, documentos de referencia, alertas | Después de la v1 (propuesta: tras la Etapa 7, con demo y aprobación del CEO) | Es valor agregado que no bloquea la operación diaria. |
-
-**Entra en este módulo**
-1. Proveedores (extienden el catálogo "proveedor" de D-008; es la misma lista, no una segunda).
-2. Contactos de cada proveedor.
-3. Contratos con vigencia, renovación (manual o automática), cambios de condiciones, terminación y anulación.
-4. Compromisos de servicio (SLA) del proveedor, siempre dentro de un contrato.
-5. Documentos de referencia (datos de dónde está el documento; no el archivo).
-6. Alertas de vencimiento y de fecha límite para avisar la no renovación.
-7. Activos cubiertos por un contrato (por ejemplo, "soporte de las 40 laptops Dell").
-
+**Entra:** proveedores (el mismo del catálogo, D-040.3); contactos; contratos con vigencia, renovación, cambios, terminación y anulación; compromisos de servicio; documentos de referencia; activos cubiertos; reglas de aviso de vencimiento. PRV-B se activa por empresa (`empresa.configurar_modulos`); apagarlo oculta, no borra.
 **No entra:** ver sección 13.
 
 ## 2. Glosario del módulo
 
 | Término | Significado |
 |---|---|
-| **Proveedor** | Empresa o persona que vende bienes o presta servicios a la empresa. Es el mismo del catálogo (D-008). |
-| **Contacto** | Persona del proveedor con quien se trata (comercial, soporte). No es Persona (quien recibe equipos) ni Usuario (quien entra a la plataforma). |
-| **Identificación fiscal** | Número tributario del proveedor (RUC, NIT, RFC u otro según país). |
-| **Contrato** | Acuerdo firmado con un proveedor por un periodo (soporte, licenciamiento, arrendamiento, telecomunicaciones, servicio administrado, acuerdo marco). |
-| **Vigencia** | Periodo entre la fecha de inicio y la de fin del contrato. El día de fin se cuenta completo. |
-| **Renovación manual** | Al llegar el fin, alguien debe registrar la renovación; si no, el contrato queda Vencido. |
-| **Renovación automática** | El contrato se renueva solo según su texto, salvo que se avise a tiempo que no se renueva. |
-| **Preaviso** | Días de anticipación que el contrato exige para avisar que no se renovará. |
-| **Fecha límite de preaviso** | Fecha de fin menos los días de preaviso. Pasada esa fecha, ya no se puede evitar la renovación. |
-| **Adenda** | Cambio escrito a las condiciones de un contrato ya firmado (precio, fecha, alcance). |
-| **SLA (acuerdo de nivel de servicio)** | Compromiso medible del proveedor, por ejemplo "responde en 4 horas a una falla crítica" o "disponibilidad 99,5 %". |
-| **Responsable interno** | Usuario de la plataforma que cuida el contrato y recibe sus alertas. |
-| **Valor del periodo** | Importe que se paga por cada periodo de facturación (sin impuesto). |
-| **Valor total estimado** | Valor del periodo por la cantidad de periodos de la vigencia. Si la facturación es única, es el importe único. |
-| **Documento de referencia** | Registro que dice qué documento es y dónde está guardado (carpeta física o enlace externo). No contiene el archivo (D-022). |
-| **Por vencer** | Etiqueta calculada (no es un estado): faltan menos días que el umbral de alerta. |
-| **Monto límite de aprobación** | El de D-015, configurado por cada empresa en su moneda base. |
+| **Proveedor** | Quien vende bienes o presta servicios a la empresa. Operador de línea, registrador de dominio, emisor de certificados y garante también son proveedores de esta tabla. |
+| **Contacto** | Persona del proveedor con quien se trata. No es Persona (quien recibe equipos) ni Usuario (quien entra a la plataforma). |
+| **Identificación fiscal** | Número tributario del proveedor (RUC, NIT, RFC u otro según país), guardado normalizado. |
+| **Contrato** | Acuerdo con un proveedor por un periodo. Es único en toda la plataforma: el contrato de licencia es una extensión 1 a 1 de este (D-044.4). |
+| **Vigencia** | Periodo entre inicio y fin; el día de fin cuenta completo. |
+| **Renovación manual / automática** | Manual: alguien la registra. Automática: el contrato se renueva solo según su texto, salvo que se avise a tiempo. |
+| **Preaviso y fecha límite de preaviso** | Días de anticipación para avisar que no se renueva; la fecha límite es el fin menos esos días. |
+| **Adenda** | Cambio escrito a un contrato firmado (precio, fecha, alcance). |
+| **Compromiso de servicio del proveedor** | Promesa medible del proveedor, por ejemplo "responde en 4 horas a una falla crítica". Reemplaza a "SLA" (D-049.7); "SLA" queda para los plazos internos de la mesa de ayuda. |
+| **Responsable** | Persona de la empresa que cuida el contrato; su vínculo con una membresía es opcional (D-044.5). |
+| **Estado mostrado** | Programado, Vigente o Vencido: se calcula al leer con las fechas y la zona horaria de la empresa; no se guarda (D-062.2). |
+| **Valor total comprometido** | Valor del periodo contratado, con impuesto, en la moneda base: la medida única de monto de RN-017 (D-043.3). |
+| **Documento de referencia** | Registro de qué documento es y dónde está; no contiene el archivo (D-022). |
 
 ## 3. Roles y permisos
 
-Los roles son las plantillas de D-004; cada empresa las edita. "Todo" es el alcance completo; "Propio" son los contratos donde el usuario es responsable interno. Los importes se ven solo con el permiso sensible `precios.ver` (del núcleo, D-004.4).
+Los permisos son los del registro único `docs/registro-permisos.md` (PS-nn, D-036); el número manda y el nombre técnico se repite en el texto por legibilidad. Este módulo agrega filas y no cambia celdas del núcleo (D-037). Valores iguales a los del registro. **Empleado (portal): no aplica.** "Propio" = contratos donde la Persona vinculada del usuario es responsable (sin Persona vinculada, lista vacía).
 
-| Acción | Permiso | Admin. | Jefatura TI | Técnico | Almacén | Solicitante | Solo lectura |
+| Acción | PS y permiso | Admin. | Jefatura TI | Técnico | Almacén | Solicitante | Solo lectura |
 |---|---|---|---|---|---|---|---|
-| Ver ficha básica del proveedor (nombre, tipo, estado) | `proveedores.ver` | Todo | Todo | Todo | Todo | Todo | Todo |
-| Ver contactos | `proveedores.ver_contactos` | Todo | Todo | Todo | Todo | No | No |
-| Crear y editar proveedor y contactos | `proveedores.crear_editar` | Sí | Sí | No | No | No | No |
-| Desactivar y reactivar proveedor | `proveedores.desactivar` | Sí | Sí | No | No | No | No |
-| Ver contratos y SLA (sin importes) | `contratos.ver` | Todo | Todo | Todo | No | No | Todo |
-| Ver importes de contratos | `precios.ver` | Sí | Sí | No | No | No | No |
-| Crear y editar contratos en Borrador | `contratos.crear_editar` | Sí | Sí | No | No | No | No |
-| Activar contrato | `contratos.activar` | Sí | Sí | No | No | No | No |
-| Renovar, registrar adenda, marcar "no renovar" | `contratos.renovar` | Sí | Sí | No | No | No | No |
-| Terminar o anular contrato | `contratos.terminar_anular` | Sí | Sí | No | No | No | No |
-| Gestionar SLA | `sla.gestionar` | Sí | Sí | No | No | No | No |
-| Gestionar documentos de referencia | `referencias.gestionar` | Sí | Sí | Sí | No | No | No |
-| Recibir alertas de contratos | `contratos.recibir_alertas` | Todo | Todo | Propio | No | No | No |
-| Exportar listas | `exportar` (núcleo) | Sí | No | No | No | No | No |
-| Ver actividad (auditoría) del módulo | `auditoria.ver` (núcleo) | Sí | Sí | No | No | No | No |
+| Ver ficha básica del proveedor | PS-35 `proveedores.ver` | Todo | Todo | Todo | Todo | No | Todo |
+| Ver contactos (datos de terceros) | PS-36 `proveedores.ver_contactos` | Sí | Sí | Sí | No | No | No |
+| Crear y editar proveedor y contactos | PS-37 `proveedores.crear_editar` | Sí | No | No | No | No | No |
+| Desactivar y reactivar proveedor | PS-38 `proveedores.desactivar` | Sí | No | No | No | No | No |
+| Ver contratos y compromisos | PS-74 `contratos.ver` | Todo | Todo | Todo | No | No | Todo |
+| Ver importes (sensible) | PS-23 `precios.ver` | Sí | Sí | No | No | No | No |
+| Crear y editar contratos en Borrador | PS-75 `contratos.crear_editar` | Sí | No | No | No | No | No |
+| Activar contrato (RN-PRV-015) | PS-76 `contratos.activar` | Sí | Sí | No | No | No | No |
+| Renovar, adenda, marcar "no renovar" | PS-77 `contratos.renovar` | Sí | Sí | No | No | No | No |
+| Terminar o anular | PS-78 `contratos.terminar_anular` | Sí | Sí | No | No | No | No |
+| Gestionar compromisos de servicio | PS-79 `contratos.gestionar_compromisos` | Sí | Sí | No | No | No | No |
+| Gestionar documentos de referencia | PS-80 `contratos.gestionar_referencias` | Sí | Sí | Sí | No | No | No |
+| Recibir avisos de contratos | PS-81 `contratos.recibir_avisos` | Todo | Todo | Propio | No | No | No |
+| Exportar listas | PS-20 `datos.exportar` | Sí | No | No | No | No | No |
+| Importar maestro de proveedores | PS-21 `datos.importar` | Sí | No | No | No | No | No |
+| Ver actividad del módulo | PS-18 `auditoria.ver` | Sí | Sí | No | No | No | No |
+| Activar o apagar el módulo | PS-09 `empresa.configurar_modulos` | Sí | No | No | No | No | No |
 
-Reglas de la matriz
-- El permiso para crear proveedores es distinto del de crear órdenes de compra (D-015.5).
-- Todo permiso se comprueba en el servidor (CLAUDE.md, regla 6).
-- Nadie se asigna permisos a sí mismo ni crea un rol con más permisos que el suyo (D-004.6).
+Con `contratos.crear_editar` solo del Administrador y `contratos.activar` también de Jefatura TI, la persona que prepara y la que aprueba son distintas por diseño. Reglas: todo permiso se comprueba en el servidor; nadie se asigna permisos ni crea un rol con más de los suyos (D-004.6); quien crea proveedores es distinto del permiso de crear órdenes (D-015.5).
 
 ## 4. Requisitos
 
-Etapa: **A** = Fase A, **B** = Fase B (sección 1).
+Columnas: **Cuándo** = `v1, Etapa 2` (PRV-A) o `Fase 2` (PRV-B). **CA** = criterio que lo cubre (sección 10).
 
 ### 4.1 Requisitos funcionales
 
-| ID | Requisito | Fase |
-|---|---|---|
-| RF-PRV-001 | Registrar un proveedor con razón social, nombre comercial, identificación fiscal, país, si vende bienes, si presta servicios, sitio web y notas. | A |
-| RF-PRV-002 | Editar un proveedor; los cambios en razón social e identificación fiscal quedan en la auditoría con valor anterior y nuevo. | A |
-| RF-PRV-003 | Desactivar y reactivar un proveedor con motivo obligatorio. | A |
-| RF-PRV-004 | Lista de proveedores con buscador (nombre, identificación fiscal), filtros (estado, vende bienes, presta servicios, país) y exportación (D-021.3). | A |
-| RF-PRV-005 | Registrar contactos de un proveedor: nombre, cargo, rol (Comercial, Soporte técnico, Facturación, Escalamiento), correo, teléfono laboral; marcar un contacto principal. | A |
-| RF-PRV-006 | Desactivar un contacto sin borrarlo. | A |
-| RF-PRV-007 | Ficha del proveedor con resumen: contratos, órdenes de compra y de servicio abiertas, últimos movimientos. | A |
-| RF-PRV-008 | Registrar un contrato en Borrador: proveedor, tipo, título, número del contrato del proveedor, objeto, fechas de firma, inicio y fin, tipo de renovación, preaviso, moneda, valor del periodo, frecuencia de facturación, centro de costo y responsable interno. | B |
-| RF-PRV-009 | Asignar número interno correlativo por empresa (`CTR-0001`) con el mecanismo de D-007.8. | B |
-| RF-PRV-010 | Activar un contrato (pasa a Programado o Vigente) cumpliendo la regla de segunda persona cuando corresponda. | B |
-| RF-PRV-011 | Renovar un contrato (nueva fecha de fin y, si cambia, nuevo valor), guardando la fecha de fin anterior. | B |
-| RF-PRV-012 | Renovación automática: el sistema extiende la vigencia al llegar el fin, salvo que el contrato esté marcado "no renovar". | B |
-| RF-PRV-013 | Marcar un contrato "no renovar" (con fecha y motivo) y deshacer la marca mientras no haya pasado el fin. | B |
-| RF-PRV-014 | Registrar una adenda: cambio de valor, fecha de fin o alcance, con descripción y fecha de la adenda. | B |
-| RF-PRV-015 | Revertir una renovación registrada por error, con motivo, si no hay cambios posteriores. | B |
-| RF-PRV-016 | Terminar un contrato antes de su fin, con fecha efectiva y motivo. | B |
-| RF-PRV-017 | Anular un contrato registrado por error, con motivo. | B |
-| RF-PRV-018 | Pasar a Vencido, automáticamente, el contrato Vigente cuyo fin ya pasó y no se renovó. | B |
-| RF-PRV-019 | Vincular activos (unidades con serie) cubiertos por el contrato: uno por uno o por filtro (SKU, categoría, ubicación). | B |
-| RF-PRV-020 | Registrar compromisos SLA dentro de un contrato: nombre, prioridad, métrica, objetivo, horario de cobertura, consecuencia pactada (texto). | B |
-| RF-PRV-021 | Registrar documentos de referencia de un proveedor o contrato: tipo, título, número, fecha, dónde está, quién lo custodia. | B |
-| RF-PRV-022 | Lista de contratos con filtros (estado, proveedor, tipo, responsable, "por vencer en N días", "fecha límite de preaviso próxima") y exportación. | B |
-| RF-PRV-023 | Bandeja "Pendientes de activación" para quien puede activar contratos. | B |
-| RF-PRV-024 | Configurar por empresa los días de alerta y los tipos de contrato. | B |
-| RF-PRV-025 | En la orden de compra o de servicio a un proveedor, mostrar (solo informativo) los contratos Vigentes de ese proveedor. | B |
-| RF-PRV-026 | Mostrar al elegir un proveedor con SLA vigente el SLA aplicable, para las órdenes de servicio (ver sección 9). | B |
-| RF-PRV-027 | Historial del contrato: todo cambio de estado, renovación, adenda y alerta enviada, con quién y cuándo. | B |
+| ID | Requisito | Cuándo | CA |
+|---|---|---|---|
+| RF-PRV-001 | Registrar un proveedor: razón social, nombre comercial, tipo (Empresa o Persona natural), identificación fiscal, país, "vende bienes", "presta servicios", sitio web, notas. | v1, Etapa 2 | 01, 03 |
+| RF-PRV-002 | Editar un proveedor. La auditoría guarda antes y después de campos ordinarios; de campos personales solo "el campo cambió" (D-030). | v1, Etapa 2 | 03, 20 |
+| RF-PRV-003 | Desactivar y reactivar un proveedor, con motivo. | v1, Etapa 2 | 04 |
+| RF-PRV-004 | Lista de proveedores con buscador, filtros (estado, vende, presta, país) y exportación por la puerta única (D-061.1), sin columnas de contactos. | v1, Etapa 2 | 15 |
+| RF-PRV-005 | Contactos: nombre, cargo, rol (Comercial, Soporte técnico, Facturación, Escalamiento), correo, teléfono laboral, principal. | v1, Etapa 2 | 03 |
+| RF-PRV-006 | Desactivar un contacto sin borrarlo; un contacto inactivo se anonimiza a los 2 años (RN-PRV-034). | v1, Etapa 2 | 16 |
+| RF-PRV-007 | Ficha del proveedor con resumen: órdenes abiertas y, con PRV-B activo, contratos. | v1, Etapa 2 | 02 |
+| RF-PRV-008 | Registrar un contrato en Borrador: proveedor, tipo, título, número del proveedor, objeto, firma, inicio, fin, renovación, preaviso, patrón de costo (RN-PRV-012), responsable, orden de compra relacionada (opcional). | Fase 2 | 05 |
+| RF-PRV-009 | Número correlativo por empresa `CTR-000012` (D-007.8, D-049). | Fase 2 | 05 |
+| RF-PRV-010 | Activar un contrato, con otra persona cuando RN-017 lo exige. | Fase 2 | 05, 06, 17 |
+| RF-PRV-011 | Renovar un contrato (nuevo fin y, si cambia, nuevo valor) conservando el fin anterior. | Fase 2 | 07 |
+| RF-PRV-012 | Renovación automática: el sistema extiende la vigencia al llegar el fin, salvo marca "no renovar". | Fase 2 | 08, 18 |
+| RF-PRV-013 | Marcar "no renovar" (fecha y motivo) y deshacer la marca mientras no haya pasado el fin. | Fase 2 | 18 |
+| RF-PRV-014 | Registrar una adenda (valor, fin o alcance) con descripción y fecha. | Fase 2 | 13 |
+| RF-PRV-015 | Revertir una renovación registrada por error, con motivo, si no hay cambios posteriores. | Fase 2 | 07 |
+| RF-PRV-016 | Terminar un contrato antes de su fin, con fecha efectiva y motivo. | Fase 2 | 09 |
+| RF-PRV-017 | Anular un contrato registrado por error, con motivo. | Fase 2 | 09 |
+| RF-PRV-018 | Mostrar el estado calculado al leer (Programado, Vigente, Vencido); el proceso diario solo emite avisos y renovaciones automáticas. | Fase 2 | 09, 19 |
+| RF-PRV-019 | Vincular activos cubiertos (uno por uno o por filtro de SKU, categoría o ubicación). | Fase 2 | 02 |
+| RF-PRV-020 | Registrar compromisos de servicio dentro de un contrato: nombre, prioridad, métrica, objetivo, cobertura, consecuencia pactada (texto). | Fase 2 | 12 |
+| RF-PRV-021 | Registrar documentos de referencia de un proveedor o contrato. | Fase 2 | 11 |
+| RF-PRV-022 | Lista de contratos con filtros (estado mostrado, proveedor, tipo, responsable, vence en N días, preaviso próximo) y exportación por la puerta única. | Fase 2 | 10 |
+| RF-PRV-023 | Los contratos por activar aparecen en la bandeja única "Por aprobar" (D-053), con el verbo "Aprobar". | Fase 2 | 05 |
+| RF-PRV-024 | Administrar los tipos de contrato de la empresa. La configuración de avisos vive solo en Notificaciones (NOT-05). | Fase 2 | 10 |
+| RF-PRV-025 | En la orden de compra o de servicio, mostrar (informativo) los contratos vigentes del proveedor y sus compromisos. | Fase 2 | 12 |
+| RF-PRV-026 | Al cerrar una orden de servicio con compromiso aplicable, mostrar el tiempo real frente al objetivo, en horas corridas, solo como dato. | Fase 2 | 12 |
+| RF-PRV-027 | Historial del contrato: cambios de estado, renovaciones y adendas, con quién y cuándo. | Fase 2 | 07 |
+| RF-PRV-028 | Contrato de licencia: PRV expone el contrato (CTR-) y LIC agrega su extensión 1 a 1 (tipo y puestos); no existe otro contrato (D-044.4). | Fase 2 | 21 |
+| RF-PRV-029 | Declarar en el registro de módulo los contratos de los que una Persona es responsable como "pendiente de la persona" (D-061.7). | Fase 2 | 22 |
 
 ### 4.2 Reglas de negocio
 
 | ID | Regla |
 |---|---|
-| RN-PRV-001 | La identificación fiscal de un proveedor es única por empresa, sin espacios, guiones ni distinción de mayúsculas; puede quedar vacía solo con un aviso visible. |
-| RN-PRV-002 | Al crear un proveedor con razón social casi igual a otra existente, se muestra un aviso con los parecidos; no se bloquea. |
+| RN-PRV-001 | La identificación fiscal es única por empresa una vez normalizada (sin espacios, guiones ni mayúsculas); puede quedar vacía con aviso visible. |
+| RN-PRV-002 | Una razón social casi igual a otra muestra un aviso con los parecidos; no bloquea. |
 | RN-PRV-003 | Un proveedor con historial no se borra: se desactiva (D-019). |
-| RN-PRV-004 | No se puede desactivar un proveedor con contratos Pendiente de activación, Programado o Vigente, ni con órdenes de compra o de servicio no cerradas ni anuladas. |
-| RN-PRV-005 | Un proveedor inactivo no se puede elegir en nuevas órdenes, contratos ni mantenimientos; sigue visible en el historial. |
-| RN-PRV-006 | Esta fase no guarda datos bancarios del proveedor (reduce el riesgo de fraude por cambio de cuenta). |
-| RN-PRV-007 | Un contacto guarda solo datos laborales: nombre, cargo, correo y teléfono laboral. No se guardan documento de identidad, dirección ni datos personales (alineado con D-006). |
-| RN-PRV-008 | Un contacto necesita correo o teléfono; el correo no se repite dentro del mismo proveedor. |
-| RN-PRV-009 | Un proveedor tiene como máximo un contacto principal activo. |
-| RN-PRV-010 | La fecha de fin de un contrato no puede ser anterior a la de inicio. |
-| RN-PRV-011 | Un contrato se crea solo con un proveedor activo y de la misma empresa. |
-| RN-PRV-012 | Cada contrato tiene una sola moneda (código de 3 letras); no hay conversión (D-014). El importe siempre se guarda con su moneda y es mayor o igual a 0. |
-| RN-PRV-013 | El importe se ingresa sin impuesto. |
-| RN-PRV-014 | Valor total estimado = valor del periodo × número de periodos de facturación entre inicio y fin (redondeado hacia arriba); con facturación única, es el importe único. |
-| RN-PRV-015 | Para pasar de Borrador a activo, el contrato necesita **segunda persona** si su valor total estimado, en la moneda base, supera el monto límite de aprobación (D-015). Un contrato en otra moneda siempre la necesita (D-014.6). |
-| RN-PRV-016 | Cuando se exige segunda persona, quien activa no puede ser quien creó o editó el contrato, ni siquiera siendo Administrador (D-015.3). |
-| RN-PRV-017 | La excepción por empresa de D-015.4 (una sola persona de TI) aplica igual a contratos: desactivada por defecto, con aviso visible y cada uso en la auditoría. |
-| RN-PRV-018 | Para activar se exige responsable interno: un Usuario activo con permiso `contratos.ver`. |
-| RN-PRV-019 | Un contrato activo no cambia valor, fechas ni alcance editando: esos cambios se hacen con renovación o adenda. Sí se editan responsable, notas y activos cubiertos. |
-| RN-PRV-020 | Una renovación o una adenda que sube el valor total estimado o alarga el fin vuelve a aplicar RN-PRV-015 con las cifras nuevas. |
-| RN-PRV-021 | La nueva fecha de fin de una renovación es posterior a la anterior; la anterior se conserva. |
-| RN-PRV-022 | La renovación automática del sistema repite las condiciones vigentes, no pide segunda persona (ya se aprobó el contrato) y queda en la auditoría como acción del sistema. |
-| RN-PRV-023 | Las condiciones nuevas del proveedor en una renovación automática (otro precio) se registran con una adenda; hasta entonces el sistema mantiene el valor anterior. |
-| RN-PRV-024 | Renovar un contrato Vencido es posible; si la fecha de hoy es posterior al fin, el motivo es obligatorio y queda marcado "renovado con retraso". |
-| RN-PRV-025 | Terminar o anular exige motivo. Terminado y Anulado son estados finales; no se reabren (se crea un contrato nuevo). |
+| RN-PRV-004 | No se desactiva un proveedor con contratos activados vigentes o programados, ni con órdenes de compra o de servicio sin cerrar ni anular. |
+| RN-PRV-005 | Un proveedor inactivo no se elige en nuevas órdenes, contratos ni mantenimientos; sigue visible en el historial. |
+| RN-PRV-006 | No se guardan datos bancarios del proveedor. |
+| RN-PRV-007 | Un contacto guarda solo nombre, cargo, correo y teléfono laborales; nada de documento, dirección ni datos personales. |
+| RN-PRV-008 | Un contacto necesita correo o teléfono; el correo no se repite dentro del proveedor. |
+| RN-PRV-009 | Máximo un contacto principal activo por proveedor. |
+| RN-PRV-010 | El fin de un contrato no es anterior al inicio. |
+| RN-PRV-011 | Un contrato se crea solo con un proveedor activo de la misma empresa. |
+| RN-PRV-012 | Patrón de costo común (D-044.1): importe sin impuesto del periodo, % de impuesto, moneda (una por contrato, sin conversión), periodicidad (Única, Mensual, Trimestral, Anual), inicio, fin, centro de costo y `fuente_costo`. Importe mayor o igual a 0. |
+| RN-PRV-013 | `fuente_costo` es "contrato"; si hay orden de compra relacionada, es "orden_compra" y el libro de costos cuenta la orden y no el contrato (precedencia D-044.3). |
+| RN-PRV-014 | Valor total comprometido = valor del periodo con impuesto × periodos entre inicio y fin (hacia arriba); con periodicidad Única, el importe único con impuesto. Redondeo según D-044.7. |
+| RN-PRV-015 | Activar exige a otra persona cuando RN-017 (núcleo) lo dispone: el valor total comprometido, en moneda base, supera estrictamente el límite; con límite 0 siempre; en otra moneda siempre. Se calcula con la función única `requiereSegundaPersona` (D-043.3). Este módulo no define otra regla de monto. |
+| RN-PRV-016 | El servicio único de doble control aplica la definición única: no activa quien haya creado o editado el contrato desde la última aprobación, ni siquiera el Administrador (D-043.1). |
+| RN-PRV-017 | La excepción de una sola persona de TI es la casilla "contratos" del interruptor único de la empresa (apagada, vence a los 90 días, con aviso visible y uso auditado). Este módulo no tiene excepción propia (D-031, D-043.2). |
+| RN-PRV-018 | Para activar se exige responsable: una Persona activa con vínculo a una membresía que tenga `contratos.ver`. |
+| RN-PRV-019 | Un contrato activado no cambia valor, fechas ni alcance editando: se usa renovación o adenda. Sí se editan responsable, notas y activos cubiertos. |
+| RN-PRV-020 | Una renovación o adenda que sube el valor total comprometido o alarga el fin vuelve a aplicar RN-PRV-015 con las cifras nuevas. |
+| RN-PRV-021 | El nuevo fin de una renovación es posterior al anterior; el anterior se conserva. |
+| RN-PRV-022 | La renovación automática es una acción del autor "sistema" (D-041.4) que registra la regla aplicada y la persona que aprobó el contrato; repite las condiciones vigentes y no pide segunda persona (D-043.5). |
+| RN-PRV-023 | Un precio nuevo del proveedor en una renovación automática se registra con una adenda; hasta entonces se mantiene el valor anterior. |
+| RN-PRV-024 | Renovar un contrato Vencido es posible; si hoy es posterior al fin, el motivo es obligatorio y queda "renovado con retraso". |
+| RN-PRV-025 | Terminar o anular exige motivo. Terminado y Anulado son finales; no se reabren, se crea otro contrato. |
 | RN-PRV-026 | Solo se borra de verdad un contrato en Borrador que nunca se activó (D-019). |
-| RN-PRV-027 | Un SLA pertenece a un contrato; solo se edita en Borrador o mediante adenda. No se repite la misma métrica con la misma prioridad en un contrato. |
-| RN-PRV-028 | El objetivo de un SLA es mayor que 0; una disponibilidad está entre 0 y 100 %. |
-| RN-PRV-029 | Un documento de referencia no guarda archivo (D-022). El enlace externo solo se acepta si empieza con `https://` y se muestra con la advertencia "enlace externo: la plataforma no controla quién lo abre". |
-| RN-PRV-030 | Las fechas de contrato son fechas de calendario en la zona horaria de la empresa; un contrato está vigente hasta el final del día de su fecha de fin (D-021.4). |
+| RN-PRV-027 | Un compromiso de servicio pertenece a un contrato, se edita solo en Borrador o con adenda, y no repite métrica y prioridad dentro del contrato. |
+| RN-PRV-028 | El objetivo de un compromiso es mayor que 0; una disponibilidad está entre 0 y 100 %. |
+| RN-PRV-029 | Un documento de referencia no guarda archivo. Un enlace externo solo acepta `https://` y muestra el aviso de salida (D-063.2). Todo texto libre pasa por el validador común que rechaza bloques de clave privada. |
+| RN-PRV-030 | Las fechas son de calendario en la zona horaria de la empresa; un contrato vale hasta el final del día de su fin. "Hoy" se obtiene con la utilidad única `hoyEnEmpresa()` (D-062.2). |
 | RN-PRV-031 | No se vinculan a un contrato activos De baja o Extraviado o robado; los ya vinculados quedan como historial. |
-| RN-PRV-032 | Un identificador de otra empresa (proveedor, contrato, contacto, activo) responde "no encontrado" (D-021.5). |
-| RN-PRV-033 | Los importes no aparecen en pantallas, exportaciones ni correos para quien no tenga `precios.ver`. |
-| RN-PRV-034 | Los datos de contactos de un proveedor siguen el plazo de anonimización de D-024; no se activa ninguna anonimización antes de la confirmación legal. |
-| RN-PRV-035 | El número interno del contrato no se reutiliza ni se edita (D-007). |
-| RN-PRV-037 | Un contrato o una renovación puede indicar la orden de compra que lo originó (opcional, de la misma empresa). Con orden relacionada, el costo ya cuenta por la orden y el contrato queda marcado "costo ya registrado por OC" para que presupuesto no lo cuente dos veces. |
-| RN-PRV-038 | Las fechas de cobro no se guardan: se derivan de la fecha de inicio y la frecuencia. Presupuesto solo lee proveedor, moneda, valor del periodo, frecuencia, fechas, centro de costo y la marca de RN-PRV-037. |
-| RN-PRV-036 | Cada empresa define de 1 a 5 días de alerta (entre 1 y 365); los valores por defecto son 60, 30 y 7. |
+| RN-PRV-032 | Un identificador de otra empresa (proveedor, contrato, contacto, activo, Persona, orden) responde "no encontrado", también al escribir una referencia cruzada (D-021.5, D-039.7). |
+| RN-PRV-033 | Los importes no aparecen en pantallas, exportaciones, correos ni avisos de quien no tenga `precios.ver`; las columnas se omiten. |
+| RN-PRV-034 | Los datos de contactos están en la lista cerrada de campos personales (D-030.6): la auditoría guarda "el campo cambió" sin valor. Un contacto inactivo se anonimiza a los 2 años; la anonimización automática permanece apagada hasta la confirmación legal (D-033.4), y entonces se sobrescribe la fila. |
+| RN-PRV-035 | El número interno no se reutiliza ni se edita (D-007). |
+| RN-PRV-036 | Las reglas de aviso se declaran a Notificaciones con los umbrales por defecto de NOT: 90, 60, 30, 15 y 7 días; la empresa los edita en NOT-05. |
+| RN-PRV-037 | Los datos de contacto no salen en exportaciones generales ni en el visor de la auditoría; solo se ven en pantalla con `proveedores.ver_contactos`. |
+| RN-PRV-038 | Las fechas de cobro no se guardan: se derivan de inicio y periodicidad. Presupuesto lee las columnas del patrón de costo (RN-PRV-012). |
+| RN-PRV-039 | Si el proveedor es Persona natural, su nombre, nombre comercial e identificación fiscal son campos personales: la auditoría guarda solo "el campo cambió" y la exportación los omite sin `datos_personales.ver`. |
+| RN-PRV-040 | Una renovación automática sin marca "no renovar" no se muestra Vencida mientras el proceso diario no haya corrido; el estado mostrado Vencido solo aplica a contratos manuales o con marca. |
+| RN-PRV-041 | Cada proceso diario es idempotente y recuperable: al arrancar procesa los días pendientes en orden, empresa por empresa con la empresa fijada en la transacción, salta empresas suspendidas y deja registro de la corrida (D-038.4). |
+| RN-PRV-042 | Una decisión simultánea (activar, renovar, terminar) se resuelve con actualización condicional y columna `version`: gana una y la otra recibe "ya fue decidido". |
+| RN-PRV-043 | Quien deja de ser responsable (cese de la Persona) no bloquea nada: el contrato aparece en sus pendientes y los avisos se resuelven Persona, membresía, correo, grupo (D-044.5). |
 
 ### 4.3 Requisitos de calidad
 
 | ID | Requisito medible |
 |---|---|
-| RNF-PRV-001 | Con 2 000 proveedores y 5 000 contratos por empresa, listas y buscador responden en menos de 2 segundos en el 95 % de las consultas. |
-| RNF-PRV-002 | El proceso diario de vencimientos y alertas es repetible: ejecutarlo dos veces el mismo día no duplica avisos ni renovaciones. |
-| RNF-PRV-003 | Las alertas del día salen dentro de 1 hora de la hora configurada (por defecto 08:00, hora local de la empresa). |
-| RNF-PRV-004 | El 100 % de las altas, cambios, activaciones, renovaciones, terminaciones y anulaciones quedan en la auditoría en la misma operación (D-018). |
-| RNF-PRV-005 | Toda tabla del módulo lleva empresa y tiene su prueba de aislamiento (D-025). |
-| RNF-PRV-006 | La exportación de 5 000 contratos se entrega en menos de 30 segundos. |
-| RNF-PRV-007 | Las pantallas se usan en tablet y celular; los estados se muestran con texto, no solo con color (D-021.1). |
-| RNF-PRV-008 | Los mensajes de error no muestran datos internos ni importes a quien no los puede ver. |
+| RNF-PRV-001 | Con el volumen de referencia de RNF-010 del núcleo, listas y buscador responden en menos de 2 segundos en el 95 % de las consultas. |
+| RNF-PRV-002 | Ejecutar dos veces el proceso diario del mismo día no duplica avisos ni renovaciones. |
+| RNF-PRV-003 | Los avisos salen a la hora única de la empresa (08:00 por defecto, D-058) y con tolerancia de 1 hora. |
+| RNF-PRV-004 | El 100 % de altas, cambios, activaciones, renovaciones, terminaciones y anulaciones queda en la auditoría en la misma operación (D-018). |
+| RNF-PRV-005 | Cada tabla lleva empresa, clave foránea compuesta y prueba de aislamiento por identificador interno (D-039, D-063.6). |
+| RNF-PRV-006 | Exportar 5 000 contratos corre en el trabajador y entrega en menos de 30 segundos. |
+| RNF-PRV-007 | Pantallas de consulta usables a 360 px, con teclado completo y estados con texto (WCAG AA). |
+| RNF-PRV-008 | Los errores no muestran datos internos ni importes a quien no los puede ver. |
 
 ## 5. Estados y transiciones
 
-### 5.1 Proveedor
+**Proveedor:** Activo e Inactivo (motivo en ambas direcciones; `proveedores.desactivar`; RN-PRV-004).
 
-| Desde | Hacia | Quién | Condición |
-|---|---|---|---|
-| (nuevo) | Activo | `proveedores.crear_editar` | Razón social obligatoria. |
-| Activo | Inactivo | `proveedores.desactivar` | Motivo; cumple RN-PRV-004. |
-| Inactivo | Activo | `proveedores.desactivar` | Motivo. |
-
-### 5.2 Contrato
+**Contrato.** Se guardan solo decisiones; Programado, Vigente y Vencido se calculan (RN-PRV-030).
 
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
 | (nuevo) | Borrador | `contratos.crear_editar` | Campos mínimos de RF-PRV-008. |
-| Borrador | Pendiente de activación | Quien lo creó | Solo si aplica RN-PRV-015. |
-| Borrador | Programado o Vigente | `contratos.activar` | Si no aplica segunda persona. Programado si el inicio es futuro. |
-| Pendiente de activación | Programado o Vigente | `contratos.activar`, distinta persona | RN-PRV-016. |
-| Pendiente de activación | Borrador | Quien puede activar | Devuelto con motivo. |
-| Borrador | (borrado) | Quien lo creó | Solo si nunca se activó (RN-PRV-026). |
-| Programado | Vigente | Sistema | Llega la fecha de inicio. |
-| Vigente | Vigente | `contratos.renovar` o Sistema | Renovación (manual o automática). |
-| Vigente | Vencido | Sistema | Pasó el fin sin renovación (manual o con marca "no renovar"). |
-| Vencido | Vigente | `contratos.renovar` | RN-PRV-024. |
-| Programado o Vigente | Terminado | `contratos.terminar_anular` | Fecha efectiva y motivo. |
+| Borrador | Programado o Vigente | `contratos.activar` | Otra persona si RN-PRV-015; Programado si el inicio es futuro. |
+| Borrador | Borrador (devuelto) | Quien puede activar | Motivo; queda en el historial. |
+| Borrador | (borrado) | Quien lo creó | Solo si nunca se activó. |
+| Programado | Vigente | Calculado | Llega la fecha de inicio. |
+| Vigente | Vencido | Calculado | Pasó el fin sin renovación (RN-PRV-040). |
+| Vigente o Vencido | Vigente | `contratos.renovar` o sistema | Renovación (RN-PRV-020, 022, 024). |
+| Vigente | Terminado | `contratos.terminar_anular` | Fecha efectiva y motivo. |
 | Programado, Vigente o Vencido | Anulado | `contratos.terminar_anular` | Motivo. |
 
-No se permite ninguna otra transición. Terminado y Anulado son finales. **Por vencer** y **Fecha límite de preaviso próxima** son etiquetas calculadas, no estados.
+Ninguna otra transición. Terminado y Anulado son finales. "Por vencer" y "preaviso próximo" son etiquetas calculadas.
 
 ## 6. Datos
 
-Todo registro lleva empresa. Las claves internas no son consecutivas (D-019). Los importes siempre van con su moneda.
+Todo registro lleva empresa; claves internas no consecutivas (D-019); autor = membresía, integración o sistema (D-041).
 
-| Entidad | Campos principales (lenguaje simple) | Unicidad | Qué se audita |
+| Entidad | Campos principales | Unicidad | Qué se audita |
 |---|---|---|---|
-| **Proveedor** (extiende el catálogo) | Razón social, nombre comercial, identificación fiscal, país, vende bienes (sí/no), presta servicios (sí/no), sitio web, notas, estado, motivo de baja | Identificación fiscal por empresa (RN-PRV-001) | Altas; cambios con antes y después; desactivación y reactivación. |
-| **Contacto** | Proveedor, nombre, cargo, rol, correo, teléfono laboral, principal (sí/no), estado | Correo por proveedor | Altas, cambios, desactivación; consultas masivas por exportación. |
-| **Tipo de contrato** (lista de la empresa) | Nombre, activo | Nombre por empresa | Altas y cambios. Valores iniciales: Soporte y mantenimiento, Licenciamiento o suscripción, Arrendamiento de equipos, Telecomunicaciones, Servicio administrado, Acuerdo marco, Otro. |
-| **Contrato** | Número interno, número del proveedor, proveedor, tipo, título, objeto, fecha de firma, inicio, fin, renovación (Ninguna, Manual, Automática), meses por renovación automática, días de preaviso, marca "no renovar" (fecha, motivo), orden de compra relacionada (opcional), marca "costo ya registrado por OC", moneda, valor del periodo, frecuencia (Única, Mensual, Trimestral, Anual), centro de costo, responsable interno, estado, motivo de terminación o anulación | Número interno por empresa | Todo cambio de estado y de campo con antes y después; uso de la excepción D-015.4. |
-| **Cambio de condiciones** | Contrato, tipo (Renovación, Renovación automática, Adenda, Terminación), fecha, fin anterior, fin nuevo, valor anterior, valor nuevo, descripción, quién, motivo, revertida (sí/no) | — | Todo (es historial que no se borra). |
-| **Activo cubierto** | Contrato, activo, desde, hasta | Un activo una vez por contrato | Altas y bajas del vínculo. |
-| **SLA** | Contrato, nombre, prioridad (Crítica, Alta, Media, Baja), métrica (Tiempo de respuesta en horas, Tiempo de resolución en horas, Disponibilidad en %), objetivo, cobertura (24x7 u horario escrito), consecuencia pactada | Contrato + métrica + prioridad | Altas y cambios. |
-| **Documento de referencia** | Proveedor o contrato, tipo (Contrato firmado, Anexo, Adenda, Propuesta, SLA, Certificado, Otro), título, número, fecha, dónde está (texto o enlace https), custodio (texto) | — | Altas, cambios, desactivación. |
-| **Alerta enviada** | Contrato, tipo de alerta, umbral, fecha, destinatarios | Contrato + tipo + umbral + vigencia | No es auditoría: evita duplicados y prueba que se avisó. |
-| **Configuración de alertas** (por empresa) | Días de alerta de vencimiento, días de alerta de preaviso, hora de envío | Una por empresa | Cambios. |
+| **Proveedor** | Razón social, nombre comercial, tipo, identificación fiscal normalizada, país, vende, presta, sitio web, notas, estado, motivo | Identificación fiscal normalizada por empresa (parcial, si no está vacía) | Todo cambio; campos personales sin valor (RN-PRV-039). |
+| **Contacto** | Proveedor, nombre, cargo, rol, correo, teléfono, principal, estado, `retener_hasta` | Correo por proveedor | Altas y cambios sin valor de campos personales; anonimización. |
+| **Tipo de contrato** | Nombre, activo | Nombre por empresa | Altas y cambios. Iniciales: Soporte y mantenimiento, Licenciamiento o suscripción, Arrendamiento, Telecomunicaciones, Servicio administrado, Acuerdo marco, Otro. |
+| **Contrato** | Número `CTR-`, número del proveedor, proveedor, tipo, título, objeto, firma, inicio, fin, renovación (Ninguna, Manual, Automática), meses por renovación, preaviso, marca "no renovar", patrón de costo (RN-PRV-012), orden de compra (opcional), responsable (Persona), decisión de activación (quién, cuándo, valor, si usó excepción), `version` | Número por empresa | Todo; uso de la excepción. |
+| **Cambio de condiciones** | Contrato, tipo (Renovación, Renovación automática, Adenda, Terminación), fecha, fin y valor anterior y nuevo, descripción, autor, motivo, revertida | — | Todo (historial). |
+| **Activo cubierto** | Contrato, activo, desde, hasta | Activo una vez por contrato | Altas y bajas. |
+| **Compromiso de servicio** | Contrato, nombre, prioridad (Crítica, Alta, Media, Baja), métrica (respuesta en horas, resolución en horas, disponibilidad %), objetivo, cobertura, consecuencia | Contrato + métrica + prioridad | Altas y cambios. |
+| **Documento de referencia** | Proveedor o contrato, tipo, título, número, fecha, dónde está (texto o `https`), custodio (texto) | — | Altas y cambios. |
 
-Datos personales: solo los contactos (nombre, correo, teléfono laboral). Finalidad: comunicarse con el proveedor. Los ve quien tiene `proveedores.ver_contactos`.
+Los avisos usan la tabla única de Notificaciones (empresa, regla, entidad, umbral, destinatario); este módulo no tiene tabla propia de avisos (D-062.3).
+
+**Campos personales declarados (D-061.3):** contactos (nombre, correo, teléfono, cargo); razón social, nombre comercial e identificación fiscal de proveedor Persona natural; responsable (referencia a Persona, no copia). Finalidad: comunicarse con el proveedor y contratar. Los ve quien tiene `proveedores.ver_contactos`. Plazo: 2 años tras quedar inactivo (propuesta, pendiente de legal).
 
 ## 7. Pantallas necesarias
 
 | ID | Pantalla | Propósito | Rol principal |
 |---|---|---|---|
-| P-PRV-01 | Lista de proveedores | Buscar, filtrar y exportar. | Jefatura TI |
-| P-PRV-02 | Ficha del proveedor | Pestañas: datos, contactos, contratos, SLA, documentos, actividad. | Jefatura TI |
-| P-PRV-03 | Alta y edición de proveedor | Registrar con aviso de parecidos. | Jefatura TI |
-| P-PRV-04 | Lista de contratos | Filtros, etiquetas "por vencer" y "preaviso próximo". | Jefatura TI |
-| P-PRV-05 | Ficha del contrato | Datos, historial, activos cubiertos, SLA, documentos. | Jefatura TI |
-| P-PRV-06 | Alta y edición de contrato | Asistente en pasos (datos, condiciones económicas, cobertura, SLA). | Jefatura TI |
-| P-PRV-07 | Diálogos de renovar, adenda, terminar, anular, "no renovar" | Cambios con motivo. | Jefatura TI |
-| P-PRV-08 | Pendientes de activación | Bandeja para quien activa. | Jefatura TI |
-| P-PRV-09 | Configuración de alertas y tipos de contrato | Ajustes de la empresa. | Administrador |
-| P-PRV-10 | Panel "Vencimientos" | Recuadro de la pantalla de inicio de Jefatura (D-021.6): contratos por vencer y preaviso próximo. | Jefatura TI |
+| PAN-PRV-01 | Lista de proveedores | Buscar, filtrar y exportar. | Administrador |
+| PAN-PRV-02 | Ficha del proveedor | Pestañas: datos, contactos, contratos, compromisos, documentos, actividad. | Jefatura TI |
+| PAN-PRV-03 | Alta y edición de proveedor | Registrar con aviso de parecidos. | Administrador |
+| PAN-PRV-04 | Lista de contratos | Filtros y etiquetas calculadas. | Jefatura TI |
+| PAN-PRV-05 | Ficha del contrato | Datos, historial, cobertura, compromisos, documentos. | Jefatura TI |
+| PAN-PRV-06 | Alta y edición de contrato | Asistente en pasos. | Jefatura TI |
+| PAN-PRV-07 | Diálogos de renovar, adenda, terminar, anular y "no renovar" | Usan el diálogo único de motivo (D-053). | Jefatura TI |
+| PAN-PRV-08 | Tipos de contrato | Ajuste de la empresa. | Administrador |
+
+La bandeja de activación es la pestaña "Contratos" de "Por aprobar"; los vencimientos se ven en la pantalla única "Vencimientos" y su configuración en NOT-05; ambas pertenecen al núcleo y a NOT.
 
 ## 8. Notificaciones y automatismos
 
-El envío lo hace el módulo de notificaciones (escuadrón C); aquí se fijan las reglas. Un proceso diario corre a la hora local de la empresa (RNF-PRV-003). Los umbrales son los de RN-PRV-036.
+Reglas declaradas al motor único de Notificaciones (RF-NOT-024); NOT envía, agrupa y no repite (clave empresa, regla, entidad, umbral, destinatario). Contenido mínimo (D-061.4): código, fecha y nombre de la empresa; sin importes ni datos de contactos.
 
-| Evento | Cuándo | A quién | Qué dice |
+| Evento (catálogo único `<módulo>.<entidad>_<hecho>`) | Cuándo | A quién | Qué dice |
 |---|---|---|---|
-| Contrato por vencer | A cada umbral de días antes del fin, solo si está Vigente y no tiene renovación posterior | Responsable interno y quienes tienen `contratos.recibir_alertas` | "El contrato CTR-0012 con Dell vence el 30/11/2026 (faltan 30 días). Renovación: manual. Revíselo." |
-| Fecha límite de preaviso próxima | A cada umbral antes de la fecha límite, contratos con renovación automática o preaviso | Igual que arriba | "Si no desea que CTR-0012 se renueve solo, avise al proveedor antes del 31/10/2026." |
-| Contrato venció | El día siguiente al fin, sin renovación | Igual | "CTR-0012 venció el 30/11/2026. Renueve o termine el contrato." |
-| Renovación automática hecha | Al ejecutarse | Responsable interno | "CTR-0012 se renovó solo hasta el 30/11/2027 con las mismas condiciones. Si el proveedor cambió el precio, registre una adenda." |
-| Contrato pendiente de activación | Al enviarlo | Quienes tienen `contratos.activar`, excepto quien lo creó | "El contrato CTR-0015 espera su activación." |
-| Contrato activado o devuelto | Al decidir | Quien lo creó | "Su contrato CTR-0015 fue activado" o "fue devuelto: <motivo>". |
-| Responsable inactivo | Al desactivar un Usuario que es responsable de contratos Vigentes | Quienes tienen `contratos.activar` | "Los contratos CTR-0003 y CTR-0007 quedaron sin responsable. Asigne uno." |
+| `vencimiento.proximo` (contrato por vencer) | A cada umbral antes del fin, contratos activados sin renovación posterior | Responsable y quienes tienen `contratos.recibir_avisos` | "El contrato CTR-000012 vence el 30/11/2026 (faltan 30 días). Revíselo." |
+| `vencimiento.proximo` (preaviso) | A cada umbral antes de la fecha límite de preaviso | Igual | "Si no desea que CTR-000012 se renueve, avise antes del 31/10/2026." |
+| `contratos.contrato_vencido` | El día siguiente al fin sin renovación | Igual | "CTR-000012 venció el 30/11/2026. Renueve o termine el contrato." |
+| `contratos.contrato_renovado_automatico` | Al ejecutarse | Responsable | "CTR-000012 se renovó hasta el 30/11/2027 con las mismas condiciones. Si el proveedor cambió el precio, registre una adenda." |
+| `contratos.contrato_por_activar` | Al pedir activación (no a quien lo creó) | Quienes tienen `contratos.activar` | "El contrato CTR-000015 espera su aprobación." |
+| `contratos.contrato_activado` o devuelto | Al decidir | Quien lo creó | "Su contrato CTR-000015 fue aprobado" o "fue devuelto: <motivo>". |
+| `contratos.contrato_sin_responsable` | Cuando el responsable cesa | Quienes tienen `contratos.activar` | "CTR-000003 y CTR-000007 quedaron sin responsable. Asigne uno." |
 
-Reglas
-- Cada aviso se envía una vez por contrato, tipo y umbral; al renovar, los umbrales se reinician.
-- Si no hay responsable, el aviso va a quienes tienen `contratos.recibir_alertas`.
-- Los avisos no incluyen importes ni datos de contactos (RN-PRV-033).
-- Las alertas por correo de esta fase quedan fuera de la v1 (D-023); en la v1 solo hay etiquetas y filtros en pantalla.
+Reglas: los avisos de PRV-B no entran a la v1 (D-023, D-061.4); los de la misma persona del mismo día se agrupan en el resumen diario (RF-NOT-011); si el responsable no tiene membresía, el aviso va al grupo con `contratos.recibir_avisos`.
 
 ## 9. Integración con el núcleo y con otros módulos
 
 | Con | Cómo |
 |---|---|
-| Catálogos (Etapa 2) | El proveedor es el del catálogo (D-008); este módulo le agrega campos. Centro de costo y moneda vienen del núcleo. |
-| Órdenes de compra (Etapa 5) | La orden elige solo proveedores activos con "vende bienes". Crear proveedor es permiso distinto de crear órdenes (D-015.5). Se muestran contratos marco vigentes (informativo). |
-| Órdenes de servicio (Etapa 6) | El responsable externo es un proveedor activo con "presta servicios" (D-027). Al cerrar una orden con SLA aplicable se muestra el tiempo real frente al objetivo, en horas corridas, solo como dato. |
-| Inventario (Etapa 4) | Activos cubiertos por contrato; se ve el contrato en la ficha del activo. |
-| Auditoría (Etapa 1) | Todo cambio usa el mecanismo general (D-018). |
-| `garantias-mantenimiento` (GAR) | La garantía extendida y el mantenimiento pueden referir a un contrato y a un proveedor de PRV. PRV es dueño del proveedor y del contrato; GAR solo los referencia. |
-| `licencias-software`, `lineas-moviles`, `dominios-certificados` (escuadrón B) | Acordado por mensaje: el proveedor (registrador, operador, fabricante) sale del catálogo de PRV; esos módulos guardan solo su derecho de uso y su vencimiento propio, y pueden enlazar un contrato de PRV de forma opcional. Soporte de software cubierto por contrato va en PRV. |
-| `presupuesto-costos` (F) | Acordado por mensaje: PRV expone, solo para lectura, valor del periodo sin impuesto, moneda, frecuencia, fechas, centro de costo, proveedor, historial de renovaciones y la marca "costo ya registrado por OC" (RN-PRV-037). F proyecta renovaciones con el fin y el último importe. El presupuesto es de F. |
-| `mesa-de-ayuda` (C) y `notificaciones` (C) | Ayuda usa el SLA como consulta; notificaciones envía los avisos. |
-| `cmdb-ligera` (E) | Contrato y proveedor son datos que la CMDB puede relacionar con activos. |
+| Catálogos (Etapa 2) | Una sola tabla de proveedor (D-040.3). Centro de costo y moneda del núcleo. El maestro de proveedores se importa por el marco único (clave: identificación fiscal normalizada); la carga SAP exige `proveedores.crear_editar` (D-063.6). |
+| Órdenes de compra y de servicio (Etapas 5 y 6) | Solo proveedores activos con "vende bienes" o "presta servicios". Una orden de compra puede originar un contrato y entonces la orden es la fuente de costo (RN-PRV-013). |
+| Doble control y excepciones | Servicio único y casilla "contratos" (D-043); ninguna regla propia. |
+| Libro de costos (`presupuesto-costos`) | PRE lee solo el patrón de costo y su `fuente_costo`; PRV no captura presupuesto (D-044.2). |
+| `licencias-software` (B) | Acordado: el contrato de licencia es la extensión 1 a 1 del CTR-; LIC guarda puestos y derecho de uso. Soporte de software contratado va aquí. |
+| `lineas-moviles`, `dominios-certificados` (B) | Usan el proveedor (operador, registrador); pueden enlazar un contrato de PRV; su vencimiento propio es de cada módulo. |
+| `garantias-mantenimiento` (GAR) | GAR referencia proveedor y contrato; no los duplica. PRV-B va antes que GAR-B (D-056). |
+| `mesa-de-ayuda` (C) y `notificaciones` (C) | Ayuda consulta los compromisos; NOT envía y no repite. |
+| `cmdb-ligera` (E) | Contrato y proveedor son datos que la CMDB lee de su origen (D-062.1). |
+| Registro de módulo (D-038.6) | PRV declara permisos, eventos, pendientes de la persona y reglas de aviso. |
 
 ## 10. Criterios de aceptación
 
-| ID | Criterio |
-|---|---|
-| CA-PRV-01 | **Dado** un proveedor con identificación fiscal 20123456789 en la empresa A, **cuando** se crea otro con "20-123 456789", **entonces** se rechaza por repetido; en la empresa B sí se acepta. |
-| CA-PRV-02 | **Dado** un contrato de la empresa A, **cuando** un usuario de la empresa B consulta su identificador, **entonces** recibe "no encontrado", igual que con un identificador inexistente. |
-| CA-PRV-03 | **Dado** un Técnico sin `proveedores.crear_editar`, **cuando** intenta crear un proveedor (por pantalla o directo al servidor), **entonces** se rechaza y queda un intento denegado en la auditoría. |
-| CA-PRV-04 | **Dado** un proveedor con un contrato Vigente, **cuando** se intenta desactivar, **entonces** se rechaza con el mensaje "Tiene el contrato CTR-0012 vigente". |
-| CA-PRV-05 | **Dado** un contrato de USD 60 000 creado por Ana en una empresa con límite 50 000 USD, **cuando** Ana intenta activarlo, **entonces** se rechaza; **cuando** Luis (con `contratos.activar`) lo activa, **entonces** pasa a Vigente y se guarda quién y por qué valor. |
-| CA-PRV-06 | **Dado** un contrato en EUR en una empresa con moneda base USD, **cuando** se crea con cualquier importe, **entonces** exige segunda persona. |
-| CA-PRV-07 | **Dado** un contrato Vigente con fin 30/11/2026, **cuando** Luis lo renueva hasta 30/11/2027, **entonces** el fin nuevo es 30/11/2027, queda registrado el anterior y los umbrales de alerta se reinician. |
-| CA-PRV-08 | **Dado** un contrato con renovación automática sin marca "no renovar", **cuando** pasa el fin, **entonces** el sistema lo renueva con las mismas condiciones, no cambia a Vencido y avisa al responsable. |
-| CA-PRV-09 | **Dado** un contrato de renovación manual cuyo fin ya pasó, **cuando** corre el proceso diario, **entonces** pasa a Vencido y avisa; al correr de nuevo el mismo día no hay un segundo aviso. |
-| CA-PRV-10 | **Dado** un usuario sin `precios.ver`, **cuando** abre la ficha de un contrato o lo exporta, **entonces** no ve importes ni en pantalla ni en el archivo. |
-| CA-PRV-11 | **Dado** un documento de referencia, **cuando** se escribe un enlace `http://...`, **entonces** se rechaza; con `https://` se acepta y se muestra la advertencia de enlace externo. |
-| CA-PRV-12 | **Dado** un SLA "Resolución, Crítica, 4 horas" en un contrato, **cuando** se agrega otro con la misma métrica y prioridad, **entonces** se rechaza como repetido. |
-| CA-PRV-13 | **Dado** un contrato Vigente, **cuando** se intenta editar su fecha de fin directamente, **entonces** el sistema indica que debe usar renovación o adenda. |
+| ID | Requisito | Criterio |
+|---|---|---|
+| CA-PRV-01 | RF-PRV-001 | **Dado** un proveedor con identificación fiscal 20123456789 en la empresa A, **cuando** se crea otro con "20-123 456789", **entonces** se rechaza por repetido; en la empresa B se acepta. |
+| CA-PRV-02 | RF-PRV-007, 019, RN-PRV-032 | **Dado** un contrato de la empresa A, **cuando** un usuario de la empresa B consulta su identificador interno o intenta vincularlo con un activo o proveedor propio, **entonces** recibe "no encontrado" y no se escribe nada. |
+| CA-PRV-03 | RF-PRV-001, 002, 005 | **Dado** un Técnico sin `proveedores.crear_editar`, **cuando** intenta crear o editar un proveedor o contacto (por pantalla o directo al servidor), **entonces** se rechaza y el intento queda en los eventos de seguridad. |
+| CA-PRV-04 | RF-PRV-003 | **Dado** un proveedor con un contrato Vigente, **cuando** se intenta desactivar, **entonces** se rechaza con "Tiene el contrato CTR-000012 vigente". |
+| CA-PRV-05 | RF-PRV-008, 010, 023 | **Dado** un contrato de USD 60 000 con impuesto creado por Ana y límite de 50 000 USD, **cuando** Ana intenta activarlo, **entonces** se rechaza; **cuando** Luis (con `contratos.activar`) lo aprueba, **entonces** pasa a Vigente y se guarda quién y por qué valor. |
+| CA-PRV-06 | RF-PRV-010, RN-PRV-015 | **Dado** un contrato en EUR en una empresa con moneda base USD, **cuando** se activa, **entonces** exige a otra persona sin importar el importe. |
+| CA-PRV-07 | RF-PRV-011, 015, 027 | **Dado** un contrato Vigente con fin 30/11/2026, **cuando** Luis lo renueva hasta 30/11/2027, **entonces** el fin es 30/11/2027, queda el anterior, y los avisos de umbral se reinician; **cuando** hubo otra renovación posterior, revertir la primera se rechaza. |
+| CA-PRV-08 | RF-PRV-012 | **Dado** un contrato con renovación automática sin marca, **cuando** pasa el fin y corre el proceso, **entonces** se renueva con las mismas condiciones, autor "sistema", y avisa al responsable. |
+| CA-PRV-09 | RF-PRV-016, 017, 018 | **Dado** un contrato manual con fin 30/11/2026 y el reloj fijado al 01/12/2026, **cuando** se lee, **entonces** se muestra Vencido sin que haya corrido ningún proceso; con el reloj al 30/11/2026 a las 23:59 aún es Vigente. |
+| CA-PRV-10 | RF-PRV-022, 024 | **Dado** un usuario sin `precios.ver`, **cuando** abre la lista, la ficha o exporta un contrato, **entonces** las columnas de importe no existen en pantalla ni en el archivo. |
+| CA-PRV-11 | RF-PRV-021 | **Dado** un documento de referencia, **cuando** se escribe un enlace `http://...`, **entonces** se rechaza; con `https://` se acepta y se muestra el aviso de salida. |
+| CA-PRV-12 | RF-PRV-020, 025, 026 | **Dado** un compromiso "Resolución, Crítica, 4 horas", **cuando** se agrega otro con la misma métrica y prioridad, **entonces** se rechaza como repetido. |
+| CA-PRV-13 | RF-PRV-014, RN-PRV-019 | **Dado** un contrato Vigente, **cuando** se intenta editar su fin directamente, **entonces** se indica usar renovación o adenda. |
+| CA-PRV-14 | RN-PRV-041, 036 | **Dado** dos empresas con un contrato cada una que vence en 30 días, **cuando** corre el proceso diario con el reloj fijado y un disparador manual, **entonces** cada aviso, registro de corrida y destinatario queda en su empresa y una segunda corrida no duplica nada. |
+| CA-PRV-15 | RF-PRV-004, RN-PRV-037 | **Dado** una lista de proveedores con contactos, **cuando** se exporta, **entonces** el archivo no trae columnas de contactos y la exportación queda en la auditoría con la hoja "Aviso". |
+| CA-PRV-16 | RF-PRV-006, RN-PRV-034 | **Dado** un contacto con nombre canario anonimizado, **cuando** se busca ese nombre en tablas, auditoría, exportaciones y correos, **entonces** no aparece; la auditoría sigue completa. |
+| CA-PRV-17 | RN-PRV-042 | **Dado** un contrato por activar, **cuando** dos aprobadores lo activan a la vez (20 conexiones), **entonces** una operación gana y las demás reciben "ya fue decidido". |
+| CA-PRV-18 | RF-PRV-013, RN-PRV-040 | **Dado** un contrato con renovación automática, **cuando** se marca "no renovar" el día anterior al fin, **entonces** al llegar el fin pasa a Vencido sin renovarse; **cuando** la marca se pone después de correr el proceso del día del fin, se rechaza. |
+| CA-PRV-19 | RN-PRV-015 | **Dado** el límite 50 000 USD, **cuando** un contrato vale exactamente 50 000,00 y otro 50 000,01, **entonces** solo el segundo exige a otra persona. |
+| CA-PRV-20 | RF-PRV-002, RN-PRV-039 | **Dado** un proveedor Persona natural, **cuando** se cambia su nombre, **entonces** la auditoría dice "el campo cambió" sin los valores. |
+| CA-PRV-21 | RF-PRV-028 | **Dado** un contrato de tipo Licenciamiento, **cuando** LIC agrega su extensión, **entonces** hay un solo número CTR- y no existe otro contrato de licencia. |
+| CA-PRV-22 | RF-PRV-029, RN-PRV-043 | **Dado** el cese de la Persona responsable de un contrato Vigente, **cuando** se cesa, **entonces** el cese no se bloquea, el contrato aparece en sus pendientes y se avisa a quienes activan. |
 
 ## 11. Casos límite
 
-1. Dos proveedores con la misma razón social y distinta identificación fiscal (sucursales): se permite con aviso.
-2. Proveedor extranjero sin identificación fiscal: se permite vacío con aviso (RN-PRV-001).
+1. Dos proveedores con la misma razón social e identificación distinta (sucursales): se permite con aviso.
+2. Proveedor extranjero sin identificación fiscal: vacío con aviso.
 3. Contrato con inicio y fin el mismo día: válido, dura un día completo.
-4. Fin de contrato un 29 de febrero y renovación a un año: el nuevo fin es el 28 de febrero.
-5. Renovación automática con marca "no renovar" puesta el mismo día del fin: se respeta la marca si se registró antes de que corra el proceso de ese día.
-6. Dos personas activan el mismo contrato a la vez: solo una operación se aplica; la otra recibe "ya fue activado".
-7. El responsable interno es dado de baja como Usuario: el contrato queda "Sin responsable" y se avisa (sección 8).
-8. Contrato sin ningún activo cubierto (por ejemplo, un servicio general): válido.
-9. Activo cubierto que luego se da de baja: el vínculo queda como historial y se marca "ya no existe cobertura".
-10. Reversión de una renovación cuando ya hubo otra posterior: se rechaza; hay que revertir primero la última.
-11. Contrato en Programado que se anula antes de empezar: permitido con motivo.
-12. Dos alertas el mismo día (vencimiento y preaviso): se agrupan en un solo correo por destinatario.
-13. Cambio de zona horaria de la empresa: las alertas futuras usan la nueva; las enviadas no se repiten.
-14. Proveedor desactivado con contratos Terminados o Anulados: permitido.
+4. Fin un 29 de febrero y renovación a un año: el nuevo fin es el 28 de febrero.
+5. El proceso diario no corrió un día (caída): al arrancar procesa los días pendientes en orden sin perder avisos ni renovaciones (D-038.4).
+6. Cambio de zona horaria de la empresa: los avisos pendientes se recalculan; los enviados no se repiten (D-060.9).
+7. Contrato sin activos cubiertos: válido.
+8. Activo cubierto que se da de baja: el vínculo queda como historial.
+9. Contrato en Programado que se anula antes de empezar: permitido con motivo.
+10. Archivo de proveedores con codificación distinta de UTF-8 o con identificaciones repetidas: se maneja según el marco de importación; el archivo ya cargado se rechaza entero (D-050).
+11. Proveedor desactivado con contratos Terminados o Anulados: permitido.
+12. Orden de compra relacionada que luego se anula: el contrato vuelve a `fuente_costo` "contrato".
 
 ## 12. Decisiones propuestas y supuestos
 
-| ID | Propuesta | Motivo |
+| ID | Resultado | Propuesta y motivo |
 |---|---|---|
-| S-PRV-01 | **[SUPUESTO]** El módulo se divide en Fase A (proveedor y contactos, Etapas 2 y 5) y Fase B (contratos, SLA, alertas, después de la v1). | D-023 deja fuera avisos de vencimiento de la v1, pero el proveedor sí se necesita desde compras. |
-| S-PRV-02 | **[SUPUESTO]** El proveedor del catálogo y el de este módulo son la misma tabla. | Evita dos listas de proveedores. |
-| S-PRV-03 | **[SUPUESTO]** La segunda persona para activar usa el monto límite de D-015 y su excepción. | Una sola regla de dinero para toda la plataforma. |
-| S-PRV-04 | **[SUPUESTO]** La renovación automática la hace el sistema con las condiciones vigentes. | Refleja lo que ocurre en la realidad legal; la alerta de preaviso da tiempo de evitarla. |
-| S-PRV-05 | **[SUPUESTO]** Los documentos de referencia son solo datos de ubicación; el archivo llega si el CEO habilita adjuntos (D-022). | D-022 difiere los archivos. |
-| S-PRV-06 | **[SUPUESTO]** Un SLA siempre vive dentro de un contrato; las "condiciones generales" se registran como contrato de tipo Otro. | Menos entidades. |
-| S-PRV-07 | **[SUPUESTO]** Los contactos de proveedor son datos laborales y no requieren `datos personales.ver`; Cumplimiento lo confirma. | Son datos de negocio. |
-| S-PRV-08 | **[SUPUESTO]** Sin validación del dígito verificador de la identificación fiscal en esta fase. | Falta saber los países (insumo pendiente del CEO). |
-| S-PRV-09 | **[SUPUESTO]** Sin datos bancarios de proveedores (RN-PRV-006). | Reduce riesgo de fraude. |
-| S-PRV-10 | **[SUPUESTO]** Alertas por correo agrupadas en un solo mensaje diario por persona. | Evita saturar. |
-| E-PRV-01 | **[ESCALAR AL CEO] (legal)** La plataforma registra datos del contrato, no tiene valor legal ni sustituye al documento firmado. Conviene que legal confirme esa frase en los términos de uso (D-024, escalado legal 3). | Evita que se entienda como respaldo jurídico. |
-| E-PRV-02 | **[ESCALAR AL CEO] (legal)** Plazo de conservación y anonimización de los datos de contactos (D-024 pendiente de legal). | Dato personal de terceros. |
-| E-PRV-03 | **[ESCALAR AL CEO] (dinero)** Guardar los archivos de contratos implica almacenamiento con costo mensual (D-022); se consultará al cierre de la Etapa 4. | Costo recurrente. |
+| S-PRV-01 | Confirmado (D-056) | Dos partes: PRV-A (v1, Etapa 2) y PRV-B (Fase 2, ola B). |
+| S-PRV-02 | Confirmado (D-040.3) | Proveedor del catálogo y de PRV son la misma tabla. |
+| S-PRV-03 | Confirmado (D-058, D-043) | Segunda persona con el límite de RN-017; sin regla de monto propia. |
+| S-PRV-04 | Confirmado (D-043.5) | Renovación automática como acción del sistema con la regla y quien aprobó el contrato. |
+| S-PRV-05 | Confirmado (D-022) | Documentos de referencia sin archivo hasta que el Cliente (CEO) habilite adjuntos. |
+| S-PRV-06 | Confirmado | Un compromiso de servicio siempre vive dentro de un contrato; las condiciones generales se registran como contrato tipo Otro. |
+| S-PRV-07 | Aceptado con condiciones (D-058) | Contactos sin `datos_personales.ver`, pero solo los ve `proveedores.ver_contactos`, no salen en exportaciones generales y tienen ciclo de vida. |
+| S-PRV-08 | Confirmado | Sin dígito verificador de la identificación fiscal hasta saber los países (P-004). |
+| S-PRV-09 | Confirmado | Sin datos bancarios. |
+| S-PRV-10 | Cambiado | Los avisos agrupados son el resumen diario de NOT (RF-NOT-011). |
+| S-PRV-11 | **[SUPUESTO]** | Proveedor Persona natural: campos personales sin valor en la auditoría. Cumplimiento lo confirma. |
+| S-PRV-12 | **[SUPUESTO]** | El contrato se guarda solo con decisiones; Programado, Vigente y Vencido se calculan, y se retira el estado "Pendiente de activación" (D-062.2). |
+| E-PRV-01 | **[ESCALAR AL CEO] (legal)** | La plataforma registra datos de contratos, no tiene valor legal ni sustituye al documento firmado; legal confirma esa frase en los términos de uso. |
+| E-PRV-02 | **[ESCALAR AL CEO] (legal)** | Plazo de conservación y anonimización de contactos (D-024, L-04); no se activa nada automático antes de la confirmación. |
+| E-PRV-03 | **[ESCALAR AL CEO] (dinero)** | Archivos de contratos implican almacenamiento con costo (D-022); se consulta al cierre de la Etapa 4. |
 
 ## 13. Fuera de alcance
 
-1. Archivos adjuntos de contratos y facturas (D-022).
-2. Datos bancarios, pagos, facturas y cuentas por pagar.
-3. Evaluación o calificación de proveedores.
-4. Firma electrónica de contratos y flujo legal de redacción.
-5. Cálculo de penalidades por incumplimiento de SLA; medición continua de disponibilidad.
-6. Conversión de monedas.
-7. Portal para que el proveedor entre a la plataforma.
-8. Alertas por mensaje de texto o aplicación móvil.
-9. Contratos de varias monedas o con varios proveedores en un mismo contrato.
-10. Integración con SAP.
+1. Archivos adjuntos (D-022). 2. Datos bancarios, pagos, facturas y cuentas por pagar. 3. Evaluación o calificación de proveedores. 4. Firma electrónica y redacción legal. 5. Cálculo de penalidades y medición continua de disponibilidad. 6. Conversión de monedas. 7. Portal para el proveedor. 8. Avisos por mensaje de texto o aplicación móvil. 9. Contratos de varias monedas o con varios proveedores. 10. Integración con SAP más allá de la carga de maestros. 11. Presupuesto y libro de costos (de `presupuesto-costos`).
+
+## 14. Historial de cambios (v0.1 a v0.2)
+
+| Cambio | Decisión o hallazgo |
+|---|---|
+| Partido en PRV-A (Etapa 2) y PRV-B (Fase 2, ola B); columna "Cuándo" y CA por requisito | D-056, H-AUD-08, H-AUD-21, plan fila PRV (1, 13) |
+| Crear, editar y desactivar proveedor solo Administrador; `ver_contactos` sin Almacén | D-037 fila 3, H-AUD-04, H-QA-08, H-UX-03 |
+| Permisos migrados a los PS-nn del registro (PS-35 a PS-38, PS-74 a PS-81, PS-23, PS-18, PS-20, PS-21, PS-09); `proveedores.desactivar` separado; `contratos.crear_editar` solo Administrador; Solicitante sin ver proveedores; sin `exportar` propio | D-036, D-037, H-AUD-05, H-SEG-07, registro de permisos |
+| Columna "Empleado (portal): no aplica" | D-037 fila 11, H-AUD-17 |
+| Contactos con ciclo de vida, fuera de exportaciones, sin valor en la auditoría | D-058 (S-PRV-07), D-030.6, D-061.3, H-CUM-01, H-CUM-09 |
+| Proveedor Persona natural con campos personales | D-030.6, H-CUM-01 |
+| Contrato único `CTR-` de 6 dígitos con extensión de licencia | D-044.4, D-049.2, H-DAT-08 |
+| Regla de segunda persona remitida a RN-017 (estrictamente mayor, con impuesto, moneda base); borde exacto | D-043.3, D-043.4, D-057 (S-30), H-QA-09, H-ARQ-10 |
+| Retirada la excepción propia (RN-PRV-017); casilla "contratos" del interruptor único | D-031.6, D-043.2, H-AUD-07, H-CUM-02 |
+| Definición única de creó o editó | D-043.1, H-ARQ-10 |
+| Renovación automática como acción del autor "sistema" | D-041.4, D-043.5, H-CUM-03 |
+| Estados guardados vs calculados; retirado "Pendiente de activación"; Vencido sin proceso nocturno | D-062.2, D-049.5, H-ARQ-16, H-DAT-17 |
+| Retirada la tabla "Alerta enviada"; avisos por Notificaciones con umbrales 90/60/30/15/7 | D-062.3, D-058 (NOT-S08), H-DAT-17, H-AUD-19 |
+| Patrón de costo y `fuente_costo` sustituye la marca "costo ya registrado por OC" | D-044.1, D-044.3, H-ARQ-08, H-DAT-07 |
+| "SLA" pasa a "Compromiso de servicio del proveedor" | D-049.7, H-AUD-19 |
+| Responsable pasa de Usuario a Persona; cese sin bloqueo | D-044.5, D-041, D-061.7 |
+| Pantallas `PAN-PRV-nn`; bandeja única "Por aprobar"; sin pantalla de avisos propia | D-049.4, H-UX-06, H-UX-11 |
+| Orden de RN-PRV-036 a 038 corregido | H-AUD-24 |
+| Reglas de proceso diario, concurrencia y aislamiento; CA-PRV-14 a 22 (dos empresas, reloj fijable, referencia cruzada, concurrencia, borde, canario) | D-038.4, D-039.6, D-063.6, H-SEG-02, H-QA-12, H-ARQ-17, QA fila PRV |
+| Volumen de referencia citado de RNF-010; hora única de avisos | S-19 (D-057), H-AUD-24, H-QA-22 |
+| Supuestos resueltos como confirmados, cambiados o nuevos | D-057, D-058 |
+| Correos con contenido mínimo; "usted" y fechas día/mes/año | D-061.4, D-049 |
