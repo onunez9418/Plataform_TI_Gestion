@@ -280,7 +280,7 @@ Resultado de cada supuesto según D-057 y D-058.
 | SUP-DOM-10 | Los avisos pasan por Notificaciones con variables cerradas. | **Confirmado** (D-062.3). |
 | SUP-DOM-11 | "Instalado en" es texto libre hasta que la CMDB defina el enlace. | **Confirmado.** |
 | SUP-DOM-12 | Módulo activable por empresa. | **Confirmado** (D-037 fila 12). |
-| SUP-DOM-13 | Costo comprometido = importe total con impuesto de la compra o renovación; sobre el límite lo confirma otra persona; el registro opera mientras tanto; la casilla del interruptor único para dominios y certificados no está asignada en D-043 (se propone «contratos»). | **Propuesto**, a confirmar por el Gerente de TI (D-043 no define esta medida para dominios y certificados). |
+| SUP-DOM-13 | Costo comprometido = importe total con impuesto de la compra o renovación; sobre el límite lo confirma otra persona; el registro opera mientras tanto; la casilla del interruptor único para dominios y certificados no está asignada en D-043 (el núcleo la lleva como supuesto S-37: «contratos», pendiente del Gerente de TI). | **Propuesto**, a confirmar por el Gerente de TI (D-043 no define esta medida para dominios y certificados). |
 | SUP-DOM-14 | Clave natural de importación: dominio = nombre normalizado; certificado = emisor + número de serie, o nombre común + emisor + vencimiento si no hay serie. | **Propuesto**, a confirmar por el Ingeniero de Datos (D-050.4). |
 
 No hay [ESCALAR AL CEO]: los costos de correo ya están escalados; este módulo no agrega dinero, tema legal nuevo ni nada irreversible. La pregunta legal L-09 sobre el titular persona natural ya está en el escalado de Cumplimiento.

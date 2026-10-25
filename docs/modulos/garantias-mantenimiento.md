@@ -51,7 +51,7 @@ Los permisos son los del registro único `docs/registro-permisos.md` (PS-nn, D-0
 | Reprogramar o cancelar | PS-110 `mantenimiento.reprogramar` | Sí | No | Sí | No | No | No |
 | Gestionar planes | PS-111 `mantenimiento.planes` | Sí | No | No | No | No | No |
 | Ver costos (sensible) | PS-23 `precios.ver` | Sí | Sí | No | No | No | No |
-| Confirmar un costo que supera el límite | PS pendiente `garantias.confirmar_costo` (solicitado) | Sí | Sí | No | No | No | No |
+| Confirmar un costo que supera el límite | PS-231 `garantias.confirmar_costo` | Sí | Sí | No | No | No | No |
 | Cambiar el estado del activo | PS-45 `activos.cambiar_estado` | Sí | No | Sí | No | No | No |
 | Dar de baja el activo original | PS-47 `activos.dar_baja` | Sí | No | Sí | No | No | No |
 | Ingreso manual del activo de reemplazo | PS-44 `activos.ingreso_manual` | Sí | No | Sí | No | No | No |

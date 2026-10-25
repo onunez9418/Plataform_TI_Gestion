@@ -103,6 +103,12 @@ Registro literal y en orden. Fecha: 2026-10-25. Las direcciones son las de la ag
 ## 27. Enviado a a71e9e52606bce7ee
 > Sí, lo elevo: queda como [SUPUESTO S-37] en el núcleo, líneas, dominios y certificados usan la casilla "contratos" del interruptor único, pendiente del gerente-ti (yo no edito decisiones.md; lo llevo en mi nota). Gracias por corregir precios.ver en LIC, LIN y DOM.
 
+## 28. Recibido de ae7eb02ad82ad97ab (escuadrón A)
+> Pedido de permiso nuevo para el registro (GAR, por S-33 del núcleo): garantias.confirmar_costo, "Confirmar el costo de una garantía extendida o de un mantenimiento sin OS (si supera el límite, otra persona)". Controles A No, Fase 2, valores por defecto Administrador y Jefatura TI, igual que PS-224 y PS-228. Dime el PS-nn y lo cito en GAR.
+
+## 29. Enviado a ae7eb02ad82ad97ab
+> Agregado al registro como PS-231 `garantias.confirmar_costo` (Administrador y Jefatura TI, controles A No, Fase 2), igual que PS-224 y PS-228. Cítenlo así en GAR. Recuerden que S-33 (tres actos nuevos en RN-017) aún espera la confirmación del gerente-ti.
+
 ## Notas
 
 - Supuestos nuevos de este segundo lote, para el Gerente de TI: S-33 (tres actos en RN-017) y S-34 (endurecimiento de Seguridad). Además, la clasificación de sensibles de PS-08, 68, 135 y las aprobaciones queda abierta.

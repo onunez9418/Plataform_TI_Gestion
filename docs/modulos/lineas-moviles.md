@@ -297,7 +297,7 @@ Resultado de cada supuesto según D-042, D-057 y D-058.
 | SUP-LIN-11 | El número es dato personal en el vínculo con la Persona. | **Confirmado** como dato personal hasta que legal responda (L-09; D-030.6). |
 | SUP-LIN-12 | Totales por moneda, sin conversión. | **Confirmado** (D-014, D-049.8). |
 | SUP-LIN-13 | Una línea sin responsable no se bloquea al importar. | **Confirmado**; se marca en "sin movimiento". |
-| SUP-LIN-14 | Costo comprometido de una línea = cargo mensual vigente con impuesto × meses de permanencia restantes (12 si no hay permanencia); la casilla del interruptor único para líneas no está asignada en D-043 (se propone «contratos») y el costo queda "pendiente de confirmación" hasta que otra persona lo confirma. | **Propuesto**, a confirmar por el Gerente de TI (D-043 no define esta medida para líneas). |
+| SUP-LIN-14 | Costo comprometido de una línea = cargo mensual vigente con impuesto × meses de permanencia restantes (12 si no hay permanencia); la casilla del interruptor único para líneas no está asignada en D-043 (el núcleo la lleva como supuesto S-37: «contratos», pendiente del Gerente de TI) y el costo queda "pendiente de confirmación" hasta que otra persona lo confirma. | **Propuesto**, a confirmar por el Gerente de TI (D-043 no define esta medida para líneas). |
 | SUP-LIN-15 | Una línea migrada queda con plan "pendiente de completar". | **Propuesto** como diseño del módulo (D-005). |
 
 ## 13. Fuera de alcance
