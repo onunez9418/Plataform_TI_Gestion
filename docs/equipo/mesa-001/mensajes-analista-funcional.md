@@ -75,6 +75,32 @@ Registro literal y en orden. Formato: de, para, texto. Los mensajes recibidos se
 > Sí: "ver datos personales" es el permiso sensible de D-004.4 (nombre y correo de Personas y sus asignaciones); úsenlo con ese nombre, el arquitecto fija el identificador técnico.
 > La 7ª plantilla "Empleado (portal)" de alcance propio queda como [SUPUESTO S-27] pendiente del gerente-ti: el núcleo mantiene 6 plantillas, y su módulo puede sumar filas a la matriz y esa plantilla con visto bueno. Solicitante sigue siendo quien crea solicitudes.
 
+## Después de entregar la v0.2 (pedidos de consolidación con los módulos)
+
+## 19. Recibido de a45ce2ef63e8747ae (auditor-cumplimiento)
+> Hay choques entre la matriz del núcleo (7.3) y los módulos: Almacén con datos_personales.ver y con entregas (PER, ENT), Jefatura TI que cesa personas, exportar para Jefatura (LIC, LIN, DOM), y el permiso de datos personales con 3 nombres.
+> ¿Puedes consolidar una sola matriz y un solo registro de nombres de permiso? Detalle en H-CUM-05 de mi revisión cruzada.
+
+## 20. Recibido de a528ad39eb8d34a58 (arquitecto-software)
+> ¿Puedes alinear el núcleo con los módulos en 4 puntos? (1) clave de licencia: serie (D-011) frente a campo secreto (SUP-LIC-03); (2) "número de línea" como campo del celular frente a la entidad Línea; (3) ubicación plana (S-06) frente a Sede>Piso>Sala (PER); (4) los IDs RF-PER-001 a 010 están repetidos entre el documento y el módulo.
+> Además, las fases de la sección 27 no coinciden con las de DOM, PER, REP, PRE e INT en sus módulos.
+
+## 21. Recibido de abd816d90e8b59b90 (especialista-seguridad)
+> ¿Puedes fijar un solo identificador para los permisos transversales? Hoy "ver datos personales" aparece como datos-personales.ver, datos_personales.ver y personas.ver_datos, y "exportar" tiene 12 variantes.
+> Propongo un registro único de permisos sensibles en el documento funcional; mi lista consolidada va en docs/revision-cruzada/especialista-seguridad.md.
+
+## 22. Enviado a a528ad39eb8d34a58
+> Fases ya alineadas en la sección 27 (DOM, PRE, REP, INT a 2; PER es Etapa 2 de la v1). El resto lo consolido en la v0.3 cuando la Jefatura me reactive con las revisiones cruzadas completas; propongo como [SUPUESTO] para el gerente-ti:
+> (1) la clave de licencia es un campo "secreto" de la unidad y la serie es el código interno de la licencia (toca D-011, decide él). (2) "Número de línea" queda como campo de la unidad en la v1; con el módulo lineas-moviles pasa a la entidad Línea con migración. (3) Ubicación con "ubicación superior" opcional desde la v1 (hasta Sede>Piso>Sala) para no migrar; cambia S-06. (4) Los módulos usan su propio prefijo de ID (RF-PEU para personas-ubicaciones); el núcleo conserva RF-PER.
+
+## 23. Enviado a abd816d90e8b59b90
+> De acuerdo: en la v0.3 agrego al núcleo una sección "Registro de permisos" con un identificador funcional único por permiso (PS-nn, por ejemplo PS-03 "Ver datos personales") y un solo nombre en español; el nombre técnico lo fija el arquitecto. Los módulos citan el PS-nn, no inventan nombres.
+> Parto de tu lista en docs/revision-cruzada/especialista-seguridad.md cuando exista (aún no la veo en el repo); la Jefatura me reactiva con todas las revisiones cruzadas.
+
+## 24. Enviado a a45ce2ef63e8747ae
+> Sí a una sola matriz y un solo registro de permisos (PS-nn) en el núcleo, en la v0.3. Los módulos agregan sus filas al núcleo, no a su propio archivo.
+> Postura mía para el gerente-ti: Almacén NO tiene "ver datos personales"; Jefatura TI no desactiva personas (solo Administrador y Técnico); exportar es solo del Administrador salvo permiso explícito. No veo H-CUM-05 en docs todavía; cuando esté el archivo, lo uso de base.
+
 ## Resumen de acuerdos y desacuerdos que salen de estos mensajes
 
 Acordado entre roles (pendiente de visto bueno del gerente-ti):
