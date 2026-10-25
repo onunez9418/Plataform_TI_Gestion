@@ -73,6 +73,15 @@ No encontré regresiones de los tipos que busqué: **ninguna clave, secreto ni d
 - Archivos de SAP: código interno de quien creó y aprobó, no nombre (`integraciones-api.md` RN-INT-043).
 - Repositorio: sin claves ni datos reales.
 
+**Actualización al terminar esta revisión.** Avisé los defectos por mensaje (ver `mensajes-ronda3-especialista-seguridad.md`) y el Analista y el escuadrón B aplicaron cambios mientras yo escribía. Lo comprobé en los archivos:
+- H-SEG-26: agregado RF-PLA-013 (soporte con lectura de solo lectura limitada a la empresa autorizada). **Aplicado a medias:** dice que el Arquitecto lo diseña al actualizar D-039; D-039 todavía no lo trae. Sigue pendiente el diseño.
+- H-SEG-27: agregados RF-PLA-011 (contacto autorizado confirmado por el primer administrador, cambio con 24 h y aviso) y RF-PLA-012 (veto de cualquier administrador durante el rescate); PS-05 ahora lleva `No` y exige segunda persona o contacto autorizado. **Aplicado a medias:** RF-PLA-001 sigue diciendo "1 o 2 personas" (pedí "al menos 2 antes de datos reales") y el texto de RF-PLA-009 no menciona la segunda persona.
+- H-SEG-28: agregado RS-51 (enlaces, invitaciones, sesiones y códigos de recuperación solo como huella).
+- H-SEG-29: resuelto. PS-23 `precios.ver` quedó solo "todo" y sensible; lo propio pasó a PS-230 `precios.ver_propios`, no sensible, para Técnico y Solicitante. CA-007 y el resumen del Solicitante cuadran. El registro tiene ahora 230 filas PS.
+- H-SEG-32 (a) y (b): aplicado en `licencias-software.md` RN-LIC-016 y RN-LIC-017 y CA-LIC-20.
+- H-SEG-30 sigue como estaba: el Analista lo dejó anotado para decisión del gerente-ti.
+- **Importante:** todo lo de H-SEG-26 a 28 entró como **[SUPUESTO S-34]**. Por la regla de precedencia de las decisiones, un supuesto que toca una decisión no es vigente hasta que el gerente-ti lo decida.
+
 | ID | Gravedad | Dónde | Hecho u opinión | Qué cambiar | Quién |
 |---|---|---|---|---|---|
 | H-SEG-26 | Media | `registro-permisos.md` PS-03; documento RF-PLA-004 y RF-PLA-005; RS-50; D-039.3 | **Hecho:** el rol de base `app_plataforma` "ve solo tablas globales" (así se impone que plataforma no ve el negocio), pero PS-03 le permite leer datos de una empresa autorizada. Ningún documento dice con qué rol de base ni con qué mecanismo lee soporte. **Opinión:** si no se define, quien implemente usará un acceso que salte las reglas por fila. | Definir en el diseño del acceso de soporte: una sesión de soporte es una transacción de solo lectura (`SET TRANSACTION READ ONLY`) con el contexto de esa única empresa, creada con `app_empresa` y un permiso temporal ligado a la autorización de la empresa, que vence a las 24 h. Prohibido `BYPASSRLS` y superusuario. Prueba: con la autorización vencida o de otra empresa, la lectura devuelve cero filas. | arquitecto; yo reviso en el prototipo |
@@ -91,10 +100,10 @@ La seguridad del núcleo y de los 17 módulos está bien resuelta en papel: no q
 
 | # | Condición | Responsable | Evidencia que verificaré |
 |---|---|---|---|
-| 1 | H-SEG-27: confirmación y cambio del contacto autorizado, cancelación del rescate por cualquier administrador, PS-05 con control dual, al menos dos personas de plataforma antes de datos reales. | analista-funcional, gerente-ti | RF-PLA-003 y 009 reescritos; PS-05 con `No` |
-| 2 | H-SEG-26: mecanismo de la sesión de soporte con la base (solo lectura, `app_empresa`, sin saltar reglas por fila). | arquitecto | ADR y caso en el prototipo |
-| 3 | H-SEG-28: enlaces, invitaciones, sesiones y códigos de recuperación guardados solo como huella. | analista-funcional, arquitecto | RS-46 con la regla; prueba automática |
-| 4 | H-SEG-29: resolver `precios.ver` sensible y "propio" para Solicitante y Técnico. | gerente-ti, analista-funcional | Registro y CA-007 coherentes |
+| 1 | H-SEG-27: el gerente-ti decide S-34 (ya redactado en RF-PLA-011, 012 y PS-05). Falta: "al menos dos personas de plataforma antes de datos reales" en RF-PLA-001 y alinear RF-PLA-009. | gerente-ti, analista-funcional | S-34 decidido en `decisiones.md`; RF-PLA-001 y 009 coherentes |
+| 2 | H-SEG-26: diseño del mecanismo de la sesión de soporte con la base (solo lectura, `app_empresa`, sin saltar reglas por fila), anotado en D-039 como pide RF-PLA-013. | arquitecto | D-039 actualizada y caso en el prototipo |
+| 3 | H-SEG-28: ya está escrito (RS-51, S-34); falta que el gerente-ti lo decida y que haya prueba automática de que la base no contiene valores que sirvan para entrar. | gerente-ti, arquitecto | S-34 decidido; prueba en CI |
+| 4 | H-SEG-29: **cumplida** (PS-23 y PS-230). | - | Registro y CA-007 coherentes (verificado) |
 | 5 | H-SEG-30: decidir qué aprobaciones y qué ajustes (monto límite, revertir recepción, webhooks) son sensibles. | gerente-ti | Registro actualizado |
 | 6 | Prototipo técnico de 3 a 4 días (D-055) con los siete criterios de aislamiento de QA, los cinco roles de base, las funciones `SECURITY DEFINER` de lista cerrada, las sesiones en base y el enlace con botón atado al navegador. | arquitecto, ingeniero-datos, devops | Informe del prototipo; lo reviso |
 | 7 | Higiene del repositorio: `.gitignore`, `.env.example`, ramas protegidas y revisión automática de secretos (H-SEG-32 e). | devops | Configuración visible |
@@ -107,5 +116,5 @@ Nada de esto es dinero, tema legal ni algo irreversible, así que no se escala a
 2. De mis 25 hallazgos: 24 cerrados y 1 parcial (H-SEG-07: faltan marcar como sensibles el monto límite, revertir recepciones, webhooks y las aprobaciones).
 3. El registro es una fuente única real: 226 permisos vigentes, cero nombres distintos en los módulos, cero celdas de rol que lo contradigan, cero PS inexistentes. Sin escaladas por defecto.
 4. Los siete altos están cerrados en papel, con dos detalles abiertos en el control dual de plataforma (quién confirma el contacto autorizado; acceso de emergencia sin segunda persona) y en cómo lee soporte los datos de una empresa.
-5. Encontré 7 hallazgos nuevos (5 medios y 2 bajos, H-SEG-26 a 32); sin regresiones de claves o datos personales en auditoría, correos o exportaciones, y sin secretos en el repositorio.
+5. Encontré 7 hallazgos nuevos (5 medios y 2 bajos, H-SEG-26 a 32); al cierre el Analista y el escuadrón B ya aplicaron 26 a 29 y parte de 32 (como supuesto S-34, falta la decisión del gerente-ti); sin regresiones de claves o datos personales en auditoría, correos o exportaciones, y sin secretos en el repositorio.
 6. Veredicto: conforme con observaciones. Para empezar la Etapa 1 hacen falta las siete condiciones de la sección 5; ninguna es dinero, legal ni irreversible.

@@ -394,7 +394,7 @@ Basado en D-009, D-010, D-012, D-034, D-044.9, D-060. Etapa 4.
 | RF-INV-005 | El sistema avisa cuando una serie parece dañada por Excel (notación científica como 3,5E+14, ceros a la izquierda perdidos). | v1, Etapa 4 | CA-038 |
 | RF-INV-006 | Una serie vacía solo se acepta si el SKU lo autoriza (RF-SKU-009). | v1, Etapa 4 | CA-023 |
 | RF-INV-007 | Corregir una serie ya registrada exige permiso y motivo; el historial guarda el valor anterior y el nuevo. | v1, Etapa 4 | CA-036 |
-| RF-INV-008 | **Garantía (GAR-A):** se captura la fecha de compra y los meses de garantía, o el fin directo; el cálculo vive en el núcleo y se guarda en un registro de garantía propio desde la Etapa 4. Solo los activos de naturaleza "equipo físico" tienen garantía. Los avisos de vencimiento quedan fuera de la v1. | v1, Etapa 4 | CA-082 |
+| RF-INV-008 | **Garantía (GAR-A):** se captura la fecha de compra y los meses de garantía, o el fin directo; el cálculo vive en el núcleo y se guarda en un registro de garantía propio desde la Etapa 4. El fin de garantía es la fecha de compra más los meses, menos un día (el último día cubierto) [SUPUESTO S-35]. Solo los activos de naturaleza "equipo físico" tienen garantía. Los avisos de vencimiento quedan fuera de la v1. | v1, Etapa 4 | CA-082b |
 | RF-INV-025 | **Ingreso manual de un activo** (reemplazos por garantía, donaciones, compras sin orden): permiso propio, serie única, motivo obligatorio, costo opcional, historial y auditoría. | v1, Etapa 4 | CA-059 |
 | RF-INV-026 | **Corregir el costo** o la moneda de un activo (activos del Excel) exige `activos.corregir_costo` (sensible), motivo y auditoría. El activo guarda el subtotal sin impuesto dividido por la cantidad, con 4 decimales. | v1, Etapa 4 | CA-063 |
 | RF-INV-027 | **Cambio de ubicación** de un activo con serie es un movimiento propio ("cambio de ubicación") con permiso, historial y sin cambiar el estado. | v1, Etapa 4 | CA-060 |
@@ -428,7 +428,7 @@ Lista **cerrada y fija** en el sistema; no se agregan estados por empresa.
 | RF-INV-011 | El motivo es obligatorio en baja, extravío, reingreso, ajuste de stock, corrección de series y corrección de costo. En el resto es opcional. | v1, Etapa 4 | CA-024 |
 | RF-INV-012 | Abrir o cerrar una orden de servicio no cambia el estado del activo; el técnico lo cambia a mano con el diálogo único "Cambiar estado". | v1, Etapa 6 | CA-044 |
 | RF-INV-028 | El estado Asignado exige responsable; En stock, Extraviado y De baja no lo tienen; En reparación puede tenerlo. La base de datos lo comprueba con una columna de responsable copiada de la asignación abierta. | v1, Etapa 4 | CA-058 |
-| RF-INV-029 | Un activo con la marca "pendiente de devolución" no cuenta como extraviado ni como robado en reportes de pérdidas ni en depreciación. Para pasarlo a Extraviado hace falta una decisión explícita con motivo. | v1, Etapa 4 | CA-081 |
+| RF-INV-029 | Un activo con la marca "pendiente de devolución" no cuenta como extraviado ni como robado en reportes de pérdidas ni en depreciación. Para pasarlo a Extraviado hace falta una decisión explícita con motivo. | v1, Etapa 4 | CA-081b |
 
 ### 11.3 Asignación, devolución y constancia
 
@@ -441,7 +441,7 @@ Lista **cerrada y fija** en el sistema; no se agregan estados por empresa.
 | RF-INV-017 | La aceptación en pantalla del receptor y la subida del escaneo del acta quedan fuera de la v1. | v1, Etapa 4 | CA-046 |
 | RF-INV-018 | Cada ingreso, asignación, traslado, reparación, baja, extravío y reingreso queda en el historial con fecha, usuario y motivo (cuando aplica). | v1, Etapa 4 | CA-024 |
 | RF-INV-024 | **Una sola regla de estado, asignación y ubicación:** (a) la asignación termina únicamente con una devolución, una baja o un extravío; (b) el responsable es la Persona de la asignación abierta y solo hay una abierta por activo; (c) Asignado exige asignación abierta, En stock no puede tenerla; (d) En reparación puede conservarla (al volver regresa a Asignado) o no (si la Persona lo devolvió a TI antes, queda En stock); (e) Extraviado o robado y De baja cierran la asignación con la causa; (f) todo activo tiene siempre una ubicación, distinta e independiente del responsable. | v1, Etapa 4 | CA-025 y CA-058 |
-| RF-INV-030 | **Autoentrega:** nadie puede entregarse un equipo a sí mismo, sin excepción ni siquiera para el Administrador. | v1, Etapa 4 | CA-079 |
+| RF-INV-030 | **Autoentrega:** nadie puede entregarse un equipo a sí mismo, sin excepción ni siquiera para el Administrador. | v1, Etapa 4 | CA-079b |
 | RF-INV-031 | Hay un solo asistente "Entregar" y un solo diálogo "Cambiar estado", que reutilizan entregas, garantías y órdenes de servicio. Extravío con la mesa de ayuda activa se reporta como un caso. | v1, Etapa 4 | CA-024 |
 | RF-INV-032 | Almacén no entrega equipos por defecto; la empresa se lo puede conceder y entonces necesita además `datos_personales.ver`. | v1, Etapa 4 | CA-011b |
 
@@ -931,7 +931,7 @@ Formato: Dado... cuando... entonces... Parten de los criterios de QA ajustados a
 - **CA-046 · Constancia de entrega** (RF-INV-016, 017, RF-DAT-006, RNF-002). Dado un activo asignado a una Persona, cuando el técnico pide el acta, entonces se genera un PDF `ACT-E-000123` con activo, serie, persona, fecha, estado de entrega y quién entrega; sin `datos_personales.ver` el PDF muestra la referencia y omite nombre y área; la fecha de garantía que cae hoy se evalúa según la zona horaria de la empresa.
 - **CA-079b · Autoentrega** (RF-INV-030). Dado el Administrador con una Persona vinculada, cuando intenta entregarse un equipo a sí mismo, entonces se rechaza, aunque la casilla de excepciones esté activa.
 - **CA-081b · Pendiente de devolución** (RF-PER-006, RF-INV-029). Dado una Persona cesada con un equipo sin devolver, cuando se la cesa, entonces el cese se acepta, el activo sigue Asignado con la marca "pendiente de devolución", no aparece como extraviado en reportes y el sistema bloquea anonimizarla hasta cerrar el caso.
-- **CA-082b · Garantía** (RF-INV-008). Dado un activo comprado el 15/01/2026 con 24 meses de garantía, cuando se guarda, entonces el fin de garantía es 15/01/2028 según la zona de la empresa; con el fin directo no se pide meses; un activo de naturaleza licencia no tiene garantía.
+- **CA-082b · Garantía** (RF-INV-008). Dado un activo comprado el 15/01/2026 con 24 meses de garantía, cuando se guarda, entonces el fin de garantía es 14/01/2028 (último día cubierto) según la zona de la empresa; con el fin directo no se pide meses; un activo de naturaleza licencia no tiene garantía.
 
 **Compras y recepción**
 
