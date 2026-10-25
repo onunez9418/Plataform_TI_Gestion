@@ -284,11 +284,12 @@ Las envía el módulo `notificaciones`; el solicitante nunca recibe contenido de
 | Auditoría (D-018) | Todo lo de la sección 6 | |
 | Contadores (D-007) | Números `AYU-` y `KB-` | |
 | `notificaciones` | Eventos de la sección 8 | AYU emite el evento; NOT decide canal, plantilla y límites |
-| `portal-autoservicio` (escuadrón D) | Entrada del Solicitante | **Propuesta:** el portal es la puerta (inicio, "mis casos", buscar artículos) y llama a las pantallas AYU-01, 02 y 14; los casos y sus reglas viven en AYU |
-| `onboarding-offboarding` (D) | Servicios como "Alta de empleado" | Puede crear solicitudes de servicio en AYU; AYU no define el proceso |
-| `gestion-problemas` y `gestion-cambios` (E) | Relación | **Propuesta:** AYU guarda el vínculo "caso relacionado con problema/cambio"; el registro de problema o cambio y su flujo viven en esos módulos |
-| `cmdb-ligera` (E) | Elementos de configuración | Si existe, un caso se puede vincular también a un elemento (servicio, aplicación) además de activos |
-| `reportes-tableros` (F) | Datos de casos y SLA | AYU ofrece el tablero operativo (AYU-07); los reportes avanzados son de F |
+| `portal-autoservicio` (D, acordado) | Entrada del Solicitante | El portal no tiene casos propios: muestra "mis casos" (alcance propio) y abre AYU-01, 02 y 14. Sus 4 trámites son servicios semilla de AYU (RF-AYU-041) |
+| `onboarding-offboarding` (D, acordado) | Tareas de alta y baja | Sus tareas son propias; si hace falta enlazan a un servicio de AYU con la Persona como solicitante |
+| `gestion-problemas` y `gestion-cambios` (E, acordado) | Incidente, problema, cambio | El incidente es de AYU. Los vínculos con problema (PRB) y cambio (CAM) viven en E y AYU los muestra en solo lectura. Un incidente pertenece a un solo problema. Un problema Resuelto no cierra incidentes. E sugiere "3 o más parecidos" con la categoría y el elemento afectado que AYU ofrece |
+| `cmdb-ligera` (E) | Elemento afectado | Campo opcional del caso; si hay un error conocido vigente sobre ese elemento, el formulario muestra su solución temporal (dato de E) |
+| `garantias-mantenimiento` (A, acordado) | Garantía y reclamo | AYU muestra en solo lectura "garantía vigente hasta [fecha]". El reclamo es un registro de GAR, que puede vincular una orden de servicio "Servicio externo" creada desde el caso. El mantenimiento programado crea órdenes de servicio, no casos |
+| `reportes-tableros` (F, acordado) | Resultados de SLA por caso | AYU guarda y calcula "cumplió primera respuesta/resolución" con su calendario y pausas; REP solo cuenta. El tablero operativo es AYU-07 |
 
 ## 10. Criterios de aceptación
 
@@ -296,7 +297,7 @@ Las envía el módulo `notificaciones`; el solicitante nunca recibe contenido de
 |---|---|
 | CA-AYU-01 | **Dado** una Persona con usuario y una laptop asignada, **cuando** crea un caso eligiendo "Falla de equipo", impacto "solo a mí" y urgencia "no puedo trabajar", **entonces** nace como `AYU-000001`, prioridad P3, estado Nuevo, y recibe confirmación con su fecha límite de primera respuesta. |
 | CA-AYU-02 | **Dado** impacto "toda la empresa" y urgencia "no puedo trabajar", **cuando** se crea el caso, **entonces** la prioridad es P1 y la cola recibe el aviso inmediato. |
-| CA-AYU-03 | **Dado** un caso P2 con primera respuesta de 60 minutos hábiles, creado a las 16:30 con el horario hasta las 17:00, **cuando** el agente responde a las 09:20 del día hábil siguiente, **entonces** la primera respuesta figura "Cumplida" (30 + 20 minutos) y no "Vencida". |
+| CA-AYU-03 | **Dado** un caso P2 con primera respuesta de 60 minutos hábiles, creado a las 16:30 con horario de 09:00 a 17:00, **cuando** el agente responde a las 09:20 del día hábil siguiente, **entonces** la primera respuesta figura "Cumplida" (30 + 20 minutos) y no "Vencida". |
 | CA-AYU-04 | **Dado** un caso En atención, **cuando** el agente lo pasa a "En espera del solicitante" y el solicitante comenta, **entonces** el reloj se detuvo durante la espera y el caso vuelve a En atención automáticamente. |
 | CA-AYU-05 | **Dado** un comentario interno, **cuando** el solicitante abre el caso o recibe la notificación, **entonces** no ve ese texto y el servidor tampoco se lo envía. |
 | CA-AYU-06 | **Dado** una solicitud de servicio que exige aprobación, **cuando** su propio creador intenta aprobarla, **entonces** el sistema lo impide aunque sea Administrador; **cuando** otra persona con permiso aprueba, **entonces** pasa a Nuevo y el reloj arranca. |
@@ -313,15 +314,15 @@ Las envía el módulo `notificaciones`; el solicitante nunca recibe contenido de
 
 1. Un agente crea un caso por teléfono para una Persona sin usuario: se notifica solo por correo si la Persona tiene correo, sin enlace; si no tiene, solo queda en el caso.
 2. Se desactiva un servicio, o cambian los tiempos de SLA, con casos abiertos: siguen su curso sin cambios; no se crean casos nuevos del servicio (RN-AYU-007).
-4. Un caso vence en un feriado o fuera de horario: el vencimiento se cuenta en el siguiente horario hábil.
-5. El solicitante intenta vincular una laptop que ya no tiene asignada: no aparece en su lista; un agente sí puede vincularla.
-6. Dos casos del mismo problema: se resuelve uno como "Duplicado" con vínculo al otro.
-7. Un solicitante usa la descripción para pegar una contraseña: no se puede detectar siempre; se avisa en pantalla y la jefatura puede retirar el comentario.
-8. La Persona solicitante se da de baja con casos abiertos: se reasignan o cancelan con motivo (D-006); los cerrados se anonimizan al plazo de D-024.
-9. Se reabre un caso y su agente ya no existe: vuelve a la cola sin responsable.
-10. Una orden de servicio vinculada se cancela: el caso no cambia solo; se avisa al responsable. Las colas no se borran: se desactivan sin casos abiertos.
-12. Un usuario con dos empresas abre un enlace de un caso de la empresa que no tiene activa: se le pide cambiar de empresa si es miembro; si no, "no encontrado".
-13. Servicio con aprobación y el único aprobador de la empresa es quien lo pide: aplica la excepción de D-015 punto 4 si está activada; si no, queda bloqueado y se avisa al administrador.
+3. Un caso vence en un feriado o fuera de horario: el vencimiento se cuenta en el siguiente horario hábil.
+4. El solicitante intenta vincular una laptop que ya no tiene asignada: no aparece en su lista; un agente sí puede vincularla.
+5. Dos casos del mismo problema: se resuelve uno como "Duplicado" con vínculo al otro.
+6. Un solicitante pega una contraseña en la descripción: no siempre se detecta; se avisa en pantalla y la jefatura puede retirar el comentario.
+7. La Persona solicitante se da de baja con casos abiertos: se reasignan o cancelan con motivo (D-006); los cerrados se anonimizan al plazo de D-024.
+8. Se reabre un caso y su agente ya no existe: vuelve a la cola sin responsable.
+9. Una orden de servicio vinculada se cancela: el caso no cambia solo; se avisa al responsable. Las colas no se borran: se desactivan sin casos abiertos.
+10. Un usuario con dos empresas abre un enlace de un caso de la empresa que no tiene activa: se le pide cambiar de empresa si es miembro; si no, "no encontrado".
+11. Servicio con aprobación y el único aprobador de la empresa es quien lo pide: aplica la excepción de D-015 punto 4 si está activada; si no, queda bloqueado y se avisa al administrador.
 
 ## 12. Decisiones propuestas y supuestos
 
@@ -333,7 +334,7 @@ Las envía el módulo `notificaciones`; el solicitante nunca recibe contenido de
 | AYU-S04 | [SUPUESTO] | La aprobación de servicios la hace quien tenga el permiso; no hay jefe directo porque la v1 no tiene organigrama. |
 | AYU-S05 | [SUPUESTO] | Sin correo entrante: no se responde ni se crea un caso escribiendo a un buzón. Evita suplantación y cuesta menos; se puede ver después. |
 | AYU-S06 | [SUPUESTO] | Escalamiento automático solo avisa; reasignar solo lo decide una persona. |
-| AYU-S08 | [SUPUESTO] | Datos de casos se conservan 5 años como la auditoría; el nombre del solicitante se anonimiza según D-024. Pendiente de la confirmación legal ya escalada en D-024. |
+| AYU-S07 | [SUPUESTO] | Datos de casos se conservan 5 años como la auditoría; el nombre del solicitante se anonimiza según D-024. Pendiente de la confirmación legal ya escalada en D-024. |
 | AYU-E01 | [ESCALAR AL CEO] (dinero) | **Adjuntos en casos y artículos.** Hoy no (D-022). Al habilitarlos: capturas de pantalla (png, jpg), documentos (pdf) y texto (txt, log), máximo 5 archivos por comentario y 5 MB cada uno [SUPUESTO], separados por empresa, entregados solo tras comprobar el permiso, con revisión de virus, y los internos solo para agentes. Cambian RF-AYU-013, RF-AYU-039, la retención y la privacidad (una captura puede mostrar datos personales). Implican almacenamiento con costo mensual y posible costo del análisis de virus; DevOps estima el costo por GB cuando llegue el momento. Recomendación: no habilitar hasta cerrar la Etapa 4 y ver el uso real. |
 | AYU-E02 | [ESCALAR AL CEO] (dinero) | Los avisos por correo de este módulo aumentan el volumen del servicio de correo ya escalado en `decisiones.md` (Escalado, Dinero 1). Si el plan contratado queda corto, el costo sube. Se mitiga con resúmenes y límites del módulo `notificaciones`. |
 

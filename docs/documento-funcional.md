@@ -316,6 +316,8 @@ Basado en D-005 y D-008. Etapa 2.
 | RF-CAT-020 | Las opciones de una lista que estén en uso se desactivan, no se borran. | 2 | CA-021 |
 | RF-CAT-021 | Cada campo tiene un identificador interno estable; cambiarle el nombre no rompe los datos. | 2 | CA-021 |
 | RF-CAT-022 | Los campos de tipo número admiten decimales y pueden tener mínimo y máximo. Los de tipo fecha son fechas de calendario, sin hora. Los textos tienen un largo máximo (ver S-08). | 2 | CA-020 |
+| RF-CAT-023 | Proveedor, ubicación y centro de costo pueden tener un **código externo** opcional (por ejemplo el que usa SAP). Es solo un dato; no se valida contra ningún sistema externo [SUPUESTO S-25]. | 2 | CA-017 |
+| RF-CAT-024 | Un centro de costo puede indicar una **Persona responsable** (opcional) [SUPUESTO S-25]. | 2 | CA-016 |
 
 Ejemplos: Laptop (del artículo) → RAM, disco, procesador. Celular (de la unidad) → IMEI, número de línea. Licencia (de la unidad) → fecha de vencimiento, número de puestos.
 
@@ -340,6 +342,7 @@ Basado en D-007, D-008, D-011. Etapa 3.
 | RF-SKU-013 | Las licencias no son un tipo especial. Si se controlan por serie, cada clave es una serie; una clave con 50 puestos es **una** serie con un campo de unidad "número de puestos" y su propia fecha de vencimiento. Si solo importa el total, se controlan por cantidad. | 3 | CA-020 |
 | RF-SKU-014 | Las claves de licencia son secretos: se guardan cifradas, se muestran enmascaradas, verlas completas exige un permiso aparte y esa consulta queda en la auditoría. Nunca aparecen en claro en la auditoría ni en los registros técnicos. | 4 | CA-042 |
 | RF-SKU-015 | En la v1 no se asigna cada puesto de una licencia a una persona; basta el total de puestos. | 3 | CA-020 |
+| RF-SKU-016 | Un SKU puede tener un **stock mínimo** opcional. En la v1 es solo un dato: no genera avisos ni bloquea salidas [SUPUESTO S-26]. | 3 | CA-020 |
 
 ## 11. Inventario
 
@@ -427,6 +430,7 @@ Basado en D-013, D-014, D-015 y en la propuesta del Auditor de Cumplimiento (`do
 | RF-OC-007 | Cada orden puede indicar un centro de costo (opcional) [SUPUESTO S-23]. | 5 | CA-032 |
 | RF-OC-008 | Una orden en Borrador creada por un Solicitante lleva SKU y cantidades; el precio lo completa quien edita la orden [SUPUESTO S-15]. | 5 | CA-029 |
 | RF-OC-009 | "Emitida" solo cambia el estado; el sistema no envía correo al proveedor. Se ofrece una vista imprimible o PDF de la orden para enviarla a mano. | 5 | CA-029 |
+| RF-OC-042 | Cada orden puede llevar una **referencia externa** opcional (por ejemplo el número de documento de SAP). Es texto libre; no se valida contra ningún sistema externo [SUPUESTO S-24]. | 5 | CA-032 |
 | RF-OC-010 | Una orden Recibida o Cerrada no se edita; se corrige con una reversión de recepción (RF-OC-032) o un ajuste de inventario, que quedan en la auditoría. | 5 | CA-036 |
 
 ### 12.2 Estados y transiciones
@@ -573,6 +577,7 @@ Basado en D-018 y D-019. Etapa 1: se construye como mecanismo general para que t
 | RF-AUD-010 | Los intentos rechazados por falta de permiso o por pertenecer a otra empresa también quedan en la auditoría. | 1 | CA-002 |
 | RF-AUD-011 | Nada con historial se borra. Lo que tiene historia se desactiva, se anula o se da de baja, con motivo. Solo se borran de verdad los borradores que nunca tuvieron efecto. Donde la versión 0.1 decía "eliminó", ahora dice "anuló o dio de baja". | 1 | CA-045 |
 | RF-AUD-012 | Los identificadores internos que se ven en la dirección web no son consecutivos ni adivinables. Los códigos para personas (SKU, número de orden) son aparte. | 1 | CA-001 |
+| RF-AUD-013 | Cada entrada de auditoría indica el **tipo de autor**: "usuario" o "integración" (un programa externo que use la futura API). En la v1 todas son de tipo usuario; el dato queda previsto para no migrar después [SUPUESTO S-28]. | 1 | CA-041 |
 
 ## 17. Seguridad (RS)
 
@@ -808,6 +813,11 @@ Los propone el Analista con recomendación; los confirma o cambia el Gerente de 
 | S-21 | Formato de fecha día/mes/año. | RNF-002 |
 | S-22 | Las celdas de la matriz de permisos que nadie había definido son una propuesta; en particular: Jefatura TI no crea órdenes ni asigna activos; Técnico no ve precios; solo el Administrador edita proveedores, categorías y campos; Almacén corrige series. | Sección 7.3 |
 | S-23 | El centro de costo de una orden es opcional. | RF-OC-007 |
+| S-24 | La orden de compra puede llevar una referencia externa opcional (texto libre, por ejemplo número de documento de SAP). Pedido por el módulo presupuesto-costos. | RF-OC-042 |
+| S-25 | Proveedor, ubicación y centro de costo pueden tener código externo opcional; el centro de costo puede tener una Persona responsable opcional. Pedido por presupuesto-costos e integraciones-api. | RF-CAT-023, 024 |
+| S-26 | El SKU puede tener un stock mínimo opcional; en la v1 es solo un dato, sin avisos ni bloqueos. | RF-SKU-016 |
+| S-27 | Los módulos adicionales pueden agregar filas a la matriz de permisos y, con visto bueno del Gerente de TI, plantillas de rol propias (por ejemplo "Empleado (portal)" de alcance propio, para el portal de autoservicio de la fase 3). El núcleo de la v1 mantiene 6 plantillas. | Sección 7.3, sección 27 |
+| S-28 | La auditoría guarda el tipo de autor ("usuario" o "integración"); en la v1 siempre es usuario. | RF-AUD-013 |
 
 ## 24. Escalado al Cliente (CEO)
 
@@ -869,7 +879,7 @@ Resumen por módulo:
 
 ## 27. Módulos adicionales (fases 2 y 3)
 
-Siete escuadrones escriben en paralelo los módulos que se suman al núcleo. Fase 2 = viene después de la versión 1 (entran con el núcleo estable); fase 3 = más adelante. Las fases son una propuesta del Analista que confirma cada escuadrón en su archivo. Los archivos se están escribiendo ahora en `docs/modulos/`; este índice solo los enumera y no repite su contenido.
+Seis escuadrones escriben en paralelo los módulos que se suman al núcleo. Fase 2 = viene después de la versión 1 (entran con el núcleo estable); fase 3 = más adelante. Las fases son una propuesta del Analista que confirma cada escuadrón en su archivo. Los archivos se están escribiendo ahora en `docs/modulos/`; este índice solo los enumera y no repite su contenido.
 
 | Módulo | Fase | Documento |
 |---|---|---|
@@ -898,4 +908,5 @@ Cruces con el núcleo, para que los escuadrones no dupliquen reglas:
 - **Licencias de software** y **Líneas móviles** amplían las reglas de licencias (RF-SKU-013) y de IMEI y número de línea (RF-CAT-014); el núcleo no asigna puestos.
 - **Proveedores y contratos** amplía el catálogo de proveedores (RF-CAT-001).
 - **Garantías y mantenimiento** amplía la fecha de garantía (RF-INV-008); el núcleo no avisa vencimientos.
+- **Permiso "ver datos personales":** es el permiso sensible de D-004 (nombre y correo de Personas y sus asignaciones). Los módulos lo usan con ese nombre; el Arquitecto fija su identificador técnico.
 - Cualquier módulo debe respetar las reglas transversales RN-001 a RN-016, la auditoría de la sección 16 y la matriz de permisos de la sección 7.3 (agregando sus filas).
