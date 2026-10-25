@@ -126,7 +126,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen. Cada RF indica
 | RN-PRS-027 | Nada se borra: Personas, áreas, ubicaciones se inactivan, cesan o anonimizan (D-019). |
 | RN-PRS-028 | Todo lleva la empresa. Un identificador de otra empresa responde "no encontrado" (D-021.5). |
 | RN-PRS-029 | Los duplicados no se fusionan en la v1: se traspasan los equipos al registro correcto (ENT) y se cesa el duplicado. |
-| RN-PRS-030 | Las solicitudes de derechos se excluyen de búsquedas, listas, reportes, exportaciones, tableros, avisos y API; las ve solo `personas.derechos_atender` (PS-29). Consultarlas queda en la auditoría (D-061.2, D-061.6). |
+| RN-PRS-030 | Las solicitudes de derechos se excluyen de búsquedas, listas, reportes, exportaciones, tableros, avisos y API; las ve solo `personas.derechos_atender` (PS-29); única excepción: la propia Persona ve el estado de **su** pedido en el portal (Fase 3). La mesa de ayuda guarda solo un caso restringido con la referencia. Consultarlas queda en la auditoría (D-061.2, D-061.6). |
 | RN-PRS-031 | El motivo de cese es una lista cerrada (Salida de la empresa, Fin de contrato, Traslado, Otro) **sin texto libre** (D-034.5). |
 | RN-PRS-032 | Las listas y fichas respetan `datos_personales.ver`: sin él se muestra `PRS-0042`, tipo y estado (tres formas de dato oculto, D-053). |
 
