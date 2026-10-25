@@ -202,11 +202,11 @@ No hay otras transiciones. Finales: Cerrado, Cancelado, Rechazado. Cada transici
 
 | Entidad | Campos principales (lenguaje simple) | Clave y unicidad |
 |---|---|---|
-| Caso | empresa, número, tipo, servicio, categoría, asunto, descripción, solicitante (Persona), creado por (Usuario), canal de origen, impacto, urgencia, prioridad, estado, cola, responsable, fechas (creación, primera respuesta, resolución, cierre), código y texto de resolución, marca de escalado | número único por empresa, nunca repetido |
+| Caso | empresa, número, tipo, servicio, categoría, asunto, descripción, solicitante (Persona), creado por (Usuario), canal de origen, impacto, urgencia, prioridad, estado, cola, responsable, fechas (creación, primera respuesta, resolución, cierre), código y texto de resolución, marca de escalado, elemento afectado (opcional) | número único por empresa, nunca repetido |
 | Valor de formulario | caso, campo del servicio, valor | uno por caso y campo |
 | Comentario | caso, autor, público o interno, texto, fecha, retirado (sí/no, quién, motivo) | solo se agrega |
 | Historial del caso | caso, cambio, valor anterior y nuevo, quién, cuándo, motivo | solo se agrega |
-| Medición de SLA | caso, tiempos meta fijados, minutos consumidos, pausas (desde, hasta, causa), estado | uno por caso |
+| Medición de SLA | caso, metas fijadas y fechas reales de primera respuesta y de resolución, "cumplió" sí/no/no aplica de cada una, minutos consumidos, pausas (desde, hasta, causa), estado | uno por caso |
 | Vínculo caso-activo | caso, activo | sin repetir el par |
 | Vínculo caso-orden de servicio | caso, orden | sin repetir el par |
 | Vínculo caso-caso | caso, caso, tipo de relación | sin repetir |
@@ -247,7 +247,6 @@ No hay otras transiciones. Finales: Cerrado, Cancelado, Rechazado. Cada transici
 | AYU-15 | Editor de artículo y versiones | Redactar, comparar, publicar | Técnico |
 | AYU-16 | Revisión de artículos | Vencidos y borradores pendientes | Jefatura TI |
 | AYU-17 | Pestaña "Casos" en la ficha del activo | Historial de fallas | Técnico |
-| AYU-18 | Configuración del módulo | Plazos de cierre y recordatorio | Administrador |
 
 ## 8. Notificaciones y automatismos
 
@@ -313,16 +312,14 @@ Las envía el módulo `notificaciones`; el solicitante nunca recibe contenido de
 ## 11. Casos límite
 
 1. Un agente crea un caso por teléfono para una Persona sin usuario: se notifica solo por correo si la Persona tiene correo, sin enlace; si no tiene, solo queda en el caso.
-2. Se desactiva un servicio con casos abiertos: siguen su curso; no se pueden crear nuevos.
-3. Cambian los tiempos de SLA con casos abiertos: no les afecta (RN-AYU-007).
+2. Se desactiva un servicio, o cambian los tiempos de SLA, con casos abiertos: siguen su curso sin cambios; no se crean casos nuevos del servicio (RN-AYU-007).
 4. Un caso vence en un feriado o fuera de horario: el vencimiento se cuenta en el siguiente horario hábil.
 5. El solicitante intenta vincular una laptop que ya no tiene asignada: no aparece en su lista; un agente sí puede vincularla.
 6. Dos casos del mismo problema: se resuelve uno como "Duplicado" con vínculo al otro.
 7. Un solicitante usa la descripción para pegar una contraseña: no se puede detectar siempre; se avisa en pantalla y la jefatura puede retirar el comentario.
 8. La Persona solicitante se da de baja con casos abiertos: se reasignan o cancelan con motivo (D-006); los cerrados se anonimizan al plazo de D-024.
 9. Se reabre un caso y su agente ya no existe: vuelve a la cola sin responsable.
-10. Una orden de servicio vinculada se cancela: el caso no cambia solo; se avisa al responsable.
-11. Se borra por error una cola: no existe borrado; se desactiva, y debe estar sin casos abiertos.
+10. Una orden de servicio vinculada se cancela: el caso no cambia solo; se avisa al responsable. Las colas no se borran: se desactivan sin casos abiertos.
 12. Un usuario con dos empresas abre un enlace de un caso de la empresa que no tiene activa: se le pide cambiar de empresa si es miembro; si no, "no encontrado".
 13. Servicio con aprobación y el único aprobador de la empresa es quien lo pide: aplica la excepción de D-015 punto 4 si está activada; si no, queda bloqueado y se avisa al administrador.
 
@@ -332,11 +329,10 @@ Las envía el módulo `notificaciones`; el solicitante nunca recibe contenido de
 |---|---|---|
 | AYU-S01 | [SUPUESTO] | Módulo en Fase 2 (después de la Etapa 7), porque el documento v0.1 excluye tickets y los cimientos primero. |
 | AYU-S02 | [SUPUESTO] | Matriz de prioridad fija y tiempos de SLA configurables por prioridad: simple de explicar; la matriz editable se puede abrir después. |
-| AYU-S03 | [SUPUESTO] | Reloj solo en horario de atención y con pausas por espera. Es lo habitual y evita vencimientos injustos. |
+| AYU-S03 | [SUPUESTO] | Reloj solo en horario de atención y con pausas por espera (lo habitual; evita vencimientos injustos). Plazos por defecto: reapertura 7 días hábiles, cierre automático 3, recordatorio 2, resolución por falta de respuesta 5. |
 | AYU-S04 | [SUPUESTO] | La aprobación de servicios la hace quien tenga el permiso; no hay jefe directo porque la v1 no tiene organigrama. |
 | AYU-S05 | [SUPUESTO] | Sin correo entrante: no se responde ni se crea un caso escribiendo a un buzón. Evita suplantación y cuesta menos; se puede ver después. |
 | AYU-S06 | [SUPUESTO] | Escalamiento automático solo avisa; reasignar solo lo decide una persona. |
-| AYU-S07 | [SUPUESTO] | Plazos por defecto: reapertura 7 días hábiles, cierre automático 3, recordatorio 2, resolución por falta de respuesta 5. |
 | AYU-S08 | [SUPUESTO] | Datos de casos se conservan 5 años como la auditoría; el nombre del solicitante se anonimiza según D-024. Pendiente de la confirmación legal ya escalada en D-024. |
 | AYU-E01 | [ESCALAR AL CEO] (dinero) | **Adjuntos en casos y artículos.** Hoy no (D-022). Al habilitarlos: capturas de pantalla (png, jpg), documentos (pdf) y texto (txt, log), máximo 5 archivos por comentario y 5 MB cada uno [SUPUESTO], separados por empresa, entregados solo tras comprobar el permiso, con revisión de virus, y los internos solo para agentes. Cambian RF-AYU-013, RF-AYU-039, la retención y la privacidad (una captura puede mostrar datos personales). Implican almacenamiento con costo mensual y posible costo del análisis de virus; DevOps estima el costo por GB cuando llegue el momento. Recomendación: no habilitar hasta cerrar la Etapa 4 y ver el uso real. |
 | AYU-E02 | [ESCALAR AL CEO] (dinero) | Los avisos por correo de este módulo aumentan el volumen del servicio de correo ya escalado en `decisiones.md` (Escalado, Dinero 1). Si el plan contratado queda corto, el costo sube. Se mitiga con resúmenes y límites del módulo `notificaciones`. |
@@ -347,8 +343,7 @@ Las envía el módulo `notificaciones`; el solicitante nunca recibe contenido de
 - Crear o responder casos por correo, teléfono, chat o mensajería.
 - Gestión de cambios, gestión de problemas y base de datos de configuración (módulos de otro escuadrón).
 - Encuestas distintas de la de satisfacción del caso; encuestas a personas sin usuario.
-- Sugerencias automáticas con inteligencia artificial; chatbots.
-- Costos y facturación por caso; aprobación con montos (eso vive en compras y en órdenes de servicio).
+- Sugerencias con inteligencia artificial; chatbots; costos por caso; aprobación con montos (vive en compras y órdenes de servicio).
 - Matriz de prioridad editable, varios niveles de aprobación, organigrama.
-- Base de conocimiento compartida entre empresas y portal público sin acceso.
-- Reportes avanzados y paneles de dirección (módulo `reportes-tableros`).
+- Base de conocimiento compartida entre empresas; portal público sin acceso.
+- Reportes avanzados y paneles de dirección (módulo `reportes-tableros`); webhooks (módulo `integraciones-api`).

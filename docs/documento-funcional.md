@@ -13,13 +13,13 @@
 | Marca | Significado |
 |---|---|
 | **[PENDIENTE]** | Falta un dato o una definición. Siempre dice qué etapa bloquea (ver sección 22). |
-| **[SUPUESTO S-nn]** | Una regla que el Analista propone con recomendación porque nadie la definió. La confirma o cambia el Gerente de TI. Lista completa en la sección 21. |
-| **[ESCALAR AL CEO]** | Solo dinero, tema legal o algo que no se puede deshacer. Lista completa en la sección 23. |
+| **[SUPUESTO S-nn]** | Una regla que el Analista propone con recomendación porque nadie la definió. La confirma o cambia el Gerente de TI. Lista completa en la sección 23. |
+| **[ESCALAR AL CEO]** | Solo dinero, tema legal o algo que no se puede deshacer. Lista completa en la sección 24. |
 | **RF-módulo-NNN** | Requisito funcional. Cada uno dice en qué **etapa** (0 a 7) se entrega y qué **criterio de aceptación (CA)** lo comprueba. |
-| **RN-NNN** | Regla de negocio que atraviesa varios módulos (sección 18). |
+| **RN-NNN** | Regla de negocio que atraviesa varios módulos (sección 20). |
 | **RNF-NNN** | Requisito de calidad medible: idioma, rendimiento, dispositivos (sección 19). |
 | **RS-NN** | Requisito de seguridad (sección 17). |
-| **CA-NNN** | Criterio de aceptación en formato "Dado... cuando... entonces..." (sección 20). |
+| **CA-NNN** | Criterio de aceptación en formato "Dado... cuando... entonces..." (sección 21). |
 | **P-NNN** | Pendiente, con la etapa que bloquea (sección 22). |
 
 Los identificadores no se reutilizan ni se renumeran. Un requisito retirado queda marcado "Retirado" con su fecha.
@@ -30,7 +30,7 @@ Los identificadores no se reutilizan ni se renumeran. Un requisito retirado qued
 
 ## 1. Propósito
 
-Una plataforma web para que el área de TI de una empresa controle sus activos tecnológicos (equipos, periféricos, celulares, licencias) y gestione las compras y los servicios que se hacen alrededor de ellos, con trazabilidad de quién hizo qué. Se usa con las empresas que el Cliente (CEO) designe (ver P-004 y sección 23).
+Una plataforma web para que el área de TI de una empresa controle sus activos tecnológicos (equipos, periféricos, celulares, licencias) y gestione las compras y los servicios que se hacen alrededor de ellos, con trazabilidad de quién hizo qué. Se usa con las empresas que el Cliente (CEO) designe (ver P-004 y la sección 24).
 
 ## 2. Alcance de la versión 1
 
@@ -48,7 +48,7 @@ Una plataforma web para que el área de TI de una empresa controle sus activos t
 11. Seguridad, datos personales y continuidad (secciones 17, 18 y 19).
 12. Búsqueda global, filtros y exportación a Excel en todas las listas; avisos por correo de invitaciones, accesos y aprobaciones.
 
-**No incluye en la versión 1** (queda anotado para después, ver sección 24): aprobación en varios niveles o por tipo de orden; varios roles por persona; restricción por sede; subcategorías de varios niveles; conversión de monedas; asignación de cada puesto de licencia a una persona; archivos adjuntos; impresión de etiquetas o códigos QR y escaneo con la cámara; firma o aceptación en pantalla del receptor; estado "en tránsito"; devolución al proveedor y mercadería dañada; avisos automáticos de vencimiento de garantía o licencia; envío automático de órdenes al proveedor; ingreso con cuenta de Google o Microsoft; segunda persona para bajas de valor; integración con SAP; tickets de soporte; mantenimiento preventivo; reportes avanzados; aplicación móvil propia.
+**No incluye en la versión 1** (queda anotado para después, ver sección 25): aprobación en varios niveles o por tipo de orden; varios roles por persona; restricción por sede; subcategorías de varios niveles; conversión de monedas; asignación de cada puesto de licencia a una persona; archivos adjuntos; impresión de etiquetas o códigos QR y escaneo con la cámara; firma o aceptación en pantalla del receptor; estado "en tránsito"; devolución al proveedor y mercadería dañada; avisos automáticos de vencimiento de garantía o licencia; envío automático de órdenes al proveedor; ingreso con cuenta de Google o Microsoft; segunda persona para bajas de valor; integración con SAP; tickets de soporte; mantenimiento preventivo; reportes avanzados; aplicación móvil propia.
 
 **Etapas** (cada una termina con una demo que el Cliente (CEO) prueba y aprueba antes de empezar la siguiente)
 
@@ -146,9 +146,9 @@ Basado en D-001 y D-002. Etapa 1.
 | RF-ACC-018 | Recuperación de acceso: como no hay contraseña, la persona pide un enlace nuevo. | 1 | CA-006 |
 | RF-ACC-019 | Si una empresa pierde a su único administrador, lo recupera el Administrador de plataforma verificando la identidad por otro medio, y queda en la auditoría. | 1 | CA-015 |
 | RF-ACC-020 | Al crear una empresa se recomienda tener al menos dos administradores; el sistema lo avisa. | 1 | CA-009 |
-| RF-ACC-021 | Se envían por correo: invitaciones, enlaces de acceso, aviso al aprobador cuando hay una orden pendiente y aviso al creador cuando se aprueba o rechaza. El servicio de envío tiene costo mensual: **[ESCALAR AL CEO]** (sección 23, punto D1). | 1 y 5 | CA-005 |
+| RF-ACC-021 | Se envían por correo: invitaciones, enlaces de acceso, aviso al aprobador cuando hay una orden pendiente y aviso al creador cuando se aprueba o rechaza. El servicio de envío tiene costo mensual: **[ESCALAR AL CEO]** (sección 24, punto D1). | 1 y 5 | CA-005 |
 | RF-ACC-022 | Una empresa suspendida por la plataforma no permite entrar a ninguno de sus usuarios; sus datos se conservan, no se borran. | 1 | CA-015 |
-| RF-ACC-023 | Al primer ingreso se pide aceptar el aviso de privacidad y los términos; quedan registradas la versión y la fecha. El texto lo define legal: **[ESCALAR AL CEO]** (sección 23, punto L3). | 1 | CA-049 |
+| RF-ACC-023 | Al primer ingreso se pide aceptar el aviso de privacidad y los términos; quedan registradas la versión y la fecha. El texto lo define legal: **[ESCALAR AL CEO]** (sección 24, punto L3). | 1 | CA-049 |
 
 ## 6. Administrador de plataforma
 
@@ -202,7 +202,7 @@ Basado en D-004 y D-015. Etapa 1.
 
 ### 7.3 Matriz de permisos: módulo × acción × rol
 
-Es la propuesta inicial que se copia a cada empresa. Se ajusta con el prototipo de la Etapa 0 y con los documentos reales (P-006); los cambios los aprueba el Gerente de TI. Marcada como [SUPUESTO S-22] en las celdas que nadie había definido.
+Es la propuesta inicial que se copia a cada empresa. Se ajusta con el prototipo de la Etapa 0 y con los documentos reales (P-005); los cambios los aprueba el Gerente de TI. Marcada como [SUPUESTO S-22] en las celdas que nadie había definido.
 
 Leyenda: **T** = todo · **P** = solo lo propio · **-** = no puede · **(S)** = permiso sensible.
 
@@ -584,7 +584,7 @@ Esta sección reúne los requisitos del Especialista en Seguridad. Donde ya est�
 | RS-06 a RS-09 | Una cuenta y una membresía por empresa; la empresa activa la fija y comprueba el servidor; una empresa nunca ve a qué otras pertenece una persona; cambiar de empresa se registra y no arrastra datos. | RF-ACC-011, RF-ACC-012 |
 | RS-10 | Todo dato tiene empresa. La base de datos debe impedir leer o escribir datos de otra empresa aunque el código se equivoque. Hay una prueba obligatoria de aislamiento por cada tabla nueva. | RN-001, CA-001, CA-002 |
 | RS-11 | Las referencias entre datos pertenecen a la misma empresa: no se puede crear una orden con un proveedor, SKU o ubicación de otra empresa aunque se conozca su identificador. | CA-003 |
-| RS-12 | Si en el futuro se guardan archivos (adjuntos, importaciones), quedan separados por empresa y solo se entregan tras comprobar el acceso. | RF-IMP-012, sección 24 |
+| RS-12 | Si en el futuro se guardan archivos (adjuntos, importaciones), quedan separados por empresa y solo se entregan tras comprobar el acceso. | RF-IMP-012, sección 25 |
 | RS-13 | Los identificadores de la dirección web no son consecutivos ni adivinables. Para un identificador de otra empresa se responde "no encontrado", igual que para uno que no existe. | RF-AUD-012, RN-011 |
 | RS-14 | Todo permiso se comprueba en el servidor. | RF-ROL-010 |
 | RS-15 | Siempre hay al menos un administrador activo por empresa. | RF-ROL-008 |
@@ -609,7 +609,7 @@ Esta sección reúne los requisitos del Especialista en Seguridad. Donde ya est�
 
 ## 18. Datos personales y retención
 
-Basado en D-024. **Todos los plazos son una propuesta provisoria hasta que legal los confirme. No se activa ninguna anonimización automática antes de esa confirmación.** Ver sección 23, puntos L1 a L6 y I1.
+Basado en D-024. **Todos los plazos son una propuesta provisoria hasta que legal los confirme. No se activa ninguna anonimización automática antes de esa confirmación.** Ver sección 24, puntos L1 a L6 e I1.
 
 ### 18.1 Qué datos personales se guardan
 
@@ -660,8 +660,8 @@ Basado en D-021 y D-029.
 | RNF-014 | Respaldo automático diario y cifrado, con restauración probada al menos una vez antes de cada etapa que pase a uso real, sin mezclar datos de empresas. | 7 | CA-053 |
 | RNF-015 | Cada despliegue tiene un plan de vuelta atrás escrito. | 7 | CA-053 |
 | RNF-016 | Manual del usuario y del administrador al cierre de cada etapa; manual de operación (respaldo y restauración) antes de producción. | 7 | CA-053 |
-| RNF-017 | El costo de alojamiento, respaldos y soporte se estima en la Etapa 0. **[ESCALAR AL CEO]** (sección 23, punto D2). | 0 | CA-053 |
-| RNF-018 | Pasar a producción con datos reales de una empresa lo aprueba el Cliente (CEO) tras la demo, con respaldo y restauración ya probados. **[ESCALAR AL CEO]** (sección 23, punto I2). | 7 | CA-053 |
+| RNF-017 | El costo de alojamiento, respaldos y soporte se estima en la Etapa 0. **[ESCALAR AL CEO]** (sección 24, punto D2). | 0 | CA-053 |
+| RNF-018 | Pasar a producción con datos reales de una empresa lo aprueba el Cliente (CEO) tras la demo, con respaldo y restauración ya probados. **[ESCALAR AL CEO]** (sección 24, punto I2). | 7 | CA-053 |
 
 ## 20. Reglas de negocio transversales
 

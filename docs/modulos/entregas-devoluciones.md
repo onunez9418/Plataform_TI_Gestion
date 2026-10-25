@@ -210,6 +210,8 @@ Notas:
 | Reporte de extravío desde el portal | Técnicos y Jefatura TI | "[P-0042] reportó extravío de [artículo]. Falta confirmarlo." |
 | Diario (automático) | (sistema) | Recalcula "por vencer" y "vencido"; no cambia estados de activos. |
 
+Eventos que se envían a una Persona **sin Usuario** (acordado con Notificaciones): entrega registrada, préstamo por vencer y préstamo vencido. Van al correo de la Persona, solo si lo tiene, sin enlaces de acción y sin más datos que artículo, serie, fecha y número de acta. Ningún otro evento de este módulo se envía a Personas sin Usuario.
+
 ## 9. Integración con el núcleo y con otros módulos
 
 - **Núcleo / inventario.** Una entrega cambia el estado del activo a Asignado y una devolución lo cambia al destino elegido, respetando la tabla de D-012.3. Los accesorios por cantidad usan los movimientos de stock de D-010. Al cerrarse por extravío se aplica la regla de reingreso de D-009.3.
