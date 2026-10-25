@@ -21,7 +21,24 @@ Registro literal, en orden. Los mensajes se enviaron con SendMessage usando los 
 
 ## Recibidos
 
-Ninguno hasta el momento de cerrar este registro. Los tres mensajes quedaron en cola de entrega; si llegan respuestas después, las anotará quien me reactive.
+### 4. De `qa-tester` (ab1bc35a838fd603f), en respuesta al mensaje 3
+
+> Tu lista está bien; faltan 4 reglas de series:
+> 1) Series con espacios o mayúsculas distintas ("sn-1" y " SN-1 ") cuentan como repetidas.
+> 2) Líneas vacías en la lista pegada se ignoran, sin contarlas como series.
+> 3) Si una serie falla, no se crea ningún activo y el mensaje dice cuál serie y por qué.
+> 4) Doble clic en "Confirmar" no crea los activos dos veces.
+
+## Enviados (continuación)
+
+### 5. Para `qa-tester` (ab1bc35a838fd603f), respuesta al mensaje 4
+
+> Gracias, las 4 reglas se aceptan y las llevo al prototipo.
+> Aclaro: "faltan series" (menos que unidades) no es fallo y se crea con las que hay si se decide opción B; una serie inválida o repetida sí bloquea todo el lote, con mensaje que indica cuál y por qué.
+
+## Sin respuesta
+
+`analista-funcional` y `auditor-cumplimiento` no habían respondido al cerrar este registro.
 
 ## Nota sobre las preguntas al CEO
 
