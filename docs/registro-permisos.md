@@ -234,7 +234,7 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 
 ## 10. Mesa de ayuda (AYU, Fase 2, ola C)
 
-Los casos con derechos de datos usan `personas.derechos_atender` (PS-29): quedan invisibles por lista, búsqueda, exportación, reportes, API, avisos y plazos.
+Los casos con derechos de datos son los del registro de PS-29 `personas.derechos_atender`: quedan invisibles por lista, búsqueda, exportación, reportes, API, avisos y plazos; la mesa de ayuda solo guarda una referencia sin contenido. Quien registra un caso por otra Persona necesita además `personas.ver` con alcance todo (PS-24) y `datos_personales.ver` (PS-22); no hace falta una fila nueva.
 
 | PS | Nombre técnico | Qué permite | S | Alcance | Controles | Adm | Jef | Téc | Alm | Sol | SL | Emp |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -265,7 +265,7 @@ Los casos con derechos de datos usan `personas.derechos_atender` (PS-29): quedan
 | PS-162 | `ayuda.conocimiento_ver` | Ver artículos publicados | | todo | | T | T | T | T | T | T | T |
 | PS-163 | `ayuda.conocimiento_ver_interno` | Ver artículos internos | | todo | | T | T | T | - | - | - | - |
 | PS-164 | `ayuda.conocimiento_editar` | Redactar y editar artículos | | todo | A | T | - | T | - | - | - | - |
-| PS-165 | `ayuda.conocimiento_publicar` | Publicar un artículo (quien no lo redactó) | | todo | A No | T | T | - | - | - | - | - |
+| PS-165 | `ayuda.conocimiento_publicar` | Publicar o archivar un artículo. La segunda persona ("No": quien no lo redactó) aplica solo a publicar | | todo | A No | T | T | - | - | - | - | - |
 | PS-166 | `ayuda.tablero_ver` | Ver el tablero de la mesa de ayuda | | todo | | T | T | T | - | - | - | - |
 
 ## 11. Cambios, problemas y CMDB (Fase 3, ola E), onboarding (Fase 2, ola C) y portal (Fase 3, ola D)
@@ -280,7 +280,7 @@ Los casos con derechos de datos usan `personas.derechos_atender` (PS-29): quedan
 | PS-172 | `cambios.aprobar` | Aprobar un cambio (siempre otra persona) | | todo | A No | T | T | - | - | - | - | - |
 | PS-173 | `cambios.aprobar_alto` | Aprobar un cambio de riesgo Alto (distinto del implementador) | | todo | A No | T | T | - | - | - | - | - |
 | PS-174 | `cambios.implementar` | Implementar un cambio | | todo | A | T | - | T | - | - | - | - |
-| PS-175 | `cambios.cerrar` | Cerrar un cambio | | todo | A | T | - | T | - | - | - | - |
+| PS-175 | `cambios.cerrar` | Cerrar un cambio. No lo cierra quien lo implementó (excepto con la casilla "cambios" del interruptor único) | | todo | A No | T | T | T | - | - | - | - |
 | PS-176 | `cambios.cancelar` | Cancelar un cambio en curso | | todo o propio | A | T | P | P | - | - | - | - |
 | PS-177 | `cambios.gestionar_plantillas` | Administrar plantillas estándar (reaprobar: otra persona) | | todo | A No | T | - | - | - | - | - | - |
 | PS-178 | `cambios.gestionar_ventanas` | Administrar ventanas de cambio | | todo | A | T | - | - | - | - | - | - |
@@ -303,7 +303,7 @@ Los casos con derechos de datos usan `personas.derechos_atender` (PS-29): quedan
 | PS-193 | `cmdb.gestionar_relaciones` | Crear y borrar relaciones manuales | | todo | A | T | - | T | - | - | - | - |
 | PS-194 | `cmdb.dar_de_baja` | Dar de baja un elemento | | todo | A | T | - | - | - | - | - | - |
 | PS-195 | `cmdb.ver_calidad` | Ver la calidad de los datos de la CMDB | | todo | | T | T | - | - | - | - | - |
-| PS-196 | `cmdb.reconciliar` | Ejecutar la reconciliación manual | | todo | A | T | - | - | - | - | - | - |
+| PS-196 | Retirado (2026-10-25) | Era `cmdb.reconciliar`. La reconciliación de la CMDB delgada es automática | | | | | | | | | | | |
 | PS-197 | `onboarding.ver` | Ver procesos de alta y baja | | todo | | T | T | T | - | - | T | - |
 | PS-198 | `onboarding.iniciar` | Iniciar un proceso de alta o baja | | todo | A | T | T | - | - | - | - | - |
 | PS-199 | `onboarding.completar_tarea` | Completar una tarea asignada ("Mi trabajo") | | todo o propio | A | T | P | P | P | - | - | - |
@@ -312,9 +312,9 @@ Los casos con derechos de datos usan `personas.derechos_atender` (PS-29): quedan
 | PS-202 | `onboarding.cancelar` | Cancelar un proceso | | todo | A | T | T | - | - | - | - | - |
 | PS-203 | `onboarding.plantillas` | Administrar plantillas de alta y baja | | todo | A | T | - | - | - | - | - | - |
 | PS-204 | `portal.acceder` | Entrar al portal de autoservicio | | propio | | - | - | - | - | - | - | P |
-| PS-205 | `portal.ver_propio` | Ver mis equipos, líneas, licencias y casos (nunca el nombre del jefe) | | propio | | - | - | - | - | - | - | P |
+| PS-205 | `portal.ver_propio` | Ver mis equipos, líneas, licencias, casos y **mis actas** (ver y reimprimir mis actas en PDF) (nunca el nombre del jefe) | | propio | | - | - | - | - | - | - | P |
 | PS-206 | `portal.solicitar` | Solicitar un equipo o servicio (crea un caso) | | propio | | - | - | - | - | - | - | P |
-| PS-207 | `portal.pedir_datos` | Pedir mis datos (caso restringido, invisible por todas las vías) | | propio | A | - | - | - | - | - | - | P |
+| PS-207 | `portal.pedir_datos` | Pedir mis datos: crea la entrada en el registro de PS-29; el empleado ve el estado de SU pedido (única excepción a "invisible por todas las vías") | | propio | A | - | - | - | - | - | - | P |
 | PS-208 | `portal.confirmar_recepcion` | Confirmar en pantalla la recepción de un equipo | | propio | A | - | - | - | - | - | - | P |
 | PS-209 | `portal.invitar` | Invitar a Personas al portal (por persona, 100 por día por defecto) | | todo | A T | T | - | - | - | - | - | - |
 | PS-210 | `portal.configurar` | Configurar el portal | | todo | A | T | - | - | - | - | - | - |
@@ -361,7 +361,7 @@ Para que cada escuadrón migre su sección 3. "Se retira" = el permiso ya existe
 
 **Personas y ubicaciones (PRS):** `personas.ver` → PS-24 · `datos_personales.ver` → PS-22 · `personas.crear`, `personas.editar` → PS-25 · `personas.cesar`, `personas.reactivar` → PS-26 · `personas.vincular_usuario` → PS-27 · `personas.anonimizar` → PS-28 · `personas.atender_derechos` → PS-29 · `importar.personas` → PS-21 · `exportar.personas` → PS-20 · `estructura.ver` → PS-30 · `ubicaciones.gestionar` → PS-32 · `areas.gestionar`, `centros_costo.gestionar` → PS-33.
 **Entregas (ENT):** `entregas.ver` → PS-54 · `entregas.crear` → PS-55 · `devoluciones.crear` → PS-56 · `entregas.traspasar` → PS-57 · `entregas.anular` → PS-58 · `actas.imprimir` → PS-59 · `entregas.marcar_conformidad` → PS-60 · `extravios.registrar` → PS-46 · `extravios.recuperar` → PS-48 (es un reingreso) · `exportar.entregas` → PS-20.
-**Licencias (LIC):** `licencias.ver`, `crear`, `editar`, `confirmar`, `cancelar`, `asignar`, `configurar` → PS-82 a PS-87 · `licencias.ver_clave` → PS-88 · `licencias.editar_clave` → PS-89 · `licencias.importar` → PS-21 · `licencias.exportar` → PS-20.
+**Licencias (LIC):** `licencias.ver` → PS-82 · `licencias.crear`, `licencias.editar` → PS-83 · `licencias.confirmar` → PS-76 `contratos.activar` · `licencias.cancelar` → PS-78 `contratos.terminar_anular` · `licencias.asignar` → PS-86 · `licencias.configurar` → PS-87 · `licencias.registrar_uso` → PS-223 · `licencias.ver_clave` → PS-88 · `licencias.editar_clave` → PS-89 · `licencias.importar` → PS-21 · `licencias.exportar` → PS-20.
 **Líneas (LIN):** `lineas.ver` a `lineas.baja` y `lineas.reingreso` → PS-90 a PS-95 · `lineas.configurar` y `lineas.administrar_planes` → PS-96 · `lineas.importar` → PS-21 · `lineas.exportar` → PS-20.
 **Dominios (DOM):** `dominios.ver` → PS-97 · `dominios.crear`, `dominios.editar` → PS-98 · `dominios.baja` → PS-99 · `dominios.cambiar_titular` → PS-100 · `dominios.configurar` → PS-101 · `dominios.importar` → PS-21 · `dominios.exportar` → PS-20.
 **Proveedores y contratos (PRV):** `proveedores.ver` → PS-35 · `proveedores.ver_contactos` → PS-36 · `proveedores.crear_editar` → PS-37 · `proveedores.desactivar` → PS-38 · `contratos.ver` → PS-74 · `contratos.crear_editar` → PS-75 · `contratos.activar` → PS-76 · `contratos.renovar` → PS-77 · `contratos.terminar_anular` → PS-78 · `sla.gestionar` → PS-79 · `referencias.gestionar` → PS-80 · `contratos.recibir_alertas` → PS-81.
