@@ -180,3 +180,18 @@ Razón: el núcleo v0.2 ya permite escribir pruebas para la gran mayoría de los
 Mientras se cierran, no doy por aprobado nada que no haya ejecutado: este veredicto es sobre el documento, no sobre software.
 
 **Mensajes enviados (4 de 4):** registrados en `docs/revision-cruzada/mensajes-qa-tester.md`. Al escribir este archivo aún no había respuestas.
+
+---
+
+## 7. Respuestas recibidas después de escribir este informe (verificadas en los documentos)
+
+| Hallazgo | Respuesta | Verificado en | Estado |
+|---|---|---|---|
+| H-QA-01 | analista-funcional: ya cerrado. RF-OC-043 impide salir de Borrador con una línea sin precio o con precio 0; la regla única de segunda persona es RN-017 (S-30). | `documento-funcional.md` líneas 434, 451 y 696 | **Cerrado en lo principal.** Queda pendiente solo el caso de borde exacto (total igual al límite): RN-017 dice "supera", lo que entiendo como mayor estricto; falta un CA con el total exactamente igual al límite. |
+| H-QA-09 | analista-funcional: RN-017 es la regla única; RF-OS-008 remite a ella; LIC debe citarla en lugar de "cualquier costo mayor que 0". | línea 696 | **Cerrado en el núcleo.** Falta que LIC (RN-LIC-016), PRV, PRE y CAM citen RN-017; D-031 (interruptor único de excepciones) cubre la parte de la bandera, que aún no he leído completa. |
+| H-QA-05 | auditor-cumplimiento: D-030 deja a S-PER-07 sin efecto; la auditoría guarda el identificador interno. Pide una prueba: anonimizar y comprobar que la auditoría queda completa y que el nombre no aparece en ninguna tabla, registro técnico ni correo pendiente. | RF-AUD-014 a 016 y CA-054 (líneas 576 a 578 y 766) | **Cerrado en el núcleo.** Acepto la prueba y la agrego a CI-06. Queda por alinear el módulo PER (§6, S-PER-07) y las copias de nombre en actas y registro de envíos. |
+| H-QA-06 | especialista-seguridad: de acuerdo; tabla de eventos de seguridad aparte, en transacción independiente, con la empresa del actor, sin datos del objeto ajeno, con tope de ritmo y agrupación. Lo incluye en su hallazgo; pide ajustar RF-AUD-010 y CA-002. | Respuesta de seguridad | **Aceptado, pendiente de redacción** en RF-AUD-010 y CA-002. |
+| H-QA-04 | ingeniero-datos: deshacer anula (estado "anulado por lote deshecho", fuera de la unicidad por índice parcial); archivo ya confirmado se rechaza entero por huella; activos por empresa + SKU + serie; stock: un solo "saldo inicial" por SKU + ubicación; personas por código de empleado o correo (sin ninguno, se rechaza la fila). | Respuesta de datos | **Aceptado en (a), (b) y (c).** Siguen abiertos (d) importar SKU nuevos y (e) formato de fechas. Nota: rechazar personas sin código ni correo choca con RF-PER-003 (el correo es opcional) y con la alta manual de homónimos: la importación exige un dato que la alta manual no exige; decidir. |
+| Rol de pruebas | ingeniero-datos: queda escrito en su revisión (H-DAT-02): pruebas de aislamiento con el rol de producción, sin ser dueño de las tablas ni BYPASSRLS, más una prueba de que ese rol no es superusuario. | Respuesta de datos | **Aceptado.** Lo uso en el criterio 2 de DevOps y en el prototipo de la Etapa 0. |
+
+**Aclaración sobre el veredicto:** las respuestas cierran o encaminan H-QA-01, H-QA-05, H-QA-06 y H-QA-09 sin cambiar el veredicto global. Quedan abiertos los demás hallazgos Altos (H-QA-02, 03, 07, 08, 10, 11, 12, 13) y los Medios. No verifiqué D-031 ni D-032 completos; no cuento con ellos hasta leerlos.
