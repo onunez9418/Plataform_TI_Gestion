@@ -141,3 +141,6 @@ temp/
 .tmp/
 .cache/
 *.tmp
+
+__pycache__/
+*.pyc
