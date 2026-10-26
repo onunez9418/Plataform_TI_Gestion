@@ -1,9 +1,9 @@
 # Plan de operación: entornos, publicación, respaldos, correo y costos
 
-**Autor:** Ingeniero DevOps · **Versión:** 2 (actualizada el 2026-10-25) · **Estado:** propuesta para revisión (Etapa 0, todavía no hay código)
-**Alineado con:** `docs/equipo/decisiones.md` hasta D-064, `docs/documento-funcional.md` v0.3 (RNF-010 a RNF-022, RS-40 a RS-51), `docs/revision-cruzada/ronda3-qa-tester.md` (sección 6) y las revisiones del Arquitecto y de Seguridad.
+**Autor:** Ingeniero DevOps · **Versión:** 3 (actualizada el 2026-10-26) · **Estado:** propuesta para revisión (Etapa 0, todavía no hay código)
+**Alineado con:** `docs/equipo/decisiones.md` hasta D-076, `docs/documento-funcional.md` v0.3 (RNF-010 a RNF-022, RS-40 a RS-51), `docs/revision-cruzada/ronda3-qa-tester.md` (sección 6), `docs/revision-cruzada/ronda4-especialista-seguridad.md` (aprobación de la estrategia de llaves con 8 condiciones) y `docs/equipo/plan-aplicacion.md` (fila de DevOps).
 **Para quién:** el CEO lo lee completo; los recuadros "Detalle para el equipo" son para Arquitecto, Datos, Seguridad y QA, y el CEO puede saltarlos.
-**Qué cambió respecto a la versión 1:** ver la sección 15 (historial de cambios, cada cambio con la decisión que lo motiva).
+**Qué cambió respecto a la versión 2:** el plan pasa de describir a **dar procedimientos que se pueden ejecutar y medir** (secciones 1.9 a 1.12, 3.7 a 3.9, 5.2 y 5.3, 6.5 a 6.7, 7.5, 9.5), se crea la **revisión automática de documentos** en `.github/` y se agregan los pasos para activar las ramas protegidas. Historial completo en la sección 15.
 
 ---
 
@@ -16,7 +16,8 @@
 5. **Copias de seguridad diarias y cifradas** (30 diarias y 12 mensuales), guardadas en otro proveedor, y una **restauración practicada** que además reaplica las anonimizaciones y vuelve a cerrar los accesos que ya estaban revocados.
 6. **El registro de auditoría tiene una copia externa** que el proveedor de la base de datos no puede alterar sin que nos demos cuenta. El **registro de anonimizaciones** vive aparte, fuera de lo que se restaura.
 7. **El correo es una pieza crítica**: se entra con un enlace que llega al correo; si falla, nadie entra. Se elige proveedor con criterios medibles, se prueba con Gmail y Outlook antes de programar el acceso, y hay un plan para cuando falle.
-8. **Costos:** no puedo verificar precios desde aquí, así que **no pongo cifras confirmadas**. Entrego, por cada gasto, las opciones, el criterio de elección y una recomendación de arranque de costo mínimo. Todo gasto mensual está marcado **[ESCALAR AL CEO]**.
+8. **Costos:** no puedo verificar precios desde aquí, así que **no pongo cifras confirmadas**. Entrego, por cada gasto, las opciones, el criterio de elección, la **página oficial exacta donde consultar el precio** (9.5) y una recomendación de arranque de costo mínimo. Todo gasto mensual está marcado **[ESCALAR AL CEO]**.
+9. **Los documentos ya tienen su revisión automática** (`.github/workflows/documentos.yml`, sección 3.7): un cambio falla si cita un requisito sin código de módulo, un permiso que no está en el registro, un documento que no existe o algo que parece una clave. Para que **sea obligatoria** falta un clic de quien administre el repositorio: pasos exactos en 3.8.
 
 ### Lo que le pedimos al CEO (resumen; el detalle está en la sección 9)
 
@@ -27,6 +28,8 @@
 | C | Informar si **ya existe un dominio de internet** de la empresa y quién lo administra | Antes de la Etapa 1 | Usar un subdominio del que ya existe |
 | D | Aprobar el **gasto mensual de producción** (base de datos de pago, alojamiento de ejecución continua, correo, copias externas, vigilancia) | Antes de cualquier etapa que se use con datos reales | Aprobar cuando se acerque la fecha, con precios ya verificados |
 | E | Informar el **país** de las empresas (P-004) | Antes de elegir la región de los servidores | También lo necesita el abogado (L-01, L-07) |
+| F | **Dinero:** comprar las **llaves de seguridad físicas** (compra única por unidad; cantidad en 6.6) y, **solo si hace falta**, pagar el plan de GitHub que permita ramas protegidas en un repositorio privado (3.8, paso 0). Precios a verificar (9.5). **[ESCALAR AL CEO]** | Llaves: antes de datos reales. Plan de GitHub: antes de la Etapa 1 | Aprobar cuando los precios estén verificados |
+| G | **Designar a dos custodios** de las llaves de cifrado que **no sean las dos únicas personas administradoras de la plataforma** a la vez (Seguridad, condición 3). Es una designación, sin costo propio | Antes de datos reales | Personas distintas de quienes administran la plataforma |
 
 ### Palabras que usamos
 

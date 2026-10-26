@@ -1,7 +1,7 @@
 # Procedimiento ante una fuga de datos o un acceso indebido
 
-**Versión:** 0.2 (borrador) · **Fecha:** 2026-10-25
-**Redacta:** Especialista en Seguridad · **Co-redacta:** Auditor de Cumplimiento (sección 6 y anexo C completados en la v0.2) · **Aprueba:** Gerente de TI
+**Versión:** 0.3 (borrador) · **Fecha:** 2026-10-26
+**Redacta:** Especialista en Seguridad · **Co-redacta:** Auditor de Cumplimiento (sección 6 y anexo C, v0.3) · **Aprueba:** Gerente de TI
 **Base:** D-059 (roles, gravedad y plazos), D-048 (llaves y control dual de la plataforma), D-052 (restauración y copia externa de la auditoría), D-054 (eventos de seguridad), D-032 (respaldos), `docs/operaciones/plan-entornos-y-costos.md` sección 8.2 (lo que prepara DevOps).
 **Estado:** borrador. **No se puede cargar ningún dato real de una empresa hasta que este procedimiento esté aprobado, ensayado una vez y validado por un abogado en lo legal** (D-064 condición 13; Etapa 7).
 
@@ -89,46 +89,85 @@ Con esto se confirma la gravedad (un G2 pasa a G1 o se baja a G3) y se pasa a la
 
 ## 6. Avisar
 
-Cumplimiento prepara los textos y lleva la cuenta de los plazos; **ningún aviso a la autoridad o a las personas sale sin la revisión del abogado**, salvo el que el abogado haya aprobado de antemano como plantilla (Anexo C.1).
+> **En pocas palabras (para el CEO).** Cuando hay un incidente con datos de personas, el equipo responde cuatro preguntas en este orden: (1) ¿se vieron datos de personas?, (2) ¿eso puede perjudicarlas?, (3) ¿a quién hay que avisar y en cuánto tiempo?, (4) ¿quién redacta, quién aprueba y quién envía? Las preguntas 3 y 4 sobre la **autoridad** y las **personas** las decide **usted con el abogado**; el equipo no decide solo y no da opinión legal. El equipo prepara todo para que esa decisión sea rápida y quede justificada por escrito. Mientras no haya respuesta del abogado, la regla de prudencia es: se le avisa a usted dentro de 24 horas, se avisa a la empresa afectada, y no sale ningún aviso a la autoridad ni a las personas sin su decisión y la del abogado. Todo se anota, también lo que se decide **no** avisar.
+
+Cumplimiento prepara los textos y lleva la cuenta de los plazos. **Ningún aviso a la autoridad o a las personas sale sin la revisión del abogado**, salvo el que el abogado haya aprobado de antemano como plantilla (Anexo C.1).
+
+### 6.0 Antes de avisar: ¿hay datos de personas afectados?
+
+Lo hace Cumplimiento con el Líder del incidente, dentro de las 24 horas de la sección 5, y se actualiza si cambia algo. El resultado se escribe en la ficha del Anexo C.7.
+
+| # | Pregunta | Cómo se responde | Si no se sabe |
+|---|---|---|---|
+| 1 | ¿Entre lo expuesto hay datos de personas? | Con la tabla C.3: nombres, correos, códigos de empleado, equipos asignados a una persona, IMEI, número de línea, IP, contactos de proveedor, textos libres de casos y motivos | Se asume que **sí** hasta probar lo contrario. IMEI, línea, IP y códigos se tratan como personales hasta que el abogado diga otra cosa (L-09) |
+| 2 | ¿De cuántas personas y de cuántas empresas? | Se cuentan por empresa, sin copiar los datos | Se da un rango y "se está calculando" |
+| 3 | ¿Qué tan grave puede ser para ellas? | Con los factores del Anexo C.6 | Se asume el nivel alto |
+| 4 | ¿Los datos estaban legibles, cifrados, enmascarados o anonimizados? | Según el tipo de incidente (C.3) y las llaves (D-048) | Se asume legibles |
+| 5 | ¿Quién los pudo ver y hay señal de que se usaron? | Registro de eventos de seguridad, auditoría de exportaciones, registro de uso de claves | Se asume que sí se usaron |
+| 6 | ¿Ya está contenido? | Resultado de la sección 4 | Se asume que no |
+
+**Resultado de la evaluación (uno de tres):**
+- **A. No hay datos de personas**, con la prueba escrita de por qué (por ejemplo, solo se vieron códigos de activos sin asignación). Se avisa al CEO y a la empresa por tratarse de datos de la empresa. No hay consulta sobre personas.
+- **B. Hay datos de personas y no se ve riesgo evidente para ellas** (por ejemplo, un código sin nombre, o datos que ya estaban enmascarados). Se consulta al abogado antes de cerrar.
+- **C. Hay datos de personas con riesgo posible.** Se consulta al abogado **de inmediato**.
+
+Esta clasificación solo **ordena la urgencia** de la consulta. **No** es el criterio legal para avisar. Ese criterio lo fija el abogado (L-16). **[ESCALAR AL CEO: confirmar con abogado]** si existe un umbral por debajo del cual no hay que avisar y cuál es.
+
+**Criterios para decidir avisar (a las personas y a la autoridad).** El equipo **no aplica un umbral propio**. Entrega al abogado un "paquete" (Anexo C.7) con los hechos y los factores de C.6, y le hace las preguntas de C.2. Mientras no responda:
+1. En cualquier G1 con resultado B o C, se consulta al abogado el mismo día.
+2. Si el abogado no responde o aún no está contratado, **usted decide con la información disponible** y queda escrito quién decidió, cuándo y por qué. **[ESCALAR AL CEO]** contratar al abogado con un canal de urgencia: es dinero y debe estar listo antes de cargar datos reales.
+3. Una decisión de **no avisar** también se registra, con su razón y su fecha. No se decide "no avisar" sin la firma del CEO y del abogado.
 
 ### 6.1 Al CEO (siempre en G1)
 
-- **Dentro de las 24 horas desde la confirmación** (plazo interno propuesto, D-059.3).
-- Lo hace la Jefatura de Proyecto, **en lenguaje claro**: qué pasó, qué empresas, qué datos, qué ya se contuvo, qué falta, qué se necesita de usted. Sin jerga y sin ocultar nada, aunque todavía falten datos ("esto sabemos, esto no sabemos").
-- Si es G2, se le avisa cuando se confirme o a más tardar a las 48 horas si sigue sin descartarse (añadido de esta versión, no está en D-059; lo confirma el Gerente de TI).
+- **Dentro de las 24 horas desde la confirmación** (plazo interno propuesto, D-059.3). Lo hace la Jefatura de Proyecto, **en lenguaje claro**, con la plantilla C.1.a: qué pasó, qué empresas, qué datos, qué ya se contuvo, qué falta, qué se necesita de usted. Sin jerga y sin ocultar nada, aunque falten datos ("esto sabemos, esto no sabemos").
+- Si es G2, se le avisa cuando se confirme o, a más tardar, a las 48 horas si sigue sin descartarse (añadido de esta versión, no está en D-059; lo confirma el Gerente de TI).
+- El aviso al CEO incluye siempre dos decisiones suyas pendientes: si se avisa a la autoridad y si se denuncia, ambas con el abogado.
 
-### 6.2 A la empresa afectada y a las personas afectadas
+### 6.2 A la empresa afectada, a las personas afectadas y a la autoridad
 
-- **Plazo propuesto: 72 horas desde la confirmación**, salvo que el abogado fije uno menor (D-059.4). **[ESCALAR AL CEO] (legal, L-16):** qué ley aplica según el país de cada empresa, **si hay que avisar a la autoridad de protección de datos**, a quién exactamente (empresa, personas, autoridad), con qué contenido mínimo y en cuánto tiempo. **Lo confirma un abogado; el equipo no da opinión legal.** Es condición para cargar datos reales.
-- **A quién avisa el equipo:** a la empresa afectada (a sus administradores y al contacto autorizado, RF-PLA-011; ver Anexo C.4 si no hay contacto confirmado). **Quién avisa a las personas** (los empleados cuyos datos se vieron) lo fija el contrato con cada empresa: lo normal es que la empresa, como responsable de sus empleados, lo decida con nuestro apoyo y el texto preparado. **[ESCALAR AL CEO] (legal, L-01):** quién es responsable de qué entre la empresa, la plataforma y el proveedor de alojamiento.
-- **Contenido del aviso** (plantilla en el Anexo C.1, que prepara Cumplimiento y aprueba el abogado): qué ocurrió, cuándo, qué datos, qué ya se hizo, qué puede hacer la persona para protegerse, a quién contactar. No incluye datos personales de otros ni detalles técnicos que ayuden a repetir el ataque.
-- **Si el incidente afecta solo a una empresa**, no se avisa a las demás; **si pudo afectar a varias**, se avisa a cada una solo de lo suyo (RF-ACC-011: una empresa nunca ve a qué otras pertenece alguien, y tampoco se le cuenta qué datos de otra se vieron).
-- **El reloj de los plazos** empieza en la **confirmación**, no en el cierre. Si el abogado dice que empieza al "tener conocimiento", se cuenta desde la sospecha seria (G2): por eso la regla de oro de la sección 1 y la hora anotada en el registro importan.
+- **A la empresa:** plazo propuesto **72 horas desde la confirmación**, o menos si el abogado lo fija (D-059.4). Conviene avisar **en cuanto se tenga lo mínimo**, sin esperar a las 72 horas, porque los plazos de la propia empresa podrían empezar a correr cuando nosotros le avisamos. **[ESCALAR AL CEO: confirmar con abogado]** (L-16, d).
+- **A las personas** (los empleados cuyos datos se vieron): lo normal es que las avise **la empresa**, como responsable de sus empleados, con nuestro texto (C.1.c). **[ESCALAR AL CEO: confirmar con abogado]** quién avisa a las personas, según el contrato y la ley de cada país (L-01, L-16).
+- **A la autoridad de protección de datos:** **[ESCALAR AL CEO: confirmar con abogado]** si hay que avisar, a cuál (según el país de cada empresa), con qué contenido, por qué medio y en cuánto tiempo (L-16, L-07). El equipo solo prepara el borrador de partida (C.1.e). Lo aprueban el CEO y el abogado.
+- **A quién avisa el equipo en la empresa:** administradores activos y contacto autorizado (RF-PLA-011); si no hay, ver C.4.
+- **Contenido del aviso:** qué ocurrió, cuándo, qué datos, qué ya se hizo, qué puede hacer la persona para protegerse, a quién contactar. No incluye datos personales de otros ni detalles técnicos que ayuden a repetir el ataque.
+- **Si el incidente afecta solo a una empresa**, no se avisa a las demás. **Si pudo afectar a varias**, se avisa a cada una solo de lo suyo (RF-ACC-011).
+- **El reloj de los plazos** empieza en la **confirmación**. Si el abogado dice que empieza al "tener conocimiento", se cuenta desde la sospecha seria (G2). Por eso importan la regla de oro de la sección 1 y la hora anotada. Cumplimiento anota las tres horas (sospecha, confirmación, conocimiento de la empresa) en la ficha C.7.
 
 ### 6.3 Al proveedor y a otros
 
-- Si la causa está en el proveedor de alojamiento, de base de datos o de correo, se les avisa de inmediato y se les pide su informe. **Los contratos con proveedores técnicos deben obligarlos a avisarnos de un incidente de su lado** (D-059.5, L-08). **[ESCALAR AL CEO] (legal)** revisar esas cláusulas antes de firmar.
-- Si hay delito evidente (robo, intrusión), el CEO decide con el abogado si se denuncia. **[ESCALAR AL CEO] (legal)**.
+- Si la causa está en el proveedor de alojamiento, de base de datos o de correo, se les avisa de inmediato (plantilla C.1.d) y se les pide su informe. **Los contratos con proveedores técnicos deben obligarlos a avisarnos de un incidente de su lado** (D-059.5, L-08). **[ESCALAR AL CEO: confirmar con abogado]** revisar esas cláusulas antes de firmar.
+- Si hay delito evidente (robo, intrusión), el CEO decide con el abogado si se denuncia. **[ESCALAR AL CEO: confirmar con abogado]**.
 
-### 6.4 Qué decide cada uno, para no improvisar
+### 6.4 Quién decide, quién redacta y quién valida con el abogado
 
-| Aviso | Quién lo redacta | Quién lo aprueba | Quién lo envía | Plazo |
+**Regla de canal:** la **Jefatura de Proyecto es el único canal con el abogado** (para que no haya instrucciones cruzadas). Cumplimiento le entrega el paquete (C.7) y la Jefatura **guarda la respuesta por escrito** (correo del abogado o nota firmada). Se puede actuar según una respuesta verbal solo si queda anotada hora y quien la recibió, y se pide confirmación escrita.
+
+| Decisión o aviso | Quién redacta o propone | Quién decide o aprueba | Quién envía | Plazo |
 |---|---|---|---|---|
-| Al CEO | Jefatura de Proyecto, con el Líder | Líder del incidente | Jefatura de Proyecto | 24 horas desde la confirmación (interno) |
-| A la empresa afectada | Cumplimiento (plantilla C.1) | Gerente de TI; abogado cuando exista el contrato | Jefatura de Proyecto | 72 horas desde la confirmación o menos si el abogado lo fija |
-| A las personas afectadas | La empresa, con el texto de Cumplimiento | La empresa y el abogado | La empresa | Lo fija el abogado (L-16) |
-| A la autoridad de protección de datos | Cumplimiento con el abogado | El CEO y el abogado | Quien el abogado indique | Lo fija el abogado (L-16) |
-| Al proveedor técnico | Líder del incidente | Gerente de TI | DevOps | De inmediato |
+| Gravedad (G1, G2, G3) | Líder del incidente | Líder; Gerente de TI si hay duda | n/a | Sección 1 |
+| ¿Hay datos de personas? (6.0) | Cumplimiento | Líder del incidente | n/a | 24 horas |
+| Aviso al CEO | Jefatura de Proyecto, con el Líder | Líder del incidente | Jefatura de Proyecto | 24 horas desde la confirmación (interno) |
+| Aviso a la empresa afectada | Cumplimiento (plantilla C.1.b) | Gerente de TI; el abogado cuando exista el contrato | Jefatura de Proyecto | 72 horas, o menos si el abogado lo fija |
+| Aviso a las personas afectadas | La empresa, con el texto de Cumplimiento (C.1.c) | La empresa y el abogado | La empresa | Lo fija el abogado (L-16) |
+| Aviso a la autoridad | Cumplimiento con el abogado (C.1.e) | **El CEO y el abogado** | Quien el abogado indique | Lo fija el abogado (L-16) |
+| Denuncia de un delito | Jefatura de Proyecto con el abogado | **El CEO y el abogado** | Quien indique el abogado | Sin plazo del equipo |
+| Aviso al proveedor técnico | Líder del incidente (C.1.d) | Gerente de TI | DevOps | De inmediato |
+| Cerrar el tema de avisos | Cumplimiento | Gerente de TI | n/a | Antes de cerrar el incidente (sección 7) |
 
-### 6.5 Marcas [ESCALAR AL CEO] de esta sección
+Reglas: quien tiene un conflicto de interés en el incidente no decide sobre ese punto (sección 2). Ningún aviso se envía por el sistema que pudo comprometerse.
+
+### 6.5 Marcas [ESCALAR AL CEO: confirmar con abogado] de esta sección
 
 | Marca | Pregunta legal | Estado |
 |---|---|---|
 | L-01 | Ley aplicable y papel de cada parte (empresa, plataforma, alojamiento) | Pendiente; sin esto no se sabe quién debe avisar |
-| L-02 | Si hay que registrar o declarar los bancos de datos de personas y de contactos, y si un incidente obliga a algo ante esa autoridad | Pendiente |
-| L-04 | Plazo para conservar el registro del incidente (propuesta 5 años), la evidencia y el registro de eventos de seguridad (12 meses) | Pendiente |
-| L-08 | Obligación contractual de los proveedores técnicos de avisar un incidente de su lado | Pendiente; antes de firmar los contratos |
-| L-16 | Obligación, destinatarios, contenido y plazos para avisar a la autoridad y a los afectados | Pendiente; condición de producción |
+| L-02 | Registro o declaración de los bancos de datos y si un incidente obliga a algo ante esa autoridad | Pendiente |
+| L-04 | Plazo para conservar el registro del incidente (propuesta 5 años), la evidencia y los eventos de seguridad (12 meses) | Pendiente |
+| L-07 | Autoridad competente si hay empresas en otros países o el proveedor está en otro país | Pendiente |
+| L-08 | Obligación contractual de los proveedores técnicos de avisar | Pendiente; antes de firmar los contratos |
+| L-09 | Qué cuenta como dato personal para la evaluación 6.0 (IP, IMEI, línea, código de empleado) | Pendiente; se tratan como personales |
+| L-16 | Obligación, destinatarios, contenido, umbral y plazos para avisar a la autoridad y a los afectados | Pendiente; condición de producción |
 
 ## 7. Resolver, restaurar y cerrar
 
@@ -145,7 +184,7 @@ Cada incidente tiene un archivo `docs/operaciones/incidentes/AAAA-MM-DD-nn.md` c
 
 - **Nunca lleva datos personales reales, claves, valores de secretos ni nombres de personas afectadas.** Usa referencias (`PRS-0042`, "empresa B", "usuario de plataforma 1"). Si hace falta guardar detalle sensible como evidencia, se guarda **fuera del repositorio**, en el lugar controlado que DevOps y Seguridad definan (D-028), y el registro solo dice dónde.
 - Contiene: línea de tiempo con horas exactas, decisiones y quién las tomó, acciones de contención, alcance, avisos hechos (a quién, cuándo, con qué texto), causa raíz, acciones correctivas con responsable y fecha, y riesgos actualizados.
-- Se conserva **5 años** como la auditoría (propuesta provisoria; **[ESCALAR AL CEO] (legal)** confirmar el plazo, L-04).
+- Se conserva **5 años** como la auditoría (propuesta provisoria; **[ESCALAR AL CEO: confirmar con abogado]** el plazo, L-04).
 - Los incidentes G3 pueden agruparse en una línea de una tabla mensual.
 
 ## 9. Lecciones aprendidas y ensayo
@@ -153,7 +192,7 @@ Cada incidente tiene un archivo `docs/operaciones/incidentes/AAAA-MM-DD-nn.md` c
 **Informe en 10 días** desde el cierre de la contención, **sin buscar culpables**: qué falló en el sistema, en el proceso o en la prueba; qué habría detectado antes; qué cambia. Debe terminar con: acciones con responsable y fecha, pruebas nuevas, y los riesgos de `docs/equipo/riesgos.md` actualizados. El Gerente de TI lo revisa; el CEO recibe un resumen de una página.
 
 **Ensayo:**
-- **Antes de cargar datos reales:** un simulacro completo con cronómetro, con datos inventados: se declara un incidente supuesto (por ejemplo, "una clave de API apareció en un repositorio público" y "un administrador de plataforma perdió su llave física"), se contiene en menos de 1 hora, se redacta el aviso al CEO y se comprueba que se puede restaurar sin revivir accesos revocados. Se registra el tiempo de cada paso. El simulacro incluye redactar el aviso a una empresa con la plantilla C.1 y atender un pedido de derechos durante el incidente (C.5).
+- **Antes de cargar datos reales:** un simulacro completo con cronómetro, con datos inventados: se declara un incidente supuesto (por ejemplo, "una clave de API apareció en un repositorio público" y "un administrador de plataforma perdió su llave física"), se contiene en menos de 1 hora, se redacta el aviso al CEO y se comprueba que se puede restaurar sin revivir accesos revocados. Se registra el tiempo de cada paso. El simulacro incluye completar la ficha de evaluación C.7, redactar el aviso a una empresa con la plantilla C.1.b y atender un pedido de derechos durante el incidente (C.5).
 - **Después, una vez al año** y cada vez que cambie algo grande (proveedor, persona de guardia, arquitectura).
 - Se revisa el procedimiento tras cada incidente real y tras cada ensayo.
 
@@ -165,11 +204,12 @@ Cada incidente tiene un archivo `docs/operaciones/incidentes/AAAA-MM-DD-nn.md` c
 | 2 | Acciones de contención probadas (Anexo A, pasos 1 a 6) | DevOps, Arquitecto |
 | 3 | Registro de eventos de seguridad, copia externa de la auditoría y su verificación semanal funcionando | Arquitecto, DevOps |
 | 4 | Plantilla de aviso preaprobada por el abogado | Cumplimiento, abogado |
-| 5 | Respuestas legales L-01, L-02, L-04, L-08, L-16 | CEO y abogado |
+| 5 | Respuestas legales L-01, L-02, L-04, L-08, L-16 (y L-03, L-07, L-14 de la prioridad A) | CEO y abogado |
 | 6 | Contratos con proveedores técnicos con la obligación de avisar | CEO, abogado |
 | 7 | Simulacro hecho y su informe | Seguridad, DevOps |
 | 8 | Carpeta `docs/operaciones/incidentes/` y plantilla | Seguridad |
-| 9 | Contacto autorizado confirmado en cada empresa (RF-PLA-011) y representante de cada empresa para avisos legales | Plataforma, CEO |
+| 9 | Contacto autorizado confirmado en cada empresa (RF-PLA-011) y representante de cada empresa para avisos legales (C.8) | Plataforma, CEO |
+| 10 | Abogado contratado con canal de urgencia (C.2) | CEO |
 
 ---
 
@@ -208,6 +248,7 @@ Líder del incidente: (rol) · Decide: (rol)
 ## Alcance: empresas · tipos de datos · cuántas personas · quién pudo verlos
 ## Evidencia guardada y dónde (fuera del repositorio si es sensible)
 ## Avisos: CEO (hora, quién) · empresas (hora, texto) · personas / autoridad (decisión legal y fecha)
+## Evaluación de datos personales y decisión de aviso: ver ficha del Anexo C.7
 ## Causa raíz
 ## Acciones correctivas (qué · responsable · fecha · prueba nueva)
 ## Riesgos actualizados (números de riesgos.md)
@@ -216,13 +257,27 @@ Líder del incidente: (rol) · Decide: (rol)
 
 ## Anexo C. Cumplimiento: avisos, preguntas al abogado, alcance y derechos
 
-Redactado por el Auditor de Cumplimiento. **Nada de este anexo es opinión legal**: son textos de partida y preguntas para que un abogado los confirme o corrija.
+Redactado por el Auditor de Cumplimiento. **Nada de este anexo es opinión legal**: son textos de partida y preguntas para que un abogado los confirme o corrija. Marcador: **[ESCALAR AL CEO: confirmar con abogado]** = depende de la ley, de a quién se avisa o del plazo.
 
-### C.1 Plantillas de aviso (lenguaje claro, tratamiento de "usted")
+### C.1 Plantillas de aviso (lenguaje claro, trato de "usted")
 
-Se completan los corchetes. Se omiten las frases que no apliquen. **No se envían sin el visto bueno del Gerente de TI y, cuando ya exista, del abogado.**
+Se completan los corchetes y se omiten las frases que no apliquen. No se envían sin el visto bueno del Gerente de TI y, cuando exista, del abogado.
 
-**Aviso a la empresa (a sus administradores y al contacto autorizado)**
+**C.1.a Aviso inicial al CEO** (lo envía la Jefatura de Proyecto)
+
+> Asunto: Incidente de seguridad [G1/G2]: [una frase simple]
+>
+> Hora de detección: [..]. Hora de confirmación: [..].
+>
+> **Qué pasó:** [..]. **Empresas afectadas:** [una, varias o "estamos calculándolo"]. **Datos:** [tipos]. **Personas:** [número o "estamos calculándolo"].
+>
+> **Qué ya hicimos:** [contención]. **Qué falta:** [..]. **Qué sabemos y qué no:** [..].
+>
+> **Decisiones suyas pendientes:** (1) si se avisa a la empresa afectada ahora; (2) si se consulta al abogado hoy; (3) si se avisa a la autoridad y a las personas, que se decide con el abogado.
+>
+> Próximo informe: [fecha y hora].
+
+**C.1.b Aviso a la empresa** (a sus administradores y al contacto autorizado)
 
 > Asunto: [Empresa]: aviso importante sobre la seguridad de sus datos en la plataforma
 >
@@ -240,7 +295,7 @@ Se completan los corchetes. Se omiten las frases que no apliquen. **No se envía
 >
 > **Contacto:** [nombre y medio de contacto de la Jefatura de Proyecto]. Le enviaremos un informe completo en un plazo de [10 días].
 
-**Texto para que la empresa avise a sus empleados afectados** (la empresa lo envía; la plataforma lo prepara)
+**C.1.c Texto para que la empresa avise a sus empleados afectados** (la empresa lo envía; la plataforma lo prepara)
 
 > Asunto: Aviso sobre sus datos en el sistema de equipos de TI de [Empresa]
 >
@@ -250,11 +305,19 @@ Se completan los corchetes. Se omiten las frases que no apliquen. **No se envía
 >
 > Si tiene preguntas o quiere ejercer sus derechos sobre sus datos, escriba a [contacto de la empresa].
 
-**Reglas del texto:** no se nombran otras personas afectadas ni otras empresas; no se dan detalles técnicos que ayuden a repetir el ataque; no se culpa a nadie; no se prometen resultados ("nunca volverá a pasar"); no se minimiza ("solo un error menor") si hubo datos expuestos.
+**C.1.d Aviso al proveedor técnico** (lo envía DevOps)
+
+> Asunto: Posible incidente de seguridad en su servicio [servicio]
+>
+> Detectamos [frase simple] el [fecha y hora]. Solicitamos: confirmación de si el hecho viene de su lado, registros de acceso entre [inicio] y [fin], medidas que tomaron y un contacto técnico de guardia. Esperamos su respuesta antes de [hora]. Conforme al contrato (cláusula de aviso de incidente), le pedimos informarnos de cualquier otro hallazgo.
+
+**C.1.e Borrador de partida para la autoridad.** **[ESCALAR AL CEO: confirmar con abogado]** El contenido, el formulario y el medio los fija la autoridad de cada país. Estructura de partida, que **no se envía** sin el abogado: quién notifica y su cargo; fecha y hora de detección y de confirmación; descripción del hecho; tipos de datos y número aproximado de personas y de registros; consecuencias posibles para las personas; medidas tomadas y propuestas; contacto. Se llena a partir de la ficha C.7.
+
+**Reglas del texto:** no se nombran otras personas afectadas ni otras empresas; no se dan detalles técnicos que ayuden a repetir el ataque; no se culpa a nadie; no se prometen resultados ("nunca volverá a pasar"); no se minimiza ("solo un error menor") si hubo datos expuestos; no se adivina: lo que no se sabe se dice.
 
 ### C.2 Preguntas para el abogado (con opciones)
 
-Cada pregunta trae las opciones que el equipo ve y, entre paréntesis, la que el equipo propone mientras no haya respuesta. **La respuesta es del abogado.**
+Cada pregunta trae las opciones que el equipo ve y, en la última columna, lo que el equipo hace mientras no haya respuesta. **La respuesta es del abogado.**
 
 | ID | Pregunta | Opciones | Mientras no haya respuesta |
 |---|---|---|---|
@@ -262,7 +325,8 @@ Cada pregunta trae las opciones que el equipo ve y, entre paréntesis, la que el
 | L-02 | ¿Hay que registrar o declarar los bancos de datos de usuarios, de personas y de contactos de proveedores, y un incidente obliga a algo adicional ante esa autoridad? | (a) Sí, y quién lo registra; (b) no hace falta; (c) depende del país | Se asume (a) como riesgo: se pide la respuesta antes de cargar datos reales |
 | L-04 | ¿Cuánto tiempo se conservan el registro del incidente, la evidencia y los eventos de seguridad? ¿Se puede borrar lo anterior a los plazos? | (a) 5 años el registro y la evidencia, 12 meses los eventos de seguridad; (b) más; (c) menos; (d) lo fija la ley de cada país | Se aplican los plazos de (a) y no se borra nada hasta la respuesta |
 | L-08 | ¿Qué cláusulas deben tener los contratos con alojamiento, base de datos, correo y respaldos para obligarlos a avisarnos de un incidente, y en cuánto tiempo? | (a) Aviso en 24 horas; (b) 48 horas; (c) 72 horas; (d) el plazo que fije el abogado | Se pide (a) en la negociación |
-| L-16 | ¿Hay que avisar a la autoridad y a las personas afectadas? ¿A quién, con qué contenido, desde cuándo se cuenta el plazo (sospecha o confirmación) y en cuánto tiempo? ¿Hay un umbral (por ejemplo, riesgo para las personas) bajo el cual no hace falta avisar? | (a) Siempre; (b) solo si hay riesgo para las personas; (c) depende del país; plazo propuesto del equipo: 72 horas desde la confirmación | Se prepara el aviso en 72 horas y se consulta al abogado de inmediato en cada G1 |
+| L-16 | Subpreguntas: (a) ¿Hay que avisar a la autoridad? ¿A cuál, si hay empresas en varios países? (b) ¿Hay que avisar a las personas, y quién lo hace? (c) ¿Desde cuándo corre el plazo: sospecha, confirmación o conocimiento? (d) ¿Los plazos de la empresa corren desde que la plataforma le avisa? (e) ¿Hay un umbral de riesgo bajo el cual no hace falta avisar? (f) ¿Qué contenido, formato y medio exige el aviso? (g) ¿Qué plazo tiene la plataforma, como encargada o proveedora, frente a la empresa? | (a) Siempre; (b) solo si hay riesgo para las personas; (c) depende del país | Se prepara el aviso a la empresa en 72 horas o menos, se consulta al abogado en cada G1 con resultado B o C, y el CEO decide con la información disponible |
+| Contratación | ¿El abogado puede atender una consulta urgente (el mismo día) en un incidente? ¿Con qué canal y horario? | Sí / No / con costo adicional | **[ESCALAR AL CEO]** es dinero: incluirlo al contratar al abogado, antes de cargar datos reales |
 
 Preguntas relacionadas que conviene responder en la misma consulta (están en la lista general de preguntas legales): L-07 (otro país y proveedores externos), L-03 (aviso de privacidad), L-06 (derechos y plazos), L-09 (qué es dato personal) y L-14 (conservación obligatoria de documentos de compra).
 
@@ -282,6 +346,8 @@ Guía para estimar el alcance en la primera hora. **Ante la duda, se asume el pe
 | Fuga en el proveedor de correo | Direcciones de correo y asuntos/códigos de los avisos (el contenido mínimo, D-061.4) | Registro de envíos (correo completo 90 días, luego enmascarado) |
 | Fuga del servicio de alojamiento o de base de datos | Todos | Lo que informe el proveedor (sección 6.3) |
 | Solicitud de derechos mal entregada (copia a otra persona) | Los datos de la Persona solicitante y su historial | Registro de solicitudes de derechos; la descarga única y su vencimiento |
+| Aviso o correo enviado a la persona o empresa equivocada | Lo que dice el aviso: tipo, código del activo o de la Persona y nombre de la empresa (contenido mínimo, RF-DAT-012) | Registro de envíos; si el correo llevaba un enlace de acceso (se revoca) |
+| Pérdida de un dispositivo o llave de una persona con acceso | Lo que esa membresía podía ver según su rol | Sesiones y acciones desde la hora de la pérdida; revocar sesiones (Anexo A, 1) |
 
 ### C.4 A quién se avisa en cada empresa y qué hacer si no hay contacto confirmado
 
@@ -298,7 +364,7 @@ Si hay problema para avisar:
 | Una persona que figura como contacto ya se fue de la empresa | Se avisa a la persona que la sustituyó o al representante; después se corrige el contacto (RF-PLA-011: cambio con espera de 24 horas) |
 | Nadie responde en 72 horas | Se insiste por otro medio y se deja constancia; el plazo de la empresa no detiene el del equipo hacia el CEO |
 
-**[ESCALAR AL CEO]** El CEO debe entregar, para cada empresa, **el nombre y el medio de contacto de un representante fuera de la plataforma** (insumo suyo, parecido a la lista de accesos de D-064 condición 9). Sin eso, el aviso por defecto no se puede cumplir cuando falla el correo.
+El insumo que debe entregar el CEO (un representante por empresa fuera de la plataforma) está en C.8.
 
 ### C.5 Pedidos de derechos de datos durante un incidente
 
@@ -310,9 +376,61 @@ Si hay problema para avisar:
 6. **Si la persona que pide es el único administrador** y el incidente afecta a su empresa, se aplica el suplente designado (D-071) y no el equipo de respuesta.
 7. Todo queda en el registro del incidente como una referencia (`PRS-0042`, tipo de pedido, fecha), sin el contenido.
 
+### C.6 Criterios para valorar el riesgo para las personas (insumo del abogado)
+
+Ordenan la urgencia. **No sustituyen** la decisión del abogado (L-16).
+
+| Factor | Preocupa menos | Preocupa más |
+|---|---|---|
+| Tipo de dato | Solo códigos internos sin nombre | Nombre con correo y equipo asignado; IMEI y línea; textos libres con datos personales |
+| Cantidad | Pocas personas | Muchas personas o una empresa entera |
+| Protección | Cifrado o enmascarado, y la llave no se perdió | Legible; o cifrado con la llave expuesta |
+| Quién lo vio | Un usuario de la misma empresa con otro permiso | Un tercero desconocido, otra empresa o un atacante externo |
+| Señal de uso | Ninguna en el registro | Descarga, exportación o copia; uso de una clave |
+| Duración | Minutos, cerrado | Días o sin saber desde cuándo |
+| Se puede aprovechar | No sirve para suplantar | Códigos, enlaces de acceso o claves que permiten entrar o suplantar |
+| Recuperación | Se recuperó o destruyó la copia | No se sabe dónde quedó |
+
+Regla: si no se puede responder un factor, se toma la columna de "preocupa más".
+
+### C.7 Registro y evidencia de cumplimiento
+
+Todo va en el archivo del incidente (Anexo B), sección "Avisos", **sin datos personales ni secretos** (referencias como `PRS-0042`, "empresa B"). La evidencia sensible se guarda fuera del repositorio (sección 8). Se conserva 5 años (propuesta; **[ESCALAR AL CEO: confirmar con abogado]**, L-04).
+
+**Qué guarda Cumplimiento:**
+1. La ficha de evaluación (abajo), con fecha y hora de cada versión.
+2. El paquete entregado al abogado (qué se envió, cuándo, por quién) y su respuesta escrita.
+3. Cada decisión de avisar o no avisar: quién decidió, cuándo y por qué.
+4. El texto exacto enviado y la prueba de envío (hora, medio, destinatario como rol, acuse si lo hubo).
+5. El reloj de plazos: horas de sospecha, confirmación y conocimiento, y la hora límite de cada aviso.
+6. Los pedidos de derechos recibidos durante el incidente (solo referencia, tipo y fecha).
+
+**Ficha de evaluación y decisión de aviso:**
+
+```
+Incidente: AAAA-MM-DD-nn · Versión de la ficha: n · Fecha y hora:
+Hora de sospecha: · de confirmación: · de conocimiento de la empresa:
+Resultado 6.0: A / B / C (con la razón)
+Datos de personas: tipos · número de personas por empresa · países de las empresas
+Factores C.6 (anotar la columna elegida de cada uno):
+Paquete al abogado: enviado (fecha, por quién) · respuesta (fecha, resumen, enlace a la prueba)
+Decisiones: empresa (sí/no, fecha, quién) · personas (sí/no, quién avisa) · autoridad (sí/no, cuál) · denuncia (sí/no)
+Quién decidió y por qué (CEO y abogado en autoridad y denuncia):
+Avisos enviados: a quién (rol) · hora · medio · texto adjunto (referencia)
+Plazos: límite de cada aviso y hora real de cumplimiento
+```
+
+### C.8 Lo que debe entregar el CEO para este procedimiento
+
+1. **[ESCALAR AL CEO]** El nombre y el medio de contacto de un **representante de cada empresa fuera de la plataforma** (para cuando falle el correo, C.4).
+2. **[ESCALAR AL CEO]** Contratar al abogado, con canal de urgencia (dinero), y obtener las respuestas legales de prioridad A (L-01, L-02, L-03, L-04, L-07, L-08, L-14 y L-16).
+3. **[ESCALAR AL CEO]** Nombrar a la persona de guardia y su suplente (sección 2).
+4. **[ESCALAR AL CEO: confirmar con abogado]** Quién firma o presenta, a nombre de la empresa, un aviso ante la autoridad.
+
 ## Historial de cambios
 
 | Fecha | Cambio | Quién |
 |---|---|---|
 | 2026-10-25 | Borrador 0.1 sobre D-059 | Especialista en Seguridad |
 | 2026-10-25 | Borrador 0.2: sección 6 completada (6.4 quién redacta, aprueba y envía; 6.5 marcas legales; L-02 aclarada: la pregunta de "quién es responsable" es L-01); anexo C completo (plantillas, preguntas al abogado, alcance por tipo de incidente, destinatarios por defecto, derechos durante un incidente); fila 9 en la lista previa a producción; el simulacro incluye aviso y derechos. No se cambió ningún plazo de D-059 | Auditor de Cumplimiento |
+| 2026-10-26 | Borrador 0.3: sección 6 con evaluación de datos personales (6.0), criterios para decidir avisar, tabla de quién decide y quién valida con el abogado (6.4); anexo C con plantillas al CEO, a la autoridad y al proveedor (C.1), subpreguntas de L-16 y condición de contratación (C.2), dos filas nuevas en C.3, criterios de riesgo para las personas (C.6), registro y ficha de cumplimiento (C.7) y lo que debe entregar el CEO (C.8); línea nueva en el anexo B; fila 10 en la sección 10; marcador legal unificado. No se cambió ningún plazo de D-059 | Auditor de Cumplimiento |

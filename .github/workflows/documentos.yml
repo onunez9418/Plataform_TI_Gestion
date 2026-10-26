@@ -1,0 +1,92 @@
+# Integración continua de DOCUMENTOS (todavía no hay código).
+# Responsable: DevOps. Plan: docs/operaciones/plan-entornos-y-costos.md, sección 3.
+#
+# Qué hace: en cada propuesta de cambio y en cada unión a la rama principal revisa
+#   1. citas de requisitos, criterios y pantallas sin código de módulo (o con un código inexistente);
+#   2. permisos citados que no están en docs/registro-permisos.md;
+#   3. referencias rotas entre documentos;
+#   4. secretos (claves, tokens, archivos de claves o de datos), también en los commits intermedios.
+# Solo usa bash, git y python3 (ya instalados en GitHub Actions). Sin dependencias ni servicios de pago.
+# La lógica vive en .github/scripts/revisar_documentos.py: se puede correr igual en cualquier computadora.
+#
+# El nombre del último trabajo ("Documentos en regla") es el que se marca como
+# "revisión obligatoria" en las ramas protegidas (plan 3.7). No cambiarlo sin cambiar esa regla.
+name: Documentos
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Sin permisos de escritura: esta revisión solo lee el repositorio.
+permissions:
+  contents: read
+
+concurrency:
+  group: documentos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  citas:
+    name: Citas con código de módulo
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/scripts/revisar_documentos.py citas
+
+  permisos:
+    name: Permisos en el registro
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/scripts/revisar_documentos.py permisos
+
+  referencias:
+    name: Referencias entre documentos
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/scripts/revisar_documentos.py referencias
+
+  secretos:
+    name: Búsqueda de secretos
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # historial completo: un secreto agregado y borrado después sigue en los commits
+      - name: Revisar archivos actuales y commits del cambio
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ -n "$BASE" ]; then
+            python3 .github/scripts/revisar_documentos.py secretos --historial "$BASE..$HEAD"
+          else
+            python3 .github/scripts/revisar_documentos.py secretos
+          fi
+
+  # Un solo nombre para exigir en las ramas protegidas: pasa solo si pasaron los cuatro.
+  documentos-en-regla:
+    name: Documentos en regla
+    runs-on: ubuntu-latest
+    needs: [citas, permisos, referencias, secretos]
+    if: always()
+    timeout-minutes: 2
+    steps:
+      - name: Comprobar el resultado de las cuatro revisiones
+        env:
+          RESULTADOS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Resultados: $RESULTADOS"
+          for r in $RESULTADOS; do
+            if [ "$r" != "success" ]; then
+              echo "::error::Alguna revisión de documentos falló o no corrió. Este cambio no se puede unir."
+              exit 1
+            fi
+          done

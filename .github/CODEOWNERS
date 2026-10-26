@@ -1,0 +1,24 @@
+# Quién debe revisar cada parte del repositorio (GitHub lo pide automáticamente).
+# Responsable: DevOps. Se hace obligatorio con la regla "Require review from Code Owners"
+# (plan docs/operaciones/plan-entornos-y-costos.md, sección 3.7).
+#
+# IMPORTANTE: GitHub solo entiende cuentas reales. Hoy la única cuenta conocida es la del
+# dueño del repositorio. Cuando existan la segunda persona y los equipos de GitHub
+# (D-064 condición 9), se agregan aquí en el mismo cambio, por ejemplo:
+#   /docs/registro-permisos.md  @onunez9418 @segunda-persona
+# Nunca se escriben nombres inventados: una cuenta que no existe deja la regla sin efecto.
+
+# Por defecto, todo.
+*                                   @onunez9418
+
+# Lo que decide qué hace la plataforma (el contrato con el CEO) y quién puede hacer qué.
+/docs/documento-funcional.md        @onunez9418
+/docs/registro-permisos.md          @onunez9418
+/docs/equipo/decisiones.md          @onunez9418
+
+# Operación, despliegue, secretos y la propia revisión automática (quien cambia la
+# revisión no puede ser quien se beneficia de que pase: exige otra persona).
+/.github/                           @onunez9418
+/docs/operaciones/                  @onunez9418
+/.env.example                       @onunez9418
+/.gitignore                         @onunez9418
