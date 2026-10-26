@@ -1,6 +1,6 @@
 # Criterios de aceptación por etapa
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-26 · **Checkpoint:** commit `0c9b54b` (más cambios sin guardar en: docs/documento-funcional.md) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-076), `docs/registro-permisos.md` v1.1 y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-26 · **Checkpoint:** commit `5ed0dcb` (árbol de documentos fuente limpio al generar) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-076), `docs/registro-permisos.md` v1.1 y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
 
 **Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del 2026-10-25 (424 criterios sobre el documento v0.3 sin partir). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).
 
@@ -12,9 +12,9 @@
 - **Bloqueante:** sí = si falla, la etapa no se aprueba. "No (bloquea su módulo)" = es de Fase 2 o 3 y bloquea la entrega de ese módulo, no la v1 (D-056).
 - **Etapa heredada:** el criterio solo cita reglas RN y no hay fila RF que lo cite; tomó la etapa más frecuente de su módulo. Debe confirmarlo el escuadrón.
 
-## Resumen (checkpoint 0c9b54b, 2026-10-26)
+## Resumen (checkpoint 5ed0dcb, 2026-10-26)
 
-**451 criterios:** 116 del núcleo (identificadores con letra, que son 94 números, CA-001 a CA-094) y 335 de los 17 módulos. El 2026-10-25 eran 424 (93 y 331). Qué cambió: el Analista agregó CA-083 a CA-093 y partió CA-016, la auditoría inalterable (hoy CA-040a y CA-040b), CA-052a y b, CA-054, CA-060, CA-064 y CA-065; los escuadrones partieron CA-NOT-05 y CA-NOT-07 y agregaron un criterio a gestión de cambios y otro a gestión de problemas.
+**451 criterios:** 116 del núcleo (identificadores con letra, que son 94 números, CA-001 a CA-094) y 335 de los 17 módulos. El 2026-10-25 eran 424 (93 y 331). Qué cambió: el Analista agregó CA-083 a CA-094 (CA-094 es el código del activo, D-079) y partió CA-016, la auditoría inalterable (hoy CA-040a y CA-040b), CA-052a y b, CA-054, CA-060, CA-064 y CA-065; los escuadrones partieron CA-NOT-05 y CA-NOT-07 y agregaron un criterio a gestión de cambios y otro a gestión de problemas.
 
 | Se ejecuta en | Criterios que empiezan aquí | Criterios que se completan aquí (empezaron antes) |
 |---|---|---|
@@ -46,7 +46,7 @@ Comparación con la versión anterior (2026-10-25). **Ojo, no es la misma medida
 | Fase 2 | 136 | 134 | 139 |
 | Fase 3 | 149 | 151 | 151 |
 
-Qué explica la diferencia: el Analista y los escuadrones agregaron 26 criterios (CA-083 a CA-093 y las particiones), y la tabla 22.1 hace empezar en la Etapa 1 varios criterios que antes se contaban completos más tarde (por ejemplo CA-001, CA-011a y b, CA-041, CA-045, CA-048, CA-069, CA-071 y CA-074). Por eso la columna "empiezan" de las Etapas 4 y 5 baja: parte de lo que allí se completa ya empezó antes.
+Qué explica la diferencia: el Analista y los escuadrones agregaron 26 criterios (CA-083 a CA-094 y las particiones), y la tabla 22.1 hace empezar en la Etapa 1 varios criterios que antes se contaban completos más tarde (por ejemplo CA-001, CA-011a y b, CA-041, CA-045, CA-048, CA-069, CA-071 y CA-074). Por eso la columna "empiezan" de las Etapas 4 y 5 baja: parte de lo que allí se completa ya empezó antes.
 
 Por la etapa más temprana de su requisito:
 
@@ -228,6 +228,7 @@ CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-AYU-26, CA-CAM-07, CA-CMD-15,
 | CA-PRS-14 | Etapa 2 | Dice "cesada hace más de 2 años", pero la anonimización manual por derechos no exige plazo (RN-PRS-020); solo la automática lo exige. Separar el caso manual del automático. |
 | CA-PRS-16 | Etapa 2 | Cita RN-PRS-004 (referencia correlativa) cuando prueba el alcance "propio" sin Persona vinculada (regla del registro de permisos). |
 | CA-082 | Etapa 1 | La cabecera dice "(RF-ACC-018, RF-INV-008 en CA-082b)": parece cubrir RF-INV-008 (Etapa 4) en una etapa 1. Dejar solo RF-ACC-018. |
+| CA-094 | Etapa 4 | Prueba el código ACTV con una recepción (Etapa 5) y con el correo de un aviso de garantía (Fase 2), que no existen en la Etapa 4. En la Etapa 4 se prueba con ingreso manual (RF-INV-025) e importación; la recepción y el correo se completan en la Etapa 5 y en Fase 2. Propuesta: partir en 094a (Etapa 4: contador por empresa, concurrencia, búsqueda, prefijo reservado, no se reutiliza) y 094b (Etapa 5: recepción; Fase 2: correo de garantía). |
 | CA-024 | Etapa 4 | Cubre RF-OC-028 (Etapa 7) y corre en Etapa 4: o se saca RF-OC-028 de su cabecera o se parte. |
 
 ---

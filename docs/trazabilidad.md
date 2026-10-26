@@ -1,6 +1,6 @@
 # Trazabilidad: requisito, etapa, criterio de aceptación
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-26 · **Checkpoint:** commit `0c9b54b` (más cambios sin guardar en: docs/documento-funcional.md) · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21) y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py`. Reemplaza la versión del 2026-10-25.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-26 · **Checkpoint:** commit `5ed0dcb` · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21) y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py`. Reemplaza la versión del 2026-10-25.
 
 **Cómo se hizo.** Un script lee las tablas de requisitos (columnas Cuándo y CA), la tabla de reglas RN con su columna CA, la sección 22 con su tabla 22.1 "Se ejecuta en" y los criterios de los módulos. Después QA leyó el texto de los requisitos y criterios dudosos. Estados:
 
@@ -15,7 +15,7 @@ El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): 
 
 ## Resumen de huecos
 
-| Medida (al 2026-10-26, commit 0c9b54b) | Resultado |
+| Medida (al 2026-10-26, commit 5ed0dcb) | Resultado |
 |---|---|
 | Filas RF y RNF del núcleo (con las retiradas) | 316 |
 | Retiradas (RF-USR-004, RF-IMP-012, RF-OS-007) | 3 |
@@ -29,9 +29,9 @@ El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): 
 | Reglas RN con un criterio en su columna CA | 23 de 23 |
 | Reglas RN que el propio criterio también cita (cita de vuelta) | 10 de 23 |
 | Reglas RN que ninguna cabecera de criterio nombra (solo están en la columna CA de la regla) | 13 de 23 |
-| Reglas RN cuyo criterio no las prueba del todo | 3 (RN-009, RN-018, RN-021) |
+| Reglas RN cuyo criterio no las prueba del todo | 4 (RN-009, RN-018, RN-021, RN-023) |
 
-El 2026-10-25 (informe de ronda 3 y archivo anterior): 18 de 22 reglas sin criterio que las cite y 17 requisitos que su criterio no probaba. Hoy las 22 reglas tienen un criterio en su columna CA (y 10 también son nombradas por la cabecera del criterio); de los 17 anteriores quedan abiertos los de RF-IMP-008, 009 y 015, RF-OC-048 y 049, RF-ENT-002 y 016 (todos con fecha límite en D-076.3), RF-EMP-004 y RF-PLA-013 (nuevo). Los demás (RF-ACC-006, 014, 020, RF-PLA-009 a 012, RF-CAT-026, RF-ROL-015) quedaron probados con los criterios nuevos y ampliados.
+El 2026-10-25 (informe de ronda 3 y archivo anterior): 18 de 22 reglas sin criterio que las cite y 17 requisitos que su criterio no probaba. Hoy las 23 reglas tienen un criterio en su columna CA (y 10 también son nombradas por la cabecera del criterio); de los 17 anteriores quedan abiertos los de RF-IMP-008, 009 y 015, RF-OC-048 y 049, RF-ENT-002 y 016 (todos con fecha límite en D-076.3), RF-EMP-004 y RF-PLA-013 (nuevo). Los demás (RF-ACC-006, 014, 020, RF-PLA-009 a 012, RF-CAT-026, RF-ROL-015) quedaron probados con los criterios nuevos y ampliados.
 
 ## Qué exige D-076, hoy, y quién lo cierra
 
@@ -41,7 +41,7 @@ Regla (D-076): un requisito necesita un criterio que lo pruebe **antes de que se
 
 | Requisito o regla | Criterio | Estado (lectura de QA) | Responsable |
 |---|---|---|---|
-| RN (22 reglas) | Columna CA en la tabla de reglas | HECHO. Las 22 reglas citan al menos un criterio que existe. 10 de 22 además aparecen citadas por el propio criterio; las otras 13 solo en la columna (basta: D-076.1a dice "citando"). Sugerencia: RN-010 debería nombrar también CA-079b (autoentrega sin excepción). | Analista (hecho); Auditor Técnico verifica con su guion |
+| RN (todas las reglas de la sección 21) | Columna CA en la tabla de reglas | HECHO. Todas las reglas (23) citan al menos un criterio que existe. 10 de 23 además aparecen citadas por el propio criterio; las otras 13 solo en la columna (basta: D-076.1a dice "citando"). Sugerencia: RN-010 debería nombrar también CA-079b (autoentrega sin excepción). | Analista (hecho); Auditor Técnico verifica con su guion |
 | RF-ACC-006 | CA-068 | HECHO. Prueba los 15 minutos (a los 15:01 se rechaza), el uso único y el código de 8 caracteres en otro dispositivo. | Analista (hecho) |
 | RF-ACC-014 | CA-069 | HECHO. Prueba aviso a los 25, vencimiento a los 30 minutos sin actividad y a las 12 horas. | Analista (hecho) |
 | RF-ACC-020 | CA-009 | HECHO. Prueba el aviso de recomendar al menos dos administradores. | Analista (hecho) |
@@ -52,7 +52,7 @@ Regla (D-076): un requisito necesita un criterio que lo pruebe **antes de que se
 | RF-ROL-015 | CA-077 | HECHO en el texto (prueba de dependencias). CA-077 sigue ambiguo en fechas (ver ambiguos). | Analista; QA propone fechas |
 | CA-070 (segundo administrador y resumen mensual) | CA-070 | HECHO en el texto. Corre en Etapa 5 según 22.1. | Analista (hecho) |
 | RN-008 | CA-085 | HECHO. Recorre las acciones con motivo, incluye el tope de 500 caracteres. | Analista (hecho) |
-| RF-PLA-013 (lectura de soporte) | ninguno todavía | NUEVO HUECO. D-073 y D-039.10 piden una prueba con la autorización vencida o ajena; ningún criterio la contiene. No estaba en la lista de D-076.1b. | Analista redacta; QA propone texto CA-015g |
+| RF-PLA-013 (lectura de soporte) | ninguno todavía | NUEVO HUECO. D-073 y D-039.10 piden una prueba con la autorización vencida o ajena; ningún criterio la contiene. No estaba en la lista de D-076.1b. | Analista redacta; QA propone texto del criterio nuevo «015g» |
 | CA-006 y CA-077 | CA-006, CA-077 | AMBIGUOS en Etapa 1. D-076.3 los difiere a las Etapas 4 a 6, pero corren en Etapa 1: hay que cerrarlos antes de la Etapa 1. | Analista; QA propone texto |
 
 **Antes de la Etapa 2**
@@ -116,7 +116,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 | RN-020 | CA-088 (E2) | CA-088 | prueba de verdad |
 | RN-021 | CA-063 (E4), CA-072 (E5) | - | parcial: CA-063 y CA-072 prueban el costo del activo en la v1 (el de la recepción). El libro único y `fuente_costo` son de Fase 3 (CA-PRE). |
 | RN-022 | CA-018 (E3) | - | prueba de verdad |
-| RN-023 | CA-094 (E4) | CA-094 | prueba de verdad |
+| RN-023 | CA-094 (E4) | CA-094 | parcial: CA-094 prueba el código y su contador; la cláusula "el correo de un aviso de garantía trae el código y no la serie" necesita los avisos de garantía (Fase 2). En la v1 los tres correos (invitación, acceso, aprobación) no llevan activo: la regla solo se prueba por completo al activar GAR. |
 
 **Reglas RN de los módulos**
 
@@ -148,7 +148,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 |---|---|---|---|---|---|
 | RF-IMP-017 | E0 | CA-038 | Es una condición de proceso (el Excel real llega con los nombres reemplazados), no un comportamiento del sistema; CA-038 no la prueba. Se verifica con un registro documental, no con una prueba automática. | Etapa 0 (verificación documental) | Analista; QA verifica el archivo recibido |
 | RF-EMP-004 | E1 | CA-071 | Prueba que el calendario "lo usan los módulos que lo declaran", pero no da datos: ningún horario, feriado ni plazo con resultado esperado (por ejemplo "caso creado el viernes 17:00 con feriado el lunes vence el martes a tal hora"). En la v1 ningún módulo usa el calendario, así que solo se puede probar su configuración y su consulta. | Antes de la Etapa 1 (D-076.1b) | Analista; QA propone texto |
-| RF-PLA-013 | E1 | CA-015b | CA-015b prueba que la sesión es de solo lectura, de 24 horas, con banner y auditoría. No prueba lo que pide D-073 y RF-PLA-013: con la autorización vencida, de otra empresa o ya usada por otra persona, la lectura devuelve cero filas y cualquier escritura falla; que no ve columnas secretas ni la cola de derechos de datos; y que el rol de plataforma por sí solo no lee negocio. Es la "lectura de soporte" nueva. | Antes de la Etapa 1 (el requisito es de la Etapa 1; no estaba en la lista de D-076.1b) | Analista; QA propone texto (CA-015g) |
+| RF-PLA-013 | E1 | CA-015b | CA-015b prueba que la sesión es de solo lectura, de 24 horas, con banner y auditoría. No prueba lo que pide D-073 y RF-PLA-013: con la autorización vencida, de otra empresa o ya usada por otra persona, la lectura devuelve cero filas y cualquier escritura falla; que no ve columnas secretas ni la cola de derechos de datos; y que el rol de plataforma por sí solo no lee negocio. Es la "lectura de soporte" nueva. | Antes de la Etapa 1 (el requisito es de la Etapa 1; no estaba en la lista de D-076.1b) | Analista; QA propone texto (propuesta: criterio nuevo «015g») |
 | RF-PRV-003 | E2 | CA-PRV-04 | CA-PRV-04 necesita un contrato Vigente (PRV-B, Fase 2). No prueba lo de la Etapa 2: desactivar y reactivar un proveedor con motivo y auditoría. | Antes de la Etapa 2 | Analista (escuadrón A) |
 | RF-ENT-002 | E4 | CA-ENT-01 | CA-ENT-01 no prueba el borrador automático (salir y volver sin perder lo capturado; no reserva equipos; el borrador sin efecto se puede borrar). | Antes de la Etapa 4 (D-076.3) | Analista (escuadrón D) |
 | RF-ENT-016 | E4 | CA-ENT-01 | CA-ENT-01 no prueba renovar un préstamo (nueva fecha con motivo y auditoría). | Antes de la Etapa 4 | Analista (escuadrón D) |
@@ -181,6 +181,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 
 | Regla | Observación |
 |---|---|
+| RN-023 | CA-094 prueba el código y su contador; la cláusula "el correo de un aviso de garantía trae el código y no la serie" necesita los avisos de garantía (Fase 2). En la v1 los tres correos (invitación, acceso, aprobación) no llevan activo: la regla solo se prueba por completo al activar GAR. |
 | RN-009 | CA-072 prueba el decimal exacto y CA-031 la orden en otra moneda; nada prueba "nunca hay un total general entre monedas" (por ejemplo un tablero o una lista con totales en USD y PEN). |
 | RN-018 | CA-077 prueba procesos con dos empresas; no prueba que "Vencido" se calcula al leer (mover el reloj sin correr el proceso). Ese caso está en CA-GAR-04 y en CA-PRV-09 / CA-DOM-02 (Fase 2). Con la partición de CA-GAR-04 en Etapa 4, la v1 lo prueba. |
 | RN-021 | CA-063 y CA-072 prueban el costo del activo en la v1 (el de la recepción). El libro único y `fuente_costo` son de Fase 3 (CA-PRE). |

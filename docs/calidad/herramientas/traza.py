@@ -90,12 +90,12 @@ def generar(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio):
         ['Reglas RN cuyo criterio no las prueba del todo', f'{len(J.RN_PARCIAL)} ({", ".join(sorted(J.RN_PARCIAL))})'],
     ]
     o.append(tabla(['Medida (al ' + HOY + ', commit ' + commit + ')', 'Resultado'], filas) + '\n')
-    o.append(f"El 2026-10-25 (informe de ronda 3 y archivo anterior): 18 de 22 reglas sin criterio que las cite y 17 requisitos que su criterio no probaba. Hoy las 22 reglas tienen un criterio en su columna CA (y {rn_vuelta} también son nombradas por la cabecera del criterio); de los 17 anteriores quedan abiertos los de RF-IMP-008, 009 y 015, RF-OC-048 y 049, RF-ENT-002 y 016 (todos con fecha límite en D-076.3), RF-EMP-004 y RF-PLA-013 (nuevo). Los demás (RF-ACC-006, 014, 020, RF-PLA-009 a 012, RF-CAT-026, RF-ROL-015) quedaron probados con los criterios nuevos y ampliados.\n")
+    o.append(f"El 2026-10-25 (informe de ronda 3 y archivo anterior): 18 de 22 reglas sin criterio que las cite y 17 requisitos que su criterio no probaba. Hoy las {len(nrns)} reglas tienen un criterio en su columna CA (y {rn_vuelta} también son nombradas por la cabecera del criterio); de los 17 anteriores quedan abiertos los de RF-IMP-008, 009 y 015, RF-OC-048 y 049, RF-ENT-002 y 016 (todos con fecha límite en D-076.3), RF-EMP-004 y RF-PLA-013 (nuevo). Los demás (RF-ACC-006, 014, 020, RF-PLA-009 a 012, RF-CAT-026, RF-ROL-015) quedaron probados con los criterios nuevos y ampliados.\n")
     # --- D-076
     o.append('## Qué exige D-076, hoy, y quién lo cierra\n')
     o.append("Regla (D-076): un requisito necesita un criterio que lo pruebe **antes de que se abra la etapa en que se programa**. Responsables: el **Analista** redacta o cita el criterio; **QA** revisa y propone el texto cuando el Analista lo prefiera; el **Auditor Técnico** verifica con su guion que ningún requisito de la etapa que se abre quede sin criterio; el **Gerente de TI** no abre una etapa con esa verificación pendiente. Estado según la lectura de QA al " + HOY + ".\n")
     for et, titulo in [(1, 'Antes de la Etapa 1 (puerta de la Etapa 0 y v1.0)'), (2, 'Antes de la Etapa 2'), (4, 'Antes de la Etapa 4'), (5, 'Antes de la Etapa 5'), (7, 'Antes de la Etapa 7')]:
-        filas = [[x[1], x[2], x[3].format(vuelta=rn_vuelta, solo=len(nrns) - rn_vuelta), x[4]] for x in J.D076 if x[0] == et]
+        filas = [[x[1], x[2], x[3].format(vuelta=rn_vuelta, solo=len(nrns) - rn_vuelta, total=len(nrns)), x[4]] for x in J.D076 if x[0] == et]
         if filas:
             o.append(f'**{titulo}**\n')
             o.append(tabla(['Requisito o regla', 'Criterio', 'Estado (lectura de QA)', 'Responsable'], filas) + '\n')

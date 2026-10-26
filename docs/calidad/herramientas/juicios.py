@@ -37,6 +37,7 @@ CITA_MAL = {
 
 # Reglas RN con criterio citado en su columna que no las prueba del todo.
 RN_PARCIAL = {
+    'RN-023': 'CA-094 prueba el código y su contador; la cláusula "el correo de un aviso de garantía trae el código y no la serie" necesita los avisos de garantía (Fase 2). En la v1 los tres correos (invitación, acceso, aprobación) no llevan activo: la regla solo se prueba por completo al activar GAR.',
     'RN-009': 'CA-072 prueba el decimal exacto y CA-031 la orden en otra moneda; nada prueba "nunca hay un total general entre monedas" (por ejemplo un tablero o una lista con totales en USD y PEN).',
     'RN-018': 'CA-077 prueba procesos con dos empresas; no prueba que "Vencido" se calcula al leer (mover el reloj sin correr el proceso). Ese caso está en CA-GAR-04 y en CA-PRV-09 / CA-DOM-02 (Fase 2). Con la partición de CA-GAR-04 en Etapa 4, la v1 lo prueba.',
     'RN-021': 'CA-063 y CA-072 prueban el costo del activo en la v1 (el de la recepción). El libro único y `fuente_costo` son de Fase 3 (CA-PRE).',
@@ -53,6 +54,7 @@ AMBIGUOS = [
     ('CA-PRS-14', 'Etapa 2', 'Dice "cesada hace más de 2 años", pero la anonimización manual por derechos no exige plazo (RN-PRS-020); solo la automática lo exige. Separar el caso manual del automático.'),
     ('CA-PRS-16', 'Etapa 2', 'Cita RN-PRS-004 (referencia correlativa) cuando prueba el alcance "propio" sin Persona vinculada (regla del registro de permisos).'),
     ('CA-082', 'Etapa 1', 'La cabecera dice "(RF-ACC-018, RF-INV-008 en CA-082b)": parece cubrir RF-INV-008 (Etapa 4) en una etapa 1. Dejar solo RF-ACC-018.'),
+    ('CA-094', 'Etapa 4', 'Prueba el código ACTV con una recepción (Etapa 5) y con el correo de un aviso de garantía (Fase 2), que no existen en la Etapa 4. En la Etapa 4 se prueba con ingreso manual (RF-INV-025) e importación; la recepción y el correo se completan en la Etapa 5 y en Fase 2. Propuesta: partir en 094a (Etapa 4: contador por empresa, concurrencia, búsqueda, prefijo reservado, no se reutiliza) y 094b (Etapa 5: recepción; Fase 2: correo de garantía).'),
     ('CA-024', 'Etapa 4', 'Cubre RF-OC-028 (Etapa 7) y corre en Etapa 4: o se saca RF-OC-028 de su cabecera o se parte.'),
 ]
 
@@ -77,7 +79,7 @@ PROPUESTA_PARTIR = {
 
 # D-076: lo que se exige antes de cada etapa. (etapa, requisito/regla, criterio, qué dice la lectura de QA hoy, responsable)
 D076 = [
-    (1, 'RN (22 reglas)', 'Columna CA en la tabla de reglas', 'HECHO. Las 22 reglas citan al menos un criterio que existe. {vuelta} de 22 además aparecen citadas por el propio criterio; las otras {solo} solo en la columna (basta: D-076.1a dice "citando"). Sugerencia: RN-010 debería nombrar también CA-079b (autoentrega sin excepción).', 'Analista (hecho); Auditor Técnico verifica con su guion'),
+    (1, 'RN (todas las reglas de la sección 21)', 'Columna CA en la tabla de reglas', 'HECHO. Todas las reglas ({total}) citan al menos un criterio que existe. {vuelta} de {total} además aparecen citadas por el propio criterio; las otras {solo} solo en la columna (basta: D-076.1a dice "citando"). Sugerencia: RN-010 debería nombrar también CA-079b (autoentrega sin excepción).', 'Analista (hecho); Auditor Técnico verifica con su guion'),
     (1, 'RF-ACC-006', 'CA-068', 'HECHO. Prueba los 15 minutos (a los 15:01 se rechaza), el uso único y el código de 8 caracteres en otro dispositivo.', 'Analista (hecho)'),
     (1, 'RF-ACC-014', 'CA-069', 'HECHO. Prueba aviso a los 25, vencimiento a los 30 minutos sin actividad y a las 12 horas.', 'Analista (hecho)'),
     (1, 'RF-ACC-020', 'CA-009', 'HECHO. Prueba el aviso de recomendar al menos dos administradores.', 'Analista (hecho)'),
