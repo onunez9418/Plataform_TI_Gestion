@@ -147,7 +147,7 @@ Notas
 | RN-PRE-034 | Todo trabajo de PRE es idempotente, recuperable (procesa los días pendientes en orden), corre empresa por empresa con la empresa fijada, salta empresas suspendidas, calcula "hoy" con la zona de la empresa y deja registro de cada corrida (D-038.4). Sus escrituras llevan autor "sistema" con la regla que lo ordenó. | Fase 3 (A y B) | CA-PRE-17 |
 | RN-PRE-035 | Lo que protege la integridad (escribir el costo de una recepción) corre síncrono en la misma transacción; avisos y alertas corren asíncronos por la cola (D-038.5). | Fase 3 (A) | CA-PRE-03 |
 | RN-PRE-036 | Si el módulo se apaga en una empresa, se oculta sin borrar datos y la API responde "no encontrado" (D-037 fila 12). | Fase 3 (A) | CA-PRE-11 |
-| RN-PRE-037 | Descripciones y motivos son texto libre: el validador común rechaza claves y patrones peligrosos y avisa al escribir que no se pongan datos personales. La auditoría no guarda su valor (D-030.6). | Fase 3 (A) | CA-PRE-24 |
+| RN-PRE-037 | Descripciones y motivos son texto libre: el validador común rechaza claves y patrones peligrosos y avisa al escribir que no se pongan datos personales. El **motivo** de una acción se guarda por valor en la entrada de auditoría (RF-AUD-003) y se declara **texto libre no anonimizable de forma garantizada** (D-030.6, 18.1 del documento funcional). Una **descripción** editada no se guarda por valor en la auditoría: solo queda "el campo cambió" (RF-AUD-014). | Fase 3 (A) | CA-PRE-24 |
 | RN-PRE-038 | Las cifras se exportan solo por la puerta única del núcleo (`datos.exportar`). Los importes negativos de los registros contrarios siguen siendo números en el archivo. | Fase 3 (A) | CA-PRE-25 |
 | RN-PRE-039 | Prefijos: `PPT-` (presupuesto), `MPR-` (modificación) y `GMA-` (gasto manual), con mínimo 6 dígitos, correlativo por empresa, sin reutilizarse (D-007.8, D-049). **[SUPUESTO]** pedido al registro de prefijos. | Fase 3 (A) | CA-PRE-01 |
 | RN-PRE-040 | Si la Persona responsable de un centro de costo cesa, se crea un pendiente informativo en su ficha; el cese no se bloquea (D-061.7). | Fase 3 (A) | CA-PRE-26 |
@@ -291,7 +291,7 @@ Cada criterio cita el requisito que cubre.
 - **CA-PRE-21 Copia.** *Cubre RF-PRE-002.* Dado un presupuesto 2026, cuando se copia con +5 %, entonces el borrador 2027 trae los montos ajustados y ninguna aprobación del original.
 - **CA-PRE-22 Proyección.** *Cubre RF-PRE-017 a 019.* Dado un contrato que vence en 3 meses y un incremento esperado de 10 %, entonces la proyección muestra el importe con el incremento, por moneda; los activos de licencias o servicios no aparecen en el plan de reposición.
 - **CA-PRE-23 Corrección de costo.** *Cubre RN-PRE-032.* Dado un activo del Excel sin costo, cuando alguien con `activos.corregir_costo` lo completa con motivo, entonces se deprecia desde el siguiente mes abierto y los meses cerrados no cambian.
-- **CA-PRE-24 Texto libre.** *Cubre RN-PRE-037.* Dado un motivo con un bloque de clave privada, cuando se guarda, entonces se rechaza; el valor de un motivo válido no aparece en la auditoría.
+- **CA-PRE-24 Texto libre.** *Cubre RN-PRE-037.* Dado un motivo con un bloque de clave privada, cuando se guarda, entonces se rechaza; un motivo válido queda en la entrada de auditoría de la acción (RF-AUD-003) y la edición de una descripción deja solo "el campo cambió", sin su valor.
 - **CA-PRE-25 Exportación.** *Cubre RN-PRE-038.* Dado un Administrador que exporta el libro con registros contrarios, entonces los importes negativos siguen siendo números, una descripción que empieza con `=` se escribe como texto y la auditoría registra filas y columnas sensibles sin el contenido.
 - **CA-PRE-26 Cese del responsable.** *Cubre RN-PRE-040.* Dado una Persona responsable de un centro, cuando se la cesa, entonces el cese se completa, aparece el pendiente y las alertas van a Jefatura TI.
 
@@ -375,7 +375,7 @@ Cada criterio cita el requisito que cubre.
 | Procesos en segundo plano con idempotencia, recuperación, "hoy" por empresa y autor "sistema"; recepción síncrona y alertas asíncronas (RN-PRE-034, 035) | D-038.4, D-038.5, D-041.4; H-ARQ-01, H-SEG-02, H-QA |
 | Cierre mensual en segundo plano con avance (RNF-PRE-004); prueba de carga nocturna con el volumen de RNF-010 | D-038.7, S-19, D-057 |
 | Módulo apagado responde "no encontrado" (RN-PRE-036) | D-037 fila 12 |
-| Texto libre con validador común y sin valor en la auditoría (RN-PRE-037); datos personales declarados | D-030.6, D-063.2, D-061.3 |
+| Texto libre con validador común; motivo guardado en la auditoría y declarado no anonimizable, descripción sin valor en la auditoría (RN-PRE-037); datos personales declarados | D-030.6, D-063.2, D-061.3 |
 | Exportación solo por la puerta única; importes negativos siguen numéricos (RN-PRE-038) | D-061.1; H-SEG-13 |
 | Pendiente de la persona al cesar un responsable de centro (RN-PRE-040) | D-061.7, D-038.6 |
 | No se cambia la moneda base con presupuestos aprobados (RN-PRE-033) | D-044.8 |

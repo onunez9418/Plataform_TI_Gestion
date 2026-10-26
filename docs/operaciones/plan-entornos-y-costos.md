@@ -114,7 +114,7 @@ QA no puede esperar 15 minutos reales a que venza un enlace de ingreso, ni un d�
 - En desarrollo, en la revisión automática y en pruebas, las pruebas pueden **fijar y adelantar la fecha y la hora** de la plataforma y **disparar a mano** los procesos diarios (variables `TEST_CLOCK_ENABLED` y `TEST_CLOCK_FIXED_AT`, nombres propuestos).
 - **La aplicación y el trabajador deben ver el mismo reloj** (si cada uno tuviera el suyo, los avisos saldrían en horas distintas). El Arquitecto decide cómo se comparte (por ejemplo, un valor guardado en la base de pruebas que ambos leen).
 - **En producción no existe.** La plataforma se niega a arrancar si encuentra esas variables, y la ruta del disparador manual responde "no encontrado". Una prueba automática lo comprueba en cada cambio, y la lista de verificación de cada publicación incluye "reloj de prueba apagado".
-- El disparador manual se protege con `CRON_SECRET` y no está expuesto fuera de la red de pruebas.
+- El disparador manual se protege con `CRON_SECRET` y no está expuesto fuera de la red de pruebas. El contrato completo (qué dispara, cómo, cómo se prueba que no existe en producción) está en 1.10.
 
 ### 1.5 Correo de captura legible por QA
 
@@ -137,19 +137,73 @@ En desarrollo y pruebas **el correo nunca sale a internet**: la plataforma lo en
 Para probar que un corte a mitad de una recepción o importación deja todo o nada, y que si el trabajador muere no se pierde nada:
 - **En la revisión automática:** un intermediario de red entre la aplicación y la base que se puede cortar a voluntad (una herramienta como Toxiproxy) y la orden de detener y reiniciar el trabajador.
 - **En pruebas:** una función de prueba, **solo en ese entorno**, que corta una conexión (`pg_terminate_backend`) y un comando para detener y reiniciar el trabajador. Ambos requieren el secreto de pruebas y no existen en producción.
+- El catálogo de fallos que se inyectan, dónde corre cada uno y el resultado que debe verse está en 1.12.
 
 ### 1.8 Cuándo se necesita cada cosa
 
 | Hito | Qué debe estar listo |
 |---|---|
-| Etapa 0 (ahora) | Este plan; `.gitignore` y `.env.example` (ya están en el repositorio); la estimación de costos |
+| Etapa 0 (ahora) | Este plan; `.gitignore` y `.env.example` (ya están en el repositorio); la **revisión automática de documentos**, `CODEOWNERS` y la plantilla de propuestas (ya están en `.github/`); la estimación de costos con las páginas donde verificar cada precio (9.5) |
 | Antes del prototipo técnico (3-4 días, D-055) | Comparación de proveedores con precios verificados, **comprobación de compatibilidad del día 0** y cuentas de prueba (sección 10) |
-| Antes de la Etapa 1 (D-064) | Proveedores elegidos y aprobados por el CEO; cuentas a nombre de la empresa; repositorio con ramas protegidas y revisión de secretos; revisión automática completa; entorno de pruebas con reloj fijable y bandeja de captura; ensayo de reversa y de restauración con cronómetro |
+| Antes de la Etapa 1 (D-064) | Proveedores elegidos y aprobados por el CEO; cuentas a nombre de la empresa; repositorio con ramas protegidas (3.8) y revisión de secretos; revisión automática completa con entornos desechables de base propia (1.9); entorno de pruebas con reloj fijable, disparador manual (1.10) y bandeja de captura; ensayo de reversa y de restauración con cronómetro (5.2); **condiciones 1 y 2 de Seguridad sobre las llaves** (6.5) |
 | Etapa 1 | Trabajador y cola en pruebas; correo real de prueba con dominio verificado y matriz de entrega; vigilancia de errores en pruebas; auditoría con su rol de base separado |
-| Etapa 2 | Registro de anonimizaciones en su almacén aparte (RF-DAT-016: existe desde la Etapa 2) |
-| Etapa 4 en adelante | **Prueba de carga nocturna** (100.000 activos, 500.000 movimientos; D-056, S-19) |
-| Antes de cualquier etapa con uso real | Respaldos diarios, restauración probada con RS-49, copia externa de auditoría funcionando, plan de reversa por publicación, procedimiento de incidente y manuales (RNF-014 a RNF-016, D-059) |
-| Etapa 7 | Producción con datos reales: aprobación del CEO (RNF-018) |
+| Etapa 2 | Registro de anonimizaciones en su almacén aparte (RF-DAT-016: existe desde la Etapa 2); **condición 8 de Seguridad** (prueba automática de que no hay secretos en claro, 6.5) |
+| Etapa 4 en adelante | **Prueba de carga nocturna** (100.000 activos y 500.000 movimientos; D-056, S-19; procedimiento en 3.9) |
+| Antes de cualquier etapa con uso real | Respaldos diarios, restauración probada con RS-49 (5.2), copia externa de auditoría funcionando y su ensayo de manipulación (5.3), plan de reversa por publicación, procedimiento de incidente y manuales (RNF-014 a RNF-016, D-059); **condiciones 3, 4, 5 y 7 de Seguridad** sobre las llaves y llaves físicas de los administradores de plataforma (6.5 y 6.6) |
+| Etapa 7 | Producción con datos reales: aprobación del CEO (RNF-018); **condición 6 de Seguridad** (evaluar el servicio de llaves gestionado, 6.5) |
+
+
+### 1.9 Entorno desechable con base propia: cómo se construye
+
+Responde a QA (punto 12) y reemplaza la base de pruebas compartida de la versión 1.
+
+1. **Un proyecto de contenedores por cambio.** El robot de GitHub levanta con un solo comando, en su propia máquina virtual, cinco piezas: PostgreSQL de la **misma versión mayor que producción** (fijada en un solo archivo), el agrupador de conexiones en modo transacción, la aplicación, el trabajador y la bandeja de captura de correo; el intermediario de fallos (1.12) se suma solo cuando la suite lo pide. El nombre del proyecto lleva el número del cambio y de la corrida, de modo que dos revisiones a la vez **no pueden** compartir nada.
+2. **La base nace vacía y muere con el trabajo.** Un guion repetible crea los cinco roles (1.2), aplica las migraciones y carga el perfil `pequeño` del generador (1.11). Al terminar se destruye con sus datos (`down -v`). No hay nada que limpiar a mano.
+3. **No puede apuntar a otra base.** El robot **no recibe** las claves de pruebas ni de producción (esas viven en los "entornos" de GitHub, solo para la publicación desde la rama principal). Además, un paso inicial **falla** si alguna dirección de base de datos no es del propio grupo de contenedores. Una prueba escribe una marca con el identificador de la corrida y comprueba que es la única que existe.
+4. **Tiempo y tamaño.** Meta: menos de 10 minutos por cambio (3.2); tope duro del trabajo, 20 minutos. Si se pasa, se corrige la suite, no se sube el tope.
+5. **Perfil de volumen solo de noche** y, para las cifras de referencia, en la base permanente de pruebas (1.3); el robot detecta empeoramientos (3.9).
+6. **Vistas previas en internet por cambio: no hay.** Si algún día se quieren, tendrían su propia base y es un gasto que va al CEO.
+7. **Costo:** los minutos de ejecución del robot. Si el plan de GitHub los limita, es el único gasto que esto agrega; precio y límites a verificar en la página de 9.5.
+
+### 1.10 Disparador manual del trabajador (RNF-020, CA-077)
+
+QA no espera a las 8:00 ni un día entero. El Arquitecto fija los nombres definitivos; esto es lo que DevOps necesita para que funcione y para que **no exista en producción**.
+
+| Aspecto | Contrato propuesto |
+|---|---|
+| Qué hace | Ejecuta **ahora** un trabajo programado concreto (avisos de vencimiento, cierres, tableros precalculados, reconciliación de anonimizaciones, vaciado de la cola de correo) **para una empresa y una fecha lógica**, sin esperar al reloj |
+| Quién lo ejecuta | **El trabajador**, no la aplicación web: así se prueba el camino real (bloqueo, reintento, registro de corrida, empresa fijada en la transacción) |
+| Cómo se invoca | (a) un comando del trabajador con trabajo, empresa y fecha; (b) una ruta interna `POST` de la aplicación que encola ese mismo trabajo. Ambas exigen `CRON_SECRET` y la ruta solo se publica en la red de pruebas |
+| Con el reloj | Receta estándar de QA: fijar o adelantar el reloj (1.4) y disparar. Para probar "el trabajador estuvo caído tres días": adelantar tres días con el trabajador detenido, arrancarlo y comprobar que procesa **los tres días en orden** (D-038.4, RNF-019) |
+| Resultado | Un registro de corrida por empresa y día (fecha lógica, resultado, duración, cantidad de avisos) que QA lee |
+| Repetirlo | Es **idempotente**: dispararlo dos veces para el mismo trabajo, empresa y día no duplica avisos ni correos (clave única, D-038.3) |
+| En producción | **No existe:** (1) la ruta responde "no encontrado" y el comando se niega si `ENTORNO=produccion`; (2) la ruta no se publica en el enrutador de producción; (3) la plataforma se niega a arrancar en producción con el reloj de prueba o los disparadores activados |
+| Pruebas que lo demuestran (en cada cambio) | disparo sin secreto, rechazado; disparo con secreto, ejecuta y deja registro; dos disparos, un solo aviso; arrancar en modo producción con el disparador activado, se niega; ruta en modo producción, "no encontrado". La publicación a producción repite las dos últimas como prueba de humo (4.1, paso 9) |
+
+### 1.11 Generador de datos de dos empresas con volumen (contrato para el Ingeniero de Datos)
+
+Lo escribe Datos (contenido de QA en 1.6); DevOps lo conecta a los cuatro entornos y a la revisión automática.
+
+- **Un solo programa, tres perfiles**, siempre con **semilla fija** (mismos datos cada vez): `pequeño` (cada cambio: empresas A "Norte" y B "Sur" con el juego de QA 6.3 y C vacía), `completo` (agrega órdenes en cada estado, actas, el Excel válido de 5.000 filas y los 12 sucios) y `volumen` (agrega **100.000 activos y 500.000 movimientos**).
+- **Volumen en las dos empresas.** RNF-010 habla de 100.000 activos **por empresa**, y probar el aislamiento con las dos grandes es más exigente. El perfil `volumen` carga esa cifra en A **y** en B (500.000 movimientos cada una), con una opción para cargarlo solo en A si el tiempo o el costo lo exigen. *Supuesto a confirmar con QA; no es pregunta al CEO.*
+- **Carga masiva** (no fila por fila) y meta inicial de tiempo para `volumen`: 20 minutos; se mide la primera vez y se ajusta. El resultado de `volumen` **no se guarda como archivo** (pesa y es dato): se regenera, y en la base permanente se guarda una plantilla interna de la propia base para reiniciar rápido antes de cada demo.
+- **Verificador de lo cargado** (el propio generador lo corre al terminar y falla si algo no cuadra): cantidades por empresa y tabla; códigos, series, correos e identificaciones fiscales idénticos en A y B a propósito; un solo canario; ningún correo fuera del dominio `.test`; un usuario por cada plantilla de rol en cada empresa; el usuario con roles distintos en A y B.
+- **Se niega a correr contra producción** (comprueba `ENTORNO` y una marca de "base de pruebas" que solo existe fuera de producción).
+
+### 1.12 Catálogo de fallos inyectados (QA, punto 14)
+
+| # | Fallo | Dónde corre | Qué debe verse |
+|---|---|---|---|
+| F1 | Cortar la conexión a la base a mitad de **recibir 100 series** | Cada cambio (intermediario de red) y pruebas | Todo o nada: no queda recepción a medias ni activos huérfanos; al reintentar, se completa una sola vez |
+| F2 | Cortar a mitad de una **importación** de 5.000 filas | Cada cambio y pruebas | Ninguna fila a medias fuera de lo que las reglas permiten; el reintento no duplica |
+| F3 | **Matar al trabajador** (sin aviso) con un trabajo en curso | Cada cambio y pruebas | El trabajo vuelve a la cola al vencer su bloqueo; se ejecuta una sola vez; no hay correo duplicado |
+| F4 | **Reiniciar PostgreSQL** | Pruebas (de noche) | La aplicación y el trabajador se reconectan solos; los errores son limpios, sin fugas de detalle |
+| F5 | **Lentitud** de 2 segundos en cada consulta | De noche | No hay doble ejecución por tiempo de espera; los topes y reintentos se comportan |
+| F6 | El **proveedor de correo** rechaza o tarda | Cada cambio (bandeja de captura configurada para fallar) | Reintentos con espera, trabajo "muerto" tras el tope, alarma por antigüedad (2.3), el acceso no se pierde en silencio |
+| F7 | **Almacén de objetos no disponible** (copia de auditoría, respaldo) | Pruebas | Falta el latido y suena la alarma; al volver, se pone al día sin huecos |
+| F8 | **Trabajador caído tres días** y luego reinicio | Cada cambio (con el disparador, 1.10) | Procesa los días pendientes en orden sin perder avisos |
+
+Las herramientas de fallo **no se despliegan en producción**: el intermediario no forma parte de su grupo de servicios, y la función de corte y el comando de detención solo los crea el guion "solo pruebas". Una prueba de humo de cada publicación comprueba que no existen.
 
 ---
 
@@ -259,14 +313,90 @@ Un programa consulta la base recién migrada y verifica, **como `app_empresa`**:
 |---|---|---|---|
 | 1 | `.gitignore` para Node, Next.js, entornos, secretos, copias de base de datos y hojas de cálculo | **Hecho:** `/.gitignore` creado y probado (ignora `.env`, claves, volcados y `*.xlsx`/`*.csv` salvo las carpetas de prueba inventada) | Archivo en el repositorio |
 | 2 | `.env.example` con los nombres de variables y sin valores reales | **Hecho:** `/.env.example` (todos los valores son "cambiar-esto"); se actualiza cada vez que el código agrega una variable | Archivo en el repositorio; la revisión automática falla si el código usa una variable que no está en él |
-| 3 | **Ramas protegidas** en GitHub: sin escritura directa en la rama principal, revisión automática obligatoria, aprobación de otra persona, sin forzar empujes | **Pendiente:** requiere acceso de administración de GitHub (riesgo #5) | Captura de la configuración |
-| 4 | **Revisión de secretos**: (a) herramienta de búsqueda de secretos en cada cambio, (b) la protección de GitHub que bloquea el empuje si lleva un secreto (verificar disponibilidad en el plan), (c) opcional: revisión local antes de cada commit | **Pendiente:** se configura al crear la revisión automática | Prueba: un secreto falso en una rama de ensayo debe bloquearse |
+| 3 | **Ramas protegidas** en GitHub: sin escritura directa en la rama principal, revisión automática obligatoria, aprobación de otra persona, sin forzar empujes | **Pasos exactos escritos (3.8); falta que los haga quien administra el repositorio.** Desde esta sesión no puedo cambiar esa configuración | Captura de la configuración y prueba de empuje directo rechazado (3.8, paso G) |
+| 4 | **Revisión de secretos**: (a) herramienta de búsqueda de secretos en cada cambio, (b) la protección de GitHub que bloquea el empuje si lleva un secreto (verificar disponibilidad en el plan), (c) opcional: revisión local antes de cada commit | **(a) Hecha para documentos** (3.7, también revisa los commits intermedios); se amplía al código en la Etapa 1. **(b) Pendiente** de activar y de verificar si el plan de GitHub la incluye en repositorio privado (3.8, pasos C y 0). (c) Opcional | Prueba: un secreto falso en una rama de ensayo debe bloquearse (3.8, paso G) |
 | 5 | Archivo de bloqueo de dependencias versionado | Se cumple al crear el proyecto | Revisión de instalación limpia (paso 1) |
 | 6 | Cuentas con segunda verificación y mínimo privilegio en GitHub | **Pendiente:** depende de pedido B | Lista de accesos (D-064 condición 9) |
 
 ### 3.6 Después de aprobar
 
 Al unirse a la rama principal: se vuelve a ejecutar todo, se publica **automáticamente en pruebas** (con migraciones aplicadas en pruebas y datos reiniciados si corresponde), corren pruebas de humo, y queda listo para decidir si se publica en producción (sección 4). **La publicación en producción nunca es automática.**
+
+
+### 3.7 Revisión automática de documentos (ya creada)
+
+Mientras no haya código, lo que se cambia son documentos, y los documentos también se rompen: una cita a un requisito que no existe, un permiso inventado, un enlace roto o una clave pegada por descuido. Archivos: `.github/workflows/documentos.yml` (el robot), `.github/scripts/revisar_documentos.py` (la lógica, solo Python 3 estándar, sin instalar nada ni pagar nada), `.github/CODEOWNERS` y `.github/pull_request_template.md`.
+
+| Revisión | Falla el cambio si... | Fuente de la regla |
+|---|---|---|
+| **Citas** | se cita `RF-012`, `PAN-05` o `SUP-03` **sin código de módulo**; el código de módulo no es uno de los 33 válidos; un `RF`, `RN`, `RNF`, `CA`, `PAN`, `SUP` o `RS` citado **no está definido** en los documentos vigentes; o un `RN-nnn`, `RNF-nnn` o `CA-nnn` sin código no existe en el documento funcional | `documento-funcional.md` 26.2 |
+| **Permisos** | se cita un `PS-nn` que no existe o está retirado; un `PS-nn` va junto a un nombre técnico distinto del del registro; o se escribe "permiso `x.y`" con un nombre que no está en el registro | `registro-permisos.md` |
+| **Referencias** | un documento nombra otro archivo o enlace de `docs/`, `.github/` o `.claude/` que no existe (las carpetas futuras solo dan aviso, no fallan) | Todo el repositorio, salvo los registros históricos |
+| **Secretos** | aparecen claves privadas, claves de AWS, tokens de GitHub, Slack, Stripe, Google, OpenAI o Anthropic, SendGrid, Resend, tokens JWT, direcciones con contraseña, asignaciones de `secret`, `token` o `password` con valor largo; hay un `.env`, un archivo de claves (`.pem`, `.key`), un volcado de base o una hoja de cálculo fuera de las carpetas de prueba inventada. **También revisa cada commit del cambio**: un secreto agregado y borrado después sigue en el historial | CLAUDE.md regla 4, `.gitignore` |
+
+- **Qué no revisa:** el sentido de lo escrito (que una cita sea la correcta, no solo que exista), nombres reales de personas ni el canario (eso se suma cuando haya datos y código), y los registros históricos (`docs/revision-cruzada/`, mesas y oleadas), que conservan citas viejas a propósito. Líneas que hablan de algo retirado o renombrado ("retirado", "pasa a", "no existe"...) se saltan en citas y permisos.
+- **Cuando se agrega un módulo nuevo,** su código se agrega a la lista cerrada del script **en el mismo cambio**; si no, la revisión falla con "código de módulo desconocido". Es a propósito: obliga a registrar el prefijo en 26.2.
+- **Un falso positivo de secretos** se marca con `revisado-sin-secreto` en esa línea y quien revisa el cambio lo acepta por escrito.
+- **Se corre igual en cualquier computadora:** `python3 .github/scripts/revisar_documentos.py todo`. El 2026-10-26 pasó en verde sobre el repositorio actual y falló, como debe, ante defectos plantados en una copia (cita sin módulo, permiso inventado, enlace roto, clave falsa en un commit intermedio, `.env` y CSV).
+- **El nombre que se exige** en las ramas protegidas es el del último trabajo, **"Documentos en regla"**, que solo pasa si pasan los cuatro.
+- **Pendiente:** acciones de terceros (`actions/checkout`) con versión etiquetada; al llegar el código se fijan por huella de versión y se agrega Dependabot (Etapa 1).
+
+### 3.8 Pasos exactos para activar las ramas protegidas y la revisión obligatoria
+
+**Quién:** una persona con rol **Admin** del repositorio (hoy, la dueña de la cuenta `onunez9418`). Desde esta sesión no puedo hacerlo. **Tiempo:** unos 15 minutos. **Los nombres de los botones de GitHub están en inglés**; van entre comillas.
+
+**Paso 0. Comprobar que el plan de GitHub lo permite.**
+1. Entre a `https://github.com/onunez9418/Plataform_TI_Gestion` e inicie sesión.
+2. Arriba a la derecha de la página del repositorio, clic en **"Settings"** (la rueda dentada).
+3. En el menú de la izquierda, clic en **"Rules"** y luego en **"Rulesets"**. Clic en **"New ruleset"** y en **"New branch ruleset"**.
+4. Si aparece un aviso que dice que esa función requiere un plan de pago para repositorios privados ("Upgrade to GitHub Pro" o "Team"), **deténgase**: es un gasto y va al CEO (pedido F). Precio en la página oficial de 9.5. **No haga público el repositorio** para evitar el pago: contiene el trabajo interno del proyecto. Si no hay aviso, siga.
+
+**Paso A. Hacer que la revisión exista.** (GitHub solo deja elegir una revisión como obligatoria después de que corrió al menos una vez.)
+1. Clic en la pestaña **"Actions"** del repositorio. Si pide habilitar los flujos, clic en **"I understand my workflows, go ahead and enable them"**.
+2. En la lista de la izquierda clic en **"Documentos"**, luego **"Run workflow"** (a la derecha), rama `main` o la de trabajo, y **"Run workflow"** otra vez. Espere a que todo quede con la marca verde. (Si "Run workflow" no aparece, abra cualquier propuesta de cambio: corre sola.)
+
+**Paso B. Crear la regla de la rama principal.**
+1. Vuelva a **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
+2. **"Ruleset Name":** escriba `proteger-main`. **"Enforcement status":** elija **"Active"**.
+3. **"Bypass list":** déjela **vacía** (nadie se salta la regla; tampoco quien administra).
+4. **"Target branches":** clic en **"Add target"** → **"Include default branch"**.
+5. En **"Branch rules"** marque:
+   - **"Restrict deletions"** y **"Block force pushes"**.
+   - **"Require a pull request before merging"** y dentro de ella: **"Required approvals"** = **1**; marque **"Dismiss stale pull request approvals when new commits are pushed"**, **"Require review from Code Owners"**, **"Require approval of the most recent reviewable push"** y **"Require conversation resolution before merging"**.
+   - **"Require status checks to pass"**; marque **"Require branches to be up to date before merging"**; clic en **"Add checks"**, escriba **`Documentos en regla`** y elíjalo (origen "GitHub Actions"). Si no aparece, el paso A no terminó o pasaron más de siete días sin correr: vuelva a correrlo.
+6. Clic en el botón verde **"Create"**.
+
+**Paso B-bis. Si hoy solo hay una persona con acceso** (el autor de un cambio **no puede aprobar el suyo**, así que con "1 aprobación" nadie podría unir nada): en el punto 5 ponga **"Required approvals" = 0** y **desmarque "Require review from Code Owners"**; el resto queda igual. Anote la fecha en `docs/equipo/riesgos.md` (riesgo #14: concentración de accesos). **Antes de la Etapa 1** (D-064 condición 9) agregue a la segunda persona (**Settings → Collaborators → "Add people"**, rol **"Write"**, con segunda verificación) y vuelva a poner **1** y la revisión de dueños del código. Cuando existan más cuentas, se agregan a `.github/CODEOWNERS` en un cambio normal.
+
+**Paso C. Bloqueo de secretos de GitHub.**
+1. **Settings → "Code security"** (en algunas pantallas, "Code security and analysis").
+2. En **"Secret scanning"** clic en **"Enable"**; luego en **"Push protection"** clic en **"Enable"**. Si estas opciones aparecen en gris o con un candado de pago, es el mismo gasto del paso 0 u otro adicional: verifíquelo en 9.5 y consulte al CEO. Mientras tanto la búsqueda de 3.7 sigue siendo la barrera.
+3. En **"Dependabot alerts"** clic en **"Enable"** (avisos de dependencias vulnerables; sirve desde que haya código).
+
+**Paso D. Limitar al robot.** **Settings → Actions → General**, bajar a **"Workflow permissions"**: elija **"Read repository contents and packages permissions"** y **desmarque** "Allow GitHub Actions to create and approve pull requests". Clic en **"Save"**.
+
+**Paso E. Segunda verificación de las cuentas.** Cada persona con acceso: foto de perfil → **"Settings"** → **"Password and authentication"** → **"Enable two-factor authentication"**. Anote la lista de accesos (nombre y rol, sin claves) para D-064 condición 9.
+
+**Paso F. Prueba de que funciona** (es la evidencia de D-064 condición 10; no use una clave real):
+1. Cree una rama `prueba/ramas-protegidas`, agregue en un archivo de texto la línea `clave = ` seguida de una clave inventada del tipo `AKIA` + 16 letras y números al azar, y envíe el cambio.
+2. Abra la propuesta de cambio hacia `main`. **Resultado esperado:** "Documentos en regla" en rojo y el botón **"Merge pull request"** bloqueado. (Si GitHub rechaza el empuje antes, por la protección del paso C, también vale.)
+3. Intente un empuje directo a `main`: **debe ser rechazado** ("protected branch").
+4. **Cierre sin unir** la propuesta (**"Close pull request"**) y **borre la rama** (**"Delete branch"**).
+5. Guarde dos capturas (la regla en **Settings → Rules** y la propuesta bloqueada) fuera del repositorio o en `docs/operaciones/` si no muestran datos personales, con la fecha.
+6. Avise a la Jefatura de Proyecto para marcar la condición 10 de D-064 como cumplida en `docs/equipo/puerta-etapa-0.md`.
+
+**Si algo falla:** el nombre de la revisión que se exige debe ser exactamente `Documentos en regla`; un cambio de nombre en el archivo `.github/workflows/documentos.yml` obliga a repetir el paso B. Ayuda oficial: `https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets`.
+
+### 3.9 Carga nocturna desde la Etapa 4 (D-056, S-19, RNF-011)
+
+Nace en la Etapa 4 como `.github/workflows/nocturna.yml` (hoy **no existe**; no se crea antes porque no hay nada que medir).
+
+1. **Cuándo:** una vez cada noche y a pedido, nunca en la revisión de cada cambio (tarda demasiado).
+2. **Qué hace:** levanta el entorno desechable (1.9) con el perfil `volumen` (1.11) y mide, con base real: (a) el 95 % de listas y búsquedas por debajo de **2 segundos**; (b) confirmar una recepción de **100 series** por debajo de **5 segundos** (RNF-011); (c) concurrencia con **50 conexiones**; (d) migraciones con volumen; (e) importación de 5.000 filas.
+3. **Qué guarda:** un informe de cifras por corrida (artefacto de 90 días) y una línea de tendencia con las últimas 7 corridas.
+4. **Qué cuenta como fallo:** pasar el umbral de RNF-011, **o** empeorar más de **20 %** frente a la mediana de las últimas 7 corridas (cifra propuesta; QA la ajusta). Un fallo avisa por correo a quien recibe las alertas (D-059.1) y a QA; **no bloquea** cambios nuevos, pero la Jefatura no cierra la etapa con fallos abiertos.
+5. **Lo que no certifica:** la máquina del robot es más pequeña que producción. Las cifras que se usan para **certificar** RNF-011 se toman en la base permanente de pruebas (1.3), la más parecida a producción; el robot detecta empeoramientos.
+6. **Costo:** minutos del robot. Si el perfil `volumen` no cabe en una máquina estándar de GitHub, la alternativa es correrlo en el entorno de pruebas permanente; una máquina más grande del robot es un gasto que va al CEO. Precio a verificar (9.5).
 
 ---
 
