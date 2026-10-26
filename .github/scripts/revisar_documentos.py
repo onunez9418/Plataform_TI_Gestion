@@ -6,7 +6,7 @@ Se ejecuta igual en la computadora de cualquiera y en GitHub Actions:
 
     python3 .github/scripts/revisar_documentos.py citas
     python3 .github/scripts/revisar_documentos.py permisos
-    python3 .github/scripts/revisar_documentos.py referencias
+    python3 .github/scripts/revisar_documentos.py referencias   # lee .github/referencias-futuras.txt
     python3 .github/scripts/revisar_documentos.py secretos [--historial BASE..HEAD]
     python3 .github/scripts/revisar_documentos.py todo
 
@@ -201,7 +201,22 @@ def revisar_permisos():
 
 
 # ------------------------------------------------------------- referencias
+def cargar_futuras():
+    ruta = ".github/referencias-futuras.txt"
+    futuras = set()
+    if os.path.isfile(ruta):
+        for n, texto in lineas(ruta):
+            limpio = texto.split("#")[0].strip()
+            if not limpio:
+                continue
+            if os.path.exists(limpio):
+                error(ruta, n, "%s ya existe: bórrelo de esta lista" % limpio)
+            futuras.add(limpio)
+    return futuras
+
+
 def revisar_referencias():
+    futuras = cargar_futuras()
     ruta = re.compile(r"(?<![A-Za-z0-9_./\-])((?:docs|\.github|\.claude)/[A-Za-z0-9_./\-áéíóúñ]*[A-Za-z0-9_\-áéíóúñ/])")
     enlace = re.compile(r"\[[^\]]*\]\(([^)\s#]+)(?:#[^)]*)?\)")
     for archivo in archivos_versionados():
@@ -222,8 +237,8 @@ def revisar_referencias():
             for p in candidatas:
                 if os.path.exists(p):
                     continue
-                if p.endswith("/"):
-                    aviso(archivo, n, "Carpeta citada que todavía no existe: %s" % p)
+                if p.endswith("/") or p in futuras:
+                    aviso(archivo, n, "Citado pero todavía no existe (previsto): %s" % p)
                 else:
                     error(archivo, n, "Referencia rota: %s no existe" % p)
 

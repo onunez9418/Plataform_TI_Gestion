@@ -1,0 +1,7 @@
+# Archivos que los documentos citan pero que todavía NO existen a propósito.
+# La revisión de referencias (revisar_documentos.py referencias) los trata como aviso y no como error.
+# Reglas: una ruta por línea, con quién la crea y cuándo. Si el archivo ya existe y sigue en esta
+# lista, la revisión FALLA hasta que se borre la línea (para que la lista no se pudra).
+# Este archivo lo revisa su dueño en .github/CODEOWNERS; no es un lugar para esconder errores.
+.github/workflows/nocturna.yml   # DevOps, al empezar la Etapa 4 (plan de operaciones 3.9)
+docs/arquitectura/prototipo-resultados.md   # Arquitecto, al terminar el prototipo técnico

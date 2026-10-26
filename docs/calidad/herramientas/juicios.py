@@ -40,7 +40,6 @@ RN_PARCIAL = {
     'RN-009': 'CA-072 prueba el decimal exacto y CA-031 la orden en otra moneda; nada prueba "nunca hay un total general entre monedas" (por ejemplo un tablero o una lista con totales en USD y PEN).',
     'RN-018': 'CA-077 prueba procesos con dos empresas; no prueba que "Vencido" se calcula al leer (mover el reloj sin correr el proceso). Ese caso está en CA-GAR-04 y en CA-PRV-09 / CA-DOM-02 (Fase 2). Con la partición de CA-GAR-04 en Etapa 4, la v1 lo prueba.',
     'RN-021': 'CA-063 y CA-072 prueban el costo del activo en la v1 (el de la recepción). El libro único y `fuente_costo` son de Fase 3 (CA-PRE).',
-    'RN-010': 'CA-012, 013 y 014 lo prueban; falta nombrar CA-079b (autoentrega sin excepción) en la columna.',
 }
 
 # Criterios del núcleo que QA lee como ambiguos (H-QA-31) y siguen sin datos o sin partir.
@@ -78,7 +77,7 @@ PROPUESTA_PARTIR = {
 
 # D-076: lo que se exige antes de cada etapa. (etapa, requisito/regla, criterio, qué dice la lectura de QA hoy, responsable)
 D076 = [
-    (1, 'RN (22 reglas)', 'Columna CA en la tabla de reglas', 'HECHO. Las 22 reglas citan al menos un criterio que existe. 8 de 22 además aparecen citadas por el propio criterio; las otras 14 solo en la columna (basta: D-076.1a dice "citando").', 'Analista (hecho); Auditor Técnico verifica con su guion'),
+    (1, 'RN (22 reglas)', 'Columna CA en la tabla de reglas', 'HECHO. Las 22 reglas citan al menos un criterio que existe. {vuelta} de 22 además aparecen citadas por el propio criterio; las otras {solo} solo en la columna (basta: D-076.1a dice "citando"). Sugerencia: RN-010 debería nombrar también CA-079b (autoentrega sin excepción).', 'Analista (hecho); Auditor Técnico verifica con su guion'),
     (1, 'RF-ACC-006', 'CA-068', 'HECHO. Prueba los 15 minutos (a los 15:01 se rechaza), el uso único y el código de 8 caracteres en otro dispositivo.', 'Analista (hecho)'),
     (1, 'RF-ACC-014', 'CA-069', 'HECHO. Prueba aviso a los 25, vencimiento a los 30 minutos sin actividad y a las 12 horas.', 'Analista (hecho)'),
     (1, 'RF-ACC-020', 'CA-009', 'HECHO. Prueba el aviso de recomendar al menos dos administradores.', 'Analista (hecho)'),

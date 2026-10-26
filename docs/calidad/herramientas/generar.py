@@ -98,7 +98,7 @@ def generar_criterios(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio
     filas = [[E(e), ant[e], por.get(e, 0), fin.get(e, 0)] for e in ant]
     o.append('Comparación con la versión anterior (2026-10-25). **Ojo, no es la misma medida:** la versión anterior contaba cada criterio en la etapa donde "se ejecuta completo" (la más tardía); esta cuenta dónde **empieza** y, aparte, dónde **termina**. La comparable con la anterior es la última columna.\n')
     o.append(tabla(['Etapa', 'Antes (completo)', 'Ahora (empiezan)', 'Ahora (terminan)'], filas) + '\n')
-    o.append('Qué explica la diferencia: las particiones del Analista (D-075) y los criterios nuevos CA-083 a CA-093 agregan 26 criterios; la Etapa 1 crece más porque CA-083 a CA-085, CA-009, CA-015e y f, CA-068, CA-069, CA-071, CA-077 y otros que D-076 pide antes de la Etapa 1 ya existen y quedan en ella. Los criterios que antes se contaban completos en la Etapa 4 o 5 y hoy arrancan en la 1 o la 2 explican la baja en esas etapas.\n')
+    o.append('Qué explica la diferencia: el Analista y los escuadrones agregaron 26 criterios (CA-083 a CA-093 y las particiones), y la tabla 22.1 hace empezar en la Etapa 1 varios criterios que antes se contaban completos más tarde (por ejemplo CA-001, CA-011a y b, CA-041, CA-045, CA-048, CA-069, CA-071 y CA-074). Por eso la columna "empiezan" de las Etapas 4 y 5 baja: parte de lo que allí se completa ya empezó antes.\n')
     emin = collections.Counter(v['req_min'] for v in todos.values())
     filas = [[E(e) if e is not None else 'sin requisito RF (heredada)', n] for e, n in sorted(emin.items(), key=lambda x: (x[0] is None, x[0] or 0))]
     o.append('Por la etapa más temprana de su requisito:\n')

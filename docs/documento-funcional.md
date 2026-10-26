@@ -124,6 +124,7 @@ La columna **Cuándo** tiene tres valores: `v1, Etapa N`, `Fase 2` o `Fase 3`. L
 | **SKU** (también "artículo") | Código que identifica un *tipo* de artículo. Ej.: `LAP-0001` = Laptop Dell Latitude 5440 i7/16GB. Existe una sola vez por empresa. "Artículo" significa siempre SKU; a las unidades físicas se les llama activos. |
 | **Serie** | Identificador visible de una unidad física concreta (número de serie; para una licencia, un código como `M365-2026-A`). Un SKU por serie puede tener muchas series. |
 | **Activo** | Una unidad física o digital con serie que la empresa posee (una laptop, un celular, una unidad de licencia). Es un solo registro para siempre. Solo los activos de naturaleza "equipo físico" tienen garantía, mantenimiento y depreciación. |
+| **Código del activo** | Identificador visible y propio de cada activo, con la forma `ACTV-000123` (D-079). Es un correlativo por empresa que se asigna al crear el activo y no cambia nunca. No es la serie ni el código del SKU, no es un dato personal, y es lo que se escribe en correos y avisos en lugar de la serie. |
 | **Naturaleza** (de una categoría) | Atributo fijo de la categoría: **equipo físico** (por defecto), **licencia** o **servicio**. Se hereda a subcategorías, SKU y activos. |
 | **Stock** | Conteo de un SKU controlado por cantidad (mouses, cables), por ubicación. El stock no se llama "activo". |
 | **Control por serie / por cantidad** | El SKU se rastrea unidad por unidad, o solo con un conteo. |
@@ -330,7 +331,7 @@ Basado en D-005, D-008, D-035, D-040, D-045. Etapa 2.
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
 | RF-CAT-007 | Una categoría tiene nombre, prefijo para los códigos (`LAP`, `CEL`, `PER`, `LIC`) y **naturaleza**. | v1, Etapa 2 | CA-017 |
-| RF-CAT-008 | El prefijo tiene de 2 a 5 caracteres (letras o números, en mayúsculas), es único dentro de la empresa y **no puede ser un prefijo reservado** (`OC, OS, RCP, RCL, MNT, CTR, AYU, CAM, PRB, KB, EC, ACT, PRS, PAN, PPT, MPR, GMA, LSAP, PRG`). | v1, Etapa 2 | CA-017 |
+| RF-CAT-008 | El prefijo tiene de 2 a 5 caracteres (letras o números, en mayúsculas), es único dentro de la empresa y **no puede ser un prefijo reservado** (`OC, OS, RCP, RCL, MNT, CTR, AYU, CAM, PRB, KB, EC, ACT, ACTV, PRS, PAN, PPT, MPR, GMA, LSAP, PRG`). | v1, Etapa 2 | CA-017 |
 | RF-CAT-009 | Hay un solo nivel de subcategoría (Categoría > Subcategoría). La subcategoría usa el prefijo de su categoría principal. | v1, Etapa 2 | CA-017 |
 | RF-CAT-010 | La subcategoría hereda los campos y la naturaleza de la categoría principal y puede sumar campos propios. | v1, Etapa 2 | CA-020 |
 | RF-CAT-011 | Cambiar el prefijo de una categoría no cambia los códigos de los SKU ya creados. | v1, Etapa 2 | CA-019 |
@@ -398,6 +399,7 @@ Basado en D-009, D-010, D-012, D-034, D-044.9, D-060. Etapa 4.
 | RF-INV-025 | **Ingreso manual de un activo** (reemplazos por garantía, donaciones, compras sin orden): permiso propio, serie única, motivo obligatorio, costo opcional, historial y auditoría. | v1, Etapa 4 | CA-059 |
 | RF-INV-026 | **Corregir el costo** o la moneda de un activo (activos del Excel) exige `activos.corregir_costo` (PS-51, sensible), motivo y auditoría. Si el nuevo costo, con impuesto y en moneda base, **supera el límite** de la empresa, el cambio queda "pendiente de confirmación" y lo confirma **otra persona con PS-51** (si la empresa tiene una sola, la casilla «compras» del interruptor único); el costo pendiente no entra al libro de costos. El activo guarda el subtotal sin impuesto dividido por la cantidad, con 4 decimales. | v1, Etapa 4 | CA-063 |
 | RF-INV-027 | **Cambio de ubicación** de un activo con serie es un movimiento propio ("cambio de ubicación") con permiso, historial y sin cambiar el estado. | v1, Etapa 4 | CA-060b |
+| RF-INV-034 | **Código visible del activo (D-079):** cada activo recibe al crearse, por cualquier vía (recepción, ingreso manual RF-INV-025 o importación), un código `ACTV-NNNNNN`. Es correlativo **por empresa**, de 6 dígitos como mínimo (el ancho es un mínimo, no un tope), con contador propio. Nunca se reutiliza: pueden quedar saltos. No se edita ni se sobrescribe, y no cambia aunque se corrija la serie, se reingrese el activo o cambie su estado. Se muestra en la ficha, las listas y el historial, y se puede buscar (sin distinguir mayúsculas ni espacios, RN-012). Se exporta como columna propia de la lista de activos. | v1, Etapa 4 | CA-094 |
 
 ### 11.2 Estados del activo
 
@@ -860,7 +862,7 @@ Basado en D-053. El prototipo de la Etapa 0 muestra las **26 pantallas A** y 18 
 | RN-001 | Todo dato de negocio pertenece a una empresa y toda consulta se filtra por la empresa de la petición. Las únicas tablas sin empresa son una lista global cerrada y corta que mantiene el Arquitecto y revisa Seguridad. Olvidar el filtro es un defecto grave. | CA-001, CA-002, CA-003 |
 | RN-002 | Toda acción de permisos se comprueba en el servidor. | CA-011a |
 | RN-003 | Las operaciones de varias partes (confirmar una recepción, importar un lote, trasladar stock) son todo o nada. | CA-034, CA-038, CA-027 |
-| RN-004 | Los correlativos (SKU, orden de compra, recepción, orden de servicio, acta) nunca se repiten, aunque dos personas trabajen a la vez. Pueden quedar saltos. | CA-018 |
+| RN-004 | Los correlativos (SKU, activo, orden de compra, recepción, orden de servicio, acta) nunca se repiten, aunque dos personas trabajen a la vez. Pueden quedar saltos. | CA-018 |
 | RN-005 | La serie es única por empresa y SKU. | CA-023 |
 | RN-006 | La auditoría solo se agrega; no se edita ni se borra. | CA-040a |
 | RN-007 | Nada con historial se borra: se desactiva, se anula o se da de baja. Solo se borran los borradores que nunca tuvieron efecto. | CA-045 |
@@ -879,6 +881,7 @@ Basado en D-053. El prototipo de la Etapa 0 muestra las **26 pantallas A** y 18 
 | RN-020 | El responsable de cualquier registro es una Persona (con vínculo opcional a membresía). Los avisos se resuelven Persona, luego membresía, luego correo, y si no hay, al grupo. | CA-088 |
 | RN-021 | El costo vive en un solo libro (el del módulo de presupuesto, cuando exista). Regla de fuente única: orden de compra, luego contrato de proveedor, luego registro propio del módulo; el campo común es `fuente_costo`. En la v1 el costo del activo es el de la recepción. | CA-063, CA-072 |
 | RN-022 | Cada empresa se mueve por el mismo contador por empresa y clave; la clave del SKU es su prefijo. | CA-018 |
+| RN-023 | **El código del activo `ACTV-NNNNNN` identifica al activo en todo lo que sale de la plataforma sin la serie** (D-079): correos, avisos, mensajes y reportes por correo usan el código del activo en lugar de la serie. El acta imprimible lleva el código del activo y, además, la serie, porque es el documento firmado (RF-INV-016). El prefijo `ACTV` es reservado: ninguna categoría puede usarlo. | CA-094 |
 
 **Tabla de actos de RN-017**
 
@@ -1056,6 +1059,7 @@ Cada criterio de esta sección corre en la etapa que indica la tabla. Cuando un 
 - **CA-091 · Redactar por seguridad** (RF-DAT-013, PS-234). Dado un motivo o una nota con un dato personal, cuando alguien con `texto.redactar` lo redacta con motivo, entonces el texto pasa a `[REDACTADO]` y la auditoría guarda quién, cuándo y por qué, sin el texto; sin el permiso se rechaza.
 - **CA-092 · Contactos de proveedor** (RF-CAT-026). Dado un contacto de proveedor inactivo por 2 años, cuando corre la rutina de anonimización (con la confirmación de legal), entonces se anonimiza; en una exportación general los contactos no aparecen; ver contactos exige `proveedores.ver_contactos`.
 - **CA-093 · Suplente de derechos** (RF-PER-012, RF-ACC-025). Dado una empresa sin persona suplente con PS-29, cuando un administrador abre "Primeros pasos", entonces ve la tarea "Designar suplente de derechos de datos" y el sistema le recuerda cada 3 días; si pasan 5 días sin designar se avisa al contacto autorizado; si quien presenta un pedido es la única persona con PS-29, el pedido queda "En espera de persona designada" y no lo atiende ella ni la plataforma.
+- **CA-094 · Código visible del activo** (RF-INV-034, RN-023, RN-004, RF-CAT-008). Dado que la empresa A ya tiene hasta `ACTV-000041` y la empresa B está en `ACTV-000007`, cuando A recibe 3 laptops por una recepción, entonces quedan `ACTV-000042`, `ACTV-000043` y `ACTV-000044`, y el siguiente activo de B es `ACTV-000008`; cuando dos técnicos de A crean un activo a la vez, entonces los códigos son distintos; cuando un activo se corrige de serie, se da de baja o se reingresa, entonces conserva su código y el código de un activo anulado no se reutiliza; cuando alguien busca `actv-000042` o ` ACTV-000042 `, entonces encuentra solo el activo de A (en B no existe); cuando alguien intenta editar el código o crear una categoría con el prefijo `ACTV`, entonces se rechaza; el correo de un aviso de garantía trae `ACTV-000042` y no la serie.
 
 ## 23. Pendientes (P-NNN)
 

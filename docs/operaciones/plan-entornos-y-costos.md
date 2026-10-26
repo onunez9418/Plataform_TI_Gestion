@@ -85,16 +85,16 @@ Una "cuenta" de la base de datos para cada tarea. Si una se filtra, el daño que
 
 **Pruebas obligatorias en cada cambio y en cada entorno** (las corre QA/CI, yo preparo el entorno): (1) todas las pruebas de aislamiento corren **como `app_empresa`**; (2) una prueba verifica que `app_empresa` **no es dueño de tablas, no tiene BYPASSRLS y no es superusuario**; (3) una prueba verifica que `app_plataforma` no lee ninguna tabla de negocio.
 
-**Lista cerrada de tablas globales** (las únicas que pueden existir sin empresa; D-039.4). La mantiene el Arquitecto y la firma Seguridad:
+**Lista cerrada de tablas globales** (las únicas que pueden existir sin empresa; D-039.4). La mantiene el Arquitecto y la firma Seguridad. **ADR-04 (propuesto) la amplía de 13 a 18** con `autorización de soporte`, `registro de plataforma`, `límite de uso`, `constancia de purga` y el esquema de la cola; la revisión de 3.3 debe leer la lista final desde ese ADR, no desde esta copia:
 
 1. cuenta de usuario; 2. sesión; 3. enlace de ingreso; 4. invitación por token; 5. clave de API (búsqueda por huella); 6. tipos de evento; 7. estado del correo; 8. monedas; 9. países; 10. administradores de plataforma; 11. límites de plataforma; 12. resumen de no leídas por usuario; 13. eventos de seguridad de ingreso.
 
 La revisión automática **falla** si aparece una tabla que ni está en esa lista ni tiene las protecciones de empresa (3.3).
 
 **Detalle para el equipo (preguntas al Arquitecto y a Datos que afectan mi trabajo):**
-- Las **tablas de la cola de trabajos** (las crea la librería elegida, por ejemplo pg-boss o graphile-worker) y el **registro de plataforma** (D-048.5d: crear, suspender, rescatar empresas) **no aparecen** en la lista cerrada. O se agregan a la lista, o se justifican como tablas con empresa. Hay que decidirlo antes de la Etapa 1 porque la revisión automática las marcaría.
+- **Resuelto en ADR-04:** la cola de trabajos (esquema `cola`) y el registro de plataforma **son globales** y entran a la lista (18 tablas). Pendiente: que Seguridad firme la lista final.
 - Verificar que el **proveedor de base de datos permite** crear estos cinco roles (con NOBYPASSRLS), reglas por fila forzadas, funciones `SECURITY DEFINER`, tablas particionadas y las extensiones `citext`, `unaccent`, `pg_trgm`, `btree_gist` y `pgcrypto` (T-4 pide que DevOps lo confirme). Esa comprobación es el **día 0** del prototipo (sección 10).
-- D-030.8 habla de partición **anual** para la purga a los 5 años y T-8 de partición **mensual**: necesito saber cuál rige para preparar el rol `mantenimiento` y su procedimiento.
+- **Resuelto en ADR-11:** la auditoría se parte por **mes** (60 meses exactos de retención); el rol `mantenimiento` solo ejecuta la función de purga, que exige dos aprobadores y el interruptor legal.
 
 ### 1.3 La base de pruebas permanente para QA
 
@@ -111,8 +111,8 @@ QA necesita comprobar cosas que **solo pasan con una base real y varias personas
 
 QA no puede esperar 15 minutos reales a que venza un enlace de ingreso, ni un día a que corran los avisos de vencimiento.
 
-- En desarrollo, en la revisión automática y en pruebas, las pruebas pueden **fijar y adelantar la fecha y la hora** de la plataforma y **disparar a mano** los procesos diarios (variables `TEST_CLOCK_ENABLED` y `TEST_CLOCK_FIXED_AT`, nombres propuestos).
-- **La aplicación y el trabajador deben ver el mismo reloj** (si cada uno tuviera el suyo, los avisos saldrían en horas distintas). El Arquitecto decide cómo se comparte (por ejemplo, un valor guardado en la base de pruebas que ambos leen).
+- En desarrollo, en la revisión automática y en pruebas, las pruebas pueden **fijar y adelantar la fecha y la hora** de la plataforma y **disparar a mano** los procesos diarios (variables `TEST_CLOCK_ENABLED` y `TEST_CLOCK_FIXED_AT`).
+- **La aplicación y el trabajador ven el mismo reloj** (si cada uno tuviera el suyo, los avisos saldrían en horas distintas). Según ADR-02 (propuesto), toda la plataforma pregunta la hora a una sola función, y en pruebas ésta lee un valor guardado en una tabla `reloj_prueba` que crea el guion de pruebas (no una migración) y que ambos leen. **En producción esa tabla no existe;** una prueba lo comprueba.
 - **En producción no existe.** La plataforma se niega a arrancar si encuentra esas variables, y la ruta del disparador manual responde "no encontrado". Una prueba automática lo comprueba en cada cambio, y la lista de verificación de cada publicación incluye "reloj de prueba apagado".
 - El disparador manual se protege con `CRON_SECRET` y no está expuesto fuera de la red de pruebas. El contrato completo (qué dispara, cómo, cómo se prueba que no existe en producción) está en 1.10.
 
@@ -173,11 +173,11 @@ QA no espera a las 8:00 ni un día entero. El Arquitecto fija los nombres defini
 |---|---|
 | Qué hace | Ejecuta **ahora** un trabajo programado concreto (avisos de vencimiento, cierres, tableros precalculados, reconciliación de anonimizaciones, vaciado de la cola de correo) **para una empresa y una fecha lógica**, sin esperar al reloj |
 | Quién lo ejecuta | **El trabajador**, no la aplicación web: así se prueba el camino real (bloqueo, reintento, registro de corrida, empresa fijada en la transacción) |
-| Cómo se invoca | (a) un comando del trabajador con trabajo, empresa y fecha; (b) una ruta interna `POST` de la aplicación que encola ese mismo trabajo. Ambas exigen `CRON_SECRET` y la ruta solo se publica en la red de pruebas |
+| Cómo se invoca | (a) la ruta `/api/pruebas/disparar` de la aplicación (nombre fijado por ADR-02), que encola ese trabajo para una empresa y fecha; (b) *complemento que propongo, no está en el ADR:* un comando del trabajador con los mismos datos, para pruebas sin web. Ambas exigen `CRON_SECRET`; la ruta solo se publica en la red de pruebas |
 | Con el reloj | Receta estándar de QA: fijar o adelantar el reloj (1.4) y disparar. Para probar "el trabajador estuvo caído tres días": adelantar tres días con el trabajador detenido, arrancarlo y comprobar que procesa **los tres días en orden** (D-038.4, RNF-019) |
 | Resultado | Un registro de corrida por empresa y día (fecha lógica, resultado, duración, cantidad de avisos) que QA lee |
 | Repetirlo | Es **idempotente**: dispararlo dos veces para el mismo trabajo, empresa y día no duplica avisos ni correos (clave única, D-038.3) |
-| En producción | **No existe:** (1) la ruta responde "no encontrado" y el comando se niega si `ENTORNO=produccion`; (2) la ruta no se publica en el enrutador de producción; (3) la plataforma se niega a arrancar en producción con el reloj de prueba o los disparadores activados |
+| En producción | **No existe:** (1) la ruta responde "no encontrado" y el comando se niega si `ENTORNO=produccion`; (2) la ruta no se publica en el enrutador de producción; (3) la plataforma se niega a arrancar en producción con el reloj de prueba o los disparadores activados; (4) la tabla `reloj_prueba` no existe (ADR-02) |
 | Pruebas que lo demuestran (en cada cambio) | disparo sin secreto, rechazado; disparo con secreto, ejecuta y deja registro; dos disparos, un solo aviso; arrancar en modo producción con el disparador activado, se niega; ruta en modo producción, "no encontrado". La publicación a producción repite las dos últimas como prueba de humo (4.1, paso 9) |
 
 ### 1.11 Generador de datos de dos empresas con volumen (contrato para el Ingeniero de Datos)
@@ -325,13 +325,13 @@ Al unirse a la rama principal: se vuelve a ejecutar todo, se publica **automáti
 
 ### 3.7 Revisión automática de documentos (ya creada)
 
-Mientras no haya código, lo que se cambia son documentos, y los documentos también se rompen: una cita a un requisito que no existe, un permiso inventado, un enlace roto o una clave pegada por descuido. Archivos: `.github/workflows/documentos.yml` (el robot), `.github/scripts/revisar_documentos.py` (la lógica, solo Python 3 estándar, sin instalar nada ni pagar nada), `.github/CODEOWNERS` y `.github/pull_request_template.md`.
+Mientras no haya código, lo que se cambia son documentos, y los documentos también se rompen: una cita a un requisito que no existe, un permiso inventado, un enlace roto o una clave pegada por descuido. Archivos: `.github/workflows/documentos.yml` (el robot), `.github/scripts/revisar_documentos.py` (la lógica, solo Python 3 estándar, sin instalar nada ni pagar nada), `.github/CODEOWNERS`, `.github/pull_request_template.md` y `.github/referencias-futuras.txt` (archivos que se citan antes de existir).
 
 | Revisión | Falla el cambio si... | Fuente de la regla |
 |---|---|---|
 | **Citas** | se cita `RF-012`, `PAN-05` o `SUP-03` **sin código de módulo**; el código de módulo no es uno de los 33 válidos; un `RF`, `RN`, `RNF`, `CA`, `PAN`, `SUP` o `RS` citado **no está definido** en los documentos vigentes; o un `RN-nnn`, `RNF-nnn` o `CA-nnn` sin código no existe en el documento funcional | `documento-funcional.md` 26.2 |
 | **Permisos** | se cita un `PS-nn` que no existe o está retirado; un `PS-nn` va junto a un nombre técnico distinto del del registro; o se escribe "permiso `x.y`" con un nombre que no está en el registro | `registro-permisos.md` |
-| **Referencias** | un documento nombra otro archivo o enlace de `docs/`, `.github/` o `.claude/` que no existe (las carpetas futuras solo dan aviso, no fallan) | Todo el repositorio, salvo los registros históricos |
+| **Referencias** | un documento nombra otro archivo o enlace de `docs/`, `.github/` o `.claude/` que no existe (las carpetas futuras solo dan aviso; un **archivo** que se cita antes de crearlo se anota en `.github/referencias-futuras.txt` con quién lo crea y cuándo, y esa línea se borra apenas el archivo existe) | Todo el repositorio, salvo los registros históricos |
 | **Secretos** | aparecen claves privadas, claves de AWS, tokens de GitHub, Slack, Stripe, Google, OpenAI o Anthropic, SendGrid, Resend, tokens JWT, direcciones con contraseña, asignaciones de `secret`, `token` o `password` con valor largo; hay un `.env`, un archivo de claves (`.pem`, `.key`), un volcado de base o una hoja de cálculo fuera de las carpetas de prueba inventada. **También revisa cada commit del cambio**: un secreto agregado y borrado después sigue en el historial | CLAUDE.md regla 4, `.gitignore` |
 
 - **Qué no revisa:** el sentido de lo escrito (que una cita sea la correcta, no solo que exista), nombres reales de personas ni el canario (eso se suma cuando haya datos y código), y los registros históricos (`docs/revision-cruzada/`, mesas y oleadas), que conservan citas viejas a propósito. Líneas que hablan de algo retirado o renombrado ("retirado", "pasa a", "no existe"...) se saltan en citas y permisos.
@@ -528,7 +528,7 @@ Se corre en el entorno de pruebas con el perfil `completo` (1.11); una vez antes
 
 **Qué hacemos:**
 
-1. **Copia cada hora, solo de agregar**, a almacenamiento externo de **otro proveedor y otra cuenta**, configurado para que no se pueda modificar ni borrar durante el plazo de retención ("inmutable" o de "una sola escritura"; verificar qué proveedores lo ofrecen).
+1. **Copia cada hora, solo de agregar** (el orden de copia y el margen de 5 minutos para filas que se confirman fuera de orden los fija ADR-11), a almacenamiento externo de **otro proveedor y otra cuenta**, configurado para que no se pueda modificar ni borrar durante el plazo de retención ("inmutable" o de "una sola escritura"; verificar qué proveedores lo ofrecen).
 2. **Encadenado:** cada archivo lleva una huella calculada con su contenido **y la huella del archivo anterior**. Si alguien cambia o borra una entrada vieja, todas las huellas posteriores dejan de coincidir. La clave de firma (`AUDIT_COPY_SIGNING_KEY`) **no está en la base de datos**.
 3. **Verificación semanal** (diaria si se puede): se recalculan las huellas con lo que hay hoy en la base y se comparan con la copia externa. **Si no coinciden, alerta inmediata** a Seguridad y a la Jefatura.
 4. **Cuentas separadas:** el trabajo de copia usa `lector_auditoria` (solo lee) y una credencial de **solo agregar** al almacenamiento; quien verifica tiene la credencial de lectura de la copia, e **idealmente no es quien administra la base de producción**.
@@ -567,7 +567,7 @@ El ensayo falla si cualquiera de las alteraciones pasa sin alarma. La Etapa 7 no
 - **Reconciliación nocturna:** un trabajo compara los eventos de anonimización de la base con el registro externo y da alarma si falta alguno.
 - **Se prueba en cada restauración de ensayo:** se anonimiza a una persona, se restaura un respaldo anterior y se comprueba que no reaparece (CA-053).
 
-**Pregunta a Datos y Arquitecto:** como el registro está fuera de la base, no se puede escribir en la misma transacción. Propongo **escribir primero la intención en el registro externo (idempotente) y después sobrescribir el registro de la persona**, de modo que reaplicar sea siempre inofensivo; y que una anonimización de la que solo hay intención se vea en la reconciliación. Que lo diseñen ellos.
+**Resuelto en ADR-12 (propuesto):** como el registro está fuera de la base, no se escribe en la misma transacción. Se escribe primero la **intención** (idempotente), luego se sobrescribe a la persona en la base y por último la **confirmación**; si el almacén no responde, la anonimización se rechaza; al restaurar se reaplican todas las intenciones; la reconciliación nocturna avisa de una intención sin resultado pasada una hora.
 
 ### 5.5 Procedimientos escritos
 
@@ -634,7 +634,7 @@ Fuente: `docs/revision-cruzada/ronda4-especialista-seguridad.md`, sección 2. Se
 
 | # | Condición (resumen) | Cuándo | Responsable | Qué entrega DevOps o cómo se comprueba | Estado hoy |
 |---|---|---|---|---|---|
-| 1 | Derivación escrita de llaves (función estándar, contexto fijo por tipo y por empresa o usuario, versión en cada valor cifrado, nunca la misma llave para dos fines) | **Antes de la Etapa 1** (antes de la primera tabla con campo cifrado) | Arquitecto (ADR T-5) | Yo reviso que las variables de 6.2 cubren lo que el ADR pida y que la versión de la llave es una variable por entorno. La prueba del ADR la corre la revisión automática | Pendiente: los ADR se están escribiendo |
+| 1 | Derivación escrita de llaves (función estándar, contexto fijo por tipo y por empresa o usuario, versión en cada valor cifrado, nunca la misma llave para dos fines) | **Antes de la Etapa 1** (antes de la primera tabla con campo cifrado) | Arquitecto (ADR T-5) | Yo reviso que las variables de 6.2 cubren lo que el ADR pida y que la versión de la llave es una variable por entorno. La prueba del ADR la corre la revisión automática | **ADR-07 (propuesto)** ya fija HKDF-SHA-256, propósitos (`licencia`, `webhook`, `segundo_factor`, `exportacion`, `pepper:<tipo>`), alcance por empresa o usuario y versión dentro del valor guardado; falta la aprobación escrita de Seguridad |
 | 2 | **La llave maestra de producción no existe** en la revisión automática, en pruebas ni en desarrollo; cada entorno usa llaves propias; el repositorio solo trae valores de relleno | **Antes de la Etapa 1** | DevOps | (a) Las llaves de la revisión automática se **generan al azar en cada corrida**; (b) la llave de pruebas se genera aparte y vive solo en el almacén de pruebas; (c) la de producción se crea el día que haya datos reales y solo en su almacén; (d) una **lista de huellas cortas** (primeros 8 caracteres del resumen de cada llave, nunca la llave) por entorno, para comprobar que no se repiten entre entornos; (e) la plataforma se niega a arrancar en producción con la llave de relleno (1.1, regla 5); (f) la búsqueda de secretos (3.7) cubre el repositorio | `.env.example` ya trae relleno; falta crear los almacenes (depende de la elección de proveedor, 9) |
 | 3 | **Dos custodios** nombrados por escrito (acta, sin escribir las llaves), que **no sean las dos únicas personas administradoras de la plataforma** a la vez; el Administrador de plataforma **no tiene acceso al almacén de secretos** | Antes de datos reales | CEO designa (pedido G); DevOps ejecuta | Acta firmada y lista de accesos al almacén de secretos donde **no figura ningún administrador de plataforma**; revisión trimestral de esa lista (O-15) | Pendiente del CEO |
 | 4 | El **respaldo de las llaves** en un gestor de contraseñas de equipo, con segunda verificación por custodio y registro de accesos, es **uno** de los dos lugares; el otro es físico o un almacén distinto del alojamiento | Antes de datos reales | DevOps | Gestor con 2F obligatorio y registro de accesos activado; **segundo lugar físico:** copia en medio no electrónico o cifrada fuera de línea, sellada, en un sitio distinto, que solo se abre con los dos custodios presentes y queda anotado; la restauración de ensayo prueba que el respaldo sirve (5.2, paso 6) | Pendiente: gasto del gestor en rubro 7 de 9.2 |
@@ -889,6 +889,7 @@ D-055 amplía el prototipo a 3 o 4 días y lo corre sobre el **proveedor candida
 3. El **reloj fijable** y el disparador manual (si el Arquitecto ya definió el mecanismo; si no, lo prueba el prototipo).
 4. Un **depósito de objetos de prueba** para probar el registro de anonimizaciones y la copia de auditoría en miniatura.
 5. Una **bitácora de límites** que voy llenando: lo que cada proveedor impide o limita (extensiones, roles, conexiones, tiempo máximo de una petición).
+6. Un **generador mínimo** de dos empresas (A y B con códigos idénticos a propósito, perfil `pequeño` de 1.11) con datos inventados, y la **herramienta de inyección de fallos** (cortar la conexión, detener el trabajador; 1.12), que también pide `docs/arquitectura/prototipo-tecnico.md`.
 
 **Lo que mido yo durante el prototipo:** tiempo de arranque del servicio, comportamiento del trabajador al reiniciar, reinicio de la conexión tras un corte, y consumo con 20 y 50 conexiones. **Lo que mide QA:** los siete criterios de aislamiento.
 
@@ -922,7 +923,7 @@ D-055 amplía el prototipo a 3 o 4 días y lo corre sobre el **proveedor candida
 | O-18 | **El proveedor de base de datos no permite lo que D-039 exige** (roles, reglas forzadas, extensiones) | Media | Alto | Comprobación del día 0 antes del prototipo (10) |
 | O-19 | **El registro de anonimizaciones se desincroniza de la base** | Baja | Alto | Intención primero, reconciliación nocturna (5.4) |
 | O-20 | **La consola de plataforma queda expuesta a internet** | Media | Alto | Dirección propia y restricción en el borde (6.4) |
-| O-21 | **Tablas de la cola o del registro de plataforma fuera de la lista global** hacen fallar la revisión o se crean sin protección | Media | Medio | Decidir con el Arquitecto antes de la Etapa 1 (1.2) |
+| O-21 | **Tablas de la cola o del registro de plataforma fuera de la lista global** hacen fallar la revisión o se crean sin protección | Baja (decidido en ADR-04) | Medio | La lista final de 18 tablas se firma antes de la Etapa 1 (1.2) |
 | O-22 | **Las ramas protegidas no se activan** (el plan de GitHub no las permite en repositorio privado, o nadie con rol Admin hace los pasos) y un cambio se une sin revisión | Media | Alto | Pasos exactos en 3.8, pedido F, evidencia con la prueba del paso F; la revisión de documentos avisa pero no impide sin la regla |
 | O-23 | **Con una sola persona con acceso, la aprobación de otra persona no se puede exigir** | Alta hoy | Medio | Paso B-bis de 3.8: se deja a 0 de forma temporal y se anota; se exige 1 antes de la Etapa 1 (D-064 condición 9) |
 | O-24 | **Los custodios de llaves son las mismas personas que administran la plataforma** | Media | Alto | Condición 3 de Seguridad (6.5), pedido G; revisión trimestral de la lista de accesos |
@@ -1021,14 +1022,12 @@ Mapa de mis entregables a las condiciones 4, 5, 6, 10, 11 y 12 de D-064 (`docs/e
 
 - **No hay código, cuentas ni configuración creadas.** Los únicos archivos de mi trabajo en el repositorio son `/.gitignore`, `/.env.example` y, en `.github/`: `workflows/documentos.yml`, `scripts/revisar_documentos.py`, `CODEOWNERS` y `pull_request_template.md`. Nada se contrató.
 - **La revisión de documentos no es obligatoria todavía:** falta activar las ramas protegidas (3.8). Hasta entonces avisa, pero no impide. En `CODEOWNERS` solo figura la cuenta dueña del repositorio; las demás se agregan cuando existan.
-- **Los ADR del Arquitecto no existen aún** (`docs/arquitectura/`): los nombres de variables, el reloj compartido, el nombre del disparador (1.10) y la condición 1 de Seguridad (6.5) se confirman cuando se publiquen. Si cambian, se ajustan aquí.
+- **Los ADR del Arquitecto (`docs/arquitectura/`) están en estado "propuesto"** y esta versión ya los incorpora (alojamiento, cola y reloj, tablas globales, llaves, partición mensual, registro de anonimizaciones). Si el Gerente de TI cambia alguno, se ajusta aquí. ADR-18 (importación) remite a un «ADR de inyección de fallos de DevOps»: su contenido es la sección 1.12; no creé un archivo en `docs/arquitectura/` porque no es mi carpeta.
 - **No verifiqué precios ni condiciones de planes** (si una vuelta a la imagen anterior con un clic, un bloqueo de una sola escritura, una recuperación a un punto en el tiempo o permisos de uso comercial están en un plan concreto). D-064 condición 5 exige esa verificación antes de la Etapa 1: **queda pendiente**.
 - **Pendiente de legal:** país y ley (L-01), plazos, incluidos respaldos 30 + 12 (L-04), región de servidores y proveedores (L-07, L-08), aviso de fuga (L-16). Hasta tenerlos no se elige región definitiva ni se activa anonimización automática.
 - **Pendiente del CEO:** cifra de uso (P-003) para dimensionar base y límites de correo; país (P-004); a nombre de quién quedan las cuentas; persona y suplente para alertas.
 - **Pendiente de Seguridad (H-SEG-27):** que el Gerente de TI decida S-34, del que dependen las condiciones del acceso de emergencia.
 - **Siguiente paso mío**, si el plan se aprueba: ficha de versión como plantilla, guion de creación de los cinco roles, flujo de la revisión automática del código (cuando haya código), comprobación del día 0 y borrador de los procedimientos de la sección 5.5. Para el día 0 y la matriz de correo necesito que la Jefatura consiga una persona que consulte las páginas de 9.5 y el subdominio de pedido C.
-
----
 
 ---
 
