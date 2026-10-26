@@ -79,13 +79,13 @@ def generar_criterios(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio
     v1 = sum(n for e, n in por.items() if e <= 7)
     o = []
     o.append('# Criterios de aceptación por etapa\n')
-    o.append(f"**Autor:** QA (qa-tester) · **Fecha:** {HOY} · **Checkpoint:** commit `{commit}`{' (con cambios sin guardar en los documentos fuente)' if sucio else ' (árbol de documentos limpio al generar)'} · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-076), `docs/registro-permisos.md` v1.1 y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.\n")
+    o.append(f"**Autor:** QA (qa-tester) · **Fecha:** {HOY} · **Checkpoint:** commit `{commit}`{(' (más cambios sin guardar en: ' + sucio + ')') if sucio else ' (árbol de documentos fuente limpio al generar)'} · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-076), `docs/registro-permisos.md` v1.1 y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.\n")
     o.append("**Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del 2026-10-25 (424 criterios sobre el documento v0.3 sin partir). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).\n")
     o.append('## Cómo leer las columnas\n')
     o.append("- **Cubre:** la cabecera del criterio, tal como la escribió el Analista o el escuadrón.\n- **Etapa del requisito:** la más temprana entre los requisitos que cubre. **Se ejecuta en:** la etapa en que el criterio **empieza** a correr. **Se completa en:** la etapa posterior en que ya existe todo lo que necesita (solo cuando 22.1 o el módulo lo dicen).\n- **Tipo:** unitaria (reglas y cálculos sin base de datos); integración (base real, servidor, permisos, concurrencia, reloj, correo); navegador (Playwright: pantallas, PDF); manual (personas o ensayo, con apoyo automático donde se pueda). Es una clasificación hecha con palabras del texto del criterio; QA la afina al escribir cada prueba.\n- **Bloqueante:** sí = si falla, la etapa no se aprueba. \"No (bloquea su módulo)\" = es de Fase 2 o 3 y bloquea la entrega de ese módulo, no la v1 (D-056).\n- **Etapa heredada:** el criterio solo cita reglas RN y no hay fila RF que lo cite; tomó la etapa más frecuente de su módulo. Debe confirmarlo el escuadrón.\n")
     o.append('## Resumen (checkpoint ' + commit + ', ' + HOY + ')\n')
     nuc, mod = len(ncas), len(mcas)
-    o.append(f"**{nuc + mod} criterios:** {nuc} del núcleo (identificadores con letra, que son {n_num} números, CA-001 a CA-{max_num:03d}) y {mod} de los 17 módulos. El 2026-10-25 eran 424 (93 y 331). Qué cambió: el Analista agregó CA-083 a CA-093 y partió CA-016, CA-040, CA-052a y b, CA-054, CA-060, CA-064 y CA-065 (CA-040 en CA-040a y CA-040b; ya no existe CA-040 sin letra); los escuadrones partieron CA-NOT-05 y CA-NOT-07 y agregaron un criterio a gestión de cambios y otro a gestión de problemas.\n")
+    o.append(f"**{nuc + mod} criterios:** {nuc} del núcleo (identificadores con letra, que son {n_num} números, CA-001 a CA-{max_num:03d}) y {mod} de los 17 módulos. El 2026-10-25 eran 424 (93 y 331). Qué cambió: el Analista agregó CA-083 a CA-093 y partió CA-016, la auditoría inalterable (hoy CA-040a y CA-040b), CA-052a y b, CA-054, CA-060, CA-064 y CA-065; los escuadrones partieron CA-NOT-05 y CA-NOT-07 y agregaron un criterio a gestión de cambios y otro a gestión de problemas.\n")
     filas = []
     for e in list(range(0, 8)) + [L.FASE2, L.FASE3]:
         if por.get(e, 0) or comp.get(e, 0) or e <= 7:
@@ -177,7 +177,7 @@ def generar_criterios(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio
 def main():
     escribir = '--escribir' in sys.argv
     commit = git('rev-parse', '--short', 'HEAD')
-    sucio = bool(git('status', '--short', 'docs/documento-funcional.md', 'docs/modulos', 'docs/registro-permisos.md', 'docs/equipo/decisiones.md'))
+    sucio = git('status', '--short', 'docs/documento-funcional.md', 'docs/modulos', 'docs/registro-permisos.md', 'docs/equipo/decisiones.md').replace('\n', ', ').replace(' M ', '').replace('M ', '').strip()
     datos = cargar()
     nreqs, nrns, ncas, mreqs, mrns, mcas, todos = datos
     por, comp = cifras(todos)

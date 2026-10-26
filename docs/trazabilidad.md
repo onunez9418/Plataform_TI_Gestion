@@ -1,6 +1,6 @@
 # Trazabilidad: requisito, etapa, criterio de aceptación
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-26 · **Checkpoint:** commit `f25fddc` (con cambios sin guardar en documentos fuente) · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21) y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py`. Reemplaza la versión del 2026-10-25.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-26 · **Checkpoint:** commit `0c9b54b` (más cambios sin guardar en: docs/documento-funcional.md) · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21) y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py`. Reemplaza la versión del 2026-10-25.
 
 **Cómo se hizo.** Un script lee las tablas de requisitos (columnas Cuándo y CA), la tabla de reglas RN con su columna CA, la sección 22 con su tabla 22.1 "Se ejecuta en" y los criterios de los módulos. Después QA leyó el texto de los requisitos y criterios dudosos. Estados:
 
@@ -15,23 +15,23 @@ El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): 
 
 ## Resumen de huecos
 
-| Medida (al 2026-10-26, commit f25fddc) | Resultado |
+| Medida (al 2026-10-26, commit 0c9b54b) | Resultado |
 |---|---|
 | Filas RF y RNF del núcleo (con las retiradas) | 316 |
 | Retiradas (RF-USR-004, RF-IMP-012, RF-OS-007) | 3 |
 | Filas vigentes | 313 |
-| Citas de criterio rotas (criterio inexistente o "padre" que ya se partió) | 1 |
-| Cubiertos: el criterio los lista | 294 |
+| Citas de criterio rotas (criterio inexistente o "padre" que ya se partió) | 0 |
+| Cubiertos: el criterio los lista | 295 |
 | No probados de verdad (núcleo) | 14 |
 | No probados de verdad (módulos con parte en la v1) | 5 |
 | Citas mal apuntadas o incompletas (núcleo) | 4 |
 | Para verificar leyendo el texto (sin juicio de QA todavía) | 0 |
 | Reglas RN con un criterio en su columna CA | 23 de 23 |
-| Reglas RN que el propio criterio también cita (cita de vuelta) | 9 de 23 |
-| Reglas RN que ninguna cabecera de criterio nombra (solo están en la columna CA de la regla) | 14 de 23 |
+| Reglas RN que el propio criterio también cita (cita de vuelta) | 10 de 23 |
+| Reglas RN que ninguna cabecera de criterio nombra (solo están en la columna CA de la regla) | 13 de 23 |
 | Reglas RN cuyo criterio no las prueba del todo | 3 (RN-009, RN-018, RN-021) |
 
-El 2026-10-25 (informe de ronda 3 y archivo anterior): 18 de 22 reglas sin criterio que las cite y 17 requisitos que su criterio no probaba. Hoy las 22 reglas tienen un criterio en su columna CA (y 9 también son nombradas por la cabecera del criterio); de los 17 anteriores quedan abiertos los de RF-IMP-008, 009 y 015, RF-OC-048 y 049, RF-ENT-002 y 016 (todos con fecha límite en D-076.3), RF-EMP-004 y RF-PLA-013 (nuevo). Los demás (RF-ACC-006, 014, 020, RF-PLA-009 a 012, RF-CAT-026, RF-ROL-015) quedaron probados con los criterios nuevos y ampliados.
+El 2026-10-25 (informe de ronda 3 y archivo anterior): 18 de 22 reglas sin criterio que las cite y 17 requisitos que su criterio no probaba. Hoy las 22 reglas tienen un criterio en su columna CA (y 10 también son nombradas por la cabecera del criterio); de los 17 anteriores quedan abiertos los de RF-IMP-008, 009 y 015, RF-OC-048 y 049, RF-ENT-002 y 016 (todos con fecha límite en D-076.3), RF-EMP-004 y RF-PLA-013 (nuevo). Los demás (RF-ACC-006, 014, 020, RF-PLA-009 a 012, RF-CAT-026, RF-ROL-015) quedaron probados con los criterios nuevos y ampliados.
 
 ## Qué exige D-076, hoy, y quién lo cierra
 
@@ -41,7 +41,7 @@ Regla (D-076): un requisito necesita un criterio que lo pruebe **antes de que se
 
 | Requisito o regla | Criterio | Estado (lectura de QA) | Responsable |
 |---|---|---|---|
-| RN (22 reglas) | Columna CA en la tabla de reglas | HECHO. Las 22 reglas citan al menos un criterio que existe. 9 de 22 además aparecen citadas por el propio criterio; las otras 14 solo en la columna (basta: D-076.1a dice "citando"). Sugerencia: RN-010 debería nombrar también CA-079b (autoentrega sin excepción). | Analista (hecho); Auditor Técnico verifica con su guion |
+| RN (22 reglas) | Columna CA en la tabla de reglas | HECHO. Las 22 reglas citan al menos un criterio que existe. 10 de 22 además aparecen citadas por el propio criterio; las otras 13 solo en la columna (basta: D-076.1a dice "citando"). Sugerencia: RN-010 debería nombrar también CA-079b (autoentrega sin excepción). | Analista (hecho); Auditor Técnico verifica con su guion |
 | RF-ACC-006 | CA-068 | HECHO. Prueba los 15 minutos (a los 15:01 se rechaza), el uso único y el código de 8 caracteres en otro dispositivo. | Analista (hecho) |
 | RF-ACC-014 | CA-069 | HECHO. Prueba aviso a los 25, vencimiento a los 30 minutos sin actividad y a las 12 horas. | Analista (hecho) |
 | RF-ACC-020 | CA-009 | HECHO. Prueba el aviso de recomendar al menos dos administradores. | Analista (hecho) |
@@ -116,7 +116,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 | RN-020 | CA-088 (E2) | CA-088 | prueba de verdad |
 | RN-021 | CA-063 (E4), CA-072 (E5) | - | parcial: CA-063 y CA-072 prueban el costo del activo en la v1 (el de la recepción). El libro único y `fuente_costo` son de Fase 3 (CA-PRE). |
 | RN-022 | CA-018 (E3) | - | prueba de verdad |
-| RN-023 |  | - | prueba de verdad |
+| RN-023 | CA-094 (E4) | CA-094 | prueba de verdad |
 
 **Reglas RN de los módulos**
 
@@ -354,7 +354,7 @@ Etapas: E0 a E7 son las de la v1; F2 y F3 son fases posteriores. "Criterio (corr
 | RF-INV-025 | Ingreso manual de un activo (reemplazos por garantía, donaciones, compras sin orden): permiso… | E4 | CA-059 (E4) | cubierto |  |
 | RF-INV-026 | Corregir el costo o la moneda de un activo (activos del Excel) exige activos.corregir_costo (P… | E4 | CA-063 (E4) | cubierto |  |
 | RF-INV-027 | Cambio de ubicación de un activo con serie es un movimiento propio ("cambio de ubicación") con… | E4 | CA-060b (E4) | cubierto |  |
-| RF-INV-034 | Código visible del activo (D-079): cada activo recibe al crearse, por cualquier vía (recepción… | E4 | CA-094 (NO EXISTE) | sin criterio |  |
+| RF-INV-034 | Código visible del activo (D-079): cada activo recibe al crearse, por cualquier vía (recepción… | E4 | CA-094 (E4) | cubierto |  |
 | RF-INV-009 | Los 5 estados son una lista cerrada. "Prestado" no es un estado; "En tránsito" no existe en la… | E4 | CA-058 (E4) | cubierto |  |
 | RF-INV-010 | Las 25 combinaciones de la tabla se comprueban en el servidor, por una sola función, y con un… | E4 | CA-058 (E4) | cubierto |  |
 | RF-INV-011 | El motivo es obligatorio en baja, extravío, reingreso, ajuste de stock, corrección de series y… | E4 | CA-024 (E4) | cubierto |  |

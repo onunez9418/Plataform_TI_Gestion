@@ -1,6 +1,6 @@
 # Criterios de aceptación por etapa
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-26 · **Checkpoint:** commit `f25fddc` (con cambios sin guardar en los documentos fuente) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-076), `docs/registro-permisos.md` v1.1 y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-26 · **Checkpoint:** commit `0c9b54b` (más cambios sin guardar en: docs/documento-funcional.md) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-076), `docs/registro-permisos.md` v1.1 y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
 
 **Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del 2026-10-25 (424 criterios sobre el documento v0.3 sin partir). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).
 
@@ -12,9 +12,9 @@
 - **Bloqueante:** sí = si falla, la etapa no se aprueba. "No (bloquea su módulo)" = es de Fase 2 o 3 y bloquea la entrega de ese módulo, no la v1 (D-056).
 - **Etapa heredada:** el criterio solo cita reglas RN y no hay fila RF que lo cite; tomó la etapa más frecuente de su módulo. Debe confirmarlo el escuadrón.
 
-## Resumen (checkpoint f25fddc, 2026-10-26)
+## Resumen (checkpoint 0c9b54b, 2026-10-26)
 
-**450 criterios:** 115 del núcleo (identificadores con letra, que son 93 números, CA-001 a CA-093) y 335 de los 17 módulos. El 2026-10-25 eran 424 (93 y 331). Qué cambió: el Analista agregó CA-083 a CA-093 y partió CA-016, CA-040, CA-052a y b, CA-054, CA-060, CA-064 y CA-065 (CA-040 en CA-040a y CA-040b; ya no existe CA-040 sin letra); los escuadrones partieron CA-NOT-05 y CA-NOT-07 y agregaron un criterio a gestión de cambios y otro a gestión de problemas.
+**451 criterios:** 116 del núcleo (identificadores con letra, que son 94 números, CA-001 a CA-094) y 335 de los 17 módulos. El 2026-10-25 eran 424 (93 y 331). Qué cambió: el Analista agregó CA-083 a CA-093 y partió CA-016, la auditoría inalterable (hoy CA-040a y CA-040b), CA-052a y b, CA-054, CA-060, CA-064 y CA-065; los escuadrones partieron CA-NOT-05 y CA-NOT-07 y agregaron un criterio a gestión de cambios y otro a gestión de problemas.
 
 | Se ejecuta en | Criterios que empiezan aquí | Criterios que se completan aquí (empezaron antes) |
 |---|---|---|
@@ -22,15 +22,15 @@
 | Etapa 1 | 52 | 0 |
 | Etapa 2 | 37 | 2 |
 | Etapa 3 | 4 | 1 |
-| Etapa 4 | 43 | 10 |
+| Etapa 4 | 44 | 10 |
 | Etapa 5 | 24 | 5 |
 | Etapa 6 | 2 | 2 |
 | Etapa 7 | 3 | 0 |
 | Fase 2 | 134 | 5 |
 | Fase 3 | 151 | 0 |
-| **Total** | 450 | 25 |
+| **Total** | 451 | 25 |
 
-**Criterios de la v1 (Etapas 0 a 7): 165.** De fases posteriores: 285. Antes (2026-10-25): 139 y 285.
+**Criterios de la v1 (Etapas 0 a 7): 166.** De fases posteriores: 285. Antes (2026-10-25): 139 y 285.
 
 Comparación con la versión anterior (2026-10-25). **Ojo, no es la misma medida:** la versión anterior contaba cada criterio en la etapa donde "se ejecuta completo" (la más tardía); esta cuenta dónde **empieza** y, aparte, dónde **termina**. La comparable con la anterior es la última columna.
 
@@ -39,7 +39,7 @@ Comparación con la versión anterior (2026-10-25). **Ojo, no es la misma medida
 | Etapa 1 | 30 | 52 | 38 |
 | Etapa 2 | 26 | 37 | 32 |
 | Etapa 3 | 3 | 4 | 3 |
-| Etapa 4 | 47 | 43 | 53 |
+| Etapa 4 | 47 | 44 | 54 |
 | Etapa 5 | 26 | 24 | 28 |
 | Etapa 6 | 3 | 2 | 3 |
 | Etapa 7 | 4 | 3 | 3 |
@@ -54,7 +54,7 @@ Por la etapa más temprana de su requisito:
 |---|---|
 | Etapa 0 | 3 |
 | Etapa 1 | 60 |
-| Etapa 2 | 44 |
+| Etapa 2 | 45 |
 | Etapa 3 | 4 |
 | Etapa 4 | 31 |
 | Etapa 5 | 16 |
@@ -66,7 +66,7 @@ Por la etapa más temprana de su requisito:
 
 | Tipo de prueba | Criterios |
 |---|---|
-| integración | 251 |
+| integración | 252 |
 | unitaria | 82 |
 | integración + navegador | 70 |
 | navegador | 39 |
@@ -91,7 +91,7 @@ Por la etapa más temprana de su requisito:
 | Personas y ubicaciones (PRS) | 16 |
 | Proveedores y contratos (PRV) | 22 |
 | Reportes y tableros (REP) | 22 |
-| Núcleo | 115 |
+| Núcleo | 116 |
 
 ### Lo que cada etapa exige (D-076)
 
@@ -102,14 +102,14 @@ Bloqueantes de una etapa = los criterios que **empiezan** en ella más los que *
 | Etapa 1 | 52 | 0 | 52 | 3 |
 | Etapa 2 | 37 | 2 | 39 | 1 |
 | Etapa 3 | 4 | 1 | 5 | 0 |
-| Etapa 4 | 43 | 10 | 53 | 4 |
+| Etapa 4 | 44 | 10 | 54 | 4 |
 | Etapa 5 | 24 | 5 | 29 | 2 |
 | Etapa 6 | 2 | 2 | 4 | 0 |
 | Etapa 7 | 3 | 0 | 3 | 1 |
 
-### Criterios que NO corren en la etapa de su requisito (40)
+### Criterios que NO corren en la etapa de su requisito (41)
 
-Dos casos distintos. **(A) Corren antes de lo que necesitan: 4.** Es un defecto del criterio: no se puede ejecutar. **(B) Arrancan después de la etapa más temprana de su requisito: 36.** El requisito se entrega antes de que su criterio corra; la etapa de ese requisito se cierra sin esa prueba. Muchos son consecuencia legítima de que el criterio necesita un módulo posterior (órdenes, activos, actas); aun así, el Gerente de TI debe saberlo al cerrar la etapa.
+Dos casos distintos. **(A) Corren antes de lo que necesitan: 4.** Es un defecto del criterio: no se puede ejecutar. **(B) Arrancan después de la etapa más temprana de su requisito: 37.** El requisito se entrega antes de que su criterio corra; la etapa de ese requisito se cierra sin esa prueba. Muchos son consecuencia legítima de que el criterio necesita un módulo posterior (órdenes, activos, actas); aun así, el Gerente de TI debe saberlo al cerrar la etapa.
 
 **(A) Corren antes:**
 
@@ -149,6 +149,7 @@ Dos casos distintos. **(A) Corren antes de lo que necesitan: 4.** Es un defecto 
 | CA-073 | Núcleo | Etapa 0 | Etapa 1 | RF-DAT-010: Etapa 0; el criterio arranca en Etapa 1. La infraestructura del nombre canario es de la Etapa 0; el criterio corre cuando hay Personas de prueba (Etapa 1). |
 | CA-081b | Núcleo | Etapa 2 | Etapa 4 | RF-PER-006: Etapa 2; el criterio arranca en Etapa 4 |
 | CA-093 | Núcleo | Etapa 1 | Etapa 2 | RF-ACC-025: Etapa 1; el criterio arranca en Etapa 2. La tarea "Designar suplente" aparece en Primeros pasos (Etapa 1), pero depende del registro de derechos de datos (RF-PER-012, Etapa 2). |
+| CA-094 | Núcleo | Etapa 2 | Etapa 4 | RF-CAT-008: Etapa 2; el criterio arranca en Etapa 4 |
 | CA-GAR-01 | Garantías y mantenimiento | Etapa 4 | Etapa 5 | RF-GAR-002, RF-GAR-005: Etapa 4; el criterio arranca en Etapa 5 |
 | CA-GAR-04 | Garantías y mantenimiento | Etapa 4 | Fase 2 | RF-GAR-003, RF-GAR-006, RF-GAR-008: Etapa 4; el criterio arranca en Fase 2 |
 | CA-LIN-09 | Líneas móviles | Fase 2 | Fase 3 | RF-LIN-014, RNF-LIN-001, RNF-LIN-006: Fase 2; el criterio arranca en Fase 3 |
@@ -233,7 +234,7 @@ CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-AYU-26, CA-CAM-07, CA-CMD-15,
 
 ## Detalle por módulo
 
-### Núcleo (documento funcional, sección 22) (115)
+### Núcleo (documento funcional, sección 22) (116)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
@@ -352,6 +353,7 @@ CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-AYU-26, CA-CAM-07, CA-CMD-15,
 | CA-091 | RF-DAT-013, PS-234 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1059 |
 | CA-092 | RF-CAT-026 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1060 |
 | CA-093 | RF-PER-012, RF-ACC-025 | Etapa 1 | Etapa 2 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1061 |
+| CA-094 | RF-INV-034, RN-023, RN-004, RF-CAT-008 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1062 |
 
 ### AYU · Mesa de ayuda (27)
 
