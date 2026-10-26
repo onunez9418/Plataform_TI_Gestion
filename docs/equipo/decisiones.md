@@ -393,7 +393,7 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
   3. **Anonimizar = sobrescribir los datos en el registro de Persona/Usuario** con una referencia ("Persona dada de baja 0042"). La auditoría no se toca y sigue siendo legible, porque apunta al identificador, que ahora muestra la referencia.
   4. La anonimización queda como un evento más en la auditoría (quién la ordenó o que fue automática, y cuándo).
   5. Lo que en la auditoría pueda ser dato personal indirecto (por ejemplo la dirección IP) se conserva solo hasta que venza el plazo de la auditoría (D-024.1). Al vencer, un **proceso de mantenimiento separado de la aplicación** (no un botón del administrador) archiva o elimina las entradas vencidas y deja constancia. Es el único borrado permitido sobre la auditoría.
-  6. **Ampliación (H-CUM-01): lista cerrada de campos personales que la auditoría nunca guarda por valor.** Son: nombre, correo, área, **código de empleado**, teléfono y correo laborales de **contactos de proveedor**, **titular persona natural** de un dominio o contrato, y cualquier **texto libre** (comentarios, motivos, descripciones) donde una persona pueda escribir datos personales. De estos, la auditoría guarda solo "el campo X cambió". En los motivos, que son texto libre, el sistema avisa al escribir que no se pongan datos personales ni claves. La lista la mantiene el Arquitecto en un solo lugar del código y todos los módulos la usan; un campo nuevo con dato personal no pasa a desarrollo sin declararse en ella. Se revisa al abrir cada etapa. Mientras legal no diga lo contrario, IMEI, número de línea asignado y dirección IP se tratan como datos personales.
+  6. **Ampliación (H-CUM-01): lista cerrada de campos personales que la auditoría nunca guarda por valor.** Son: nombre, correo, área, **código de empleado**, teléfono y correo laborales de **contactos de proveedor**, **titular persona natural** de un dominio o contrato, y cualquier **texto libre** (comentarios, motivos, descripciones) donde una persona pueda escribir datos personales. De estos, la auditoría guarda solo "el campo X cambió". En los motivos, que son texto libre, el sistema avisa al escribir que no se pongan datos personales ni claves. La lista la mantiene el Arquitecto en un solo lugar del código y todos los módulos la usan; un campo nuevo con dato personal no pasa a desarrollo sin declararse en ella. Se revisa al abrir cada etapa. **[Enmendado por D-077 (2026-10-26): los "motivos" salen de la lista de textos que la auditoría nunca guarda por valor.]** Mientras legal no diga lo contrario, IMEI, número de línea asignado y dirección IP se tratan como datos personales.
   7. **Eventos de seguridad aparte.** La IP, los inicios de sesión fallidos y el correo escrito en un intento fallido (que puede ser de un desconocido) van en un **registro de seguridad separado**, con plazo corto de **12 meses** (propuesta, legal lo confirma), no en los 5 años de la auditoría de negocio.
   8. La purga a los 5 años se hace por **partición anual**, por un rol de mantenimiento fuera de la aplicación, con **dos personas autorizadas** y constancia (partición, fecha, quién).
 - **Motivo:** Separar "quién fue" (identificador, permanente) de "cómo se llama" (dato personal, anonimizable) permite cumplir las dos cosas sin excepciones a la regla de solo agregar. La lista cerrada evita que cada módulo decida por su cuenta qué es dato personal.
@@ -1154,6 +1154,46 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Qué cambia:** núcleo §21, §22; `docs/calidad/criterios-por-etapa.md` y `docs/trazabilidad.md` (QA los actualiza); definición de "listo" de cada etapa.
 
 **Escalado al CEO por la ronda 3.** Nada nuevo en dinero, legal o irreversible. Se agrega un **insumo** que solo él tiene: **designar dos personas** del equipo para administrar la plataforma antes de cargar datos reales (D-073.1); esa designación no tiene costo propio salvo las llaves de seguridad físicas ya incluidas en el escalado de dinero.
+
+---
+
+## Decisiones de la ronda 4 (2026-10-26)
+
+**Origen.** Informes de ronda 4 de Cumplimiento y Seguridad, aviso de la Jefatura de Proyecto sobre D-030.6 y las preguntas abiertas de la puerta de la Etapa 0. Nada de lo que sigue es dinero, legal nuevo ni irreversible.
+
+### D-077 · Enmienda a D-030.6: el motivo SÍ se guarda por valor en la auditoría
+- **Pregunta:** D-030.6 incluye los "motivos" entre los textos libres que la auditoría nunca guarda por valor; el núcleo (RF-AUD-003) y `garantias-mantenimiento.md` los guardan. ¿Cuál vale?
+- **Decisión:**
+  1. **Se enmienda D-030.6.** Siguen sin valor en la auditoría (solo "el campo X cambió"): nombre, correo, área, código de empleado, teléfono y correo laborales de contactos, titular persona natural, IMEI y número de línea asignados a una Persona, y los **comentarios y descripciones libres**. **Los motivos salen de esa lista.**
+  2. **El motivo se guarda por valor.** Es el "porqué" de aprobar, anular, reabrir, corregir o revertir (RN-008); sin él la auditoría dice qué pasó pero no por qué.
+  3. **Es texto libre no anonimizable de forma garantizada.** Así se declara en §18.1 y en el aviso de privacidad (O-3). Su copia en la auditoría vence con el plazo de la auditoría; PS-234 `texto.redactar` redacta el registro, no la copia de la auditoría (RF-AUD-003). Se mantienen el aviso al escribir y el validador común.
+  4. El plazo de esa copia queda dentro de la consulta legal L-04 ya pedida; no se agrega nada nuevo para el CEO.
+- **Motivo:** Una auditoría sin el porqué pierde su función de control. El riesgo (un dato personal escrito por error en un motivo) está declarado, acotado en el tiempo y en consulta legal.
+- **Recomendó:** Cumplimiento (O-2, R-09), Analista (RF-AUD-003), Jefatura de Proyecto (aviso del choque).
+- **Qué cambia:** `integraciones-api.md` (línea de textos libres: "descripciones" sin valor, "motivos de revocación" con valor) y `presupuesto-costos.md` (sección de datos personales declarados, que hoy dice "descripciones y motivos sin valor" y contradice su propio RN-PRE-037): **Escuadrón F**. `docs/arquitectura/adr-11-auditoria.md`: el filtro de `registrarAuditoria` excluye "texto libre" salvo el motivo: **Arquitecto**. Nota al pie en D-030.6 (hecha).
+
+### D-078 · Ratificación de S-PRS-14, S-PRB-12, S-CMD-11, S-CMD-12 y PS-175
+- **Pregunta:** ¿Siguen vigentes estos cinco puntos que la puerta de la Etapa 0 tenía por abiertos?
+- **Decisión:** **Ya estaban decididos; se ratifican sin cambio, con una línea cada uno.** Comprobado con Grep en `docs/modulos/` y en el registro:
+  - **S-PRS-14** (único con PS-29 no atiende su propio pedido; suplente obligatorio): D-071.1; `personas-ubicaciones.md` línea 277 ya dice "Aceptado (D-071)".
+  - **S-PRB-12** (errores conocidos visibles a más roles, con resumen para usuarios y detalle técnico aparte): D-071.2; `gestion-problemas.md` línea 280 "Aceptado con condición".
+  - **S-CMD-11** (un elemento de CMDB de origen se materializa al relacionarlo): D-071.3; `cmdb-ligera.md` línea 288 "Aceptado".
+  - **S-CMD-12** (consulta de impacto con 100 o más nombres de Personas se audita): D-071.4; `cmdb-ligera.md` línea 289 "Aceptado con umbral propio".
+  - **PS-175 `cambios.cerrar`** (no lo cierra quien lo implementó, salvo la casilla «cambios»): D-067; `registro-permisos.md` línea 288 vigente.
+- **Motivo:** No reabrir lo decidido; la puerta solo necesita que conste.
+- **Qué cambia:** nada en los archivos.
+
+### D-079 · S-GAR-12: formato del "código del activo"
+- **Pregunta:** Los correos de garantías usan el "código del activo" en lugar de la serie (H-SEG-32 g), pero el núcleo no define ese código (solo existen SKU, actas, órdenes y Personas). **Búsqueda con Grep:** `documento-funcional.md` no trae ninguna definición; la propuesta de reserva está en `garantias-mantenimiento.md` línea 316.
+- **Decisión:** **Confirmado y definido.** Cada activo recibe al crearse un **código visible** `ACTV-NNNNNN`: correlativo **por empresa**, mínimo 6 dígitos, que no se reutiliza (pueden quedar saltos), con contador propio (ADR-15). No es la serie ni el código del SKU, no es dato personal y se puede buscar. Los correos, las actas y los avisos lo usan en lugar de la serie. Se agrega `ACTV` a los prefijos reservados (junto a `ACT`) para que ninguna categoría lo use.
+- **Motivo:** Un código propio evita escribir la serie en correos sin inventar una combinación frágil de SKU más referencia.
+- **Qué cambia:** **Analista:** un requisito en RF-INV (código visible del activo), la tabla de prefijos y la lista de reservados (§26.2) y `trazabilidad.md`. **Escuadrón A:** `garantias-mantenimiento.md` S-GAR-12 pasa a "Aceptado (D-079)". **Arquitecto:** una línea en ADR-15 (contador `activo`).
+
+### D-080 · Procedimiento de incidente v0.3: plazo de 48 horas para G2 y congelación en incidente
+- **Pregunta:** Cumplimiento propone (procedimiento §6.1) avisar al CEO de un G2 al confirmarse o, a más tardar, a las 48 horas si sigue sin descartarse; y (C.5.2) congelar anonimización y purga durante la preservación de evidencia.
+- **Decisión:** (a) **Confirmado el plazo interno de 48 horas para G2.** Es un plazo del equipo, no legal: no sustituye los plazos que fije el abogado (L-16). (b) **Confirmada la congelación de C.5.2**: es solo pausar algo irreversible, no borra nada. (c) **Visto bueno técnico del Gerente de TI al borrador v0.3 como borrador** (lo que pide D-064 condición 13), tras leerlo completo; sigue siendo borrador hasta ensayo y abogado (H-CUM-18). Observación: `docs/operaciones/incidentes/` y su plantilla (sección 10, fila 8) los crea Seguridad antes de producción.
+- **Motivo:** Un G2 sin descartar durante dos días ya merece que el CEO lo sepa; congelar lo irreversible mientras se investiga no cuesta nada.
+- **Qué cambia:** `procedimiento-incidente-datos.md` 6.1 deja de decir "lo confirma el Gerente de TI" (lo edita Cumplimiento).
 
 ---
 

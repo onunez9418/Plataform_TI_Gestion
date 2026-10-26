@@ -63,12 +63,12 @@ PAL_NAV = ['pantalla', 'botón', ' pdf', 'teclado', '360', 'contraste', 'banner'
            'impres', 'clic', 'vista previa', 'barra de avance', 'se ve ', 've el ', 've la ', 'muestra', 'aviso visible',
            'etiqueta', 'ficha', 'calendario', 'tablero', 'portal']
 PAL_MANUAL = ['personas no técnicas', 'prueba de tareas', 'cronómetro', 'ensayo', 'revisión manual', 'plan de vuelta',
-              'manuales de la etapa', 'restauración probada']
-PAL_SERV = ['empresa', 'permiso', 'rechaza', 'petición', 'concurr', 'a la vez', 'simult', 'reloj', 'correo', 'auditor',
-            'sesión', 'cola', 'trabajador', 'import', 'export', 'base de datos', 'api', 'integraci', 'identificador',
-            'huella', 'transacci', 'registro de', 'notific', 'aviso']
-PAL_CALC = ['calcula', 'fórmula', 'redondeo', 'porcentaje', 'suma', 'normaliza', 'umbral', 'riesgo =', 'prioridad',
-            'sla', 'vigencia', 'resta', 'meses', 'días', 'tabla de']
+              'manuales de la etapa', 'restauración probada', 'restaur', 'respaldo']
+PAL_SERV = ['permiso', 'petición', 'concurr', 'a la vez', 'simult', 'reloj', 'correo', 'auditor', 'sesión', 'cola',
+            'trabajador', 'import', 'export', 'base de datos', 'api', 'integraci', 'huella', 'transacci', 'otra empresa',
+            'empresa b', 'empresa a', 'solo lectura', 'rol ', 'identificador interno', 'no encontrado']
+PAL_CALC = ['calcula', 'fórmula', 'redondeo', 'porcentaje', 'suma', 'normaliza', 'umbral', 'riesgo', 'prioridad',
+            'sla', 'vigencia', 'resta', 'meses', 'días', 'tabla de', 'saldo', 'estado', 'transición', 'ciclo', 'vence', 'rechaza']
 
 
 def tipo(v):

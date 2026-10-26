@@ -103,3 +103,22 @@ D076 = [
     (5, 'RF-OC-026 (mapa acto-casilla), RF-OC-051', 'CA-070, CA-031', 'PENDIENTE. No lo pidió D-076 expresamente.', 'Analista; QA propone tabla'),
     (7, 'Partir CA-053', 'CA-053', 'PENDIENTE (D-076.3 lo agrupa con CA-038 y CA-054).', 'Analista'),
 ]
+
+# Razón con que QA explica por qué un criterio del núcleo arranca después de la etapa de su requisito (lectura de QA)
+NOTAS_TARDE = {
+    'CA-012': 'Necesita órdenes de compra (Etapa 5). Hasta entonces "quien crea no aprueba" solo se prueba por la matriz (CA-011a) y CA-010.',
+    'CA-016b': 'Necesita registrar una entrega de equipo (Etapa 4).',
+    'CA-038': 'RF-IMP-017 es una condición documental de la Etapa 0; la importación se prueba cuando existe (Etapa 4).',
+    'CA-053': 'Existe como plan desde la Etapa 0 y se ejecuta en la Etapa 7. El ensayo de restauración previo a la Etapa 1 (CI-17) cubre una parte.',
+    'CA-054c': 'RF-USR-006 está mal citado (ver trazabilidad); la restauración de un respaldo es de la Etapa 7.',
+    'CA-057': 'Portal de autoservicio (Fase 3).',
+    'CA-073': 'La infraestructura del nombre canario es de la Etapa 0; el criterio corre cuando hay Personas de prueba (Etapa 1).',
+    'CA-093': 'La tarea "Designar suplente" aparece en Primeros pasos (Etapa 1), pero depende del registro de derechos de datos (RF-PER-012, Etapa 2).',
+    'CA-NOT-01': 'El módulo lo fija en Etapa 5 porque necesita órdenes de compra; el envío base (RF-NOT-013) es de Etapa 1 y se prueba con CA-NOT-12 y CA-NOT-14.',
+    'CA-NOT-07a': 'Igual que CA-NOT-01: necesita órdenes de compra.',
+    'CA-NOT-20': 'Igual que CA-NOT-01: necesita órdenes de compra.',
+}
+NOTAS_ANTES = {
+    'CA-NOT-10': 'La tabla del módulo lo pone en Etapa 1 pero cubre requisitos de Fase 2 (rebotes y bandeja). El escuadrón C debe decir qué parte corre en Etapa 1.',
+    'CA-NOT-13': 'Igual que CA-NOT-10: cubre requisitos de Fase 2 (campana de no leídas).',
+}

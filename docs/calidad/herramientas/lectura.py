@@ -107,10 +107,16 @@ def leer_nucleo():
         if m: rns[m.group(1)] = dict(id=m.group(1), texto=m.group(2), ca=expandir_ca(m.group(3)), linea=i)
     cas = {}
     for i, l in enumerate(doc, 1):
-        m = re.match(r'^- \*\*(CA-\d{3}[a-z]?\d?) · (.+?)\*\* \((.*?)\)\.\s*(.*)$', l)
+        m = re.match(r'^\s*- \*\*(CA-\d{3}[a-z]?\d?) · (.+?)\*\* \((.*?)\)\.\s*(.*)$', l)
         if m:
             cas[m.group(1)] = dict(id=m.group(1), modulo='núcleo', titulo=m.group(2),
-                                   cubre=expandir_refs(m.group(3), CORE_MODS), texto=m.group(4), linea=i)
+                                   cubre=expandir_refs(m.group(3), CORE_MODS), texto=m.group(4), linea=i, cabecera=m.group(3))
+    # un criterio "padre" que solo anuncia su partición (el que anuncia "Se divide") no es un criterio: lo prueban sus hijos
+    for d in list(cas):
+        if cas[d]['texto'].startswith('Se divide') and any(o != d and o.startswith(d) for o in cas):
+            cas[d]['padre'] = True
+    for d in [d for d in cas if cas[d].get('padre')]:
+        del cas[d]
     # tabla 22.1
     ini = [i for i, l in enumerate(doc) if l.startswith('### 22.1')][0]
     etapa_run, completa = {}, {}
@@ -132,7 +138,7 @@ def leer_nucleo():
             comp = re.search(r'completa en (Etapa \d|Fase \d)', p)
             for d in ids:
                 if d in etapa_run and et > etapa_run[d]:
-                    completa[d] = et     # segunda aparición (ej. CA-040 copia externa)
+                    completa[d] = et     # segunda aparición (ej. la copia externa de la auditoría)
                     continue
                 etapa_run[d] = et
                 if comp:
@@ -180,7 +186,7 @@ def leer_modulos():
                     corte = re.search(r'(?<![A-Za-zñáéíóú])\*{0,2}Dad[oa]s?\b', resto, re.I)
                     cab = resto[:corte.start()] if corte else resto[:200]
                     texto = resto[corte.start():] if corte else resto
-                cas[m.group(1)] = dict(id=m.group(1), modulo=nombre, titulo='', cubre=expandir_refs(cab, mods_ok),
+                cas[m.group(1)] = dict(id=m.group(1), modulo=nombre, titulo='', cubre=expandir_refs(cab, mods_ok), cabecera=cab.strip(' *.()'),
                                        texto=re.sub(r'\*', '', texto).strip(), linea=i, archivo=f.split('/')[-1])
     return reqs, rns, cas
 

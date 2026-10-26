@@ -313,8 +313,8 @@ Un programa consulta la base recién migrada y verifica, **como `app_empresa`**:
 |---|---|---|---|
 | 1 | `.gitignore` para Node, Next.js, entornos, secretos, copias de base de datos y hojas de cálculo | **Hecho:** `/.gitignore` creado y probado (ignora `.env`, claves, volcados y `*.xlsx`/`*.csv` salvo las carpetas de prueba inventada) | Archivo en el repositorio |
 | 2 | `.env.example` con los nombres de variables y sin valores reales | **Hecho:** `/.env.example` (todos los valores son "cambiar-esto"); se actualiza cada vez que el código agrega una variable | Archivo en el repositorio; la revisión automática falla si el código usa una variable que no está en él |
-| 3 | **Ramas protegidas** en GitHub: sin escritura directa en la rama principal, revisión automática obligatoria, aprobación de otra persona, sin forzar empujes | **Pasos exactos escritos (3.8); falta que los haga quien administra el repositorio.** Desde esta sesión no puedo cambiar esa configuración | Captura de la configuración y prueba de empuje directo rechazado (3.8, paso G) |
-| 4 | **Revisión de secretos**: (a) herramienta de búsqueda de secretos en cada cambio, (b) la protección de GitHub que bloquea el empuje si lleva un secreto (verificar disponibilidad en el plan), (c) opcional: revisión local antes de cada commit | **(a) Hecha para documentos** (3.7, también revisa los commits intermedios); se amplía al código en la Etapa 1. **(b) Pendiente** de activar y de verificar si el plan de GitHub la incluye en repositorio privado (3.8, pasos C y 0). (c) Opcional | Prueba: un secreto falso en una rama de ensayo debe bloquearse (3.8, paso G) |
+| 3 | **Ramas protegidas** en GitHub: sin escritura directa en la rama principal, revisión automática obligatoria, aprobación de otra persona, sin forzar empujes | **Pasos exactos escritos (3.8); falta que los haga quien administra el repositorio.** Desde esta sesión no puedo cambiar esa configuración | Captura de la configuración y prueba de empuje directo rechazado (3.8, paso F) |
+| 4 | **Revisión de secretos**: (a) herramienta de búsqueda de secretos en cada cambio, (b) la protección de GitHub que bloquea el empuje si lleva un secreto (verificar disponibilidad en el plan), (c) opcional: revisión local antes de cada commit | **(a) Hecha para documentos** (3.7, también revisa los commits intermedios); se amplía al código en la Etapa 1. **(b) Pendiente** de activar y de verificar si el plan de GitHub la incluye en repositorio privado (3.8, pasos C y 0). (c) Opcional | Prueba: un secreto falso en una rama de ensayo debe bloquearse (3.8, paso F) |
 | 5 | Archivo de bloqueo de dependencias versionado | Se cumple al crear el proyecto | Revisión de instalación limpia (paso 1) |
 | 6 | Cuentas con segunda verificación y mínimo privilegio en GitHub | **Pendiente:** depende de pedido B | Lista de accesos (D-064 condición 9) |
 
@@ -497,6 +497,31 @@ Un respaldo que nunca se restauró no es un respaldo. **Calendario (D-052.6):** 
 
 **Restaurar a una sola empresa:** el caso más probable no es "se perdió todo" sino "una empresa se equivocó y quiere volver a ayer". Restaurar toda la base borraría el trabajo de las demás ese día. La herramienta de **exportar/importar una empresa** (D-052.5, H-ARQ-25) recorre el catálogo y mueve las filas por empresa; **Datos y DevOps la entregan antes de la primera empresa real**. Hasta entonces, el plan de emergencia es restaurar completo con aprobación del CEO. La prueba de restauración parcial se hace en una base de ensayo antes de cada etapa con uso real.
 
+#### Guion del ensayo de restauración con RS-49 (con cronómetro)
+
+Se corre en el entorno de pruebas con el perfil `completo` (1.11); una vez antes de la Etapa 7, con el perfil `volumen`. Evidencia para CA-053, CA-054c y D-064 condición 11.
+
+**Preparación (antes del "desastre"):**
+1. Anonimizar a la Persona canario (queda su intención en el registro externo, 5.4).
+2. Tomar el respaldo **R1** y anotar su identificador.
+3. **Después de R1,** a propósito: dejar una sesión abierta, un enlace de ingreso y una invitación sin usar, y una clave de API activa; suspender al usuario U1, cambiar el rol de U2, dar de baja a U3; anonimizar a otra Persona (P2).
+4. Forzar o esperar la copia externa de auditoría, para que contenga esos cambios.
+5. "Desastre": borrar la base.
+
+**Ensayo (el cronómetro corre desde el aviso hasta abrir el sistema):**
+
+| Paso | Qué se hace | Cómo se comprueba que quedó bien | Quién |
+|---|---|---|---|
+| 1 | Restaurar R1 en una base aislada y cerrada | Ninguna conexión de usuarios llega a ella; la aplicación está en modo mantenimiento | DevOps |
+| 2 | Reaplicar el registro de anonimizaciones | La Persona canario **y P2** (anonimizada después de R1) aparecen anonimizadas; el nombre canario no se encuentra en ninguna tabla, exportación ni correo | DevOps, Datos |
+| 3 | Revocar sesiones, enlaces e invitaciones pendientes | Cero sesiones válidas; el enlace y la invitación del punto 3 son rechazados | DevOps |
+| 4 | Rotar las claves de API | La clave de API del punto 3 es rechazada; se emite una nueva | DevOps |
+| 5 | Reaplicar bajas, suspensiones y cambios de rol **leyendo la copia externa** | U1 sigue suspendido, U2 tiene el rol nuevo, U3 sigue dado de baja; ninguno recupera acceso | DevOps, Seguridad |
+| 6 | Comprobaciones: cantidades por tabla y empresa; **aislamiento A/B como `app_empresa`**; auditoría restaurada contra la copia externa; clave de licencia descifrada con la llave guardada aparte | Todas pasan; tiempo medido contra el RTO de 4 horas (en el ensayo con datos de prueba, meta 1 hora para `completo`; `volumen` solo se mide) | QA, DevOps |
+| 7 | Abrir el sistema a los usuarios | **Un intento de entrar antes de este paso falla;** después entra una persona de prueba | Jefatura de Proyecto autoriza |
+
+**Registro:** fecha, quién, tiempo de cada paso, identificador de R1 y resultado de cada comprobación, en `docs/operaciones/` (sin claves ni datos personales). Si cualquier comprobación falla, el ensayo se repite completo después de corregir; no se declara "pasado" con excepciones.
+
 ### 5.3 Copia externa del registro de auditoría (el riesgo del superusuario)
 
 **El problema, en simple.** D-018 hace que la aplicación no pueda modificar ni borrar la auditoría. Pero en cualquier base existe una cuenta con poder absoluto (el "superusuario"); esa cuenta puede alterar cualquier fila sin pasar por la aplicación. **No se puede eliminar ese poder; se puede lograr que cualquier alteración quede al descubierto** (D-052.2, RF-AUD-018).
@@ -507,7 +532,7 @@ Un respaldo que nunca se restauró no es un respaldo. **Calendario (D-052.6):** 
 2. **Encadenado:** cada archivo lleva una huella calculada con su contenido **y la huella del archivo anterior**. Si alguien cambia o borra una entrada vieja, todas las huellas posteriores dejan de coincidir. La clave de firma (`AUDIT_COPY_SIGNING_KEY`) **no está en la base de datos**.
 3. **Verificación semanal** (diaria si se puede): se recalculan las huellas con lo que hay hoy en la base y se comparan con la copia externa. **Si no coinciden, alerta inmediata** a Seguridad y a la Jefatura.
 4. **Cuentas separadas:** el trabajo de copia usa `lector_auditoria` (solo lee) y una credencial de **solo agregar** al almacenamiento; quien verifica tiene la credencial de lectura de la copia, e **idealmente no es quien administra la base de producción**.
-5. **Ensayo de manipulación (a pedido de QA, CA-040):** en pruebas, un guion usa el rol dueño para alterar una entrada de auditoría y comprueba que la verificación **da alarma**; otro intenta borrar un archivo de la copia (en un depósito de pruebas con bloqueo corto) y comprueba que **se rechaza**. Se corre antes de cada etapa con uso real.
+5. **Ensayo de manipulación (a pedido de QA, CA-040b):** en pruebas, un guion usa el rol dueño para alterar una entrada de auditoría y comprueba que la verificación **da alarma**; otro intenta borrar un archivo de la copia (en un depósito de pruebas con bloqueo corto) y comprueba que **se rechaza**. Se corre antes de cada etapa con uso real.
 
 **Límites honestos:** no impide que un superusuario altere la base; lo hace **detectable**. Lo alterado en la hora entre dos copias, antes de copiarse, no queda protegido (se puede acortar el intervalo). Se reduce además con medidas humanas: pocas personas con acceso total, segunda verificación, y que el proveedor registre quién usó cuentas de alto poder (verificar que el plan lo incluya).
 
@@ -515,6 +540,22 @@ Un respaldo que nunca se restauró no es un respaldo. **Calendario (D-052.6):** 
 - **Modo de bloqueo** (estricto, o con borrado bajo orden legal): lo decide Cumplimiento con legal (D-052.2). Como D-030 ya impide que la auditoría guarde datos personales por valor, el conflicto con la anonimización se reduce; el **registro de seguridad** (IP, intentos fallidos, 12 meses) tiene otro plazo y **no debe ir a la copia de 5 años** sin que se decida.
 - **Retención de la copia:** la misma que la auditoría (5 años, D-024, pendiente de legal).
 - **Purga:** el rol `mantenimiento` borra por partición a los 5 años; la copia externa debe tener bloqueo que **venza** a ese mismo plazo, no antes ni mucho después.
+
+#### Guion del ensayo de manipulación de la copia externa (CA-040b)
+
+Prueba **CA-040b** (copia externa y plazo de 5 años, Etapa 7). La parte que dice que la aplicación no puede editar ni borrar la auditoría (**CA-040a**, Etapa 1) corre en cada cambio dentro de las pruebas con base real (3.1, paso 7), no en este ensayo. Se corre **en miniatura antes de la Etapa 1** (depósito de pruebas con bloqueo corto y llaves de pruebas), **antes de cada etapa con uso real** y **una vez por trimestre** en producción (solo la parte de verificación, sin alterar nada real).
+
+| # | Acción del ensayo (en pruebas) | Resultado que debe verse |
+|---|---|---|
+| 1 | Generar auditoría y esperar tres copias encadenadas (o forzarlas) | Tres archivos con huellas encadenadas; la verificación da "sin diferencias" |
+| 2 | Con el rol dueño **de pruebas,** modificar el texto de una entrada de hace dos horas | La verificación da **alarma** que indica el archivo y la hora de la entrada |
+| 3 | Restaurar la entrada y borrar otra entrada vieja | La verificación da alarma otra vez (falta una entrada) |
+| 4 | Intentar borrar un archivo de la copia con la credencial de solo agregar | **Rechazado** |
+| 5 | Intentar borrar o reescribir un archivo dentro del plazo de bloqueo con la credencial administradora del depósito de pruebas | **Rechazado** por el bloqueo; si el proveedor lo permitiera, la huella encadenada lo delata y el hallazgo va a la selección de proveedor (9.2, rubro 4) |
+| 6 | Medir cuánto pasa entre la alteración y la alarma | Dentro del intervalo de verificación definido (diaria si se puede, semanal como máximo) |
+| 7 | Dejar la base como estaba y registrar tiempos y capturas | Registro en `docs/operaciones/`; la alarma llegó a Seguridad y a la Jefatura de Proyecto |
+
+El ensayo falla si cualquiera de las alteraciones pasa sin alarma. La Etapa 7 no se cierra sin tener este ensayo en verde con el depósito y las credenciales **definitivas.**
 
 ### 5.4 Registro de anonimizaciones (D-032.3, D-052.3, RF-DAT-016)
 
@@ -586,6 +627,43 @@ Antes de producción quedan en `docs/operaciones/` (RNF-016): respaldo manual, r
 - **Acceso a la consola de plataforma desde una red restringida:** lo configuro yo. Propongo que la consola viva en **una dirección propia** (por ejemplo `plataforma.…`, separada de la de las empresas) protegida **antes de llegar a la aplicación** con una lista de direcciones permitidas o un túnel de acceso privado (verificar costo, 9). Requiere que los administradores de plataforma tengan una dirección fija o una conexión privada. Lo decide Seguridad.
 - **Registros:** el "de plataforma" (crear, suspender, rescatar empresas) y el "de empresa" (todo lo que soporte vio o hizo) son del Arquitecto; yo me ocupo de que las credenciales de plataforma no estén en el mismo lugar que las de producción de la base.
 
+
+### 6.5 Las 8 condiciones de Seguridad sobre las llaves: cuándo, quién y qué evidencia
+
+Fuente: `docs/revision-cruzada/ronda4-especialista-seguridad.md`, sección 2. Seguridad aprobó la estrategia de la sección 6.3 **con estas condiciones**: la 1 y la 2 antes de la Etapa 1; la 3, 4, 5 y 7 antes de cargar datos reales; la 8 en la Etapa 2; la 6 en la Etapa 7.
+
+| # | Condición (resumen) | Cuándo | Responsable | Qué entrega DevOps o cómo se comprueba | Estado hoy |
+|---|---|---|---|---|---|
+| 1 | Derivación escrita de llaves (función estándar, contexto fijo por tipo y por empresa o usuario, versión en cada valor cifrado, nunca la misma llave para dos fines) | **Antes de la Etapa 1** (antes de la primera tabla con campo cifrado) | Arquitecto (ADR T-5) | Yo reviso que las variables de 6.2 cubren lo que el ADR pida y que la versión de la llave es una variable por entorno. La prueba del ADR la corre la revisión automática | Pendiente: los ADR se están escribiendo |
+| 2 | **La llave maestra de producción no existe** en la revisión automática, en pruebas ni en desarrollo; cada entorno usa llaves propias; el repositorio solo trae valores de relleno | **Antes de la Etapa 1** | DevOps | (a) Las llaves de la revisión automática se **generan al azar en cada corrida**; (b) la llave de pruebas se genera aparte y vive solo en el almacén de pruebas; (c) la de producción se crea el día que haya datos reales y solo en su almacén; (d) una **lista de huellas cortas** (primeros 8 caracteres del resumen de cada llave, nunca la llave) por entorno, para comprobar que no se repiten entre entornos; (e) la plataforma se niega a arrancar en producción con la llave de relleno (1.1, regla 5); (f) la búsqueda de secretos (3.7) cubre el repositorio | `.env.example` ya trae relleno; falta crear los almacenes (depende de la elección de proveedor, 9) |
+| 3 | **Dos custodios** nombrados por escrito (acta, sin escribir las llaves), que **no sean las dos únicas personas administradoras de la plataforma** a la vez; el Administrador de plataforma **no tiene acceso al almacén de secretos** | Antes de datos reales | CEO designa (pedido G); DevOps ejecuta | Acta firmada y lista de accesos al almacén de secretos donde **no figura ningún administrador de plataforma**; revisión trimestral de esa lista (O-15) | Pendiente del CEO |
+| 4 | El **respaldo de las llaves** en un gestor de contraseñas de equipo, con segunda verificación por custodio y registro de accesos, es **uno** de los dos lugares; el otro es físico o un almacén distinto del alojamiento | Antes de datos reales | DevOps | Gestor con 2F obligatorio y registro de accesos activado; **segundo lugar físico:** copia en medio no electrónico o cifrada fuera de línea, sellada, en un sitio distinto, que solo se abre con los dos custodios presentes y queda anotado; la restauración de ensayo prueba que el respaldo sirve (5.2, paso 6) | Pendiente: gasto del gestor en rubro 7 de 9.2 |
+| 5 | **Ensayo de pérdida y de filtración** de la llave maestra; debe quedar escrito qué se pierde y que **rotar la maestra completa toma menos de 4 horas** con datos de prueba | Antes de datos reales | DevOps, Seguridad | Guion y cronómetro en 6.7 | Plan escrito; falta ejecutar |
+| 6 | La llave en la memoria de la aplicación es el punto débil conocido: nunca se imprime, no está en volcados de error, el trabajador y la web la leen al arrancar y no la guardan en la base; evaluar un servicio de llaves gestionado | **Etapa 7** | Arquitecto, DevOps | Prueba con una **llave canaria de pruebas**: se busca en registros técnicos, reportes y volcados de error de prueba (el filtro de 8.1 la elimina); en la Etapa 7 comparo el costo y la operación del servicio gestionado del proveedor elegido y lo llevo al Arquitecto y a Seguridad | Pendiente (Etapa 7) |
+| 7 | **Rotación anual** con calendario y alerta, y rotación inmediata de lo expuesto; la de `AUTH_SECRET` cierra sesiones y enlaces y se anuncia | Desde que haya datos reales | DevOps | Fecha de creación de cada llave en el registro de vencimientos (8.1) con alerta 60 y 30 días antes; procedimiento de rotación sin cortar el servicio (se acepta la nueva antes de retirar la vieja, 6.1 punto 6); aviso a los usuarios preparado para `AUTH_SECRET` | Plan escrito |
+| 8 | **Prueba automática** de que ningún valor cifrado, llave ni secreto aparece en la base en claro, en la auditoría, en los registros ni en exportaciones, y de que `app_plataforma` no lee columnas cifradas | **Etapa 2** (campo secreto) | QA, Arquitecto | Yo agrego la prueba como paso de la revisión automática (3.1, paso 7) y de la nocturna, con la llave canaria de la condición 6 | Pendiente (Etapa 2) |
+
+### 6.6 Llaves de seguridad físicas para los administradores de plataforma
+
+- **Qué son:** un dispositivo pequeño que se toca para entrar (estándar FIDO2/WebAuthn, el que ya entienden los navegadores actuales). Sin batería ni programa que instalar. El tipo de conector (USB-A, USB-C o por aproximación) se elige según los computadores y celulares de cada administrador.
+- **Cuántas:** **dos por administrador de plataforma** (una de uso diario y una de repuesto guardada en otro lugar). Con dos administradores, cuatro; con tres, seis. Compra única por unidad; precio a verificar (9.5). **[ESCALAR AL CEO]** (pedido F).
+- **Cuándo:** antes de cargar datos reales, y siempre dos personas de plataforma como mínimo (D-073.1). Con datos inventados, el ingreso con llave se prueba con una **llave virtual** del navegador en las pruebas automáticas, así que no hace falta comprar nada para empezar.
+- **Alta:** cada persona registra las dos llaves **el mismo día y en persona**, comprobando que cada una abre la cuenta. En la lista de accesos se anota quién tiene cuál (por la etiqueta, nunca un secreto) y dónde se guarda la de repuesto.
+- **Pérdida o robo:** se retira esa llave con la otra, o con los códigos de recuperación fuera de línea (con dos custodios, 6.4); si ya no queda ninguna, entra el rescate de plataforma (RF-PLA-003, que exige a otra persona). Se anota como incidente y se repone la llave en 5 días hábiles.
+- **Salida de una persona:** se retiran sus llaves de la cuenta el mismo día (O-15); la llave física no se reasigna a otra persona sin volver a registrarla.
+- **Alcance de la compra:** las llaves cubren primero las cuentas de plataforma. Extender el mismo mecanismo a las cuentas de infraestructura (GitHub, alojamiento, base de datos, DNS, almacenes, gestor de contraseñas) es recomendable; sumaría dos llaves por persona y se presenta aparte al CEO.
+
+### 6.7 Ensayo de pérdida y de filtración de la llave maestra (Seguridad, condición 5)
+
+Se corre en pruebas, con el perfil `completo` (1.11) y claves de licencia, secretos de webhook y semillas de segunda verificación cargados de prueba, antes de cargar datos reales y después ante cualquier cambio del esquema de cifrado.
+
+| Escenario | Qué se hace | Qué se espera | Se anota |
+|---|---|---|---|
+| **A. Se perdió la llave maestra** | Quitar la llave maestra de pruebas del almacén y reiniciar | La plataforma **se niega a arrancar** (no arranca con llave faltante ni de relleno). Se crea una llave nueva (versión 2) y se vuelve a arrancar | Qué no se recupera: **claves de licencia y secretos de webhook** (se vuelven a cargar o a generar); las semillas de la segunda verificación se rehacen: cada persona se **reenrola con su código de recuperación**, que es una huella y no depende de la llave. Tiempo hasta servicio normal |
+| **B. Se filtró la llave maestra** | Crear la versión 2, dejarla como activa para cifrar y **recifrar por lotes** en segundo plano todo lo cifrado con la versión 1; retirar la versión 1; rotar también lo que se derivó de ella | **Sin detener el servicio:** el recifrado corre mientras se usa la plataforma; al final no queda ninguna fila con la versión 1, la versión 1 ya no descifra y la rotación consta en la auditoría | **Tiempo total, que debe ser menor de 4 horas** con los datos de prueba. Si no cumple, se optimiza antes de datos reales |
+
+Comprobaciones al cerrar: descifrado de una muestra de cada tipo con la versión 2; ninguna fila con la versión 1; el respaldo cifrado con `BACKUP_ENCRYPTION_KEY` (distinta de la maestra) sigue restaurando; el procedimiento de incidente (D-059, contención en 1 hora) cita este ensayo. Firman Seguridad y DevOps; el registro, con tiempos, va a `docs/operaciones/`.
+
 ---
 
 ## 7. Correo transaccional
@@ -636,6 +714,36 @@ El acceso es por un enlace que llega al correo (D-002). Si no llega, **nadie ent
 
 **No se agregan contraseñas como respaldo del correo** (D-002).
 
+
+### 7.5 Matriz de entrega: plantilla, buzones y umbrales (D-064 condición 6)
+
+**Lo que se necesita antes de empezar:** (1) el **subdominio real** de envío (pedido C; un dominio `.test` no sirve para correo real); (2) dos cuentas de candidatos de correo (gratuitas o de entrada); (3) **cinco buzones de prueba** controlados por el equipo, **nunca personales de nadie**: Gmail personal, Google Workspace, Outlook/Hotmail, Microsoft 365 y un quinto con filtros estrictos (Microsoft 365 con la protección de enlaces encendida). Conseguir los dos buzones de empresa (Workspace y Microsoft 365) puede requerir una cuenta de prueba o de pago: se verifica en 9.5 y, si cuesta, va al CEO. Las claves de esos buzones viven en el gestor de contraseñas del equipo, no en el repositorio.
+
+**Cómo se hace:**
+1. Por **cada candidato**, **20 envíos a cada uno de los 5 tipos de buzón** (100 por candidato), repartidos en **cuatro franjas del día** durante **dos días**, con el texto real de la v1: invitación, enlace de acceso y aviso de aprobación (D-061.4).
+2. Por cada envío se anota: identificador, hora de salida, hora de llegada, dónde cayó (bandeja principal, otra pestaña, spam o no llegó), resultado de SPF, DKIM y DMARC leído en el encabezado "Authentication-Results" (en Gmail: "Mostrar original"), y si el enlace abrió y sirvió.
+3. Prueba con filtro: 20 aperturas del enlace **después** de que el buzón con protección de enlaces lo analizó; el enlace debe seguir sirviendo.
+4. Verificar con una captura de la configuración que el seguimiento de clics está apagado y que no se guarda el cuerpo de los correos.
+
+**Plantilla de la tabla de resultados** (una por candidato; se guarda en `docs/operaciones/` sin direcciones reales):
+
+| Tipo de buzón | Envíos | En bandeja principal | En spam o no llegó | Mediana de llegada | Máxima | SPF / DKIM / DMARC en "pass" | Enlace sirvió |
+|---|---|---|---|---|---|---|---|
+| Gmail personal | 20 | | | | | | |
+| Google Workspace | 20 | | | | | | |
+| Outlook / Hotmail | 20 | | | | | | |
+| Microsoft 365 | 20 | | | | | | |
+| Con filtros estrictos | 20 | | | | | | |
+
+**Umbrales de aprobación (propuesta de DevOps; QA y Seguridad pueden endurecerlos):**
+- **Spam o no llegó: 0 de 20** en los correos de acceso a los cinco tipos. Un solo caso obliga a investigar, corregir y repetir los 20 de ese tipo.
+- **Tiempo de llegada: mediana menor de 30 segundos y máximo menor de 2 minutos** (la alarma del plan es de 2 minutos, 2.3; el enlace dura 15, S-01).
+- **SPF, DKIM y DMARC en "pass" y alineados: 100 %.**
+- **Enlace tras el filtro: 20 de 20.**
+- **Sin seguimiento de clics y sin guardar el cuerpo:** comprobado por captura.
+
+**Quién gana:** el candidato que cumple todo; si cumplen los dos, el de costo menor con plan de pago claro (el segundo queda como reserva configurada, 7.4). El resultado, con fecha, va a `docs/operaciones/` y al CEO para aprobar el costo. **DMARC por pasos** (D-054.4): solo observación durante 2 a 4 semanas, luego cuarentena y luego rechazo, con los informes llegando a un buzón controlado por el equipo.
+
 ---
 
 ## 8. Monitoreo mínimo y respuesta ante incidentes
@@ -676,7 +784,7 @@ Los roles, plazos y avisos los fija D-059 y el detalle va a `docs/operaciones/pr
 
 ### 9.1 Cómo leer esta sección
 
-- **No verifiqué ningún precio** (esta actualización tampoco). Los precios cambian y no los consulté. Donde dice "**precio a verificar en la página del proveedor**" nadie debería citar una cifra mía. **D-064 condición 5 exige precios verificados y aprobados por el CEO antes de codificar:** esa verificación está **pendiente** y la debe hacer quien pueda consultar las páginas oficiales (ver 14).
+- **No verifiqué ningún precio** (esta actualización tampoco). En 9.5 está, por cada rubro, la página oficial exacta donde consultarlo. Los precios cambian y no los consulté. Donde dice "**precio a verificar en la página del proveedor**" nadie debería citar una cifra mía. **D-064 condición 5 exige precios verificados y aprobados por el CEO antes de codificar:** esa verificación está **pendiente** y la debe hacer quien pueda consultar las páginas oficiales (ver 14).
 - Los nombres de proveedores son **ejemplos de opciones del mercado**, no una contratación ni una recomendación cerrada. No hay ninguna cuenta creada.
 - Las condiciones de los planes gratuitos (límites, pausas por inactividad, uso comercial, retención de copias) cambian y deben leerse antes de apoyarse en ellos. Un plan gratuito puede servir para desarrollo, **no** para producción con datos reales.
 - **[ESCALAR AL CEO]** marca todo gasto recurrente.
@@ -718,6 +826,42 @@ Los roles, plazos y avisos los fija D-059 y el detalle va a `docs/operaciones/pr
 - **Proveedor de base de datos:** cambiarlo es posible (PostgreSQL es estándar) pero cuesta trabajo; se elige **antes del prototipo** porque este corre sobre él (D-055).
 - **Alojamiento:** si todo corre en contenedores de una sola imagen, cambiar de proveedor es relativamente barato. Lo conservo así a propósito.
 - **Proveedor de correo:** más fácil de cambiar gracias a la capa de envío con adaptadores.
+
+
+### 9.5 Dónde verificar cada precio (todos "a verificar")
+
+**Ninguna cifra de esta tabla es mía:** solo la página oficial donde se consulta. No pude abrir estas direcciones desde esta sesión; si alguna ya no abre, se busca "pricing" (precios) en el sitio oficial del proveedor. Quien verifique anota en las dos últimas columnas la fecha y el valor visto (D-064 condición 5), con captura, y la Jefatura lo lleva al CEO.
+
+| Rubro (9.2) | Opción | Página oficial a consultar | Qué mirar | Verificado (fecha, valor) |
+|---|---|---|---|---|
+| 1 Alojamiento de ejecución continua | Railway | `https://railway.com/pricing` | Si hay plan gratuito estable, costo de dos servicios siempre encendidos, uso comercial | |
+| | Render | `https://render.com/pricing` | Servicios siempre encendidos, "trabajador en segundo plano" y vuelta a una versión anterior | |
+| | Fly.io | `https://fly.io/docs/about/pricing/` | Costo de máquinas siempre encendidas | |
+| | Google Cloud Run | `https://cloud.google.com/run/pricing` | Mínimo de instancias siempre encendidas | |
+| | AWS App Runner | `https://aws.amazon.com/apprunner/pricing/` | Costo de instancia siempre activa | |
+| | Azure Container Apps | `https://azure.microsoft.com/en-us/pricing/details/container-apps/` | Réplicas mínimas | |
+| | Hetzner Cloud | `https://www.hetzner.com/cloud` | Servidor virtual pequeño (solo para pruebas) | |
+| | DigitalOcean | `https://www.digitalocean.com/pricing` | Servidor virtual pequeño | |
+| 2 Base de datos | Neon | `https://neon.com/pricing` | Conexiones directas, 60 utilizables, retención de la recuperación a un punto en el tiempo | |
+| | Supabase | `https://supabase.com/pricing` | Ídem; límites de roles y extensiones | |
+| | AWS RDS (PostgreSQL) | `https://aws.amazon.com/rds/postgresql/pricing/` | Instancia mínima, respaldo | |
+| | Google Cloud SQL | `https://cloud.google.com/sql/pricing` | Instancia mínima, respaldo | |
+| 3 Correo | Postmark | `https://postmarkapp.com/pricing` | Tope mensual y por día frente a los topes de D-054.2 | |
+| | Resend | `https://resend.com/pricing` | Ídem; dominios incluidos | |
+| | Amazon SES | `https://aws.amazon.com/ses/pricing/` | Costo por mil envíos | |
+| | Brevo / Mailgun | `https://www.brevo.com/pricing/` · `https://www.mailgun.com/pricing/` | Ídem | |
+| 4 Respaldos y copias | Backblaze B2 | `https://www.backblaze.com/cloud-storage/pricing` | Almacenamiento, bloqueo de objetos, costo de bajar datos | |
+| | Cloudflare R2 | `https://developers.cloudflare.com/r2/pricing/` | Ídem | |
+| | AWS S3 | `https://aws.amazon.com/s3/pricing/` | Ídem; "Object Lock" | |
+| 5 Monitoreo | Sentry | `https://sentry.io/pricing/` | Filtro de datos personales, cupo del plan gratuito | |
+| | UptimeRobot / Better Stack | `https://uptimerobot.com/pricing/` · `https://betterstack.com/pricing` | Latidos y alertas por celular | |
+| 6 Dominio | Registro de dominio (si hace falta uno nuevo) | `https://www.cloudflare.com/products/registrar/` o el registrador que se elija | Precio anual y renovación | |
+| 7 Llaves y gestor | Llaves físicas (Yubico) | `https://www.yubico.com/store/` | Precio por unidad, tipo de conector | |
+| | Llaves físicas (Nitrokey) | `https://shop.nitrokey.com/` | Ídem | |
+| | Gestor de contraseñas de equipo | `https://1password.com/pricing/` · `https://bitwarden.com/pricing/` | 2F obligatorio y registro de accesos por plan | |
+| 8 Red restringida | Túnel privado | `https://tailscale.com/pricing` · `https://www.cloudflare.com/plans/zero-trust-services/` | Si el plan gratuito alcanza | |
+| Otros | GitHub (ramas protegidas en repositorio privado, bloqueo de secretos, minutos del robot) | `https://github.com/pricing` y, en la ayuda oficial, "About protected branches" y "About push protection" | Si el plan actual permite la regla del paso 0 de 3.8 y qué cuesta el bloqueo de secretos | |
+| | Buzones de prueba de empresa (7.5) | `https://workspace.google.com/pricing` · `https://developer.microsoft.com/microsoft-365/dev-program` | Si hay prueba gratuita suficiente para la matriz | |
 
 ---
 
@@ -779,6 +923,10 @@ D-055 amplía el prototipo a 3 o 4 días y lo corre sobre el **proveedor candida
 | O-19 | **El registro de anonimizaciones se desincroniza de la base** | Baja | Alto | Intención primero, reconciliación nocturna (5.4) |
 | O-20 | **La consola de plataforma queda expuesta a internet** | Media | Alto | Dirección propia y restricción en el borde (6.4) |
 | O-21 | **Tablas de la cola o del registro de plataforma fuera de la lista global** hacen fallar la revisión o se crean sin protección | Media | Medio | Decidir con el Arquitecto antes de la Etapa 1 (1.2) |
+| O-22 | **Las ramas protegidas no se activan** (el plan de GitHub no las permite en repositorio privado, o nadie con rol Admin hace los pasos) y un cambio se une sin revisión | Media | Alto | Pasos exactos en 3.8, pedido F, evidencia con la prueba del paso F; la revisión de documentos avisa pero no impide sin la regla |
+| O-23 | **Con una sola persona con acceso, la aprobación de otra persona no se puede exigir** | Alta hoy | Medio | Paso B-bis de 3.8: se deja a 0 de forma temporal y se anota; se exige 1 antes de la Etapa 1 (D-064 condición 9) |
+| O-24 | **Los custodios de llaves son las mismas personas que administran la plataforma** | Media | Alto | Condición 3 de Seguridad (6.5), pedido G; revisión trimestral de la lista de accesos |
+| O-25 | **La revisión de documentos da falsos positivos o se vuelve ruido** y alguien la silencia | Media | Medio | Excepción solo con marca visible y aceptación escrita (3.7); cambios a la revisión pasan por revisión de otra persona (CODEOWNERS) |
 
 Propongo al Gerente de TI **sumar O-3, O-5, O-6, O-12, O-16, O-18 y O-20 a `docs/equipo/riesgos.md`** o ligarlos a los existentes (#9, #14, #16, #17, #18, #26). Ese archivo es suyo; mi alcance es `docs/operaciones/`.
 
@@ -817,7 +965,7 @@ Propongo al Gerente de TI **sumar O-3, O-5, O-6, O-12, O-16, O-18 y O-20 a `docs
 **Jefatura de Proyecto y CEO**
 1. Los pedidos A a E de la sección 0.
 2. Nombrar una persona con suplente para recibir alertas.
-3. **Dar acceso de administración a GitHub** (riesgo #5) para ramas protegidas y revisión de secretos.
+3. **Hacer los pasos de 3.8** (los hace quien tenga rol Admin del repositorio; el acceso de escritura de esta sesión no permite cambiar esa configuración) para ramas protegidas y bloqueo de secretos, y decidir el pedido F si el plan de GitHub lo exige.
 4. Alguien que pueda **verificar precios en las páginas oficiales** (D-064 condición 5), o autorizarme explícitamente a hacerlo.
 5. Convocar una mesa de revisión de este plan antes de la Etapa 1.
 
@@ -844,7 +992,7 @@ Fuente: `docs/revision-cruzada/ronda3-qa-tester.md`, sección 6.1 (H-QA-24). "Re
 | 13 | Navegadores (Chromium, Firefox, WebKit), 360 px y medidor de contraste | **Resuelto** en la corrida nocturna; en cada cambio, los 5 recorridos esenciales | 3.2 |
 | 14 | **Inyección de fallos:** cortar la conexión, matar al trabajador | **Resuelto:** intermediario de red en la revisión automática y función de corte solo en pruebas | 1.7 |
 | 15 | Restauración de ensayo con **RS-49** y registro de anonimizaciones | **Resuelto:** el orden obligatorio incluye revocar sesiones y enlaces, rotar claves de API, reaplicar bajas y cambios de rol, y reaplicar anonimizaciones | 5.2, 5.4 |
-| 16 | Copia externa con verificador que se pueda **probar alterando una entrada** | **Resuelto:** ensayo de manipulación (CA-040) antes de cada etapa con uso real | 5.3 (punto 5) |
+| 16 | Copia externa con verificador que se pueda **probar alterando una entrada** | **Resuelto:** ensayo de manipulación (CA-040b) antes de cada etapa con uso real | 5.3 (punto 5) |
 | 17 | Búsqueda de secretos y del **nombre canario** | **Resuelto:** secretos en cada cambio; canario en base, exportaciones y correos (QA) y en registros técnicos y eventos de error de prueba (DevOps) | 1.6, 3.1 (paso 3) |
 | 18 | Informe de pruebas, artefactos de fallos y política de pruebas intermitentes | **Sí** | 3.4 |
 | 19 | Matriz de entrega del correo | **Sí** (con prueba de filtro de enlaces añadida) | 7.3 |
@@ -898,7 +1046,7 @@ Además recogí las respuestas de QA a mis dos preguntas: qué corre en cada cam
 | 2 | **Llaves de cifrado:** llave maestra fuera de la base y de los respaldos, llaves por empresa y por usuario, versiones y rotación, respaldo en dos lugares con dos custodios; la variable pasa de `FIELD_ENCRYPTION_KEY` a `MASTER_ENCRYPTION_KEY` | D-048.4, RS-46, D-035, H-ARQ-05 |
 | 2 | **Cuentas de plataforma:** llaves físicas, dos personas antes de datos reales, consola en dirección propia con red restringida | D-048.5, H-SEG-27 |
 | 2 | **Registro de anonimizaciones** en un almacén propio fuera de la base que se restaura, replicado, desde la Etapa 2; reconciliación nocturna | D-032.3, D-052.3, RF-DAT-016, H-ARQ-03 |
-| 2 | **Respaldos 30 diarios + 12 mensuales** (la versión 1 decía "mismo plazo que los datos"); **orden de restauración** con revocar sesiones y enlaces, rotar claves de API, reaplicar bajas y cambios de rol y reaplicar anonimizaciones; ensayo de manipulación de la copia de auditoría | D-032, D-052.4, RS-49, CA-040, H-QA-24 (puntos 15, 16) |
+| 2 | **Respaldos 30 diarios + 12 mensuales** (la versión 1 decía "mismo plazo que los datos"); **orden de restauración** con revocar sesiones y enlaces, rotar claves de API, reaplicar bajas y cambios de rol y reaplicar anonimizaciones; ensayo de manipulación de la copia de auditoría | D-032, D-052.4, RS-49, CA-040b, H-QA-24 (puntos 15, 16) |
 | 2 | **Copia externa de auditoría:** el registro de seguridad (12 meses) queda fuera de la copia de 5 años salvo decisión; el bloqueo debe vencer con la purga; el rol `mantenimiento` con dos personas | D-030.5, 7 y 8, D-054.1, D-052.2 |
 | 2 | **Correo:** topes del cuadro único (D-054.2), cupo propio de obligatorios, enlace con botón atado al navegador y prueba de filtro de enlaces; acceso excepcional de emergencia **aceptado por Seguridad** con condiciones; correos de la v1 solo invitación, acceso y aprobación | D-054, D-061.4, D-048.6, H-SEG-27, H-SEG-31 |
 | 2 | **Respuesta ante incidentes:** qué debe dejar listo DevOps para contener en 1 hora; registros técnicos 90 días (propuesta) | D-059, D-064 condición 13 |
