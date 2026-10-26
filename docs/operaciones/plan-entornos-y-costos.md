@@ -389,7 +389,7 @@ Mientras no haya código, lo que se cambia son documentos, y los documentos tamb
 
 ### 3.9 Carga nocturna desde la Etapa 4 (D-056, S-19, RNF-011)
 
-Nace en la Etapa 4 como `.github/workflows/nocturna.yml` (hoy **no existe**; no se crea antes porque no hay nada que medir).
+Nace en la Etapa 4 como el flujo `nocturna.yml` dentro de `.github/workflows/` (hoy **no existe**; no se crea antes porque no hay nada que medir).
 
 1. **Cuándo:** una vez cada noche y a pedido, nunca en la revisión de cada cambio (tarda demasiado).
 2. **Qué hace:** levanta el entorno desechable (1.9) con el perfil `volumen` (1.11) y mide, con base real: (a) el 95 % de listas y búsquedas por debajo de **2 segundos**; (b) confirmar una recepción de **100 series** por debajo de **5 segundos** (RNF-011); (c) concurrencia con **50 conexiones**; (d) migraciones con volumen; (e) importación de 5.000 filas.
@@ -1002,29 +1002,33 @@ Además recogí las respuestas de QA a mis dos preguntas: qué corre en cada cam
 
 ---
 
-## 13. Puerta de salida de la Etapa 0 (D-064): lo que entrega DevOps
+## 13. Qué entrega DevOps para la puerta de la Etapa 0 (D-064)
 
-| # | Condición de la puerta | Mi parte | Estado hoy |
-|---|---|---|---|
-| 4 | Prototipo técnico de 3 a 4 días aprobado | Terreno y día 0 (sección 10) | Plan escrito; falta ejecutar |
-| 5 | Proveedor de base y de alojamiento elegido, con **precios verificados** y aprobado por el CEO | Comparación y ficha de costos | **Pendiente:** no verifiqué precios (sección 14) |
-| 6 | Proveedor de correo elegido tras la matriz de entrega | Matriz (7.3) | Plan escrito; falta ejecutar |
-| 9 | Cuentas a nombre de la empresa, dos personas con segunda verificación, persona con suplente para alertas | Configurar las cuentas | **Pendiente:** depende del CEO (pedido B) |
-| 10 | Estrategia de llaves aprobada por Seguridad; `.env.example`; ramas protegidas y revisión automática | `.gitignore` y `.env.example` | **Parcial:** `.gitignore` y `.env.example` **creados**; faltan ramas protegidas y revisión de secretos (necesitan acceso a GitHub) |
-| 11 | Ensayo de reversa y restauración con cronómetro | Ensayos (4.3, 5.2) | Plan escrito; falta ejecutar |
-| 12 | Plan de pruebas, juego de datos de dos empresas, **reloj fijable y correo de captura** | Entornos (1.3 a 1.5) | Plan escrito; falta ejecutar |
-| 13 | Procedimiento de incidente en borrador | Parte técnica (8.2); lo redactan Seguridad y Cumplimiento | Mi parte descrita |
+Mapa de mis entregables a las condiciones 4, 5, 6, 10, 11 y 12 de D-064 (`docs/equipo/decisiones.md`). Las condiciones 9 y 13 siguen como en la versión 2: la 9 depende del pedido B del CEO y la 13 la redactan Seguridad y Cumplimiento (mi parte técnica es 8.2). **Hoy ninguna de las seis está cumplida del todo;** lo único hecho son las piezas de la 10 que no requieren permisos de administración.
+
+| # | Condición de la puerta | Lo que entrega DevOps | Evidencia que se presenta | Estado (2026-10-26) |
+|---|---|---|---|---|
+| 4 | Prototipo técnico de 3 a 4 días aprobado sobre el proveedor candidato | El terreno y la **comprobación del día 0** por candidato (sección 10); alojamiento de prueba con dos servicios y 60 conexiones; repositorio con revisión mínima; script de los cinco roles; depósito de objetos de prueba; bitácora de límites | Informe del día 0 por candidato y bitácora de límites; mediciones de arranque, reinicio y 20/50 conexiones | Plan escrito; **falta ejecutar** (empieza al nombrar candidato tras el día 0) |
+| 5 | Proveedor de base y de alojamiento elegido con **precios verificados** y aprobado por el CEO | Comparación (9.2), páginas oficiales exactas para verificar (9.5) y ficha de costos con fecha y enlace | Ficha de costos firmada por quien verificó; aprobación del CEO (**[ESCALAR AL CEO]**, pedido A y D) | **Pendiente:** ningún precio verificado; hace falta una persona que consulte las páginas |
+| 6 | Proveedor de correo elegido tras la **matriz de entrega** y costo aprobado | Matriz con plantilla, buzones, 20 envíos por tipo y umbrales (7.5); SPF, DKIM y DMARC | Tablas llenas de los dos candidatos y capturas de encabezados | Plan escrito; **falta ejecutar**; necesita el subdominio real (pedido C) |
+| 10 | Estrategia de llaves aprobada por Seguridad; `.env.example`; ramas protegidas y revisión automática | **Hechos:** `.gitignore`, `.env.example`, revisión automática de documentos con búsqueda de secretos (3.7), `CODEOWNERS` y plantilla de propuestas en `.github/`. **Escritos:** las 8 condiciones de Seguridad con su calendario (6.5), las llaves físicas (6.6) y los pasos exactos de las ramas protegidas (3.8) | Aprobación de Seguridad con 8 condiciones (ronda 4); captura de la regla y prueba de empuje directo rechazado y secreto falso bloqueado (3.8, paso F) | **Parcial:** falta que quien administra GitHub haga 3.8; las condiciones 1 y 2 son antes de la Etapa 1 |
+| 11 | Ensayo de vuelta atrás y de restauración, con cronómetro | Ficha de versión y ensayo "publicar, fallar a propósito, volver" (4.3); guion de restauración con **RS-49** (5.2); ensayo de manipulación de la copia externa (5.3); ensayo de pérdida de la llave maestra (6.7) | Registros de cada ensayo con tiempos por paso en `docs/operaciones/` | Planes escritos; **falta infraestructura** (depende de la condición 5) |
+| 12 | Plan de pruebas, juego de datos de dos empresas, **reloj fijable y correo de captura** | Entorno desechable con base propia (1.9), base permanente con 60 conexiones (1.3), reloj y **disparador manual** (1.4, 1.10), bandeja de captura legible (1.5), **contrato del generador** con volumen (1.11), **fallos inyectados** (1.12) | Entorno funcionando con las pruebas de QA de `docs/calidad/plan-de-pruebas.md` en verde | Especificado; **falta construir** (el generador lo escribe Datos) |
 
 ---
 
 ## 14. Pendientes y límites de este plan
 
-- **No hay código, cuentas ni configuración creadas.** Los únicos archivos nuevos en el repositorio son `/.gitignore` y `/.env.example`. Nada se contrató.
+- **No hay código, cuentas ni configuración creadas.** Los únicos archivos de mi trabajo en el repositorio son `/.gitignore`, `/.env.example` y, en `.github/`: `workflows/documentos.yml`, `scripts/revisar_documentos.py`, `CODEOWNERS` y `pull_request_template.md`. Nada se contrató.
+- **La revisión de documentos no es obligatoria todavía:** falta activar las ramas protegidas (3.8). Hasta entonces avisa, pero no impide. En `CODEOWNERS` solo figura la cuenta dueña del repositorio; las demás se agregan cuando existan.
+- **Los ADR del Arquitecto no existen aún** (`docs/arquitectura/`): los nombres de variables, el reloj compartido, el nombre del disparador (1.10) y la condición 1 de Seguridad (6.5) se confirman cuando se publiquen. Si cambian, se ajustan aquí.
 - **No verifiqué precios ni condiciones de planes** (si una vuelta a la imagen anterior con un clic, un bloqueo de una sola escritura, una recuperación a un punto en el tiempo o permisos de uso comercial están en un plan concreto). D-064 condición 5 exige esa verificación antes de la Etapa 1: **queda pendiente**.
 - **Pendiente de legal:** país y ley (L-01), plazos, incluidos respaldos 30 + 12 (L-04), región de servidores y proveedores (L-07, L-08), aviso de fuga (L-16). Hasta tenerlos no se elige región definitiva ni se activa anonimización automática.
 - **Pendiente del CEO:** cifra de uso (P-003) para dimensionar base y límites de correo; país (P-004); a nombre de quién quedan las cuentas; persona y suplente para alertas.
 - **Pendiente de Seguridad (H-SEG-27):** que el Gerente de TI decida S-34, del que dependen las condiciones del acceso de emergencia.
-- **Siguiente paso mío**, si el plan se aprueba: ficha de versión como plantilla, guion de creación de los cinco roles, flujo de la revisión automática, comprobación del día 0 y borrador de los procedimientos de la sección 5.5.
+- **Siguiente paso mío**, si el plan se aprueba: ficha de versión como plantilla, guion de creación de los cinco roles, flujo de la revisión automática del código (cuando haya código), comprobación del día 0 y borrador de los procedimientos de la sección 5.5. Para el día 0 y la matriz de correo necesito que la Jefatura consiga una persona que consulte las páginas de 9.5 y el subdominio de pedido C.
+
+---
 
 ---
 
@@ -1032,6 +1036,19 @@ Además recogí las respuestas de QA a mis dos preguntas: qué corre en cada cam
 
 | Versión | Cambio | Decisión o documento que lo motiva |
 |---|---|---|
+| 3 | **Revisión automática de documentos** en `.github/` (citas con código de módulo, permisos en el registro, referencias entre documentos, secretos incluso en commits intermedios), `CODEOWNERS` y plantilla de propuestas | D-064 condición 10, H-SEG-32 (e), H-QA-21 y H-QA-28, plan de aplicación (fila de DevOps) |
+| 3 | **Pasos exactos, clic a clic,** para activar ramas protegidas, revisión obligatoria y bloqueo de secretos, con el caso de una sola persona con acceso y la prueba de que funciona (3.8) | D-064 condición 10, D-065 (H-SEG-32 e) |
+| 3 | **Entornos desechables con base propia:** cómo se construyen y cómo se demuestra que no comparten base (1.9) | H-QA-24 (punto 12), D-039 |
+| 3 | **Disparador manual del trabajador:** contrato, idempotencia y las pruebas de que no existe en producción (1.10) | RNF-020, RNF-021, CA-077, D-038.8 |
+| 3 | **Generador de datos de dos empresas:** perfiles, semilla fija, verificador y volumen de 100.000 activos y 500.000 movimientos por empresa (1.11) | H-QA-24 (puntos 9 y 10), RNF-010, ronda 3 de QA 6.3 |
+| 3 | **Inyección de fallos:** catálogo de ocho fallos con resultado esperado (1.12) | D-060.9, H-QA-24 (punto 14) |
+| 3 | **Carga nocturna desde la Etapa 4:** procedimiento, umbrales y alcance de lo que certifica (3.9) | D-056, S-19, RNF-011, H-QA-24 (punto 11) |
+| 3 | **Restauración con RS-49:** guion con preparación, siete pasos y comprobaciones con cronómetro (5.2) | D-052.4, RS-49, CA-053, CA-054c, D-064 condición 11 |
+| 3 | **Ensayo de manipulación de la copia externa de auditoría:** guion de siete acciones y resultado esperado; se cita **CA-040b** (copia externa) y se aclara que **CA-040a** corre en cada cambio | D-052.2, RF-AUD-018, CA-040a y CA-040b (D-075), H-QA-24 (punto 16) |
+| 3 | **Matriz de entrega de correo:** plantilla, cinco buzones, 20 envíos por tipo, umbrales y regla de decisión (7.5) | D-064 condición 6, D-054.4, H-QA-24 (punto 19) |
+| 3 | **Las 8 condiciones de Seguridad sobre las llaves** con cuándo, quién y evidencia (6.5); llaves físicas (6.6); ensayo de pérdida y filtración de la llave maestra, con meta de menos de 4 horas (6.7) | Ronda 4 de Seguridad (sección 2), D-048.4, D-073.1, RS-46 |
+| 3 | **Costos:** página oficial exacta donde verificar cada precio (9.5); nuevos pedidos F (llaves y plan de GitHub, dinero) y G (custodios); riesgos O-22 a O-25 | D-064 condición 5, plan de aplicación (fila de DevOps) |
+| 3 | La sección 13 se rehace como «Qué entrega DevOps para la puerta de la Etapa 0» (condiciones 4, 5, 6, 10, 11 y 12) | D-064 |
 | 2 | El **proceso trabajador en segundo plano** pasa a ser una pieza de operación: dónde corre, cómo se vigila (latido, antigüedad de la cola, procesos diarios), cómo se reinicia, costo **[ESCALAR AL CEO]** (nueva sección 2) | D-038, D-055 T-1, H-ARQ-01, H-QA-24 (punto 6) |
 | 2 | Se **retira la suposición de Vercel**: el alojamiento debe ser de ejecución continua; se presentan opciones (contenedores gestionados, nube grande, servidor propio, híbrido) | D-038.2, D-055 T-1 ("no se asume Vercel") |
 | 2 | **Cinco roles de base de datos** en lugar de tres, con las tres pruebas de privilegios y la **lista cerrada de tablas globales** | D-039.3 y 4, RS-50, H-QA-24 (punto 3) |

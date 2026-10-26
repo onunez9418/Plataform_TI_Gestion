@@ -19,6 +19,15 @@ Aquí se registra cada mesa de revisión. Una entrada por tema, de la más recie
 
 ## Registro
 
+### 2026-10-26 · Mesa #002, ronda 4 · Puerta de la Etapa 0, choque en D-030.6 y supuestos abiertos
+- **Preside:** gerente-ti
+- **Participantes:** auditor-cumplimiento y especialista-seguridad (informes `docs/revision-cruzada/ronda4-*.md`); aviso de la Jefatura de Proyecto sobre el choque de D-030.6. QA y auditor-codigo **no** presentaron ronda 4.
+- **Propuesta:** estado de las 13 condiciones en `docs/equipo/puerta-etapa-0.md`; ejecución de supuestos y decisiones en `docs/equipo/decisiones.md` (D-077 a D-080).
+- **Posturas:** Cumplimiento: conforme con observaciones; firma la condición 3 cuando Seguridad confirme la lectura del procedimiento v0.3 y el Gerente lo apruebe. Seguridad: conforme; aprueba la estrategia de llaves con 8 condiciones; sin altos abiertos.
+- **Decisión del Gerente de TI:** D-077 (los motivos sí se guardan por valor en la auditoría; enmienda a D-030.6), D-078 (se ratifican S-PRS-14, S-PRB-12, S-CMD-11, S-CMD-12 y PS-175, ya decididos), D-079 (S-GAR-12: código visible del activo `ACTV-NNNNNN`), D-080 (plazo interno de 48 horas para G2, congelación en incidente y visto bueno al borrador v0.3). Puerta: 0 cumplidas, 7 parciales, 4 pendientes, 2 del CEO.
+- **Requiere decisión del CEO:** no se agrega nada; la hoja suma 4 líneas de Cumplimiento (urgencia del abogado, aviso de fuga, representante por empresa, las ocho preguntas previas).
+- **Retrospectiva corta:** (a) el choque de D-030.6 nació porque una decisión vieja se citó en 17 módulos sin releerla: toda enmienda deja nota al pie en la decisión original; (b) la puerta se desfasó un día porque otros roles editaban a la vez: cada estado dice qué archivos estaban "en curso" y se verifica al final.
+
 ### 2026-10-25 · Mesa #002 · Revisión cruzada del núcleo v0.2 y de los 17 módulos
 - **Preside:** gerente-ti
 - **Participantes:** arquitecto-software, ingeniero-datos, especialista-seguridad, qa-tester, auditor-codigo, auditor-cumplimiento, disenador-ux (siete revisiones); analista-funcional (autor de núcleo y módulos, con sus escuadrones) y devops (plan de entornos y costos).
