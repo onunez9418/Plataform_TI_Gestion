@@ -45,25 +45,35 @@ def expandir_refs(s, mods_ok):
     return ids
 
 
-def expandir_ca(s):
-    """IDs de CA citados: CA-004 y CA-079; CA-ENT-01, 12, 13; CA-025 a CA-028."""
+def expandir_ca(s, sigla=None):
+    """IDs de CA citados: CA-004 y CA-079; CA-ENT-01, 12, 13; CA-REP-01 a 03; '04, 15' con sigla del módulo."""
+    s = s.strip()
+    if sigla and s and re.fullmatch(r'[\d, y]+', s):
+        s = ', '.join(f'CA-{sigla}-{x}' if i == 0 else x for i, x in enumerate(re.findall(r'\d+', s)))
+        s = s.replace(', ', ', ')
     out = []; pref = None; last = None; rango = False
-    tok = re.compile(r'\b(CA-(?:([A-Z]{2,4})-)?(\d+)([a-z]\d?)?)\b|\b(\d{2})\b|\b(a)\b')
+    tok = re.compile(r'\b(CA-(?:([A-Z]{2,4})-)?(\d+)([a-z]\d?)?)\b|\b(\d{2,3})\b|\b(a)\b')
     for m in tok.finditer(s):
         full, md, n, suf, bare, a = m.groups()
         if full:
-            pref = md; last = int(n); out.append((md, int(n), suf or '', len(n)))
-            if rango:
+            pref = md; w = len(n); v = int(n)
+            if rango and last is not None:
+                for x in range(last + 1, v): out.append((md, x, '', w))
                 rango = False
-        elif bare and pref is not None:
+            out.append((md, v, suf or '', w)); last = v
+        elif bare and (pref is not None or sigla):
             antes = s[max(0, m.start() - 3):m.start()]
-            if re.search(r'(,|\by)\s*$', antes):
-                out.append((pref, int(bare), '', 2)); last = int(bare)
+            if re.search(r'(,|\by|\ba)\s*$', antes):
+                v = int(bare)
+                if rango and last is not None:
+                    for x in range(last + 1, v): out.append((pref or sigla, x, '', len(bare)))
+                    rango = False
+                out.append((pref if pref is not None else sigla, v, '', len(bare))); last = v
         elif a:
             rango = True
     ids = []
     for md, n, suf, w in out:
-        ids.append(f"CA-{md + '-' if md else ''}{n:0{w}d}{suf}")
+        ids.append(f"CA-{md + '-' if md else ''}{n:0{max(w,2) if md else 3}d}{suf}")
     return ids
 
 
@@ -144,10 +154,15 @@ def leer_modulos():
             m = re.match(r'^\| ((?:RF|RNF|RN)-[A-Z]{3}-\d+) \|', l)
             if m:
                 p = [x.strip() for x in l.strip().strip('|').split('|')]
-                cuando = p[2] if len(p) >= 3 else None
+                sg = p[0].split('-')[1]
+                if len(p) == 5 and p[0].startswith('RN-'):
+                    cuando, cacol = p[3], p[4]
+                else:
+                    cuando = p[2] if len(p) >= 3 else None
+                    cacol = p[3] if len(p) >= 4 else ''
                 mn, mx = etapas_de(cuando)
                 d = dict(id=p[0], modulo=nombre, texto=p[1], cuando=cuando, min=mn, max=mx,
-                         ca=expandir_ca(p[3]) if len(p) >= 4 else [], linea=i)
+                         ca=expandir_ca(cacol, sg), linea=i)
                 (rns if p[0].startswith('RN-') else reqs)[p[0]] = d
         mods_ok = CORE_MODS | {nombre_sigla(x) for x in glob.glob(ROOT + '/docs/modulos/*.md')}
         for i, l in enumerate(t, 1):
