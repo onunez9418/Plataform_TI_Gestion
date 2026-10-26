@@ -205,7 +205,7 @@ Una modificación Aprobada ya no cambia.
 | Corrida de trabajo | fecha lógica, resultado, cantidad de hechos | Única por empresa + trabajo + fecha lógica | No (registro técnico) |
 
 - La alerta no tiene tabla propia: usa la única tabla de avisos de Notificaciones (D-062.3).
-- **Datos personales declarados:** ninguno por valor. Se guardan solo referencias (membresía, Persona responsable por identificador). Descripciones y motivos son texto libre, sin valor en la auditoría.
+- **Datos personales declarados:** ninguno por valor. Se guardan solo referencias (membresía, Persona responsable por identificador). Las descripciones son texto libre sin valor en la auditoría ("el campo cambió"); los **motivos** son texto libre que **sí se guarda por valor** en la auditoría y se declara no anonimizable de forma garantizada (D-077, RN-PRE-037).
 - Todo dato lleva empresa; tablas calientes (libro, cuotas) con índices que empiezan por empresa (para Datos).
 
 ---

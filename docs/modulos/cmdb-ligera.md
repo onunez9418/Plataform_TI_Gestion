@@ -122,7 +122,7 @@ Columnas: **Cuándo** (Fase 3 = ola E) y **CA** (criterio de la sección 10 que 
 | RN-CMD-025 | Solo se guardan como filas los Servicios y los EC materializados; el resto se lee de su origen. Los códigos `EC-000001` se reservan por bloque y pueden quedar saltos. | Fase 3 | CA-CMD-01 |
 | RN-CMD-026 | Un EC se materializa al crearle una relación manual o completarle un dato propio. Lo hace un gancho en la misma operación y el mismo bloqueo de la base que el origen; un reconciliador nocturno corrige diferencias, sin aviso. | Fase 3 | CA-CMD-11 |
 | RN-CMD-027 | La CMDB identifica cada EC de origen por su identificador interno estable, no por su código ni nombre. Cada módulo origen lo ofrece (sección 9). | Fase 3 | CA-CMD-05 |
-| RN-CMD-028 | La auditoría guarda "el campo X cambió" para notas, descripciones y motivos (texto libre) y el identificador de las Personas, nunca nombres (D-030). | Fase 3 | CA-CMD-18 |
+| RN-CMD-028 | La auditoría guarda "el campo X cambió" para notas y descripciones (texto libre) y el identificador de las Personas, nunca nombres (D-030). Los **motivos** de una acción sí se guardan por valor en la auditoría y se declaran texto libre no anonimizable de forma garantizada (D-077, RF-AUD-003). | Fase 3 | CA-CMD-18 |
 | RN-CMD-029 | Cada consulta de impacto que muestre 100 o más nombres de Personas (umbral configurable por la plataforma, D-071.4), y toda exportación, deja una entrada de auditoría con el EC y la cantidad, sin los nombres. | Fase 3 | CA-CMD-19 |
 | RN-CMD-030 | Las notas y descripciones pasan por el validador común de texto libre (rechaza claves privadas y patrones de claves) y advierten no escribir datos personales (D-063.2). | Fase 3 | CA-CMD-20 |
 

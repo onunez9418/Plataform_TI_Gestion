@@ -123,7 +123,7 @@ Controles (D-036.5, D-048): `dominios.cambiar_titular` lleva segundo factor (2F)
 | RN-DOM-022 | Sin `datos_personales.ver` no se ve el titular persona natural ni los nombres de responsables (se ve `PRS-0042`). Sin `precios.ver` no se ven costos. |
 | RN-DOM-023 | Al anonimizar una Persona (D-030.3), responsable y suplente históricos siguen apuntando a su identificador, que muestra "Persona anonimizada 0042"; el titular persona natural en la tabla de titulares se sobrescribe con la referencia. |
 | RN-DOM-024 | Un dominio de baja puede registrarse otra vez como dominio nuevo (si se vuelve a comprar); el anterior queda en el historial. No hay reingreso. |
-| RN-DOM-025 | Textos libres (notas, DNS, "instalado en", motivo "Otro"): la auditoría solo dice que el campo cambió. "Instalado en" es texto libre hasta que la CMDB defina el enlace (SUP-DOM-11). |
+| RN-DOM-025 | Textos libres (notas, DNS, "instalado en"): la auditoría solo dice que el campo cambió. El **motivo** de una acción (incluido el texto de "Otro") sí se guarda por valor en la auditoría y se declara texto libre no anonimizable de forma garantizada (D-077, RF-AUD-003). "Instalado en" es texto libre hasta que la CMDB defina el enlace (SUP-DOM-11). |
 | RN-DOM-026 | Reemplazar un certificado de producción puede ser un cambio; el vínculo con `gestion-cambios` es opcional y lo define ese módulo. |
 
 ### 4.3 Requisitos de calidad
@@ -133,7 +133,7 @@ Controles (D-036.5, D-048): `dominios.cambiar_titular` lleva segundo factor (2F)
 | RNF-DOM-001 | El panel "Por vencer" con 2.000 registros carga en 2 segundos o menos (95 %), con 50 filas por página. Volumen de referencia: el único de RNF-010 del núcleo. | Fase 2, ola B | CA-DOM-02 |
 | RNF-DOM-002 | Los avisos del día los emite Notificaciones a la hora única de la empresa (08:00 por defecto) sin repetir (elemento, umbral, destinatario); el proceso es idempotente y recuperable (D-038.4). | Fase 2, ola B | CA-DOM-03 |
 | RNF-DOM-003 | La vigencia se calcula con el reloj de la plataforma, que las pruebas pueden fijar y adelantar en entornos de prueba; no depende de ningún proceso. | Fase 2, ola B | CA-DOM-02 |
-| RNF-DOM-004 | El 100 % de los cambios de fecha, titular, responsable, estado y costo deja auditoría (los campos personales y el texto libre, sin valor). | Fase 2, ola B | CA-DOM-07 |
+| RNF-DOM-004 | El 100 % de los cambios de fecha, titular, responsable, estado y costo deja auditoría (los campos personales y el texto libre, sin valor; el motivo sí se guarda, D-077). | Fase 2, ola B | CA-DOM-07 |
 | RNF-DOM-005 | Una prueba automática no encuentra en base, auditoría ni registros técnicos ningún texto con formato de clave privada (secretos de prueba propios, no los de producción). | Fase 2, ola B | CA-DOM-06 |
 | RNF-DOM-006 | Dos personas que registran el mismo dominio a la vez: exactamente un registro se crea. | Fase 2, ola B | CA-DOM-01 |
 | RNF-DOM-007 | Lista y ficha usables en 360 px y con teclado; contraste AA; estado con texto, no solo color (D-021.1). | Fase 2, ola B | CA-DOM-13 |

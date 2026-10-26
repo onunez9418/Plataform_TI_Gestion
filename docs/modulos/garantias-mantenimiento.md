@@ -142,7 +142,7 @@ Columnas: **Cuándo** = `v1, Etapa 4` / `v1, Etapa 5` (GAR-A) o `Fase 2` (GAR-B)
 | RN-GAR-036 | "Vencida" y "Atrasado" se calculan al leer; el proceso diario solo emite avisos y genera programaciones (D-062.2). |
 | RN-GAR-037 | Los procesos diarios (avisos, programaciones) son idempotentes y recuperables, corren empresa por empresa con la empresa fijada en la transacción, saltan empresas suspendidas y registran cada corrida (D-038.4). |
 | RN-GAR-038 | Una decisión simultánea (cerrar, cancelar, resolver un reclamo) usa actualización condicional y `version`: gana una y la otra recibe "ya fue decidido". |
-| RN-GAR-039 | Falla, notas y descripciones son texto libre: pasan por el validador común, la auditoría guarda "el campo cambió" sin el texto, y la pantalla avisa que no se escriban datos personales ni claves. Los motivos sí se guardan (D-030.6). |
+| RN-GAR-039 | Falla, notas y descripciones son texto libre: pasan por el validador común, la auditoría guarda "el campo cambió" sin el texto, y la pantalla avisa que no se escriban datos personales ni claves. Los motivos sí se guardan por valor en la auditoría (D-077, enmienda a D-030.6). |
 | RN-GAR-041 | Acto de dinero de RN-017 (S-33): registrar una garantía extendida con costo, o un mantenimiento con costo sin OS, no pide aprobación; si el costo con impuesto, en moneda base, supera estrictamente el límite (o está en otra moneda), lo confirma otra persona con `garantias.confirmar_costo`, según la función única `requiereSegundaPersona`; sin orden de compra queda la marca "sin respaldo de compra". La excepción es la casilla «contratos y servicios recurrentes» del interruptor único (D-066: apagada, vence a los 90 días, uso auditado); GAR no tiene regla propia. PS-231 es sensible (2F, A, No, D-068). |
 | RN-GAR-040 | La depreciación, el costo del activo y el libro de costos no son de este módulo; PRE toma el costo con `fuente_costo` (OS, orden de compra, propia). |
 
@@ -231,7 +231,7 @@ Reglas declaradas al motor único de Notificaciones (RF-NOT-024); NOT envía, ag
 | Evento | Cuándo | A quién | Qué dice |
 |---|---|---|---|
 | `garantias.costo_pendiente_confirmacion` | Al registrar un costo sobre el límite | Quienes tienen `garantias.confirmar_costo`, excepto quien lo registró | "Hay un costo de garantía o mantenimiento pendiente de confirmación." |
-| `vencimiento.umbral_alcanzado` (garantía) | A los umbrales por defecto de NOT: 90, 60, 30, 15 y 7 días antes del fin | Quienes tienen `garantias.recibir_avisos` | "La garantía del activo [código del activo] vence el 15/03/2027 (faltan 30 días). Revise si necesita un reclamo o una extensión." |
+| `vencimiento.umbral_alcanzado` (garantía) | A los umbrales por defecto de NOT: 90, 60, 30, 15 y 7 días antes del fin | Quienes tienen `garantias.recibir_avisos` | "La garantía del activo [código del activo, p. ej. ACTV-000123] vence el 15/03/2027 (faltan 30 días). Revise si necesita un reclamo o una extensión." |
 | `garantias.garantia_vencida` | Un día después del fin | Igual | "La garantía del activo [código del activo] venció el 15/03/2027." |
 | `vencimiento.umbral_alcanzado` (mantenimiento) | Los días de aviso del plan y el mismo día (se aparta del umbral general porque es una tarea y no un vencimiento) | Ejecutor y quienes tienen `garantias.recibir_avisos` | "MNT-000045 está programado para el 20/11/2026." |
 | `mantenimiento.mantenimiento_atrasado` | Un día después de la fecha y luego cada lunes | Ejecutor y Jefatura TI | "MNT-000045 está atrasado 9 días." |
@@ -240,7 +240,7 @@ Reglas declaradas al motor único de Notificaciones (RF-NOT-024); NOT envía, ag
 | `mantenimiento.mantenimiento_asignado` | Al asignar | Ejecutor | "Se le asignó MNT-000045." |
 | `mantenimiento.mantenimiento_cancelado` | Al cancelar el sistema | Ejecutor | "MNT-000045 se canceló: activo dado de baja." |
 
-Los correos nunca llevan la serie: usan el código del activo, el código del documento (MNT-, RCL-), la fecha y el nombre de la empresa (D-075, H-SEG-32 g); la serie se ve dentro de la plataforma. Los avisos de GAR-B no entran a la v1 (D-023, D-061.4). Un proveedor de servicio no recibe correo de la plataforma.
+Los correos nunca llevan la serie: usan el código del activo (`ACTV-000123`, RF-INV-034 del núcleo), el código del documento (MNT-, RCL-), la fecha y el nombre de la empresa (D-075, H-SEG-32 g); la serie se ve dentro de la plataforma. Los avisos de GAR-B no entran a la v1 (D-023, D-061.4). Un proveedor de servicio no recibe correo de la plataforma.
 
 ## 9. Integración con el núcleo y con otros módulos
 
@@ -313,7 +313,7 @@ Los correos nunca llevan la serie: usan el código del activo, el código del do
 | S-GAR-08 | Aceptado | Un solo preventivo pendiente por plan y activo. |
 | S-GAR-09 | Aceptado | Los proveedores de servicio no reciben correos. |
 | S-GAR-10 | Confirmado (D-053, S-31) | Los reportes de falla entran por "Pedir ayuda" (OS "Creada" en la v1, caso en Fase 2); GAR no tiene pantalla para Solicitante. |
-| S-GAR-12 | **[SUPUESTO]** | "Código del activo" en los correos es el identificador visible del activo en la plataforma (no la serie); el Analista del núcleo define su formato y, si no existe, se usa el código del SKU más la referencia interna del activo. |
+| S-GAR-12 | Aceptado (D-079) | "Código del activo" en los correos es el código visible `ACTV-NNNNNN` del núcleo (RF-INV-034): correlativo por empresa, mínimo 6 dígitos, no se reutiliza, no es la serie ni el código del SKU ni un dato personal. Ya no se usa la combinación de código del SKU más referencia interna. |
 | S-GAR-11 | Aceptado | El tiempo real frente al compromiso del proveedor se muestra en horas corridas y solo como dato. |
 | E-GAR | Ninguno por ahora | Seguros, pólizas o archivos de garantía activarían D-022 (costo de almacenamiento) y una opinión legal. |
 
@@ -337,13 +337,13 @@ Los correos nunca llevan la serie: usan el código del activo, el código del do
 | Reemplazo por garantía usa el ingreso manual del núcleo | D-060.7, H-AUD-15 |
 | Cancelación de mantenimientos al dar de baja en la misma transacción | D-038.5, H-ARQ-11, H-DAT-09 |
 | Ejecutor y pendientes como Persona con vínculo opcional | D-044.5, D-041, D-061.7 |
-| v0.3: RN-GAR-003 con la fórmula exacta de S-35; RN-GAR-041 con la casilla «contratos y servicios recurrentes» y PS-231 sensible; PS-231 citado como definitivo; PS-106 confirmado; correos con el código del activo en lugar de la serie (S-GAR-12) | D-065, D-066, D-068, D-074, D-075 (H-SEG-32 g), plan-aplicacion |
+| v0.3: RN-GAR-003 con la fórmula exacta de S-35; RN-GAR-041 con la casilla «contratos y servicios recurrentes» y PS-231 sensible; PS-231 citado como definitivo; PS-106 confirmado; correos con el código del activo en lugar de la serie (S-GAR-12, aceptado y definido como `ACTV-NNNNNN` por D-079) | D-065, D-066, D-068, D-074, D-075 (H-SEG-32 g), D-079, plan-aplicacion |
 | Acto de dinero S-33 (garantía extendida y mantenimiento sin OS sobre el límite): RF-GAR-031, RN-GAR-041, permiso `garantias.confirmar_costo` solicitado, evento y CA-GAR-20 | S-33 del núcleo, RN-017, D-043.4, H-CUM-03 |
 | Dos citas viejas de pantalla `NOT-05` pasan a `PAN-NOT-05`; las pantallas propias ya eran `PAN-GAR-nn` | D-049.4, N-AUD-01 (ronda 3) |
 | Eventos renombrados al catálogo de NOT (`vencimiento.umbral_alcanzado`, `mantenimiento.activo_reparacion_prolongada`) | D-038.5, D-049, notificaciones.md |
 | Permisos migrados a los PS-nn del registro (PS-102 a PS-111, PS-23, PS-44, PS-45, PS-47, PS-20, PS-09); `mantenimiento.planes` y `garantias.recibir_avisos` con el nombre del registro; Almacén y Jefatura TI según sus valores por defecto; `datos.exportar` único; columna "Empleado (portal): no aplica" | D-036, D-037, H-AUD-05, H-SEG-07, registro de permisos |
 | Volumen de referencia citado de RNF-010; RNF-GAR-007 definido | S-19 (D-057), H-AUD-24, H-QA-22 |
-| Texto libre sin valor en la auditoría y con validador común | D-030.6, D-063.2, H-CUM-01, H-SEG-23 |
+| Texto libre sin valor en la auditoría (salvo el motivo, que sí se guarda) y con validador común | D-030.6, D-077, D-063.2, H-CUM-01, H-SEG-23 |
 | Reglas de proceso diario y concurrencia; CA-GAR-14 a 19 (dos empresas, reloj fijable, referencia cruzada, bisiesto, concurrencia) | D-038.4, D-039.6, D-063.6, H-SEG-02, H-QA-12, H-ARQ-17, QA fila GAR |
 | Correos con contenido mínimo; avisos solo a membresías | D-061.4, H-CUM-06 |
 | Supuestos resueltos | D-057, D-058 |

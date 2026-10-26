@@ -216,7 +216,7 @@ Notas
 | Referencia externa en la OC | número SAP, estado de exportación, versión exportada | Una por OC | Cambios |
 
 - **Datos personales declarados:** el correo y el identificador de la cuenta externa (ingreso con Microsoft o Google, INT-3); IMEI y número de línea al leerlos por API (solo con `datos_personales.ver`). Los archivos de SAP no llevan nombres. El registro de uso no guarda datos personales.
-- Textos libres (descripciones, motivos de revocación) sin valor en la auditoría (D-030.6).
+- Textos libres: las descripciones y los comentarios no se guardan por valor en la auditoría (solo "el campo cambió", D-030.6). Los **motivos** (por ejemplo el de revocación de una clave) **sí se guardan por valor** en la auditoría; son texto libre no anonimizable de forma garantizada y su copia vence con el plazo de la auditoría (D-077, RF-AUD-003).
 - Todo lleva empresa; las tablas globales (clave de API, cuenta externa) se consultan solo por funciones puntuales auditadas (D-039.5).
 
 ---

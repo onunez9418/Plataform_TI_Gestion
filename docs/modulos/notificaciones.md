@@ -25,7 +25,7 @@
 | **Canal** | **En la plataforma** (campana y bandeja) o **Correo**. |
 | **Grupo de avisos** | Conjunto de eventos parecidos sobre el que el usuario decide (Compras y aprobaciones, Mis casos, Vencimientos...). |
 | **Mensaje obligatorio** | Aviso de seguridad o acceso que no se puede apagar. |
-| **Contenido mínimo** | Solo tipo de aviso, código (`ACT-E-000123`, `PRS-0042`), fecha y nombre de la empresa. Sin serie, IMEI, nombres de terceros, importes ni enlaces de acción (D-061.4). |
+| **Contenido mínimo** | Solo tipo de aviso, código (`ACT-E-000123`, `ACTV-000123`, `PRS-0042`), fecha y nombre de la empresa. Sin serie, IMEI, nombres de terceros, importes ni enlaces de acción (D-061.4). |
 | **Correo no verificado** | Dirección que nadie confirmó (la de una Persona sin usuario). Solo recibe contenido mínimo. |
 | **Capa de envío** | Pieza única que entrega los correos a un proveedor externo mediante un adaptador intercambiable (T-12). |
 | **Plantilla** | Texto base de un aviso, con espacios para datos (variables). |

@@ -130,7 +130,7 @@ Controles (D-036.5, D-048): `lineas.reingreso` y `lineas.migrar` llevan reautent
 | RN-LIN-024 | **Migración (D-042.2, D-042.3):** normaliza el número, crea las líneas con el equipo y la Persona que lo tiene asignado, reporta duplicados y formatos dudosos, y funciona todo o nada por lote, con simulacro previo sobre copia anonimizada, lote deshacible (anula, no borra, D-050.5) y plan de vuelta atrás (D-029). Tras migrar, el campo del celular queda de solo lectura con la etiqueta "Lo gestiona el módulo Líneas móviles" y se oculta de los formularios; los valores originales se conservan 90 días. |
 | RN-LIN-025 | Una línea migrada no tiene plan: queda **"pendiente de completar"** y no bloquea lo que ya existe (D-005); el plan es obligatorio para las líneas nuevas. |
 | RN-LIN-026 | Una línea importada con un equipo cuyo IMEI no existe falla en esa fila; no se crea el equipo. |
-| RN-LIN-027 | Textos libres (notas, motivo "Otro"): la auditoría solo dice que el campo cambió; un validador común rechaza patrones de claves (D-063.2); el formulario avisa de no escribir datos personales. |
+| RN-LIN-027 | Textos libres: en las notas la auditoría solo dice que el campo cambió; el **motivo** de una acción (incluido el texto de "Otro") sí se guarda por valor en la auditoría y se declara texto libre no anonimizable de forma garantizada (D-077, RF-AUD-003). Un validador común rechaza patrones de claves (D-063.2); el formulario avisa de no escribir datos personales. |
 | RN-LIN-028 | Los correos de aviso solo contienen nombre del elemento (número enmascarado), fecha y días restantes; nunca importes ni nombres de personas (D-061.4). |
 
 ### 4.3 Requisitos de calidad
@@ -327,7 +327,7 @@ Resultado de cada supuesto según D-042, D-057 y D-058.
 | Permanencia calculada al leer; avisos por el motor único de Notificaciones con umbrales por defecto (se retiraron 60/30/15 propios y los recordatorios semanales); el módulo no tiene procesos propios; se retiró la desasociación nocturna. | D-062.2, D-062.3, D-058 fila 3, D-038.4 |
 | Normalización del número y unicidad entre no dadas de baja (se mantiene); reingreso con permiso sensible y reautenticación. | Plan de correcciones, fila LIN (9, 10); D-048.2 |
 | Importación con el marco único y exportación con la puerta única; se retiró la pantalla de importación propia. | D-050, D-061.1 |
-| Textos libres: solo "el campo cambió" en la auditoría y validador común; datos personales declarados en la sección 6; "Persona anonimizada 0042"; Persona Cesada. | D-030, D-061.3, D-063.2, D-049.5 |
+| Textos libres: solo "el campo cambió" en la auditoría (el motivo sí se guarda) y validador común; datos personales declarados en la sección 6; "Persona anonimizada 0042"; Persona Cesada. | D-030, D-077, D-061.3, D-063.2, D-049.5 |
 | Pruebas nuevas: procesos con dos empresas y reloj fijable (CA-LIN-13), borde exacto del límite (CA-LIN-08), escritura con referencias cruzadas (CA-LIN-16), aislamiento por identificador interno y rol de la aplicación (CA-LIN-15), permiso denegado de cargo especial y reingreso. | D-039.6, D-063.6, D-038.8; QA y Seguridad |
 | Prefijos `PAN-LIN-nn`; vocabulario "Cliente (CEO)", "usted". | D-049 |
 | Versión 0.3. SUP-LIN-14 pasa a "Aceptado (D-070)"; RN-LIN-016 y CA-LIN-08 usan la casilla «contratos y servicios recurrentes»; `lineas.confirmar_costo` (PS-224) marcado sensible (2F, A, No); clave natural de línea = número normalizado con índice único parcial que excluye lo anulado. | D-066, D-068, D-070; plan de aplicación (fila LIN) |
