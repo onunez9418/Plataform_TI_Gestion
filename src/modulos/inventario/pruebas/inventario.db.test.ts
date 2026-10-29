@@ -58,7 +58,7 @@ describe.skipIf(!hayBaseDeDatos)('inventario (con base real)', () => {
     it('DUPLICADO: una serie ya registrada se rechaza diciendo cuál, y no se guarda nada del lote', async () => {
       const antes = (await listarActivos(tecnico(), { skuId: a.skuSerie })).length
       await expect(registrarActivos(tecnico(), { skuId: a.skuSerie, ubicacionId: a.ubicA, series: ['SN-NUEVA', 'sn-002'] }))
-        .rejects.toMatchObject({ codigo: 'DUPLICADO', mensaje: expect.stringContaining('SN-002'), campos: { series: expect.stringContaining('sn-002') } })
+        .rejects.toMatchObject({ codigo: 'DUPLICADO', mensaje: expect.stringContaining('SN-002'), campos: { series: expect.stringContaining('SN-002') } })
       expect((await listarActivos(tecnico(), { skuId: a.skuSerie })).length).toBe(antes)
     })
 
