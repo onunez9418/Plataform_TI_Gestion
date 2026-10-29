@@ -13,7 +13,7 @@ export const NOMBRES_INTERRUPTORES_LEGALES = [
 
 export type InterruptorLegal = (typeof NOMBRES_INTERRUPTORES_LEGALES)[number]
 
-const VALORES: Readonly<Record<InterruptorLegal, false>> = Object.freeze({
+const VALORES: Readonly<Record<InterruptorLegal, boolean>> = Object.freeze({
   'legal.borrado_automatico': false,
   'legal.anonimizacion': false,
   'legal.purga_auditoria': false,
