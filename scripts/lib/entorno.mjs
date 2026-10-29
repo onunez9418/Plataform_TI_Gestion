@@ -8,7 +8,6 @@ export const CLAVES_SECRETAS = [
   'PG_PASS_APP_EMPRESA',
   'PG_PASS_APP_PLATAFORMA',
   'PG_PASS_LECTOR_AUDITORIA',
-  'AUTH_SECRET',
 ];
 
 /** Crea ".env" con contraseñas aleatorias si no existe. Devuelve true si lo creó. */

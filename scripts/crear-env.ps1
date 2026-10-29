@@ -12,7 +12,7 @@ function Nuevo-Secreto {
     return (($bytes | ForEach-Object { $_.ToString('x2') }) -join '')
 }
 
-$claves = 'POSTGRES_PASSWORD','PG_PASS_MIGRACIONES','PG_PASS_APP_EMPRESA','PG_PASS_APP_PLATAFORMA','PG_PASS_LECTOR_AUDITORIA','AUTH_SECRET'
+$claves = 'POSTGRES_PASSWORD','PG_PASS_MIGRACIONES','PG_PASS_APP_EMPRESA','PG_PASS_APP_PLATAFORMA','PG_PASS_LECTOR_AUDITORIA'
 $lineas = @('# Creado automaticamente. Contiene contrasenas aleatorias SOLO de esta computadora.',
             '# No lo comparta ni lo suba a ningun sitio.')
 foreach ($c in $claves) { $lineas += ($c + '=' + (Nuevo-Secreto)) }

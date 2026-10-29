@@ -36,7 +36,6 @@ services:
       NODE_ENV: production
       ENTORNO: desarrollo
       APP_URL: http://localhost:3000
-      AUTH_SECRET: ${AUTH_SECRET:?Falta .env}
       DATABASE_URL: postgres://app_empresa:${PG_PASS_APP_EMPRESA}@db:5432/plataforma
       PLATFORM_DATABASE_URL: postgres://app_plataforma:${PG_PASS_APP_PLATAFORMA}@db:5432/plataforma
       MIGRATION_DATABASE_URL: postgres://migraciones:${PG_PASS_MIGRACIONES}@db:5432/plataforma
