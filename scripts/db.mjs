@@ -1,4 +1,4 @@
-// Migrar, sembrar y reiniciar la base (versión local). Uso: node scripts/db.mjs migrar|semilla|reiniciar
+// Migrar, sembrar, reiniciar y probar la base (versión local). Uso: node scripts/db.mjs migrar|semilla|reiniciar
 // Las URLs vienen del entorno o de .env (host y puerto de la base local privada de "npm run local").
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -39,6 +39,11 @@ export function sembrar() {
   ejecutar('npx', ['tsx', 'prisma/semilla/index.ts']);
 }
 
+// Pruebas con base real (aislamiento, contadores, servicios): necesitan la base local y la semilla ya cargadas.
+export function probar(extra = []) {
+  ejecutar('npx', ['vitest', 'run', '--config', 'vitest.base.config.mts', ...extra]);
+}
+
 export async function reiniciar() {
   // Vacía el esquema como "migraciones" (prisma/reiniciar.sql, de Datos) y vuelve a migrar y sembrar.
   const sql = readFileSync('prisma/reiniciar.sql', 'utf8');
@@ -60,8 +65,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     if (orden === 'migrar') migrar();
     else if (orden === 'semilla') sembrar();
     else if (orden === 'reiniciar') await reiniciar();
+    else if (orden === 'probar') probar(process.argv.slice(3));
     else {
-      console.error('Uso: node scripts/db.mjs migrar | semilla | reiniciar');
+      console.error('Uso: node scripts/db.mjs migrar | semilla | reiniciar | probar');
       process.exit(2);
     }
   } catch (e) {

@@ -19,7 +19,7 @@
     "db:semilla": "node scripts/db.mjs semilla",
     "db:reiniciar": "node scripts/db.mjs reiniciar",
     "local": "node scripts/local.mjs",
-    "probar:aislamiento": "vitest run --config vitest.base.config.mts pruebas/aislamiento",
+    "probar:aislamiento": "node scripts/db.mjs probar",
     "probar:recorrido": "playwright test",
     "postinstall": "node scripts/generar-prisma.mjs"
   },

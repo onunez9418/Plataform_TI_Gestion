@@ -10,6 +10,6 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'pruebas/arranque/**/*.test.ts'],
-    exclude: ['node_modules/**', '.next/**', 'pruebas/aislamiento/**', 'pruebas/recorrido/**'],
+    exclude: ['node_modules/**', '.next/**', 'pruebas/aislamiento/**', 'pruebas/recorrido/**', 'src/**/*.integracion.test.ts', 'src/**/*.db.test.ts'],
   },
 });
