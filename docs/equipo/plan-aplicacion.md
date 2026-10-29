@@ -156,3 +156,41 @@ Se despacha en el orden numerado; lo de una misma fila va en paralelo (máximo c
 | A2-27 | **Seguridad** | Firma la lista de permisos de Graph cuando pueda verificarla; confirma las correcciones de D-111; revisa la suite IO-15 en adelante y la lista fija de expresiones de emergencia | D-111 | P2 / P3 | Gerente de TI |
 | A2-28 | **Diseñador** | Tarjetas de equipo sin enviar nada al modelo (el chat «pide la tarjeta»); aviso de la pantalla de conexión con Microsoft sobre el daño máximo de una filtración (H-SEG-71) | D-112 | P2 | Gerente de TI |
 | A2-29 | **Jefatura de Proyecto** | Registra por escrito cuando L-19 sea contestada (condición para levantar el texto libre); transmite al CEO la hoja corregida (D-114); no hay preguntas nuevas para el CEO | D-111, D-114 | P3 | - |
+
+## Ola 5: piloto gratuito para probar con clientes (D-115)
+
+**Fecha:** 2026-10-29 · **Origen:** pedido del CEO y `docs/operaciones/piloto-gratuito.md` (ratificado con correcciones en D-115). Máximo cuatro agentes a la vez. **Regla que manda sobre todo lo de abajo:** solo datos de ejemplo; D-064 no se debilita.
+**Hoy no hay código.** Lo que se puede hacer ahora es A2-30 a A2-33 y los documentos. Render, Resend y las pruebas con clientes esperan a que exista una aplicación mínima con ingreso (Etapa 1) y a la demo aprobada por el CEO.
+
+### Qué debe hacer DevOps: condiciones, orden y criterio de éxito
+
+**Condiciones (todas, antes de crear nada):** (1) cada cifra y cada cláusula de uso comercial verificadas en la página oficial (lista en la sección 6 de `piloto-gratuito.md`), con fecha y enlace; si un servicio prohíbe probar con clientes de otra empresa, ese servicio se reemplaza por el plan B o C antes de usarlo con clientes (puede seguir en uso interno); (2) cuentas con el correo de la empresa, suplente y segundo factor, nunca personales (D-064.9); (3) **si un servicio pide tarjeta o cobra por exceso en vez de detenerse, se para y se avisa a la Jefatura de Proyecto** (dinero del CEO); (4) secretos solo en las variables secretas de Render y de GitHub, nunca en el repositorio, con la lista de variables del modo piloto aprobada por Seguridad (D-064.10); (5) el piloto es un entorno aparte que no se reutiliza como producción; (6) se registra la región elegida de cada servicio.
+
+**Orden:**
+1. **Verificar cifras y términos** sin crear cuentas; resultado en `docs/operaciones/piloto-verificacion.md` (A2-30).
+2. **Crear las cuentas** cuando el CEO entregue el correo de la empresa y el suplente (A2-31).
+3. **La primera prueba, solo en Neon** (A2-32; es también el día 0 de `plan-entornos-y-costos.md` §10, y cuenta como evidencia para el prototipo técnico). **Criterio de éxito** (todo con evidencia escrita; QA valida, Seguridad revisa): los roles y cuentas de ADR-01 creados **por SQL y no desde el panel de Neon**, con `app_empresa_*` sin ser dueño, sin ser superusuario y con `rolbypassrls = false`; políticas por fila **forzadas** en una tabla de ejemplo con `empresa_id`; la empresa A no ve nada de la B, y sin fijar empresa se ven **cero filas**; por el agrupador en modo transacción, con empresas alternadas, la empresa no se queda pegada entre peticiones; `app_plataforma` no lee tablas de negocio; función `SECURITY DEFINER`, clave foránea compuesta, partición y las cinco extensiones; conexión directa para el trabajador. Se **registran** (sin bloquear el piloto) el límite de conexiones y la retención de respaldos. **Si fallan roles, políticas, aislamiento por el agrupador o `app_plataforma`: se detiene todo, sin arreglos con un rol dueño o más permisos, y se vuelve a mesa con el plan C.**
+4. **Render:** servicio de la web con variables, `/salud`, cabeceras de ADR-01, `MODO_PILOTO` y su guarda; consola como segundo servicio si las horas lo permiten (A2-34).
+5. **GitHub Actions:** paso de migraciones con el secreto allí y latido cada cierto tiempo hacia `/api/piloto/latido`; la frecuencia la decide DevOps con las cifras oficiales (que alcancen las horas del mes y que la demo no encuentre la aplicación dormida) (A2-35).
+6. **Resend:** primero en modo captura (interno); después, con dominio, SPF, DKIM y DMARC en «pass» y la matriz de entrega de D-064.6; sin dominio no hay prueba con clientes (A2-36).
+7. **Reconstrucción cronometrada** del piloto con el generador de datos de dos empresas (meta: minutos) y **medición de una semana** de horas de cálculo de Neon y de horas de Render (A2-37).
+
+### Pedidos por rol
+
+| # | Responsable | Qué hace | Decisión | Prio. | Verifica |
+|---|---|---|---|---|---|
+| A2-30 | **DevOps** | Verifica cifras y cláusulas de uso comercial en páginas oficiales; escribe `piloto-verificacion.md` con fecha y enlace; confirma en la documentación de Neon si los roles creados desde el panel saltan las políticas por fila | D-115 | P1 | Gerente de TI |
+| A2-31 | **Jefatura de Proyecto** | Pide al CEO el correo de la empresa y el suplente (hoja del CEO, sección D) y, si existe, el dominio o subdominio | D-115 | P1 | - |
+| A2-32 | **DevOps** con **Ingeniero de Datos** | La primera prueba en Neon (criterio arriba), con los guiones de H1 de `prototipo-tecnico.md` | D-115.5 | P1 | QA, Seguridad |
+| A2-33 | **Seguridad** | Lista de variables y guardas del modo piloto (qué proceso tiene qué, prohibición en producción, ruta de latido, secretos); revisa la evidencia de A2-32 con modelo potente (toca aislamiento) | D-115 | P1 | Gerente de TI |
+| A2-34 | **DevOps** | Render: web, salud, cabeceras, `MODO_PILOTO`; consola aparte si se puede | D-115 | P2 (Etapa 1) | Seguridad |
+| A2-35 | **DevOps** | GitHub Actions: migraciones y latido | D-115 | P2 (Etapa 1) | Seguridad |
+| A2-36 | **DevOps** | Resend en captura y luego con dominio y matriz de entrega | D-115, D-064.6 | P2 (con dominio) | QA |
+| A2-37 | **DevOps** | Reconstrucción cronometrada y medición de una semana; informe corto | D-115 | P2 | QA |
+| A2-38 | **Arquitecto** | Sección «Modo piloto (D-115)» en ADR-01 (un proceso con las dos cuentas, solo con datos de ejemplo, prohibido en producción) y ADR-02 (ciclo único sin conexión permanente, ruta de latido propia, sin reloj fijable); el texto de producción no cambia | D-115 | P1 | Seguridad |
+| A2-39 | **Analista** | **Sí hace falta** un RF de «Modo piloto» (sección corta de plataforma en `documento-funcional.md`): franja permanente, aceptación al primer ingreso registrada en la auditoría, correos con «[PRUEBA]», chat apagado, reconstrucción periódica; sin permisos nuevos ni cambios de reglas de negocio; actualiza el documento en el mismo cambio | D-115 | P2 (antes de la Etapa 1) | Auditor Técnico |
+| A2-40 | **Diseñador** | (1) Aviso «solo datos de ejemplo»: franja fija no cerrable, con buen contraste y texto claro; pantalla de aceptación al primer ingreso; repetido en importación y en «Pedir ayuda»; texto de los correos con «[PRUEBA]». (2) Pantalla **«despertando»**: página estática y aparte (la aplicación dormida no puede mostrarla), con «El sistema está despertando, tarda hasta un minuto», botón «Entrar» y recarga automática; sin datos y sin abrir CORS | D-115 | P2 | Gerente de TI |
+| A2-41 | **QA** | Criterios del modo piloto (guarda en producción, franja y aceptación, chat apagado, ruta de latido sin reloj, reconstrucción) y el criterio de la primera prueba | D-115 | P2 | Auditor Técnico |
+| A2-42 | **Cumplimiento** | Borrador de una página del acuerdo de prueba para el abogado (prototipo, datos de ejemplo, sin garantía, nombre y correo del que prueba con su permiso, reconstrucción y borrado, proveedores en otros países); revisa la franja | D-115 | P1 | Gerente de TI |
+
+**Qué pasa si el CEO no entrega algo:** sin correo de la empresa no se crean cuentas (A2-31 bloquea A2-32 y siguientes salvo la verificación); sin dominio, el piloto es solo interno; sin acuerdo de prueba revisado por abogado, no hay prueba con clientes externos; sin crédito, el chat sigue apagado y el formulario de «Pedir ayuda» funciona normal.
