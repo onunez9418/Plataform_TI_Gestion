@@ -21,6 +21,8 @@ type Props = {
   children: ReactNode
   enviar: string
   testid?: string
+  /** Identificador propio del botón de enviar (por defecto «{testid}-enviar»). */
+  testidEnviar?: string
   /** Texto que se muestra al salir bien. */
   exito?: string
   /** Vaciar el formulario al salir bien (por defecto sí). */
@@ -32,7 +34,7 @@ type Props = {
   extra?: ReactNode
 }
 
-export function Formulario({ accion, children, enviar, testid, exito, limpiar = true, alExito, deshabilitado, extra }: Props) {
+export function Formulario({ accion, children, enviar, testid, testidEnviar, exito, limpiar = true, alExito, deshabilitado, extra }: Props) {
   const [errores, setErrores] = useState<Record<string, string>>({})
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null)
   const [mensajeExito, setMensajeExito] = useState<string | null>(null)
@@ -107,7 +109,7 @@ export function Formulario({ accion, children, enviar, testid, exito, limpiar = 
             type="submit"
             className={`btn primario${enCurso ? ' cargando' : ''}`}
             disabled={enCurso || deshabilitado}
-            data-testid={testid ? `${testid}-enviar` : undefined}
+            data-testid={testidEnviar ?? (testid ? `${testid}-enviar` : undefined)}
           >
             {enCurso ? 'Guardando…' : enviar}
           </button>

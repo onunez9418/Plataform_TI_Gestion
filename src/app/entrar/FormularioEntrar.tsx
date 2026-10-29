@@ -14,6 +14,7 @@ export function FormularioEntrar({ correoInicial }: { correoInicial?: string }) 
         accion={pedirEnlace}
         enviar="Pedir mi enlace"
         testid="form-entrar"
+        testidEnviar="boton-pedir-enlace"
         limpiar={false}
         alExito={(d) => setRespuesta((d as DatosPedirEnlace) ?? {})}
       >
