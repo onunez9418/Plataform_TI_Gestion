@@ -1300,6 +1300,101 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Recomendó:** Analista (sección 12.2 de ASI); decide el Gerente de TI.
 - **Qué cambia:** `asistente-ia.md`: esos cuatro pasan a «Confirmado (D-086)». Cumplimiento valida el aviso de transparencia y la declaración de texto libre (§18.1).
 
+## Decisiones técnicas de la revisión de los ADR (2026-10-29)
+
+**Origen.** El Arquitecto incorporó la ronda 5 de Seguridad (`docs/revision-cruzada/ronda5-seguridad-adr.md`, H-SEG-33 a 62) y la revisión de Datos (`docs/arquitectura/revision-datos.md`) en los ADR 01 a 23 y dejó 15 propuestas en `docs/arquitectura/README.md` (sección «Decisiones D-0xx por registrar»). El último número usado era D-086; estas son **D-087 a D-101**, en el mismo orden que la lista del Arquitecto. **Qué leí:** el README completo, ADR-01 (decisión y consecuencias), ADR-08 (acceso y sesiones), ADR-21 y ADR-22 (decisión), el resumen de Seguridad (H-SEG-36, 42, 43, 45, 46, 52) y el resumen de Datos. **No leí línea por línea** los ADR 02, 03, 04, 06, 09 a 20 y 23: ratifico lo que el README y los hallazgos dicen de ellos y exijo que Seguridad y Datos confirmen por escrito que sus condiciones quedaron incorporadas antes de pasar cada ADR de «Propuesto» a «Aceptado» (ver `plan-aplicacion.md`, «Plan de aplicación 2»). **Nada cuesta dinero salvo D-089, y ninguna cambia una regla de negocio.** Por la instrucción del CEO (solo dinero, legal o irreversible) no se le pregunta nada de producto ni de ingeniería.
+
+### D-087 · Sexto rol de base `app_soporte` (enmienda D-039.3) — RATIFICADA
+- **Pregunta:** ¿la lectura de soporte usa un rol de base propio, o `app_empresa` en solo lectura con una variable `modo_soporte`? (H-SEG-36, ADR-03 y ADR-04).
+- **Decisión:** **rol propio `app_soporte`**, solo lectura y sin acceso a las tablas restringidas. Son seis roles de base, no cinco. La variante de la variable queda como plan B **solo si** la prueba H2 del prototipo demuestra que `app_soporte` no es viable con el agrupador de conexiones; en ese caso vuelve a mesa, no se degrada en silencio.
+- **Motivo:** una variable de la transacción la puede cambiar cualquier SQL que corra con el rol de la aplicación (hecho de Seguridad, H-SEG-36); un permiso de base no se puede cambiar desde dentro. No cuesta dinero: es un rol y una conexión más.
+- **Qué cambia:** DevOps: límite de conexiones por rol (plan de entornos). QA: los 13 casos de H2. El texto «cinco roles» de documentos viejos se lee «seis».
+
+### D-088 · La verificación reciente solo se renueva con el autenticador o la llave (enmienda D-048.2) — RATIFICADA con una precisión
+- **Pregunta:** ¿el enlace de correo sirve para renovar la «verificación reciente» que piden las acciones delicadas? (H-SEG-52, ADR-08).
+- **Decisión:** **No.** Solo el segundo factor (autenticador o llave física) renueva `verificada_en`; el enlace sirve únicamente para el ingreso inicial. Vigencia: 10 minutos. **Precisión mía:** un código de recuperación sirve para volver a registrar el autenticador (cuando se pierde el celular); no renueva la verificación reciente por sí mismo, la renueva el código del autenticador ya registrado. Seguridad confirma esta precisión.
+- **Motivo:** quien tiene permisos delicados ya tiene segunda verificación obligatoria; si el enlace bastara, la protección se reduciría al control del buzón de correo, que es justo lo que se quiere cubrir. Costo para la persona: un código del autenticador cada 10 minutos al hacer una de esas acciones.
+- **Qué cambia:** Analista: RF-ACC (verificación reciente) y el texto de D-048.2. Diseñador: el aviso «ingrese el código de su autenticador». QA: prueba de que el enlace no renueva.
+
+### D-089 · Consola de plataforma en un tercer despliegue (complementa D-038, D-048.5 y el plan de entornos) — RATIFICADA el diseño; costo **[ESCALAR AL CEO]** sin cifras
+- **Pregunta:** ¿la consola del equipo de plataforma corre en un servicio propio, sin la llave maestra y sin acceso a las bases de las empresas? (H-SEG-42, ADR-01).
+- **Decisión:** **Sí: tres servicios** (`web`, `trabajador`, `consola`) de una sola imagen, con credenciales por proceso (la tabla de ADR-01 manda y una prueba de arranque la hace cumplir). La consola no recibe la llave maestra. El diseño **no cambia por el costo**.
+- **Costo:** **no puedo afirmar si sube.** DevOps no ha verificado precios (puerta, condición 5) y muchos proveedores cobran por servicio. Como es posible que sume un gasto mensual pequeño no previsto en D2, queda **[ESCALAR AL CEO] sin cifras**, como **una línea dentro del gasto de alojamiento que ya debe aprobar**, no como una pregunta aparte (`hoja-ceo.md`, sección A). DevOps verifica el precio del tercer servicio (tamaño mínimo, se usa poco) y de las dos tareas programadas al traer la comparación de proveedores; si el proveedor elegido no cobra extra, la línea se retira. Mientras tanto, el prototipo usa planes gratuitos.
+- **Si el CEO no aprobara el gasto:** la alternativa (consola como ruta de `web`) la considera Seguridad una pérdida real de aislamiento; solo el Gerente de TI podría aceptarla, por escrito, con Seguridad, como riesgo residual. No antes.
+- **Motivo:** si una falla de la parte que usan las empresas alcanzara la credencial de plataforma, la separación de roles de D-039 no serviría en la práctica.
+- **Qué cambia:** DevOps (variables por proceso, tareas programadas, costo); Arquitecto: pasa ADR-01 a «Aceptado» cuando Seguridad confirme.
+
+### D-090 · Huella en dos niveles (enmienda D-065 S-34(e); corrige el escenario A del plan 6.7) — RATIFICADA
+- **Pregunta:** ¿los códigos de recuperación y las claves de API pueden depender de la llave maestra? (H-SEG-45, alta; ADR-09 y ADR-07).
+- **Decisión:** **Dos niveles.** **A, con llave (HMAC):** lo corto o de vida corta (código corto, claves del limitador, sesiones de empresa, enlaces, invitaciones, acceso de emergencia, identificador del directorio de Microsoft). **B, sin depender de la maestra:** lo duradero y de alta entropía (claves de API de 128 bits o más; códigos de recuperación de 100 bits o más; sesión de plataforma), con SHA-256 separado por tipo. `scrypt` queda descartado (costo de CPU en un punto sin autenticar sin ganancia a 100 bits).
+- **Motivo:** el plan de DevOps y la condición 5 de Seguridad suponían que, si se pierde la maestra, cada persona se reenrola con su código de recuperación. Con una sola llave eso era falso: nadie con segunda verificación obligatoria podía reentrar y el ensayo previo a datos reales habría fallado.
+- **Qué cambia:** DevOps: reescribe el escenario A de 6.7. Seguridad ya corrigió su condición 5. QA: prueba de que, con la maestra «perdida» en un entorno de prueba, un código de recuperación sigue sirviendo.
+
+### D-091 · El valor del correo de acceso nace en el trabajador y nunca viaja por la cola (H-SEG-46) — RATIFICADA CON CONDICIÓN: la confirma Seguridad
+- **Pregunta:** el enlace de ingreso, la invitación y el acceso de emergencia llevan un valor en claro que RS-51 prohíbe guardar. ¿Cómo llega al correo sin pasar por la cola? (ADR-08, 09, 16 y 02).
+- **Decisión:** **Avalo la variante del Arquitecto como decisión técnica y la mando a Seguridad para su confirmación escrita antes de pasar ADR-08 a «Aceptado».** La web crea una fila `por_emitir` y encola solo el identificador; el trabajador genera el valor en memoria, fija su huella y arma el correo; sin reintentos después de que el enlace venza (15 minutos).
+- **Por qué la avalo:** cumple los cuatro criterios de Seguridad (nada en claro en la cola ni en trabajos fallidos, sin reintentos tras vencer, RS-51 probada con la cola) y evita lo que las dos opciones de Seguridad costaban: (a) obliga a que todo proceso que encola tenga la llave maestra (la consola no debe tenerla) y (b) rompe la única vía de envío con sus reintentos y su segundo proveedor.
+- **Por qué no la cierro yo:** es un hallazgo **Alto** de Seguridad y la variante **no estaba entre las dos opciones que ella enumeró**. Le pido confirmar cinco puntos: (1) qué impide que un proceso distinto del trabajador (por ejemplo la web) ejecute `enlace_ingreso_emitir(id)` y obtenga un valor válido para un correo ajeno; (2) que al reintentar solo vale el último correo y no se abre una ventana con dos enlaces válidos; (3) que si el envío falla después de emitir, no queda ningún valor guardado; (4) que la prueba RS-51 recorre la cola con trabajos fallidos, el registro de envíos y los mensajes de error; (5) que la invitación del primer administrador y el acceso de emergencia, creados desde la consola sin llave maestra, siguen el mismo camino.
+- **Puerta:** la prueba H6 del prototipo. Si el valor no puede nacer en el trabajador, se usa la opción (b) de Seguridad (enviar estos tres correos desde la petición) y se vuelve a mesa, tal como ya dice `prototipo-tecnico.md`.
+- **Qué cambia:** Seguridad (confirma); QA (casos del punto 4); precisa D-061.4 y D-073.4.
+
+### D-092 · La copia externa de la auditoría va sin IP ni motivo, con un resumen con llave (enmienda D-052.2 y D-030.5) — RATIFICADA; Cumplimiento y Seguridad confirman
+- **Pregunta:** ¿qué contiene la copia que se guarda fuera, en un almacén que no se puede borrar? (H-SEG-43, ADR-11 y ADR-04).
+- **Decisión:** **La copia externa no incluye la IP ni el motivo**; lleva un resumen con llave (HMAC) de la fila completa, que permite comprobar que nadie alteró la auditoría original. La auditoría de la base sigue guardando IP y motivo por valor (D-077); solo cambia lo que se copia.
+- **Motivo:** copiar a un almacén sin borrado datos que quizá haya que eliminar por orden legal (L-04 a L-06) es el tipo de decisión que **no se puede deshacer**; la integridad no necesita esos dos campos. Si la derivación de la llave se perdiera, los archivos de versiones retiradas de ADR-07 (H-SEG-47) permiten verificar copias antiguas.
+- **Condiciones:** Cumplimiento confirma que la copia sigue cumpliendo D-052.2 (inmutable y verificable) y D-077; Seguridad confirma la derivación `auditoria_copia` y que la tarea de copia solo recibe lo que dice la tabla de ADR-01.
+- **Qué cambia:** Cumplimiento: aviso de privacidad y §18.1 (qué se copia). Analista: RF-AUD si cita la copia.
+
+### D-093 · Tablas globales: `invitacion` y `clave_api` pasan a empresa; nuevas `accion_plataforma`, `congelacion_incidente` y `directorio_microsoft` (enmienda D-039.4) — RATIFICADA
+- **Pregunta:** ¿qué tablas no pertenecen a una empresa? (D04-2, H-SEG-38, ADR-04, ADR-21, ADR-23).
+- **Decisión:** la lista cerrada queda en **18 tablas globales** (ADR-04). `invitacion` y `clave_api` pasan a tablas de empresa (propuesta preferida por Datos). Se agregan `accion_plataforma`, `congelacion_incidente` y `directorio_microsoft`. **Toda tabla global nueva exige una decisión escrita del Gerente de TI**; una prueba de CI falla ante una tabla sin protección (riesgo #36).
+- **Motivo:** cada tabla global es un punto ciego del aislamiento; mover las dos que no necesitan serlo lo reduce, y las tres nuevas son inevitables (dos personas de plataforma; congelación; un directorio de Microsoft pertenece a una sola empresa, D-085.1).
+- **Condición:** Seguridad firmó la lista «solo con las condiciones» de su ronda 5 (H-SEG-33, 38, 39, 40, 42, 43, 44); confirma que quedaron escritas.
+
+### D-094 · Cuarto autor `plataforma` y marca de origen `asistente` (enmienda D-041 y RF-AUD-013); permiso `empresa.autorizar_soporte` = **PS-247** — RATIFICADA
+- **Pregunta:** ¿cómo se registra en la auditoría una lectura de soporte, y la acción de un asistente? (H-SEG-37, ADR-11, ADR-22).
+- **Decisión:** (1) Cuarto tipo de autor **`plataforma`**, **solo para lecturas de soporte**. (2) El asistente **no es un tipo de autor** (D-081.4a sigue vigente): es una **marca de origen** `asistente` en una columna aparte; el autor es la persona que lo usa. (3) Soporte no exporta ni hace lecturas masivas. (4) **Nuevo permiso sensible `empresa.autorizar_soporte`, asignado como PS-247** (siguiente libre; sensible n.º 55; controles 2F, verificación reciente y registrar al revocar; Administrador = T; Plataforma = «-»; Cuándo = Etapa 1). Avisa por correo a los administradores al usarse por primera vez y al revocarse. Nombre validado contra §1 del registro.
+- **Motivo:** sin ese permiso la autorización de soporte (D-073) no se puede construir; el cuarto autor evita mezclar a la plataforma con las personas de una empresa.
+- **Qué cambia:** Analista: RF-AUD-013, `registro-permisos.md` (fila PS-247, total 55 sensibles) y la matriz; QA recalcula celdas.
+
+### D-095 · Congelación por incidente dentro de la base; pospone toda purga de particiones (implementa D-080(b); ajusta RF-AUD-016) — RATIFICADA
+- **Pregunta:** ¿cómo se pausa lo irreversible durante un incidente, y qué pasa con la purga mensual de auditoría? (H-SEG-62, ADR-23, ADR-11, ADR-12).
+- **Decisión:** la congelación se aplica **dentro de la base** (tabla `congelacion_incidente`), no solo en el programa. Mientras exista una congelación vigente, **se pospone toda purga de particiones de auditoría**, no solo la de la empresa afectada. Crearla y levantarla son acciones de plataforma con segunda persona (ADR-23). El texto «omite a las empresas» de RF-AUD-016 pasa a «pospone la purga de la partición».
+- **Motivo:** una partición mensual mezcla a todas las empresas; purgarla parcialmente rompería la evidencia. Posponer no destruye nada y solo cuesta espacio mientras dure el incidente.
+- **Qué cambia:** Analista: RF-AUD-016. Cumplimiento: quién ejerce los papeles de la congelación (procedimiento de incidente, C.5.2).
+
+### D-096 · El correo del intento fallido se guarda como huella (enmienda D-054) — RATIFICADA
+- **Decisión:** el evento de seguridad de un ingreso fallido guarda la **huella** (nivel A) del correo, no el correo. Sirve para agrupar intentos contra una misma dirección, no para leerla.
+- **Motivo:** quien intenta con correos que no están registrados deja direcciones de terceros en nuestra base; no hay finalidad que lo justifique (D04-5).
+- **Qué cambia:** QA: prueba de que el correo no aparece en `evento_seguridad`.
+
+### D-097 · PostgreSQL 15 o superior, normalización con funciones propias, clases de clave y clave primaria `(empresa_id, id)` (precisa D-055 T-4 y D-070.6) — RATIFICADA
+- **Decisión:** PostgreSQL **15 o superior** (recomendada 16 o 17); funciones de normalización propias, `IMMUTABLE` y versionadas, sin `citext` ni `unaccent` (D06-1); clases de clave natural P/L/B/V/A de `indices-claves-naturales.md`; clave primaria compuesta `(empresa_id, id)` en las tablas de empresa (D03-4), que impide referencias entre empresas.
+- **Motivo:** las tres primeras evitan fallos de índices y de búsqueda que solo se verían con datos reales; la cuarta cierra una vía de fuga entre empresas.
+- **Condiciones:** la prueba H10 mide el costo de la clave compuesta; si falla, vuelve a mesa. DevOps confirma que el proveedor candidato ofrece la versión 15 o superior; si no, queda descartado como candidato.
+
+### D-098 · Exportación: descarga única atada a quien la pidió, con borrado inmediato (precisa D-061.1) — RATIFICADA
+- **Decisión:** el resultado se cifra, se guarda en la base hasta 24 horas, solo lo descarga la persona que lo pidió, **una sola vez**, por `POST` y de forma atómica, y se borra al terminar. Los permisos se vuelven a comprobar al generar (H-SEG-54 a 58). Si la descarga se corta, se pide de nuevo (queda en la auditoría). El tope de 100 MB por empresa es una propuesta que mide la prueba H12.
+- **Motivo:** una descarga repetible o por otra persona convierte la exportación en una fuga silenciosa. **No es un «almacén de archivos» en el sentido de D-022** (adjuntos subidos por personas): es una fila temporal ya incluida en la base gestionada, así que **no suma dinero**; Cumplimiento confirma esa lectura de D-022. Los respaldos conservarán el texto cifrado hasta que venzan: va al aviso de privacidad.
+- **Plan B (Seguridad):** generar el archivo al momento de la descarga, sin guardarlo, si Cumplimiento rechazara la lectura anterior.
+
+### D-099 · Prototipo técnico de 4 días y 1 de reserva (enmienda D-055) — RATIFICADA
+- **Decisión:** el prototipo previo a la Etapa 1 pasa de 3 o 4 días a **4 días más 1 de reserva**, con datos inventados y planes gratuitos: H9 obligatoria, H8 como mínimo el día 3, H2 de 9 a 13 casos, H1, H6 y H11 ampliadas y H12 nueva (exportación cifrada). Criterios de éxito y de fracaso en `prototipo-tecnico.md`.
+- **Motivo:** las condiciones de Seguridad y de Datos agregaron comprobaciones que antes eran supuestos; es tiempo, no dinero. Sigue pendiente de DevOps nombrar el proveedor candidato.
+
+### D-100 · Integración con Microsoft: aplicación por empresa, solo lectura, lectura programada (ADR-21) — RATIFICADA como diseño; decisión nueva
+- **Decisión:** se aprueba el diseño de ADR-21: **una aplicación registrada por cada empresa en su propio Microsoft** (no una aplicación multiempresa de la plataforma, que sería un secreto único para todas); credencial cifrada con el propósito `integracion_graph`; **consentimiento comprobable en cada lectura** (RN-MSF-007, D-085.4) contra una lista permitida en el código; cliente único con dos direcciones fijas; **lectura programada** y no notificaciones de Microsoft; "ya no aparece" solo tras una lectura completa y con la barrera de la mitad. La fecha de vencimiento del secreto la escribe quien conecta (corrige RF-MSF-004).
+- **Condiciones:** (1) Seguridad firma la lista de permisos de Graph (marcada «a verificar contra la documentación vigente») y decide cliente propio o librería oficial; (2) si la comprobación del token no puede hacerse como describe el ADR, vuelve a mesa antes de seguir (D-085.4); (3) Cumplimiento revisa los datos de Microsoft en el aviso (L-MSF).
+- **Dinero:** sin cambio (D9: las licencias son de cada empresa). Nada se construye antes de aprobar la Etapa 7 (D-081); en el núcleo solo entran las preparaciones ya aprobadas.
+
+### D-101 · Asistente de IA: sin estado en el servidor, proyecciones de campos, topes con reserva, proveedor por prueba H-IA (ADR-22) — RATIFICADA la arquitectura; los valores quedan como propuesta
+- **Decisión:** se aprueba la estructura de ADR-22: servicio externo detrás de un puerto propio (`ProveedorModelo`, con uno simulado «malicioso por diseño»); corre **solo en `web`**; herramientas cerradas de lectura que corren con los permisos de la persona; una sola lista de sensibilidad de columnas compartida con la exportación; **sin estado de conversación en el servidor** (la guarda el navegador); nunca una transacción abierta mientras se espera al modelo; topes por usuario, empresa y plataforma con **reserva antes de llamar y liquidación después** (el gasto máximo queda acotado por construcción, falla cerrada); la marca «vía asistente» es una columna `origen`, no un tipo de autor. Se cierra la pregunta de ASI-S05: **no se enmascaran nombres escritos a mano.**
+- **Precisión sobre D-086.3:** «el modelo nunca recibe nombres» debe leerse **«nunca recibe nombres que salgan de la base»**. Lo que la persona teclee puede contener un nombre y no se puede filtrar de forma fiable; se cubre con un aviso al escribir y con el aviso de privacidad. Cumplimiento lo recoge en L-18 y en el aviso de transparencia.
+- **No ratifico todavía:** los valores (2.000 caracteres, 6 turnos, 20 filas, 10 minutos, 15 y 60 segundos) y la elección del proveedor y modelo; son propuestas que fija la prueba H-IA con datos inventados, con Seguridad y Cumplimiento. El valor en dinero de los topes y el contrato los decide el **CEO** (ya en `hoja-ceo.md`, D8, I-05, L-17 a L-19).
+- **Condición:** Seguridad y QA revisan los controles estructurales y la suite IO-01 a IO-14 (la tabla de ADR-22, sección 3) antes de pasar el ADR a «Aceptado». Nada se construye antes de la Etapa 7 aprobada.
+
+**Notas al pie en las decisiones originales:** hechas en D-039, D-041, D-048, D-052, D-054, D-055, D-061, D-065 y D-073 (regla de la retrospectiva del 2026-10-26).
+
 ---
 
 ## Escalado al CEO

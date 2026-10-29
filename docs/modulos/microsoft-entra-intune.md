@@ -1,8 +1,8 @@
 # Módulo: Microsoft Entra ID e Intune (MSF)
 
-**Versión:** 0.1 (primera propuesta; aplica D-001 a D-080) · **Fecha:** 29/10/2026 · **Autor:** analista-funcional
-**Base:** `CLAUDE.md`, `docs/documento-funcional.md` v0.3 (en especial la sección 18), `docs/equipo/decisiones.md` (D-001, D-030, D-048, D-056, D-065 a D-080), `docs/registro-permisos.md` v1.1, y como modelo `integraciones-api.md`, `cmdb-ligera.md`, `personas-ubicaciones.md`, `licencias-software.md` y `onboarding-offboarding.md`.
-**Estado:** propuesta. El Gerente de TI aprobó el módulo; este texto queda pendiente de la verificación del Auditor Técnico, QA, Seguridad y Cumplimiento. **[SUPUESTO]** = lo confirma el Gerente de TI. **[ESCALAR AL CEO]** = dinero, tema legal o algo irreversible. **[LEGAL]** = depende de la opinión de un abogado (se suma al paquete L-01 a L-16 con las preguntas L-MSF-01 a L-MSF-06 de la sección 12). **[PENDIENTE]** = dato que no está definido y no se inventa.
+**Versión:** 0.2 (ajustada a D-081, D-084 y D-085) · **Fecha:** 29/10/2026 · **Autor:** analista-funcional
+**Base:** `CLAUDE.md`, `docs/documento-funcional.md` v0.3 (en especial la sección 18), `docs/equipo/decisiones.md` (D-001, D-030, D-048, D-056, D-065 a D-085), `docs/registro-permisos.md` v1.2, y como modelo `integraciones-api.md`, `cmdb-ligera.md`, `personas-ubicaciones.md`, `licencias-software.md` y `onboarding-offboarding.md`.
+**Estado:** alcance aceptado por el Gerente de TI; el texto queda pendiente de la verificación del Auditor Técnico, QA, Seguridad y Cumplimiento. **[SUPUESTO]** = propuesta que confirma el Gerente de TI; los ya confirmados dicen "Confirmado (D-085)". **[ESCALAR AL CEO]** = dinero, tema legal o algo irreversible. **[LEGAL]** = depende de la opinión de un abogado (se suma al paquete L-01 a L-16 con las preguntas L-MSF-01 a L-MSF-06 de la sección 12). **[PENDIENTE]** = dato que no está definido y no se inventa.
 **Leyenda de "Cuándo":** la columna usa las palabras del núcleo (`Fase 3`) y, entre paréntesis, la parte: **(MSF-1)** conexión y Personas (necesita las Etapas 1 y 2); **(MSF-2)** equipos y conciliación (necesita además las Etapas 4 y 5). **MSF-3 (acciones remotas) no existe en esta versión** (sección 12, S-MSF-03).
 
 ---
@@ -28,11 +28,11 @@
 
 **No entra:** acciones remotas (bloquear, borrar, retirar), cualquier escritura en Microsoft, crear Usuarios de la plataforma desde Entra, otros MDM, equipos personales de empleados, medición de uso de licencias, avisos a los empleados, exposición por API pública. Ver sección 13.
 
-**Fase (D-056).** **Fase 3.** Se propone una **ola nueva (G)** después de la ola F, porque necesita Personas (Etapa 2), inventario (Etapa 4), órdenes de compra y recepción (Etapa 5), la gestión de secretos, la cola y el bus de eventos (Etapa 1) y NOT-completo (Fase 2, ola A) para los avisos por fecha. **MSF-1** (conexión y Personas) puede adelantarse si el Gerente de TI lo decide. Nada se construye antes de aprobar la Etapa 7, salvo decisión del Gerente de TI (D-056.2). Se registra en la tabla de D-056 (sección 9, lista del núcleo).
+**Fase y orden (D-056, D-081).** **Fase 3, ola G**, después de la ola F, con este orden junto al Asistente de IA (ASI): G-1 ASI-A, **G-2 MSF-1**, **G-3 MSF-2**, G-4 ASI-B, G-5 ASI-C. **MSF-1** (conexión y Personas) necesita las Etapas 1 y 2, la gestión de secretos, la cola y NOT-completo (Fase 2, ola A) para los avisos por fecha; es independiente de ASI y no escribe en Microsoft. **MSF-2** (equipos y conciliación) necesita MSF-1 y las Etapas 4 (inventario) y 5 (órdenes de compra y recepción). **Sin adelantos:** MSF-1 podría pasar a después de la ola D solo por decisión escrita del Gerente de TI al cerrar la Etapa 7 (D-056.2); nunca antes. Cada paso termina con una demo que el CEO aprueba antes del siguiente. **Datos reales:** el módulo se construye y se demuestra con datos inventados; usar datos reales de una empresa exige las respuestas legales L-MSF-01 a L-MSF-06; esto no frena la salida de la v1.
 
-**Preparaciones del núcleo que conviene hacer antes (baratas hoy, caras con datos reales; sección 9):**
-- Un campo «se gestiona en MDM» en la categoría, apagado por defecto (Etapa 2).
-- Un gancho para que cada módulo limpie sus datos al anonimizar una Persona (Etapa 2, cuando nace la anonimización manual).
+**Preparaciones del núcleo aprobadas (D-081.4; ya en el documento funcional):**
+- Un campo «se gestiona en MDM» en la categoría, apagado por defecto (Etapa 2; RF-CAT-030).
+- Un gancho síncrono para que cada módulo limpie sus datos al anonimizar una Persona (Etapa 2, cuando nace la anonimización manual; RF-DAT-018).
 
 ---
 
@@ -68,21 +68,21 @@
 
 ## 3. Roles y permisos
 
-Solo nombres y PS-nn de `docs/registro-permisos.md`. Las filas **PS-235 a PS-240 son propuestas** que siguen el mecanismo de la sección 14 del registro (el Analista no edita el registro en esta entrega; el Gerente de TI aprueba y el Analista asigna el número definitivo). Siguiente número libre al 29/10/2026: PS-235. Alcance siempre **«todo»**. Todo se comprueba en el servidor (regla 6 de `CLAUDE.md`). **Empleado (portal): no aplica** en esta versión.
+Solo nombres y PS-nn de `docs/registro-permisos.md`. Las filas **PS-241 a PS-246 ya están en el registro** (sección 12B, valores finales de D-084). `microsoft.*` es la lectura del directorio y de Intune; el **ingreso de usuarios con Microsoft** es otro permiso, `integraciones.configurar_metodos_ingreso` (PS-137). Alcance siempre **«todo»**. Todo se comprueba en el servidor (regla 6 de `CLAUDE.md`). **Empleado (portal): no aplica** en esta versión.
 
 | Acción | Permiso (PS) | Admin | Jefatura TI | Técnico | Almacén | Solicitante | Solo lectura |
 |---|---|---|---|---|---|---|---|
-| Ver la conexión, las lecturas, la lista de equipos de Intune y el bloque «Intune» de un activo (sin datos personales) | `microsoft.ver` (**PS-235**, propuesto) | Sí | Sí | Sí | No | No | Sí |
+| Ver la conexión, las lecturas, la lista de equipos de Intune y el bloque «Intune» de un activo (sin datos personales) | `microsoft.ver` (**PS-241**) | Sí | Sí | Sí | No | No | Sí |
 | Ver el activo (requisito para ver su bloque «Intune») | `activos.ver` (PS-43) | Sí | Sí | Sí | Sí | No | Sí |
 | Ver usuario principal, IMEI y nombre del equipo en Intune; ver nombres y correos de las propuestas | `datos_personales.ver` (PS-22, sensible) | Sí | Sí | Sí | No | No | No |
-| Conectar, reemplazar la credencial, pausar, reanudar y desconectar | `microsoft.conectar` (**PS-236**, propuesto; **sensible**: 2F, R, A) | Sí | No | No | No | No | No |
-| Configurar qué se lee (filtros, exclusiones, equivalencias de área, umbrales de días) | `microsoft.configurar` (**PS-237**, propuesto; A) | Sí | No | No | No | No | No |
-| Pedir una lectura manual («Sincronizar ahora») | `microsoft.sincronizar_ahora` (**PS-238**, propuesto; A, T) | Sí | Sí | Sí | No | No | No |
-| Revisar propuestas sobre Personas, descartarlas con motivo y desvincular una cuenta | `microsoft.revisar_personas` (**PS-239**, propuesto; A) | Sí | Sí | Sí | No | No | No |
+| Conectar, reemplazar la credencial, pausar, reanudar y desconectar | `microsoft.conectar` (**PS-242**; **sensible**, el n.º 54 del registro: 2F, R, A) | Sí | No | No | No | No | No |
+| Configurar qué se lee (filtros, exclusiones, equivalencias de área, umbrales de días) | `microsoft.configurar` (**PS-243**; A) | Sí | No | No | No | No | No |
+| Pedir una lectura manual («Sincronizar ahora») | `microsoft.sincronizar_ahora` (**PS-244**; A, T) | Sí | Sí | Sí | No | No | No |
+| Revisar propuestas sobre Personas, descartarlas con motivo y desvincular una cuenta | `microsoft.revisar_personas` (**PS-245**; A) | Sí | Sí | Sí | No | No | No |
 | Aplicar una propuesta de alta o de cambio | además `personas.crear_editar` (PS-25) | Sí | No | Sí | No | No | No |
 | Aplicar una propuesta de baja o de reingreso | además `personas.cesar` (PS-26) y, si la Persona tiene membresía, `usuarios.suspender` (PS-14) | Sí | Sí (PS-14 solo Admin) | No | No | No | No |
 | Aprobar un área nueva que trae la lectura | `estructura.gestionar` (PS-33) | Sí | No | No | No | No | No |
-| Conciliar equipos: vincular, desvincular, resolver coincidencias dudosas, ignorar con motivo | `microsoft.conciliar` (**PS-240**, propuesto; A) | Sí | Sí | Sí | No | No | No |
+| Conciliar equipos: vincular, desvincular, resolver coincidencias dudosas, ignorar con motivo | `microsoft.conciliar` (**PS-246**; A) | Sí | Sí | Sí | No | No | No |
 | Registrar en el inventario un equipo hallado en Intune | además `activos.ingreso_manual` (PS-44) | Sí | No | Sí | No | No | No |
 | Marcar una categoría «se gestiona en MDM» | `categorias.gestionar` (PS-34) | Sí | No | No | No | No | No |
 | Exportar listas con datos de Intune | `datos.exportar` (PS-20, sensible) | Sí | No | No | No | No | No |
@@ -90,9 +90,9 @@ Solo nombres y PS-nn de `docs/registro-permisos.md`. Las filas **PS-235 a PS-240
 | Suspender a toda la empresa (la conexión queda Pausada) | Administrador de plataforma (`plataforma.empresas_gestionar`, PS-01); no ve datos del negocio | n/a | n/a | n/a | n/a | n/a | n/a |
 
 Notas
-1. **Una sola fila nueva es sensible: PS-236**, porque cambia la puerta de entrada a todos los datos de personas y equipos de la empresa. Seguridad la revisa (D-068, sección 14 del registro).
+1. **Una sola fila nueva es sensible: PS-242** (el sensible n.º 54 del registro, D-084.5), porque cambia la puerta de entrada a todos los datos de personas y equipos de la empresa. Seguridad la revisa (D-068, sección 14 del registro).
 2. **Revisar no es aplicar.** Quien revisa propuestas necesita además el permiso del módulo Personas que corresponda para aplicarlas; este módulo no da permisos de Personas a nadie (nadie se da más permisos de los que tiene).
-3. **Destinatarios de avisos, sin permiso nuevo:** los titulares de PS-236 (conexión y credencial), de PS-239 (propuestas) y de PS-240 (equipos). No se crea un `microsoft.recibir_avisos`.
+3. **Destinatarios de avisos, sin permiso nuevo:** los titulares de PS-242 (conexión y credencial), de PS-245 (propuestas) y de PS-246 (equipos). No se crea un `microsoft.recibir_avisos`.
 4. **Ni el Administrador de plataforma ni el soporte** pueden conectar, reemplazar o ver credenciales de una empresa (D-003, D-039.10).
 5. **No existe ningún permiso para acciones remotas.** Si algún día se proponen, cada acción tendrá su propio permiso sensible (S-MSF-03).
 6. **Casillas del interruptor único (D-066):** este módulo no mueve dinero ni aprueba nada; **no usa ni agrega casillas**. La autoentrega y la anonimización siguen sin casilla.
@@ -111,7 +111,7 @@ Notas
 | RF-MSF-001 | Asistente para conectar la empresa: explica en lenguaje simple qué se leerá y qué no, guía el consentimiento del administrador de Microsoft de esa empresa, prueba la conexión y muestra el **nombre del directorio** para que el Administrador confirme que es el suyo. | Fase 3 (MSF-1) | CA-MSF-01, CA-MSF-02 |
 | RF-MSF-002 | Guardar la credencial **por empresa** como secreto: cifrada, aparte, nunca visible después de guardarla. | Fase 3 (MSF-1) | CA-MSF-03 |
 | RF-MSF-003 | Conectar **por partes**: solo usuarios (Entra), solo equipos (Intune) o ambos. Cada parte pide y usa únicamente sus propios permisos de lectura. | Fase 3 (MSF-1) | CA-MSF-02 |
-| RF-MSF-004 | Mostrar el estado de la conexión, los permisos que tiene concedidos, la fecha de vencimiento de la credencial cuando Microsoft la informa y la fecha de la última lectura correcta. | Fase 3 (MSF-1) | CA-MSF-04 |
+| RF-MSF-004 | Mostrar el estado de la conexión, los permisos que tiene concedidos (comprobados antes de cada lectura, RN-MSF-007), la fecha de vencimiento de la credencial cuando Microsoft la informa y la fecha de la última lectura correcta. | Fase 3 (MSF-1) | CA-MSF-04 |
 | RF-MSF-005 | Reemplazar la credencial: la nueva se prueba antes; solo si funciona se descarta la anterior. | Fase 3 (MSF-1) | CA-MSF-05 |
 | RF-MSF-006 | Pausar y reanudar las lecturas, con motivo al pausar. | Fase 3 (MSF-1) | CA-MSF-06 |
 | RF-MSF-007 | Desconectar con motivo: la credencial se elimina en el acto; lo ya leído se conserva marcado «desconectado» según la sección 6. | Fase 3 (MSF-1) | CA-MSF-07 |
@@ -127,7 +127,7 @@ Notas
 | RF-MSF-012 | Unir cuentas con Personas: primero por identificador inmutable ya vinculado; si no, por código de empleado; si no, por correo. Se vincula sola solo la coincidencia única con una Persona Activa. | Fase 3 (MSF-1) | CA-MSF-11 |
 | RF-MSF-013 | Generar propuestas: **alta**, **cambio**, **baja** (posible cese), **reingreso** y **para revisión** (coincidencia dudosa o conflicto). | Fase 3 (MSF-1) | CA-MSF-12 |
 | RF-MSF-014 | Revisar propuestas (lista con filtros por tipo y estado), aplicarlas una por una o descartarlas con motivo. Aplicar usa el mismo servicio y las mismas reglas que el módulo Personas. | Fase 3 (MSF-1) | CA-MSF-13 |
-| RF-MSF-015 | Aplicar propuestas **en bloque** con vista previa, informe de las que fallan y un lote que se puede anular. | Fase 3 (MSF-1) | CA-MSF-14 |
+| RF-MSF-015 | Aplicar propuestas **en bloque** con vista previa obligatoria, informe de las que fallan con su motivo y un lote que se puede anular (RN-MSF-026); la pantalla dice que no es «todo o nada». | Fase 3 (MSF-1) | CA-MSF-14 |
 | RF-MSF-016 | Una propuesta de baja abre el asistente de cese de Personas con sus pendientes; si ONB está activo, ofrece iniciar una salida. **Nunca cesa por sí sola.** | Fase 3 (MSF-1) | CA-MSF-15 |
 | RF-MSF-017 | Equivalencia entre el departamento de Entra y el área de la plataforma; los departamentos desconocidos se listan para aprobar o mapear y no se crean solos. | Fase 3 (MSF-1) | CA-MSF-16 |
 | RF-MSF-018 | La ficha de la Persona indica si tiene cuenta de Microsoft vinculada (sin mostrar el identificador) y permite desvincularla con motivo. | Fase 3 (MSF-1) | CA-MSF-17 |
@@ -180,13 +180,13 @@ Notas
 | RN-MSF-001 | Toda conexión, lectura, propuesta, vínculo y hallazgo lleva empresa. La base impone que las referencias sean de la misma empresa (D-039). Un identificador de otra empresa responde «No encontrado». | Fase 3 (MSF-1) | CA-MSF-37 |
 | RN-MSF-002 | Las credenciales son **por empresa** y nunca se comparten ni se reutilizan: una credencial solo sirve para leer su propio directorio. Un fallo o un exceso de uso de una conexión no afecta a las de otras empresas. | Fase 3 (MSF-1) | CA-MSF-03, CA-MSF-37 |
 | RN-MSF-003 | La credencial se guarda **cifrada**, con llave derivada por empresa (D-048.4, RS-46), en columna aparte; nunca en el repositorio, en JSON de campos, registros técnicos, auditoría, errores, exportaciones ni respaldos en claro. No se vuelve a mostrar. A diferencia de las claves de API, no puede guardarse solo como huella porque la plataforma debe presentarla a Microsoft (misma excepción declarada que el secreto del webhook, RN-INT-025). Una pérdida o filtración de credencial es un incidente de seguridad (D-059, D-080): se revoca en Microsoft y se reemplaza. | Fase 3 (MSF-1) | CA-MSF-03 |
-| RN-MSF-004 | Conectar, reemplazar la credencial y desconectar exigen PS-236 (sensible) con **reautenticación reciente (10 minutos) y segunda verificación**. Nadie puede conectar «por» una empresa: ni el Administrador de plataforma ni el soporte. | Fase 3 (MSF-1) | CA-MSF-01 |
-| RN-MSF-005 | Un directorio de Microsoft se conecta a **una sola empresa a la vez**. Si ya está conectado a otra, el rechazo dice «No se puede conectar este directorio» y **no revela a qué empresa** (D-041.5). **[SUPUESTO]** | Fase 3 (MSF-1) | CA-MSF-01 |
+| RN-MSF-004 | Conectar, reemplazar la credencial y desconectar exigen PS-242 (sensible) con **reautenticación reciente (10 minutos) y segunda verificación**. Nadie puede conectar «por» una empresa: ni el Administrador de plataforma ni el soporte. | Fase 3 (MSF-1) | CA-MSF-01 |
+| RN-MSF-005 | Un directorio de Microsoft se conecta a **una sola empresa a la vez**. Si ya está conectado a otra, el rechazo dice «No se puede conectar este directorio» y **no revela a qué empresa** (D-041.5). Si dos empresas del grupo comparten un directorio, solo una lo conecta y la otra espera; dividir un directorio por grupos sería un módulo aparte. **Confirmado (D-085.1, S-MSF-08).** | Fase 3 (MSF-1) | CA-MSF-01 |
 | RN-MSF-006 | El consentimiento lo da una persona con rol de administrador en el Microsoft **de esa empresa**. La plataforma no concede ni simula consentimientos. Puede ser la misma persona que administra la plataforma en la empresa o una distinta; si es otra, la plataforma entrega un texto con los pasos, sin credenciales. | Fase 3 (MSF-1) | CA-MSF-01 |
-| RN-MSF-007 | **Solo lectura.** La plataforma solo pide permisos de lectura. Si al probar la conexión descubre que la credencial tiene además permisos para **modificar o ejecutar operaciones** sobre cuentas o equipos, **no la activa**: queda «Pendiente de consentimiento» con el texto «Quite los permisos de más y vuelva a probar». Se muestra la lista exacta de permisos concedidos. | Fase 3 (MSF-1) | CA-MSF-02 |
+| RN-MSF-007 | **Solo lectura, comprobada en cada lectura.** La plataforma solo pide permisos de lectura. Antes de **conectar** y **antes de cada lectura** (programada o manual) comprueba los permisos concedidos. Si descubre que la credencial tiene además permisos para **modificar o ejecutar operaciones** sobre cuentas o equipos, **no la activa** (al conectar) o **la pasa a «Pendiente de consentimiento»** (si ya estaba Conectada), **no lee**, avisa a los titulares de PS-242 y muestra «Quite los permisos de más y vuelva a probar» con la lista exacta de permisos concedidos. La plataforma **nunca usa** un permiso de escritura u operaciones aunque exista. Si el mecanismo de credencial elegido no permite comprobarlo en cada lectura, el Arquitecto vuelve a mesa antes de seguir (ADR-22). **Confirmado y reforzado (D-085.4).** | Fase 3 (MSF-1) | CA-MSF-02 |
 | RN-MSF-008 | **Mínimo necesario.** Solo se guarda la lista cerrada de datos de la sección 6, aunque Microsoft entregue más. **Nunca** se traen: ubicación del equipo, aplicaciones instaladas, contenido, número de teléfono, claves de recuperación del cifrado, contraseñas, registros de inicio de sesión, foto, ni los datos prohibidos de RN-PRS-003 (documento, dirección, teléfono personal, fecha de nacimiento, sueldo, salud). | Fase 3 (MSF-1, MSF-2) | CA-MSF-21 |
 | RN-MSF-009 | La plataforma solo llama a las direcciones fijas de la nube pública de Microsoft. **No existe un campo para escribir direcciones.** Las nubes soberanas o gubernamentales quedan fuera (S-MSF-15). | Fase 3 (MSF-1) | CA-MSF-21 |
-| RN-MSF-010 | Solo se guardan los equipos de **propiedad corporativa**. Los personales (BYOD) se descartan sin guardarse y solo se muestra su conteo. **Excepción:** si la serie de un equipo personal coincide con un activo del inventario, se guarda y se señala la diferencia de propiedad (hallazgo «datos distintos»). **[SUPUESTO]** | Fase 3 (MSF-2) | CA-MSF-21 |
+| RN-MSF-010 | Solo se guardan los equipos de **propiedad corporativa**. Los personales (BYOD) se descartan sin guardarse y solo se muestra su conteo. **Excepción:** si la serie de un equipo personal coincide con un activo del inventario, se guarda **solo el hallazgo «propiedad distinta», sin usuario principal ni nombre del equipo**, y se señala la diferencia de propiedad (hallazgo «datos distintos»). **Confirmado (D-085.2, S-MSF-09).** | Fase 3 (MSF-2) | CA-MSF-21 |
 | RN-MSF-011 | **Intune informa; el inventario decide.** Nada que llegue de Microsoft cambia por sí solo el estado, la asignación, la ubicación, la serie, el costo, el responsable ni la categoría de un activo. Las diferencias se muestran y una persona decide. | Fase 3 (MSF-2) | CA-MSF-28 |
 | RN-MSF-012 | **Nunca se crean Usuarios (membresías) ni se cambian roles desde Entra** (D-001). La plataforma tampoco vincula una Persona con una membresía en automático (RN-PRS-017). Un correo traído de Entra **no se considera verificado**. | Fase 3 (MSF-1) | CA-MSF-15 |
 | RN-MSF-013 | Nada se borra porque Microsoft deje de informarlo: se marca «ya no aparece en Microsoft» con fecha (D-019, RF-AUD-011). La purga por plazos de privacidad la rigen la sección 6 y RN-MSF-059. | Fase 3 (MSF-1, MSF-2) | CA-MSF-07 |
@@ -201,13 +201,13 @@ Notas
 | RN-MSF-017 | Una cuenta **sin correo ni código de empleado** no genera propuesta de alta (como la importación, RF-PRS-014); se cuenta como «sin datos suficientes». | Fase 3 (MSF-1) | CA-MSF-12 |
 | RN-MSF-018 | Tipo de la Persona propuesta: cuenta de miembro = Empleado; cuenta de invitado = Externo; **nunca Custodio**. Los invitados no se leen por defecto. **[SUPUESTO]** | Fase 3 (MSF-1) | CA-MSF-12 |
 | RN-MSF-019 | **Ninguna propuesta se aplica sola.** No existe un modo automático en esta versión. | Fase 3 (MSF-1) | CA-MSF-13 |
-| RN-MSF-020 | Aplicar una propuesta exige el permiso de Personas que corresponda: alta y cambio, PS-25; baja y reingreso, PS-26 (y PS-14 si la Persona tiene membresía); área nueva, PS-33. Tener PS-239 no basta. Se comprueba en el servidor. | Fase 3 (MSF-1) | CA-MSF-13 |
+| RN-MSF-020 | Aplicar una propuesta exige el permiso de Personas que corresponda: alta y cambio, PS-25; baja y reingreso, PS-26 (y PS-14 si la Persona tiene membresía); área nueva, PS-33. Tener PS-245 no basta. Se comprueba en el servidor. | Fase 3 (MSF-1) | CA-MSF-13 |
 | RN-MSF-021 | Una cuenta **deshabilitada o eliminada** en Microsoft produce solo una **propuesta de cese**. No equivale a un cese (puede ser una licencia o una ausencia). El cese se registra con el asistente de Personas y **nunca se bloquea por recursos** (D-034, D-061.7). | Fase 3 (MSF-1) | CA-MSF-15 |
 | RN-MSF-022 | Una Persona Cesada no se reactiva por la lectura (solo se propone un «reingreso»). Una Anonimizada nunca se reactiva (RN-PRS-016) y **no se vuelve a proponer un alta para su misma cuenta**: se guarda una huella irreversible del identificador de la cuenta. **[LEGAL: L-MSF-04]** | Fase 3 (MSF-1) | CA-MSF-18 |
 | RN-MSF-023 | Campos que se proponen (lista cerrada): nombre, correo, código de empleado, área (por equivalencia) y jefe directo (solo si ambas Personas están vinculadas). Los demás campos de la Persona no se tocan. Un dato editado a mano que difiere de Entra **se propone como cambio, no se pisa**. Se respetan los límites de largo de D-072 (por ejemplo, nombre de 120 caracteres): una cuenta que no cabe es error de esa fila. | Fase 3 (MSF-1) | CA-MSF-12 |
 | RN-MSF-024 | Un área, tipo de puesto o ubicación desconocidos **no se crean solos**: se listan para aprobar o mapear (RF-IMP-007). | Fase 3 (MSF-1) | CA-MSF-16 |
 | RN-MSF-025 | Una propuesta pendiente vence a los **30 días** y se vuelve a generar si la diferencia persiste. Una descartada no se repite mientras el valor propuesto sea el mismo (se guarda una huella del valor, no el valor). **[SUPUESTO]** | Fase 3 (MSF-1) | CA-MSF-12 |
-| RN-MSF-026 | Aplicar en bloque: cada propuesta se valida por separado; las que fallan se listan y no se aplican, las demás sí (no es «todo o nada» porque son decisiones independientes y la plataforma no es dueña del origen). El conjunto queda como un **lote con una sola entrada de auditoría**, anulable con el mismo criterio de RF-IMP-006. **[SUPUESTO]** | Fase 3 (MSF-1) | CA-MSF-14 |
+| RN-MSF-026 | Aplicar en bloque, **excepción confirmada a D-050 (D-085.3, S-MSF-12)**: **vista previa obligatoria**; cada propuesta se valida por separado; las que fallan se listan **con su motivo** y no se aplican, las demás sí (no es «todo o nada» porque son decisiones independientes y la plataforma no es dueña del origen; mismo criterio que las invitaciones por persona, D-053 DS-08). El conjunto queda como un **lote con una sola entrada de auditoría**, **anulable** con el mismo criterio de RF-IMP-006 (D-072), con los **mismos límites de tamaño de D-050**, y la pantalla dice que no es «todo o nada». | Fase 3 (MSF-1) | CA-MSF-14 |
 
 **Equipos y conciliación**
 
@@ -252,7 +252,7 @@ Notas
 | RN-MSF-058 | Con la **empresa suspendida** o el **módulo apagado** (`modulo_activo`): las lecturas se detienen, los datos se ocultan sin borrarse, la API responde «No encontrado». Al reactivar se hace una lectura completa antes de marcar nada como desaparecido. | Fase 3 (MSF-1) | CA-MSF-36 |
 | RN-MSF-059 | **Retención y anonimización** según la sección 6. Al anonimizar una Persona se borran su vínculo y sus copias de nombre de usuario en lecturas, en la misma operación. **[LEGAL: L-MSF-03]** | Fase 3 (MSF-1, MSF-2) | CA-MSF-18 |
 | RN-MSF-060 | Al **desconectar**, la credencial se elimina en el acto. Las Personas, los activos, los vínculos y el historial de cumplimiento se conservan marcados «desconectado»; se **purgan** las lecturas de equipos sin activo y los nombres de usuario no vinculados (se pueden volver a leer al reconectar). Reconectar abre un asistente nuevo. | Fase 3 (MSF-1) | CA-MSF-07 |
-| RN-MSF-061 | **Sin acciones remotas.** El módulo no solicita ni usa permisos de escritura u operaciones, y no ofrece ninguna ruta que los use (RF-MSF-038). | Fase 3 (MSF-1) | CA-MSF-33 |
+| RN-MSF-061 | **Sin acciones remotas (código I-06 del documento funcional: no se construyen).** El módulo no solicita ni usa permisos de escritura u operaciones, **aunque la credencial los tenga**, y no ofrece ninguna ruta que los use (RF-MSF-038, RN-MSF-007). | Fase 3 (MSF-1) | CA-MSF-33 |
 | RN-MSF-062 | Conectar Entra para leer cuentas **no activa** el ingreso a la plataforma con Microsoft (PS-137, INT-3). Son consentimientos y configuraciones separadas. | Fase 3 (MSF-1) | CA-MSF-41 |
 | RN-MSF-063 | Los datos de este módulo **no se exponen por la API pública ni por webhooks** en esta versión; una clave de API responde «No encontrado» (S-MSF-18). | Fase 3 (MSF-1) | CA-MSF-41 |
 | RN-MSF-064 | **Al restaurar un respaldo**, toda conexión queda **Pausada** hasta que un administrador reemplace la credencial (una credencial eliminada al desconectar podría reaparecer); antes de abrir el sistema se reaplican las anonimizaciones (RS-49). | Fase 3 (MSF-1) | CA-MSF-36 |
@@ -270,7 +270,7 @@ Notas
 | RNF-MSF-006 | Todas las pruebas usan un **simulador de Microsoft** con datos inventados; ninguna credencial, directorio ni nombre real entra al repositorio ni al entorno de pruebas (RF-DAT-010). | Fase 3 (MSF-1) | CA-MSF-44 |
 | RNF-MSF-007 | Pantallas operables por teclado, a 360 px, con contraste AA y el estado de cumplimiento en texto; los objetivos táctiles de 44 px (RNF-004). | Fase 3 (MSF-2) | CA-MSF-24 |
 | RNF-MSF-008 | El 100 % de las acciones humanas y automáticas queda en la auditoría con su autor (usuario o «sistema»). | Fase 3 (MSF-1, MSF-2) | CA-MSF-39 |
-| RNF-MSF-009 | La pérdida de acceso (credencial vencida o consentimiento retirado) se detecta en la siguiente lectura programada y se avisa a los titulares de PS-236. | Fase 3 (MSF-1) | CA-MSF-04 |
+| RNF-MSF-009 | La pérdida de acceso (credencial vencida o consentimiento retirado) y la aparición de un permiso de escritura u operaciones se detectan en la siguiente lectura programada (la comprobación de permisos se hace en **cada** lectura, RN-MSF-007) y se avisa a los titulares de PS-242. | Fase 3 (MSF-1) | CA-MSF-02, CA-MSF-04 |
 | RNF-MSF-010 | Al cambiar de empresa activa ninguna pantalla arrastra datos de Microsoft de la empresa anterior (D-046). | Fase 3 (MSF-1) | CA-MSF-37 |
 
 ---
@@ -280,20 +280,21 @@ Notas
 ### 5.1 Flujos
 
 **Flujo 1 · La empresa conecta su Entra ID e Intune** (MSF-1)
-1. El Administrador (PS-236, con reautenticación reciente y segunda verificación) abre «Conectar Microsoft» y elige qué conectar: usuarios, equipos o ambos.
+1. El Administrador (PS-242, con reautenticación reciente y segunda verificación) abre «Conectar Microsoft» y elige qué conectar: usuarios, equipos o ambos.
 2. La plataforma muestra qué leerá y qué **no** (lista cerrada de la sección 6) y los permisos de **solo lectura** que Microsoft va a pedir.
 3. El administrador de Microsoft de **esa empresa** da el consentimiento dentro de Microsoft (si es otra persona, recibe un texto con los pasos).
 4. La empresa entrega la credencial según el mecanismo que fije el Arquitecto (S-MSF-20). La plataforma la guarda como **secreto** y no la vuelve a mostrar.
-5. La plataforma prueba la conexión: lee el nombre del directorio, comprueba que no esté conectado a otra empresa y que **no** haya permisos de escritura.
+5. La plataforma prueba la conexión: lee el nombre del directorio, comprueba que no esté conectado a otra empresa y que **no** haya permisos de escritura. **Esta comprobación de permisos se repite antes de cada lectura** (RN-MSF-007).
 6. El Administrador confirma que el nombre del directorio es el de su empresa. La conexión queda **Conectada** y se programa la primera lectura en vista previa.
 - **Si falla:** consentimiento incompleto, permisos de más o credencial inválida → «Pendiente de consentimiento» con la razón en palabras simples.
+- **Si más adelante aparece un permiso de escritura u operaciones** (en una lectura programada o manual): la conexión vuelve a «Pendiente de consentimiento», esa lectura no se hace, se avisa a los titulares de PS-242 y no se lee nada hasta que se quiten los permisos de más y se pruebe de nuevo.
 
 **Flujo 2 · Sincronizar cuentas de Entra con Personas** (MSF-1)
 1. La lectura programada (o manual) trae las cuentas que cumplen los filtros.
 2. La **primera vez** solo se muestra una vista previa con cifras; no se crea nada.
 3. Cada cuenta se une con una Persona (RN-MSF-014): identificador inmutable, luego código de empleado, luego correo. La coincidencia única con una Persona Activa se vincula sola.
 4. La lectura genera **propuestas**: alta (cuenta sin Persona), cambio (nombre, correo, código, área, jefe), baja (cuenta deshabilitada o eliminada), reingreso (cuenta rehabilitada de una Persona Cesada) y «para revisión».
-5. Quien tiene PS-239 revisa la lista; para aplicar necesita además el permiso de Personas que corresponda. Lo descartado se recuerda.
+5. Quien tiene PS-245 revisa la lista; para aplicar necesita además el permiso de Personas que corresponda. Lo descartado se recuerda.
 6. Una baja abre el asistente de cese (sin bloqueo por recursos); un reingreso, la reactivación de Personas. **Nunca se crea ni se toca un Usuario de la plataforma.**
 7. Todo lo aplicado queda en la auditoría con el identificador de la Persona y los campos que cambiaron, sin valores.
 
@@ -322,23 +323,24 @@ Notas
 
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
-| (nueva) | Pendiente de consentimiento | `microsoft.conectar` (PS-236) | Reautenticación reciente y segunda verificación. El asistente abandonado vence a los 7 días **[SUPUESTO]** |
-| Pendiente de consentimiento | Conectada | Sistema, tras confirmar el Administrador el nombre del directorio | Permisos de solo lectura concedidos; directorio libre (RN-MSF-005, 007) |
-| Conectada | Con problema | Sistema | Credencial vencida, consentimiento retirado, permisos de más, Microsoft rechaza el acceso |
-| Con problema | Conectada | Sistema (lectura correcta) o PS-236 (credencial nueva) | La causa se corrigió |
-| Conectada o Con problema | Pausada | PS-236 con motivo, o sistema | Empresa suspendida, módulo apagado, respaldo restaurado (RN-MSF-058, 064) |
-| Pausada | Conectada | PS-236 | Tras una prueba de conexión; tras restaurar, solo con credencial reemplazada |
-| Cualquiera | Desconectada | PS-236 con motivo | La credencial se elimina; final. Para volver se crea una conexión nueva |
+| (nueva) | Pendiente de consentimiento | `microsoft.conectar` (PS-242) | Reautenticación reciente y segunda verificación. El asistente abandonado vence a los 7 días **[SUPUESTO]** |
+| Pendiente de consentimiento | Conectada | Sistema, tras confirmar el Administrador el nombre del directorio; o, si volvió desde Conectada, tras una prueba de conexión correcta | Permisos de solo lectura concedidos; directorio libre (RN-MSF-005, 007) |
+| Conectada | Pendiente de consentimiento | Sistema, en una lectura | Aparece un permiso de escritura o de operaciones (RN-MSF-007, D-085.4): no lee, avisa a los titulares de PS-242 |
+| Conectada | Con problema | Sistema | Credencial vencida, consentimiento retirado, Microsoft rechaza el acceso |
+| Con problema | Conectada | Sistema (lectura correcta) o PS-242 (credencial nueva) | La causa se corrigió |
+| Conectada o Con problema | Pausada | PS-242 con motivo, o sistema | Empresa suspendida, módulo apagado, respaldo restaurado (RN-MSF-058, 064) |
+| Pausada | Conectada | PS-242 | Tras una prueba de conexión; tras restaurar, solo con credencial reemplazada |
+| Cualquiera | Desconectada | PS-242 con motivo | La credencial se elimina; final. Para volver se crea una conexión nueva |
 
 **Lectura (corrida):** En cola → En curso → Completada · Completada con avisos · Fallida · Cancelada. Solo una lectura **Completada** puede marcar «ya no aparece» (RN-MSF-042).
 
-**Propuesta sobre una Persona:** Pendiente → Aplicada (PS-239 más el permiso de Personas) · Descartada (PS-239, motivo) · Vencida (sistema, 30 días) · Obsoleta (sistema, la diferencia ya no existe).
+**Propuesta sobre una Persona:** Pendiente → Aplicada (PS-245 más el permiso de Personas) · Descartada (PS-245, motivo) · Vencida (sistema, 30 días) · Obsoleta (sistema, la diferencia ya no existe).
 
-**Cuenta vinculada:** Vinculada → Desvinculada (PS-239 con motivo, o sistema al anonimizar la Persona). «Ya no aparece en Microsoft» es una marca con fecha, no un estado.
+**Cuenta vinculada:** Vinculada → Desvinculada (PS-245 con motivo, o sistema al anonimizar la Persona). «Ya no aparece en Microsoft» es una marca con fecha, no un estado.
 
-**Vínculo del equipo:** Dudoso → Vinculado (PS-240, o sistema si la coincidencia es única) · Vinculado → Desvinculado (PS-240 con motivo; la decisión se recuerda).
+**Vínculo del equipo:** Dudoso → Vinculado (PS-246, o sistema si la coincidencia es única) · Vinculado → Desvinculado (PS-246 con motivo; la decisión se recuerda).
 
-**Hallazgo:** Abierto ↔ Ignorado (PS-240, motivo) · Abierto → Resuelto (sistema, desaparece la causa).
+**Hallazgo:** Abierto ↔ Ignorado (PS-246, motivo) · Abierto → Resuelto (sistema, desaparece la causa).
 
 **Relación de un activo con Intune** (derivada, se calcula al leer; no es un estado del activo): No aplica · Pendiente de enrolar · En Intune · En Intune sin comunicación reciente · Ya no aparece en Intune · Coincidencia dudosa.
 
@@ -386,7 +388,7 @@ Notas
 | Dato | Finalidad | Quién lo ve | Plazo propuesto | Rutina |
 |---|---|---|---|---|
 | Identificador de la cuenta de Microsoft vinculada a una Persona | Reconocer a la misma persona entre Microsoft y la plataforma | Nadie lo ve; solo el sistema | Mientras la Persona esté vinculada | Se borra al desvincular o anonimizar |
-| Nombre, correo, código de empleado, área y jefe dentro de propuestas pendientes | Revisar altas y cambios | PS-239 con `datos_personales.ver` | Hasta aplicar o descartar, y como máximo 30 días | Se borran al decidir o vencer |
+| Nombre, correo, código de empleado, área y jefe dentro de propuestas pendientes | Revisar altas y cambios | PS-245 con `datos_personales.ver` | Hasta aplicar o descartar, y como máximo 30 días | Se borran al decidir o vencer |
 | Huella del valor de una propuesta descartada | No repetir una propuesta ya rechazada | Nadie; solo el sistema | Mientras la cuenta esté vinculada o aparezca en Microsoft | Se borra al desvincular o anonimizar |
 | Huella del identificador de una cuenta de una Persona anonimizada | No volver a importar a quien ejerció su derecho de eliminación | Nadie; solo el sistema | Hasta que legal diga **[LEGAL: L-MSF-04]** | Conservar |
 | Usuario principal (nombre de usuario) de un equipo de Intune sin Persona vinculada | Conciliar y proponer el alta | `datos_personales.ver` | Mientras el equipo siga en la lectura | Se purga al dejar de aparecer, al vincular la Persona o al desconectar |
@@ -429,16 +431,17 @@ Los avisos salen por el motor único de Notificaciones (RF-NOT-024); contenido m
 
 | Cuándo | A quién | Qué dice |
 |---|---|---|
-| La credencial vence en 30 días, 7 días y el día **[SUPUESTO]** (como las claves de API) | Titulares de PS-236 | «La conexión con Microsoft vence el 20/11/2026. Reemplace la credencial a tiempo.» |
-| La conexión pasa a «Con problema» | Titulares de PS-236 | «La conexión con Microsoft dejó de funcionar. Revísela.» |
-| Propuestas por revisar (resumen semanal) | Titulares de PS-239 | «Tiene 14 propuestas sobre Personas por revisar.» |
-| Equipos en Intune sin inventario (resumen semanal) | Titulares de PS-240 | «Hay 12 equipos en Intune que no están en el inventario.» |
-| Activo entregado sin enrolar pasado el umbral | Titulares de PS-240 | «El equipo ACTV-000123 sigue sin enrolar en Intune.» |
-| Equipos que pasaron a «No cumple» (resumen semanal) **[SUPUESTO]** | Titulares de PS-240 | «3 equipos pasaron a No cumple esta semana.» |
+| La credencial vence en 30 días, 7 días y el día **[SUPUESTO]** (como las claves de API) | Titulares de PS-242 | «La conexión con Microsoft vence el 20/11/2026. Reemplace la credencial a tiempo.» |
+| La conexión pasa a «Con problema» | Titulares de PS-242 | «La conexión con Microsoft dejó de funcionar. Revísela.» |
+| La conexión pasa a «Pendiente de consentimiento» porque apareció un permiso de escritura u operaciones (inmediato) | Titulares de PS-242 | «La conexión con Microsoft se detuvo: tiene permisos de más. Quítelos y vuelva a probar.» |
+| Propuestas por revisar (resumen semanal) | Titulares de PS-245 | «Tiene 14 propuestas sobre Personas por revisar.» |
+| Equipos en Intune sin inventario (resumen semanal) | Titulares de PS-246 | «Hay 12 equipos en Intune que no están en el inventario.» |
+| Activo entregado sin enrolar pasado el umbral | Titulares de PS-246 | «El equipo ACTV-000123 sigue sin enrolar en Intune.» |
+| Equipos que pasaron a «No cumple» (resumen semanal) **[SUPUESTO]** | Titulares de PS-246 | «3 equipos pasaron a No cumple esta semana.» |
 | **Extraviado o robado que se comunicó con Intune** (inmediato, no se resume) | Jefatura TI y administradores | «El equipo ACTV-000123, marcado como extraviado o robado, se comunicó con Intune el 28/10/2026.» |
 | Lote de aplicación terminado | Quien lo aplicó | «Se aplicaron 295 propuestas; 5 no se pudieron aplicar.» |
 
-**Eventos que emite** (catálogo `<módulo>.<entidad>_<hecho>`, Notificaciones es dueña): `microsoft.conexion_establecida`, `microsoft.conexion_con_problema`, `microsoft.conexion_desconectada`, `microsoft.propuesta_generada`, `microsoft.equipo_vinculado`, `microsoft.equipo_desvinculado`, `microsoft.equipo_cumplimiento_cambiado`, `microsoft.equipo_extraviado_comunicado`. No se agregan al catálogo público de webhooks en esta versión (S-MSF-18).
+**Eventos que emite** (catálogo `<módulo>.<entidad>_<hecho>`, Notificaciones es dueña): `microsoft.conexion_establecida`, `microsoft.conexion_con_problema`, `microsoft.conexion_pendiente_consentimiento`, `microsoft.conexion_desconectada`, `microsoft.propuesta_generada`, `microsoft.equipo_vinculado`, `microsoft.equipo_desvinculado`, `microsoft.equipo_cumplimiento_cambiado`, `microsoft.equipo_extraviado_comunicado`. No se agregan al catálogo público de webhooks en esta versión (S-MSF-18).
 **Eventos que escucha:** `inventario.activo_creado`, `inventario.activo_estado_cambiado`, `inventario.activo_asignado`, `inventario.activo_devuelto`, `personas.persona_creada`, `personas.persona_cesada`, y el **evento síncrono de anonimización** de una Persona (D-038.5; no está en el catálogo, se pide al núcleo).
 **Trabajos** (programador único, D-038): lectura de cuentas, lectura de equipos, vencimiento de propuestas y limpieza de lecturas sin vínculo. La periodicidad de cada lectura es configurable por empresa dentro de límites fijados por la plataforma; el valor inicial lo fija el Arquitecto con los límites de Microsoft **[PENDIENTE]**. Todos cumplen RN-MSF-050.
 Si el motor de avisos por fecha no puede expresar una condición (por ejemplo «entregado sin enrolar»), el módulo emite el evento al detectar el cambio en la lectura, de forma idempotente.
@@ -472,7 +475,7 @@ Si el motor de avisos por fecha no puede expresar una condición (por ejemplo «
 
 1. **Tabla de fases (D-056) y sección 27 del documento funcional:** nueva fila «Microsoft Entra ID e Intune» (Fase 3, ola G propuesta; MSF-1 y MSF-2). Registro del prefijo `MSF` y de `PAN-MSF` en la sección 26 y en `docs/trazabilidad.md`. No hay prefijo de documento nuevo.
 2. **Categoría (RF-CAT-007, RF-CAT-027):** campo booleano «se gestiona en MDM», solo para naturaleza equipo físico, heredado por las subcategorías, apagado por defecto, editado con PS-34 y auditado. Preparación recomendada en la Etapa 2.
-3. **Registro de permisos:** filas PS-235 a PS-240 (sección 3), mediante la sección 14 del registro. Sensible: PS-236.
+3. **Registro de permisos:** filas PS-241 a PS-246 (sección 3 de este módulo), ya agregadas al registro (sección 12B) con la sección 14 del registro y D-084. Sensible: PS-242. *Hecho.*
 4. **Anonimización de Personas (RF-AUD-015, RN-PRS-018):** un gancho **síncrono** para que cada módulo limpie sus datos al anonimizar (el registro de módulo de D-038.6 gana «limpieza al anonimizar»). Preparación recomendada en la Etapa 2.
 5. **Tabla 18.1 de datos personales:** agregar las filas de la sección 6 de este módulo.
 6. **Aviso de privacidad (RF-DAT-014):** mencionar los datos que llegan del directorio y de Intune de la empresa, para qué, quién los ve y por cuánto tiempo **[LEGAL: L-MSF-01]**.
@@ -482,7 +485,7 @@ Si el motor de avisos por fecha no puede expresar una condición (por ejemplo «
 10. **Recepción (RF-OC-040):** una línea en el resumen previo cuando haya categorías marcadas.
 11. **Ficha y lista del activo (Etapa 4):** espacio para el bloque «Intune», la marca calculada y su filtro, sin cambiar los 5 estados (RF-INV-009).
 12. **Asistente de cese (PAN-PRS-04):** espacio para una línea informativa de módulos activos.
-13. **Catálogo de eventos (Notificaciones e Integraciones):** los ocho eventos `microsoft.*` y el evento síncrono de anonimización.
+13. **Catálogo de eventos (Notificaciones e Integraciones):** los nueve eventos `microsoft.*` y el evento síncrono de anonimización.
 14. **Módulos activables (RF-EMP-005):** MSF se agrega a la lista de módulos que cada empresa enciende en Configuración; «Primeros pasos» gana la tarea opcional «Conectar Microsoft».
 15. **Lista corta de tablas globales (D-039.5):** la tabla de directorios conectados.
 16. **Paquete legal (sección 25):** agregar L-MSF-01 a L-MSF-06. **Escalado al CEO (sección 25):** agregar S-MSF-03 a S-MSF-07.
@@ -660,7 +663,10 @@ Cada criterio cita lo que cubre y la etapa en que se ejecuta. Las pruebas usan e
 | Nunca se crean Usuarios desde Entra; no se vincula membresía en automático; coincidencia por identificador inmutable | D-001, D-054.5, RN-PRS-017 |
 | Solo lectura; acciones remotas fuera y marcadas [ESCALAR AL CEO] | Decisión del Gerente de TI, regla de escalado a la Jefatura |
 | Credencial por empresa como secreto, con llave derivada por empresa, reautenticación reciente y segunda verificación | D-048.1, D-048.2, D-048.4, RS-46 |
-| PS-236 como único permiso nuevo sensible; propuestas PS-235 a PS-240 | D-036, D-068, registro de permisos sección 14 |
+| PS-242 como único permiso nuevo sensible; propuestas PS-241 a PS-246 | D-036, D-068, registro de permisos sección 14 |
+| **v0.2 (29/10/2026).** Los seis permisos se renumeran (los números anteriores pasaron al Asistente de IA) a PS-241 a PS-246 con los nombres de D-084 (`microsoft.ver`, `microsoft.conectar`, `microsoft.configurar`, `microsoft.sincronizar_ahora`, `microsoft.revisar_personas`, `microsoft.conciliar`) y quedan en el registro (sección 12B) | D-084 |
+| Ola G: MSF-1 es el paso G-2 y MSF-2 el G-3, entre ASI-A y ASI-B; sin adelantos; datos reales solo con L-MSF-01 a L-MSF-06; las preparaciones (b) y (c) quedan aprobadas | D-081 |
+| S-MSF-08, S-MSF-09, S-MSF-12 y RN-MSF-007 pasan a Confirmado, con sus condiciones en RN-MSF-005, 007, 010 y 026, CA-MSF-02, 14 y 21; la revisión de permisos de escritura se hace en **cada lectura**; respuestas a P-MSF-01, 03 y 04 (sección 12.2); códigos D9 e I-06 | D-085 |
 | Auditoría con el identificador y los campos que cambiaron, sin valores; el motivo sí por valor | D-030, D-077 |
 | IMEI, usuario principal y nombre del equipo como datos personales; consultas de 100 o más nombres auditadas | D-030.6, D-071.4, L-09 |
 | «Pendiente de enrolar» como marca calculada, no como estado | RF-INV-009, D-062.2 |
