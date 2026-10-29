@@ -50,4 +50,15 @@ describe('FormularioRegistrar', () => {
     expect(screen.getByTestId('campo-sku-error')).toBeTruthy()
     expect(screen.getByTestId('campo-ubicacion-error')).toBeTruthy()
   })
+
+  it('muestra tal cual los avisos del servidor junto al éxito', async () => {
+    const accion = vi.fn(async (_d: FormData) => ({ ok: true as const, datos: { creados: 1, avisos: ['La serie SN-9 ya existe en otro artículo (MON-0001).'] } }))
+    render(<FormularioRegistrar skus={skus} ubicaciones={ubicaciones} accion={accion} />)
+    await userEvent.selectOptions(screen.getByTestId('campo-sku'), 's1')
+    await userEvent.selectOptions(screen.getByTestId('campo-ubicacion'), 'u1')
+    fireEvent.change(screen.getByTestId('series-texto'), { target: { value: 'SN-9' } })
+    await userEvent.click(screen.getByTestId('form-registrar-enviar'))
+    await waitFor(() => expect(screen.getByTestId('registrado-avisos').textContent).toContain('La serie SN-9 ya existe en otro artículo (MON-0001).'))
+    expect(screen.getByTestId('registrado-ok')).toBeTruthy()
+  })
 })

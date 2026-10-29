@@ -49,4 +49,13 @@ describe('FormularioRecibir', () => {
     expect(d.get('ubicacionId')).toBe('u1')
     await waitFor(() => expect(screen.getByTestId('recepcion-ok')).toBeTruthy())
   })
+
+  it('muestra los avisos del servidor al recibir', async () => {
+    const accion = vi.fn(async (_d: FormData) => ({ ok: true as const, datos: { avisos: ['La serie A-1 ya existe en otro artículo.'] } }))
+    render(<FormularioRecibir lineas={lineas} ubicaciones={ubicaciones} accion={accion} />)
+    await userEvent.selectOptions(screen.getByTestId('campo-ubicacion'), 'u1')
+    fireEvent.change(screen.getByTestId('cantidad-MON-0001'), { target: { value: '1' } })
+    await userEvent.click(screen.getByTestId('form-recibir-enviar'))
+    await waitFor(() => expect(screen.getByTestId('recepcion-avisos').textContent).toContain('La serie A-1 ya existe en otro artículo.'))
+  })
 })
