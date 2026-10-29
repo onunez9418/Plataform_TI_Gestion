@@ -1,8 +1,8 @@
 # Registro único de permisos
 
-**Versión:** 1.2 (parte de la v0.3 del documento funcional; incorpora D-065 a D-076 y las filas PS-235 a PS-246 de D-081 a D-084) · **Fecha:** 2026-10-29 · **Autor:** Analista de Negocio
-**Base:** D-004 (reescrita), D-035, D-036, D-037, D-043, D-048, D-049, D-058, D-060, D-061, D-065, D-066, D-068, D-073, D-074, D-081, D-083, D-084, D-086. Sustituye a la matriz de la sección 7.3 de la v0.2.
-**Conteo (2026-10-29):** 246 filas PS (3 retiradas: PS-84, PS-85 y PS-196; **243 permisos vigentes**), de ellas **54 sensibles** (52 anteriores más PS-240 y PS-242, que son el 53.º y el 54.º). Las 12 filas nuevas (PS-235 a PS-246) son de Fase 3, ola G, y no cambian la matriz de la v1 (71 filas de empresa por 7 plantillas más 7 de plataforma).
+**Versión:** 1.3 (parte de la v0.3 del documento funcional; incorpora D-065 a D-076, las filas PS-235 a PS-246 de D-081 a D-084 y la fila PS-247 de D-094) · **Fecha:** 2026-10-29 · **Autor:** Analista de Negocio
+**Base:** D-004 (reescrita), D-035, D-036, D-037, D-043, D-048, D-049, D-058, D-060, D-061, D-065, D-066, D-068, D-073, D-074, D-081, D-083, D-084, D-086, D-094. Sustituye a la matriz de la sección 7.3 de la v0.2.
+**Conteo (2026-10-29):** 247 filas PS (3 retiradas: PS-84, PS-85 y PS-196; **244 permisos vigentes**), de ellas **55 sensibles** (54 anteriores más PS-247, que es el 55.º; PS-240 y PS-242 son el 53.º y el 54.º). Las 12 filas de ola G (PS-235 a PS-246) son de Fase 3 y no cambian la matriz de la v1 (71 filas de empresa por 7 plantillas más 7 de plataforma). PS-247 sí es de la v1 (E1): cambia la matriz de empresa a 72 filas y QA recalcula sus celdas (D-094).
 **Quién aprueba cambios:** el Gerente de TI. Los módulos **no inventan permisos**: piden una fila nueva (D-036.1). Fuera de este registro no hay permiso.
 
 ## 1. Cómo se lee
@@ -90,6 +90,7 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-232 | `empresa.configurar_aprobacion` | Cambiar el monto límite de aprobación, la moneda base y activar o desactivar la aprobación. **Cada cambio avisa por correo a todos los administradores** (D-068) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - |
 | PS-234 | `texto.redactar` | Redactar por seguridad un texto libre de cualquier registro del núcleo (motivo, nota, observación), con el mismo mecanismo `[REDACTADO]` que PS-153, 221 y 222; motivo obligatorio (D-074.3) | S | todo | 2F A | v1 E4 | T | - | - | - | - | - | - |
 | PS-230 | `precios.ver_propios` | Ver precios y totales **solo** de las órdenes que la persona creó o editó (Técnico y Solicitante). No es sensible: no exige segunda verificación (D-037 fila 10) | | propio | | v1 E5 | - | - | P | - | P | - | - |
+| PS-247 | `empresa.autorizar_soporte` | Crear y revocar la autorización de soporte de la empresa para una persona de la plataforma (motivo). Avisa por correo a los administradores al usarse por primera vez y al revocarse; [PENDIENTE: si el aviso también sale al crear, lo decide el Gerente de TI, porque ADR-03 lo dice y D-094 no]. El Administrador de plataforma no lo tiene (D-094) | S | todo | 2F R A | v1 E1 | T | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] |
 
 ## 5. Personas, estructura y proveedores (núcleo)
 
@@ -438,8 +439,17 @@ Los nombres de **eventos** que aparecen en los módulos (por ejemplo `acceso.inv
 ## 16. Pendientes del registro
 
 - **Sin pendientes de clasificación (D-068, D-074).** Los 16 permisos de D-068 son sensibles (35 a 51); PS-234 `texto.redactar` (D-074.3) hace 52. PS-08 y PS-154 no son sensibles. PS-232 es el monto límite y la moneda base; PS-233 son los conteos de seguridad de plataforma; PS-106 `garantias.recibir_avisos` queda confirmado y los otros `recibir_avisos` (PS-81, PS-226, PS-229) siguen el mismo patrón (Administrador y Jefatura TI todo, Técnico propio).
-- **Ola G (D-081 a D-084, 2026-10-29):** PS-235 a PS-246 agregadas con los valores finales de D-084.6. Sensibles nuevos: PS-240 (n.º 53) y PS-242 (n.º 54), total **54**. PS-237 `asistente.ejecutar_acciones` queda **no sensible de forma provisional**; Seguridad lo confirma en el paso 4 de la sección 14. Siguiente número libre: PS-247.
+- **Ola G (D-081 a D-084, 2026-10-29):** PS-235 a PS-246 agregadas con los valores finales de D-084.6. Sensibles nuevos: PS-240 (n.º 53) y PS-242 (n.º 54), total **54**. PS-237 `asistente.ejecutar_acciones` queda **no sensible de forma provisional**; Seguridad lo confirma en el paso 4 de la sección 14. Siguiente número libre: PS-248 (PS-247 se agregó después, por D-094; ver la sección 17).
 - **PS-23 y PS-230:** `precios.ver` es solo para todo y sensible; lo propio (Técnico y Solicitante) pasó a `precios.ver_propios` (PS-230), no sensible.
 - Los valores de las celdas de los módulos de Fase 2 y 3 son una propuesta mía (supuesto S-22 del documento funcional) hasta que cada escuadrón confirme las suyas; se resuelven en la revisión del Auditor Técnico (plan de correcciones, sección 4).
 - El nombre técnico definitivo de cada fila lo fija el Arquitecto en el catálogo del código; este registro fija el nombre funcional y el identificador PS-nn.
 - Si un módulo necesita una fila nueva durante su corrección, la pide por el mecanismo de la sección 14.
+
+## 17. Historial de cambios
+
+| Fecha | Versión | Cambio | Decisión |
+|---|---|---|---|
+| 2026-10-29 | 1.3 | Agregada la fila PS-247 `empresa.autorizar_soporte` (sensible n.º 55, v1 E1). Conteo: 247 filas, 244 vigentes, 55 sensibles. Siguiente libre: PS-248. Pendientes de Jefatura TI a Empleado y del aviso al crear, para el Gerente de TI | D-094 |
+| 2026-10-29 | 1.2 | Filas PS-235 a PS-246 (ola G, Asistente de IA y Microsoft); PS-240 y PS-242 sensibles (total 54) | D-081 a D-084 |
+
+Versiones anteriores: ver la cabecera y la sección 16.
