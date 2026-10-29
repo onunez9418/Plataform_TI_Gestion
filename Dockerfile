@@ -1,11 +1,8 @@
 # Imagen de la aplicación (Versión local 0.1). Node 22 sobre Debian.
-FROM node:22-bookworm-slim
+FROM node:22-bookworm
 
-# postgresql-client: espera y revisa la base desde la entrada del contenedor. openssl: lo pide Prisma.
-RUN apt-get update \
- && apt-get install -y --no-install-recommends postgresql-client openssl ca-certificates \
- && rm -rf /var/lib/apt/lists/*
-
+# Se usa la imagen completa (no "slim") a propósito: ya trae openssl y certificados, que Prisma necesita,
+# y así la construcción no depende de descargar paquetes del sistema (menos puntos de falla en la computadora del CEO).
 ENV NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
 

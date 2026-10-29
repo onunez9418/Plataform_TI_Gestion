@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_DB: plataforma
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Falta .env: ejecute iniciar.bat}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Falta el archivo .env - ejecute iniciar.bat}
       PG_PASS_MIGRACIONES: ${PG_PASS_MIGRACIONES:?Falta .env}
       PG_PASS_APP_EMPRESA: ${PG_PASS_APP_EMPRESA:?Falta .env}
       PG_PASS_APP_PLATAFORMA: ${PG_PASS_APP_PLATAFORMA:?Falta .env}
