@@ -1,0 +1,520 @@
+// Esquema de datos de la Versión local 0.1 (DAT-1).
+//
+// IMPORTANTE (ADR-06): este archivo DESCRIBE el modelo. La verdad vive en las migraciones SQL
+// escritas a mano en prisma/migrations/ (seguridad por fila, funciones, disparadores, índices
+// parciales, columnas generadas, EXCLUDE y permisos no se expresan aquí).
+//   * Solo se usa `prisma migrate deploy`. Nunca `migrate dev` ni `db push` contra la base real.
+//   * El acceso a datos en tiempo de ejecución NO usa el cliente de Prisma: pasa por
+//     src/nucleo/aislamiento (conEmpresa) con el paquete `pg` (D-039.9). Prisma se usa para el
+//     esquema, `migrate deploy` y los tipos.
+//   * Columnas "_norm" (generadas, STORED) y "creado_en"/"id" con valor por defecto: las calcula la base.
+//   * Índices únicos PARCIALES (no expresables en Prisma), por nombre: uq_activo__serie,
+//     uq_asignacion__abierta, uq_proveedor__documento, uq_persona__correo, uq_valor_campo__sku,
+//     uq_valor_campo__activo. Restricción EXCLUDE: ex_asignacion__solape.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Tablas globales (lista cerrada, sin seguridad por fila)
+// ---------------------------------------------------------------------------
+
+model Empresa {
+  id        String   @id @default(dbgenerated("uuid_v7()")) @db.Uuid
+  slug      String   @unique(map: "uq_empresa__slug")
+  nombre    String
+  estado    String   @default("activa")
+  creadoEn  DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  sesiones     Sesion[]
+  roles        Rol[]
+  membresias   Membresia[]
+  auditorias   Auditoria[]
+  rolPermisos  RolPermiso[]
+  ubicaciones  Ubicacion[]
+  proveedores  Proveedor[]
+  personas     Persona[]
+  categorias   Categoria[]
+  campos       CampoDefinicion[]
+  contadores   Contador[]
+  skus         Sku[]
+  activos      Activo[]
+  existencias  Existencia[]
+  asignaciones Asignacion[]
+  valoresCampo ValorCampo[]
+  ordenes      OrdenCompra[]
+  ordenLineas  OrdenLinea[]
+  aprobaciones OrdenAprobacion[]
+  recepciones  Recepcion[]
+  recepcionLineas RecepcionLinea[]
+
+  @@map("empresa")
+}
+
+model Usuario {
+  id          String   @id @default(dbgenerated("uuid_v7()")) @db.Uuid
+  correo      String
+  correoNorm  String?  @unique(map: "uq_usuario__correo") @default(dbgenerated()) @map("correo_norm") // generada
+  nombre      String
+  estado      String   @default("activo")
+  creadoEn    DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  sesiones       Sesion[]
+  enlaces        EnlaceIngreso[]
+  membresias     Membresia[]
+
+  @@map("usuario")
+}
+
+model Sesion {
+  id                  String    @id @default(dbgenerated("uuid_v7()")) @db.Uuid
+  usuarioId           String    @map("usuario_id") @db.Uuid
+  empresaId           String?   @map("empresa_id") @db.Uuid // última empresa usada
+  huella              String    @unique(map: "uq_sesion__huella") // solo la huella del token, nunca el token
+  expiraEn            DateTime  @map("expira_en") @db.Timestamptz(6)
+  ultimaActividadEn   DateTime  @default(now()) @map("ultima_actividad_en") @db.Timestamptz(6)
+  creadaEn            DateTime  @default(now()) @map("creada_en") @db.Timestamptz(6)
+  revocadaEn          DateTime? @map("revocada_en") @db.Timestamptz(6)
+
+  usuario Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  empresa Empresa? @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([usuarioId], map: "ix_sesion__usuario")
+  @@map("sesion")
+}
+
+model EnlaceIngreso {
+  id               String    @id @default(dbgenerated("uuid_v7()")) @db.Uuid
+  usuarioId        String    @map("usuario_id") @db.Uuid
+  huella           String    @unique(map: "uq_enlace_ingreso__huella")
+  navegadorHuella  String?   @map("navegador_huella")
+  venceEn          DateTime  @map("vence_en") @db.Timestamptz(6)
+  consumidoEn      DateTime? @map("consumido_en") @db.Timestamptz(6)
+  creadoEn         DateTime  @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([usuarioId], map: "ix_enlace_ingreso__usuario")
+  @@map("enlace_ingreso")
+}
+
+// ---------------------------------------------------------------------------
+// Tablas de empresa (FORCE ROW LEVEL SECURITY; clave primaria (empresa_id, id))
+// ---------------------------------------------------------------------------
+
+model Rol {
+  id          String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId   String   @map("empresa_id") @db.Uuid
+  nombre      String
+  nombreNorm  String?  @default(dbgenerated()) @map("nombre_norm") // generada
+  esBase      Boolean  @default(false) @map("es_base")
+  creadoEn    DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa     Empresa      @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  permisos    RolPermiso[]
+  membresias  Membresia[]
+
+  @@id([empresaId, id])
+  @@unique([empresaId, nombreNorm], map: "uq_rol__nombre")
+  @@map("rol")
+}
+
+model RolPermiso {
+  id         String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId  String   @map("empresa_id") @db.Uuid
+  rolId      String   @map("rol_id") @db.Uuid
+  permiso    String
+  creadoEn   DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  rol     Rol     @relation(fields: [empresaId, rolId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_rol_permiso__rol")
+
+  @@id([empresaId, id])
+  @@unique([empresaId, rolId, permiso], map: "uq_rol_permiso__rol_permiso")
+  @@map("rol_permiso")
+}
+
+model Membresia {
+  id         String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId  String   @map("empresa_id") @db.Uuid
+  usuarioId  String   @map("usuario_id") @db.Uuid
+  rolId      String   @map("rol_id") @db.Uuid
+  estado     String   @default("activa")
+  creadoEn   DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa  Empresa @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  usuario  Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  rol      Rol     @relation(fields: [empresaId, rolId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_membresia__rol")
+
+  auditorias        Auditoria[]
+  asignaciones      Asignacion[]
+  ordenesPreparadas OrdenCompra[]
+  aprobaciones      OrdenAprobacion[]
+  recepciones       Recepcion[]
+
+  @@id([empresaId, id])
+  @@unique([empresaId, usuarioId], map: "uq_membresia__usuario")
+  @@index([empresaId, rolId], map: "ix_membresia__rol")
+  @@index([usuarioId], map: "ix_membresia__usuario")
+  @@map("membresia")
+}
+
+// Solo agregar: app_empresa tiene SELECT e INSERT; un disparador impide UPDATE, DELETE y TRUNCATE.
+model Auditoria {
+  id                String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId         String   @map("empresa_id") @db.Uuid
+  autorMembresiaId  String?  @map("autor_membresia_id") @db.Uuid
+  accion            String
+  entidadTipo       String   @map("entidad_tipo")
+  entidadId         String?  @map("entidad_id") @db.Uuid
+  cambios           Json?
+  motivo            String?
+  creadoEn          DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa Empresa    @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  autor   Membresia? @relation(fields: [empresaId, autorMembresiaId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_auditoria__autor")
+
+  @@id([empresaId, id])
+  @@index([empresaId, creadoEn(sort: Desc), id(sort: Desc)], map: "ix_auditoria__fecha")
+  @@index([empresaId, entidadTipo, entidadId], map: "ix_auditoria__entidad")
+  @@index([empresaId, autorMembresiaId], map: "ix_auditoria__autor")
+  @@map("auditoria")
+}
+
+model Ubicacion {
+  id           String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId    String   @map("empresa_id") @db.Uuid
+  nombre       String
+  nombreNorm   String?  @default(dbgenerated()) @map("nombre_norm") // generada
+  descripcion  String?
+  activo       Boolean  @default(true)
+  creadoEn     DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa      Empresa      @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  activos      Activo[]
+  existencias  Existencia[]
+  recepciones  Recepcion[]
+
+  @@id([empresaId, id])
+  @@unique([empresaId, nombreNorm], map: "uq_ubicacion__nombre")
+  @@map("ubicacion")
+}
+
+model Proveedor {
+  id              String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId       String   @map("empresa_id") @db.Uuid
+  nombre          String
+  nombreNorm      String?  @default(dbgenerated()) @map("nombre_norm") // generada
+  documento       String?
+  documentoNorm   String?  @default(dbgenerated()) @map("documento_norm") // generada; único parcial uq_proveedor__documento
+  contacto        String?
+  activo          Boolean  @default(true)
+  creadoEn        DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa  Empresa       @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  ordenes  OrdenCompra[]
+
+  @@id([empresaId, id])
+  @@map("proveedor")
+}
+
+model Persona {
+  id          String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId   String   @map("empresa_id") @db.Uuid
+  nombre      String
+  correo      String?
+  correoNorm  String?  @default(dbgenerated()) @map("correo_norm") // generada; único parcial uq_persona__correo
+  area        String?
+  activo      Boolean  @default(true)
+  creadoEn    DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa       Empresa      @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  asignaciones  Asignacion[]
+
+  @@id([empresaId, id])
+  @@map("persona")
+}
+
+model Categoria {
+  id          String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId   String   @map("empresa_id") @db.Uuid
+  nombre      String
+  nombreNorm  String?  @default(dbgenerated()) @map("nombre_norm") // generada
+  prefijo     String
+  activo      Boolean  @default(true)
+  creadoEn    DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa  Empresa            @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  campos   CampoDefinicion[]
+  skus     Sku[]
+
+  @@id([empresaId, id])
+  @@unique([empresaId, prefijo], map: "uq_categoria__prefijo")
+  @@unique([empresaId, nombreNorm], map: "uq_categoria__nombre")
+  @@map("categoria")
+}
+
+model CampoDefinicion {
+  id           String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId    String   @map("empresa_id") @db.Uuid
+  categoriaId  String   @map("categoria_id") @db.Uuid
+  clave        String
+  etiqueta     String
+  tipo         String   // texto | numero | fecha | lista | si_no
+  opciones     Json?    // solo tipo lista: arreglo de textos
+  obligatorio  Boolean  @default(false)
+  orden        Int      @default(0)
+  creadoEn     DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa    Empresa      @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  categoria  Categoria    @relation(fields: [empresaId, categoriaId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_campo_definicion__categoria")
+  valores    ValorCampo[]
+
+  @@id([empresaId, id])
+  @@unique([empresaId, categoriaId, clave], map: "uq_campo_definicion__clave")
+  @@map("campo_definicion")
+}
+
+model Contador {
+  empresaId  String @map("empresa_id") @db.Uuid
+  clave      String
+  ultimo     BigInt
+
+  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@id([empresaId, clave])
+  @@map("contador")
+}
+
+model Sku {
+  id             String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId      String   @map("empresa_id") @db.Uuid
+  categoriaId    String   @map("categoria_id") @db.Uuid
+  codigo         String
+  codigoNorm     String?  @default(dbgenerated()) @map("codigo_norm") // generada
+  codigoPropio   Boolean  @default(false) @map("codigo_propio")
+  nombre         String
+  control        String   // serie | cantidad
+  valores        Json     @default("{}")
+  activo         Boolean  @default(true)
+  creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa      Empresa      @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  categoria    Categoria    @relation(fields: [empresaId, categoriaId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_sku__categoria")
+  activos      Activo[]
+  existencias  Existencia[]
+  valoresCampo ValorCampo[]
+  lineas       OrdenLinea[]
+
+  @@id([empresaId, id])
+  @@unique([empresaId, codigoNorm], map: "uq_sku__codigo")
+  @@index([empresaId, categoriaId], map: "ix_sku__categoria")
+  @@map("sku")
+}
+
+model Activo {
+  id           String    @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId    String    @map("empresa_id") @db.Uuid
+  skuId        String    @map("sku_id") @db.Uuid
+  serie        String
+  serieNorm    String?   @default(dbgenerated()) @map("serie_norm") // generada; único parcial uq_activo__serie
+  ubicacionId  String    @map("ubicacion_id") @db.Uuid
+  estado       String    @default("en_stock") // en_stock | asignado | en_reparacion | extraviado | de_baja
+  anuladoEn    DateTime? @map("anulado_en") @db.Timestamptz(6)
+  creadoEn     DateTime  @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa       Empresa      @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  sku           Sku          @relation(fields: [empresaId, skuId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_activo__sku")
+  ubicacion     Ubicacion    @relation(fields: [empresaId, ubicacionId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_activo__ubicacion")
+  asignaciones  Asignacion[]
+  valoresCampo  ValorCampo[]
+
+  @@id([empresaId, id])
+  @@index([empresaId, serieNorm], map: "ix_activo__serie")
+  @@index([empresaId, skuId], map: "ix_activo__sku")
+  @@index([empresaId, ubicacionId], map: "ix_activo__ubicacion")
+  @@index([empresaId, estado], map: "ix_activo__estado")
+  @@map("activo")
+}
+
+model Existencia {
+  id             String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId      String   @map("empresa_id") @db.Uuid
+  skuId          String   @map("sku_id") @db.Uuid
+  ubicacionId    String   @map("ubicacion_id") @db.Uuid
+  cantidad       Decimal  @default(0) @db.Decimal(14, 3)
+  creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+  actualizadoEn  DateTime @default(now()) @map("actualizado_en") @db.Timestamptz(6)
+
+  empresa    Empresa   @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  sku        Sku       @relation(fields: [empresaId, skuId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_existencia__sku")
+  ubicacion  Ubicacion @relation(fields: [empresaId, ubicacionId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_existencia__ubicacion")
+
+  @@id([empresaId, id])
+  @@unique([empresaId, skuId, ubicacionId], map: "uq_existencia__sku_ubicacion")
+  @@index([empresaId, ubicacionId], map: "ix_existencia__ubicacion")
+  @@map("existencia")
+}
+
+model Asignacion {
+  id                      String    @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId               String    @map("empresa_id") @db.Uuid
+  activoId                String    @map("activo_id") @db.Uuid
+  personaId               String    @map("persona_id") @db.Uuid
+  desde                   DateTime  @default(now()) @db.Timestamptz(6)
+  hasta                   DateTime? @db.Timestamptz(6)
+  asignadaPorMembresiaId  String?   @map("asignada_por_membresia_id") @db.Uuid
+  motivo                  String?
+  creadoEn                DateTime  @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa    Empresa     @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  activo     Activo      @relation(fields: [empresaId, activoId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_asignacion__activo")
+  persona    Persona     @relation(fields: [empresaId, personaId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_asignacion__persona")
+  asignadaPor Membresia? @relation(fields: [empresaId, asignadaPorMembresiaId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_asignacion__autor")
+
+  @@id([empresaId, id])
+  @@index([empresaId, personaId], map: "ix_asignacion__persona")
+  @@index([empresaId, asignadaPorMembresiaId], map: "ix_asignacion__autor")
+  @@map("asignacion")
+}
+
+model ValorCampo {
+  id           String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId    String   @map("empresa_id") @db.Uuid
+  campoId      String   @map("campo_id") @db.Uuid
+  skuId        String?  @map("sku_id") @db.Uuid
+  activoId     String?  @map("activo_id") @db.Uuid
+  valorTexto   String?  @map("valor_texto")
+  valorNumero  Decimal? @map("valor_numero") @db.Decimal(24, 6)
+  valorFecha   DateTime? @map("valor_fecha") @db.Date
+  valorSiNo    Boolean? @map("valor_si_no")
+  creadoEn     DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa  Empresa          @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  campo    CampoDefinicion  @relation(fields: [empresaId, campoId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_valor_campo__campo")
+  sku      Sku?             @relation(fields: [empresaId, skuId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_valor_campo__sku")
+  activo   Activo?          @relation(fields: [empresaId, activoId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_valor_campo__activo")
+
+  @@id([empresaId, id])
+  @@index([empresaId, skuId], map: "ix_valor_campo__sku")
+  @@index([empresaId, activoId], map: "ix_valor_campo__activo")
+  @@map("valor_campo")
+}
+
+// ---------------------------------------------------------------------------
+// Compras y recepción (S1)
+// ---------------------------------------------------------------------------
+
+model OrdenCompra {
+  id                        String    @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId                 String    @map("empresa_id") @db.Uuid
+  numero                    String
+  proveedorId               String    @map("proveedor_id") @db.Uuid
+  estado                    String    @default("borrador") // borrador | por_aprobar | aprobada | rechazada | recibida_parcial | recibida
+  moneda                    String    @default("PEN")
+  preparadaPorMembresiaId   String    @map("preparada_por_membresia_id") @db.Uuid
+  enviadaEn                 DateTime? @map("enviada_en") @db.Timestamptz(6)
+  creadoEn                  DateTime  @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa       Empresa           @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  proveedor     Proveedor         @relation(fields: [empresaId, proveedorId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_orden_compra__proveedor")
+  preparadaPor  Membresia         @relation(fields: [empresaId, preparadaPorMembresiaId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_orden_compra__preparada_por")
+  lineas        OrdenLinea[]
+  aprobaciones  OrdenAprobacion[]
+  recepciones   Recepcion[]
+
+  @@id([empresaId, id])
+  @@unique([empresaId, numero], map: "uq_orden_compra__numero")
+  @@index([empresaId, proveedorId], map: "ix_orden_compra__proveedor")
+  @@index([empresaId, preparadaPorMembresiaId], map: "ix_orden_compra__preparada_por")
+  @@index([empresaId, estado], map: "ix_orden_compra__estado")
+  @@map("orden_compra")
+}
+
+model OrdenLinea {
+  id                String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId         String   @map("empresa_id") @db.Uuid
+  ordenId           String   @map("orden_id") @db.Uuid
+  skuId             String   @map("sku_id") @db.Uuid
+  cantidad          Decimal  @db.Decimal(14, 3)
+  precioUnitario    Decimal  @map("precio_unitario") @db.Decimal(19, 4)
+  cantidadRecibida  Decimal  @default(0) @map("cantidad_recibida") @db.Decimal(14, 3) // la suma la base al insertar recepcion_linea
+  creadoEn          DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa    Empresa     @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  orden      OrdenCompra @relation(fields: [empresaId, ordenId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_orden_linea__orden")
+  sku        Sku         @relation(fields: [empresaId, skuId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_orden_linea__sku")
+  recibidas  RecepcionLinea[]
+
+  @@id([empresaId, id])
+  @@unique([empresaId, ordenId, skuId], map: "uq_orden_linea__orden_sku")
+  @@index([empresaId, skuId], map: "ix_orden_linea__sku")
+  @@map("orden_linea")
+}
+
+model OrdenAprobacion {
+  id                      String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId               String   @map("empresa_id") @db.Uuid
+  ordenId                 String   @map("orden_id") @db.Uuid
+  aprobadorMembresiaId    String   @map("aprobador_membresia_id") @db.Uuid
+  decision                String   // aprobada | rechazada
+  motivo                  String?
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa    Empresa     @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  orden      OrdenCompra @relation(fields: [empresaId, ordenId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_orden_aprobacion__orden")
+  aprobador  Membresia   @relation(fields: [empresaId, aprobadorMembresiaId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_orden_aprobacion__aprobador")
+
+  @@id([empresaId, id])
+  @@index([empresaId, ordenId], map: "ix_orden_aprobacion__orden")
+  @@index([empresaId, aprobadorMembresiaId], map: "ix_orden_aprobacion__aprobador")
+  @@map("orden_aprobacion")
+}
+
+model Recepcion {
+  id                        String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId                 String   @map("empresa_id") @db.Uuid
+  numero                    String
+  ordenId                   String   @map("orden_id") @db.Uuid
+  ubicacionId               String   @map("ubicacion_id") @db.Uuid
+  recibidaPorMembresiaId    String   @map("recibida_por_membresia_id") @db.Uuid
+  creadoEn                  DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa      Empresa     @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  orden        OrdenCompra @relation(fields: [empresaId, ordenId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_recepcion__orden")
+  ubicacion    Ubicacion   @relation(fields: [empresaId, ubicacionId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_recepcion__ubicacion")
+  recibidaPor  Membresia   @relation(fields: [empresaId, recibidaPorMembresiaId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_recepcion__recibida_por")
+  lineas       RecepcionLinea[]
+
+  @@id([empresaId, id])
+  @@unique([empresaId, numero], map: "uq_recepcion__numero")
+  @@index([empresaId, ordenId], map: "ix_recepcion__orden")
+  @@index([empresaId, ubicacionId], map: "ix_recepcion__ubicacion")
+  @@index([empresaId, recibidaPorMembresiaId], map: "ix_recepcion__recibida_por")
+  @@map("recepcion")
+}
+
+model RecepcionLinea {
+  id            String   @default(dbgenerated("uuid_v7()")) @db.Uuid
+  empresaId     String   @map("empresa_id") @db.Uuid
+  recepcionId   String   @map("recepcion_id") @db.Uuid
+  ordenLineaId  String   @map("orden_linea_id") @db.Uuid
+  cantidad      Decimal  @db.Decimal(14, 3)
+  series        String[]
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+
+  empresa     Empresa    @relation(fields: [empresaId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  recepcion   Recepcion  @relation(fields: [empresaId, recepcionId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_recepcion_linea__recepcion")
+  ordenLinea  OrdenLinea @relation(fields: [empresaId, ordenLineaId], references: [empresaId, id], onDelete: Restrict, onUpdate: Restrict, map: "fk_recepcion_linea__orden_linea")
+
+  @@id([empresaId, id])
+  @@unique([empresaId, recepcionId, ordenLineaId], map: "uq_recepcion_linea__linea")
+  @@index([empresaId, ordenLineaId], map: "ix_recepcion_linea__orden_linea")
+  @@map("recepcion_linea")
+}
