@@ -21,7 +21,7 @@
 **No entra:** conector directo a SAP, conexión que la plataforma abra hacia SAP, aplicación móvil, tienda de aplicaciones (sección 13).
 
 **Fase (D-056).** **INT-1** (claves y API de lectura): Fase 3, ola F. **INT-2** (escritura, webhooks, SAP): Fase 3, después de las Etapas 5 y 6. **INT-3** (ingreso con Microsoft o Google): Fase 3, al final. Nada se construye antes de aprobar la Etapa 7, salvo decisión del Gerente de TI.
-**Preparaciones del núcleo en la v1:** tipo de autor de la auditoría con tres valores (usuario, integración, sistema; Etapa 1); código externo en proveedor, ubicación y centro de costo (Etapa 2); referencia externa y número de versión en la OC (Etapa 5). La migración del código externo a equivalencias llega con INT-2 (D-040.4).
+**Preparaciones del núcleo en la v1:** tipo de autor de la auditoría con cuatro valores (usuario, integración, sistema y plataforma, este último solo para lecturas de soporte, D-094; Etapa 1); código externo en proveedor, ubicación y centro de costo (Etapa 2); referencia externa y número de versión en la OC (Etapa 5). La migración del código externo a equivalencias llega con INT-2 (D-040.4).
 
 ---
 
@@ -264,7 +264,7 @@ Los avisos salen por el motor único de Notificaciones; contenido mínimo (D-061
 
 ## 9. Integración con el núcleo y con otros módulos
 
-- **Núcleo:** empresa, membresías y Personas, roles y registro de permisos, auditoría con tres tipos de autor, sesiones, segunda verificación y reautenticación, marco de importación (D-050), puerta de exportación, cola y bus de eventos, gestión de secretos y llaves derivadas por empresa (D-048.4), interruptor de módulos, administrador de plataforma.
+- **Núcleo:** empresa, membresías y Personas, roles y registro de permisos, auditoría con cuatro tipos de autor, sesiones, segunda verificación y reautenticación, marco de importación (D-050), puerta de exportación, cola y bus de eventos, gestión de secretos y llaves derivadas por empresa (D-048.4), interruptor de módulos, administrador de plataforma.
 - **Pedidos al núcleo (aceptados):** referencia externa y número de versión de la OC (sube con cada reaprobación); código externo en proveedor, ubicación y centro de costo; tipo de autor "integración".
 - **Registro de módulo (D-038.6):** permisos `integraciones.*`; emite eventos del catálogo; escucha los eventos del catálogo para webhooks; pendiente de la persona "integraciones que creó" (informativo).
 - **proveedores-contratos (A):** lectura de proveedores y contratos; código SAP como equivalencia; la API nunca crea ni cambia proveedores.

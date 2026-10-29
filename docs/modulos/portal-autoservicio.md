@@ -1,6 +1,6 @@
 # Módulo: Portal de autoservicio (POR)
 
-**Versión:** 0.4 (aplicación de D-065 a D-076; Oleada D, Escuadrón D; D-082 y D-083 para el Asistente de IA)
+**Versión:** 0.5 (aplicación de D-065 a D-076; Oleada D, Escuadrón D; D-082 y D-083 para el Asistente de IA; D-103 a D-110 para el chat de mesa de ayuda, entrega ASI-A)
 **Sigla de requisitos:** POR
 **Fuente de verdad:** `docs/documento-funcional.md` y `docs/equipo/decisiones.md`. Aplican D-001 y D-002 (acceso por invitación), D-036 y D-037 (permisos y plantilla "Empleado (portal)"), D-039.8 (aislamiento entre Personas), D-053 (Pedir ayuda, tono), D-054 (topes), D-058 (supuestos), D-061.2 (derechos), D-063.5.
 **Marcas:** **[SUPUESTO]** = propuesta mía que confirma el Gerente de TI. **[ESCALAR AL CEO]** = solo dinero, tema legal o algo irreversible. "Cuándo": `Fase 3, ola D` (D-056.3).
@@ -13,7 +13,7 @@
 
 **Cuándo.** **Fase 3, ola D** (después de la mesa de ayuda; D-056). **En la v1 no hay portal**: las columnas "Empleado (portal)" del registro de permisos son informativas (D-037 fila 11). Depende de AYU, ENT y Personas. La aceptación en pantalla ("confirmar recepción") es de esta fase y queda fuera de la v1 (D-023.2).
 
-**Entra:** invitación de Personas al portal y vínculo Persona-membresía (y, solo si la empresa lo habilita, el acceso al Asistente de IA, D-083); **Mi espacio** (equipos, líneas, licencias, actas, casos, pendientes); el botón **"Pedir ayuda"** que abre el catálogo de la mesa de ayuda; "Mis datos y derechos"; confirmar recepción; reglas de lo que la Persona ve y nunca ve.
+**Entra:** invitación de Personas al portal y vínculo Persona-membresía (y, solo si la empresa lo habilita, el acceso al Asistente de IA, D-083, que incluye el **chat de ayuda** para armar un caso completo, RF-POR-018); **Mi espacio** (equipos, líneas, licencias, actas, casos, pendientes); el botón **"Pedir ayuda"** que abre el catálogo de la mesa de ayuda; "Mis datos y derechos"; confirmar recepción; reglas de lo que la Persona ve y nunca ve.
 **No entra:** ver sección 13. El portal **no tiene casos propios**: los casos y su flujo viven en AYU; el portal es la puerta y la vista de lo propio.
 
 ## 2. Glosario del módulo
@@ -29,6 +29,7 @@
 | **Acuse de recepción** | Confirmación en pantalla de que la Persona recibió un equipo. Informativa, no es firma. |
 | **Mi espacio** | Página con pestañas (equipos, líneas, licencias, actas, casos, pendientes), principal del portal (DS-07). |
 | **Pedir ayuda** | Botón único que abre el catálogo de casos (DS-01); sigue siendo el único camino para crear un caso. El «Asistente de IA» (módulo `asistente-ia`) es **otro control**, con otro nombre e icono, abajo a la derecha (D-082). |
+| **Chat de ayuda** | Conversación con el Asistente de IA, por escrito y en español, que le hace una pregunta por vez al empleado y le deja **precargado el formulario real de «Pedir ayuda»** para que TI reciba el caso con toda la información. El empleado revisa y lo envía con el botón normal; el chat no puede enviar ni crear casos (entrega ASI-A, D-103 y D-105). |
 
 ## 3. Roles y permisos
 
@@ -44,7 +45,7 @@ Solo nombres del registro `docs/registro-permisos.md`. Todo se comprueba en el s
 | Invitar Personas al portal | PS-209 | `portal.invitar` | No | Administrador |
 | Configurar el portal | PS-210 | `portal.configurar` | No | Administrador |
 
-**Lista cerrada de la plantilla "Empleado (portal)"** (todo lo demás denegado, D-037 fila 11): PS-204 a PS-208; `personas.ver` PS-24 (propio); `ayuda.caso_crear` PS-138, `ayuda.caso_ver` PS-139, `ayuda.caso_comentar_publico` PS-141, `ayuda.caso_cancelar` PS-149, `ayuda.caso_reabrir` PS-150 y `ayuda.encuesta_responder` PS-155 (todos propio); `ayuda.catalogo_ver` PS-158 y `ayuda.conocimiento_ver` PS-162; `notificaciones.bandeja_usar` PS-211 y `notificaciones.preferencias_propias` PS-212 (propio); y, **desde la Fase 3, ola G (D-083, completa D-037 fila 11)**, `asistente.usar` PS-235 y `asistente.preparar_borradores` PS-236 (alcance «todo»: son compuertas que no dan datos), **apagados por defecto**: el Administrador debe incluir al rol Empleado en «roles que lo usan» (PS-238) o el asistente no aparece en el portal. Nunca PS-237 ni PS-238 a PS-240.
+**Lista cerrada de la plantilla "Empleado (portal)"** (todo lo demás denegado, D-037 fila 11): PS-204 a PS-208; `personas.ver` PS-24 (propio); `ayuda.caso_crear` PS-138, `ayuda.caso_ver` PS-139, `ayuda.caso_comentar_publico` PS-141, `ayuda.caso_cancelar` PS-149, `ayuda.caso_reabrir` PS-150 y `ayuda.encuesta_responder` PS-155 (todos propio); `ayuda.catalogo_ver` PS-158 y `ayuda.conocimiento_ver` PS-162; `notificaciones.bandeja_usar` PS-211 y `notificaciones.preferencias_propias` PS-212 (propio); y, **desde la Fase 3, ola G (D-083, completa D-037 fila 11)**, `asistente.usar` PS-235 y `asistente.preparar_borradores` PS-236 (alcance «todo»: son compuertas que no dan datos; PS-236 cubre también el chat que arma el caso de ayuda, D-103.4), **apagados por defecto**: el Administrador debe incluir al rol Empleado en «roles que lo usan» (PS-238) o el asistente no aparece en el portal. Con ellos el Empleado solo puede usar el chat de ayuda para **su propio caso**: el chat le ofrece únicamente los equipos asignados a él, con **código, categoría y modelo** (nunca serie, IMEI ni número de línea). Nunca PS-237 ni PS-238 a PS-240. No se renumeran permisos.
 
 Notas:
 - El resto de los roles (Técnico, Jefatura, etc.) ven sus propios equipos como cualquier Persona vinculada con "Mi espacio" desde el menú de usuario (DS-07); no usan los permisos `portal.*`.
@@ -66,7 +67,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen (`Fase 3`).
 | RF-POR-004 | Licencias: productos de software asignados a su nombre; nunca claves. Solo si el módulo de licencias asigna puestos a Personas (S-POR-04). | Fase 3 | CA-POR-06 |
 | RF-POR-005 | Actas: lista y PDF reimprimible de sus actas de entrega y devolución. | Fase 3 | CA-POR-01 |
 | RF-POR-006 | Casos: lista y detalle de sus casos de AYU, solo con comentarios públicos. Abre PAN-AYU-01, PAN-AYU-02 y PAN-AYU-14. | Fase 3 | CA-POR-04 |
-| RF-POR-007 | Botón **"Pedir ayuda"**: abre el catálogo de casos de AYU. "Reportar un problema" se prellena con el equipo elegido de su lista. | Fase 3 | CA-POR-04 |
+| RF-POR-007 | Botón **"Pedir ayuda"**: abre el catálogo de casos de AYU. "Reportar un problema" se prellena con el equipo elegido de su lista, **y también cuando el equipo lo eligió el empleado dentro del chat de ayuda** (RF-POR-018). | Fase 3 | CA-POR-04, CA-POR-17 |
 | RF-POR-008 | Reportar extravío o robo de un equipo propio: crea un caso urgente en AYU y avisa a TI; **no cambia el estado del equipo**. | Fase 3 | CA-POR-11 |
 | RF-POR-009 | Solicitar un equipo o accesorio: categoría solicitable, motivo, urgencia y fecha deseada. Crea un caso del servicio "Solicitar equipo", **no una orden de compra**. | Fase 3 | CA-POR-10 |
 | RF-POR-010 | Pedir devolver o cambiar un equipo propio. Crea un caso. | Fase 3 | CA-POR-10 |
@@ -77,6 +78,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen (`Fase 3`).
 | RF-POR-015 | Configuración: activar o desactivar secciones (Líneas, Licencias), elegir las categorías solicitables y un texto de bienvenida de hasta 500 caracteres. | Fase 3 | CA-POR-10 |
 | RF-POR-016 | Buscador de artículos de ayuda de AYU desde Mi espacio. | Fase 3 | CA-POR-04 |
 | RF-POR-017 | Primer ingreso: aceptación del aviso de privacidad de la empresa; se vuelve a pedir cuando cambia la versión, con versión y fecha registradas (D-061.8). | Fase 3 | CA-POR-07 |
+| RF-POR-018 | **Entrada al chat de ayuda.** Si el Administrador incluyó al rol Empleado en «roles que lo usan» (PS-238) y la mesa de ayuda (AYU) está activa, el empleado llega al chat desde el botón flotante «Asistente de IA» de cualquier pantalla del portal, incluida Mi espacio. El chat le hace una pregunta por vez, le deja precargado el formulario de «Pedir ayuda» con **sus** equipos (código, categoría y modelo) y un resumen, y el empleado lo envía con el botón normal. «Pedir ayuda» sigue en la barra superior y funciona igual con o sin chat. Si el Diseñador ofrece además un acceso al chat dentro de «Pedir ayuda» queda como [PENDIENTE: lo decide el Diseñador en el prototipo, sin cambiar este requisito]. Sin AYU activo el chat no se ofrece. | Fase 3, ola G (ASI-A) | CA-POR-17, CA-POR-18, CA-POR-19 |
 
 ### 4.2 Reglas de negocio
 
@@ -99,11 +101,14 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen (`Fase 3`).
 | RN-POR-015 | Un acuse no se edita ni se borra; una corrección es un acuse nuevo. |
 | RN-POR-016 | Invitaciones: **100 por empresa por día y 20 por administrador por hora** (D-054.2). La plataforma puede subir el tope de una empresa por un periodo corto para la campaña inicial (PS-04). La pantalla dice que el envío es por persona. |
 | RN-POR-017 | La empresa activa va en la dirección (D-046). Con dos empresas, el portal muestra solo la Persona de la empresa activa. |
-| RN-POR-018 | El portal no modifica datos de equipos, Personas ni estados: toda acción del empleado se convierte en un caso, un pedido de derechos o un acuse. El asistente de IA, si el rol lo tiene habilitado, solo **prepara el caso de ayuda** (entrega ASI-B) y lo envía la persona. |
+| RN-POR-018 | El portal no modifica datos de equipos, Personas ni estados: toda acción del empleado se convierte en un caso, un pedido de derechos o un acuse. El asistente de IA, si el rol lo tiene habilitado, solo **prepara el caso de ayuda** (entrega ASI-A, admisión de casos por chat) y lo envía la persona con el botón normal; no tiene ninguna función para crear, enviar ni cambiar un caso (D-105). |
 | RN-POR-019 | Un mensaje de error del portal no contiene datos de otra Persona ni detalles internos (D-021.7). |
 | RN-POR-020 | Pedidos de datos personales: quien presenta el pedido no lo atiende; la copia se entrega por descarga única con vencimiento, nunca por correo; el pedido es invisible para listas, búsquedas, reportes, exportaciones, API y avisos de quien no tiene PS-29, salvo la propia Persona que ve su estado (D-061.2). El asistente de IA remite a PAN-POR-02 y **no prepara** ese pedido. |
 | RN-POR-021 | Todo texto y botón usa "usted"; el botón único es "Pedir ayuda" (DS-01, DS-09); el asistente de IA es otro control con otro nombre e icono (D-082). |
 | RN-POR-022 | La respuesta de cada ruta del portal, **y cada respuesta del asistente de IA a un empleado**, incluye únicamente los campos de la tabla 4.4; una prueba compara los campos devueltos con esa lista. |
+| RN-POR-023 | **Aviso de transparencia para empleados.** Antes de su primera conversación con el chat de ayuda, el empleado ve un aviso propio que dice, en «usted», que habla con una inteligencia artificial y no con una persona de TI, que puede equivocarse, qué se envía a un proveedor externo (lo que él escribe en el chat, enmascarando correos, teléfonos e IMEI), que no escriba contraseñas ni datos personales innecesarios, y que puede pedir ayuda a TI con el formulario de «Pedir ayuda» en cualquier momento. Se registra versión y fecha de aceptación (RF-ASI-005 de `asistente-ia`). El texto final es [LEGAL: depende de L-18, que contesta el abogado por el CEO]. |
+| RN-POR-024 | **El chat no entrega datos de otra persona.** Un empleado solo recibe del chat información propia (tabla 4.4). Si pide equipos, casos, correo u otros datos de un compañero o de su jefe, el chat responde «Solo puedo ayudarle con su información», sin consultar ni confirmar si existe esa persona. Un caso a nombre de otra persona lo registra un técnico (RF-AYU-002). |
+| RN-POR-025 | **Equipos que ve el chat.** Para armar el caso, el chat solo conoce los equipos asignados al empleado, con código, categoría y modelo. La serie, el IMEI y el número de línea que el empleado ve en su pantalla (tabla 4.4) **no viajan** al chat ni a su proveedor de IA (D-104.4). El servidor comprueba al enviar que el equipo elegido es uno de los asignados a esa persona (RN-POR-010). |
 
 ### 4.3 Requisitos de calidad
 
@@ -114,7 +119,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen (`Fase 3`).
 | RNF-POR-003 | Para **cada ruta del portal**, una prueba automática con dos Personas de la misma empresa y con dos empresas: 100 intentos de pedir equipos, actas y casos ajenos dan 100 respuestas "no encontrado" y 0 datos filtrados (D-039.8, H-SEG-09). La prueba incluye las herramientas de lectura del asistente de IA. |
 | RNF-POR-004 | Con el tope subido para la campaña, una selección de 200 Personas se procesa en menos de 60 segundos y cada resultado se informa por persona; con los topes por defecto, lo que exceda queda "En espera" y se informa. |
 | RNF-POR-005 | El 100 % de invitaciones, vínculos, acuses y cambios de configuración queda en la auditoría en la misma operación (D-018.2). |
-| RNF-POR-006 | Un empleado completa "Reportar un problema" en 3 pasos o menos y menos de 90 segundos. |
+| RNF-POR-006 | Un empleado completa "Reportar un problema" **con el formulario normal** en 3 pasos o menos y menos de 90 segundos. Estas dos cifras son del formulario, no del chat. El chat tiene otra medida (D-109): que sus casos necesiten **menos repreguntas de TI** que los del formulario normal, del mismo servicio y el mismo periodo, más la mediana de tiempo y de mensajes hasta enviar. No lleva cifra de 3 pasos ni de 90 segundos. La diferencia mínima que se exige es [PENDIENTE: Gerente de TI y QA, cuando exista la línea base]. |
 | RNF-POR-007 | Cada tabla nueva tiene prueba de aislamiento con `app_empresa` y por identificador interno (D-039, D-063.6). |
 | RNF-POR-008 | Una prueba compara los campos de cada respuesta del portal con la lista de la tabla 4.4 (RN-POR-022); se extiende a las respuestas del asistente de IA a un empleado (D-083.3). |
 
@@ -136,6 +141,9 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen (`Fase 3`).
 | Datos de otras Personas: compañeros, subordinados, quién tuvo antes el equipo | **Nunca** |
 | Notas y comentarios internos, nombre del técnico que analizó | **Nunca** |
 | Auditoría, stock, órdenes de compra y de servicio, reportes, otras empresas | **Nunca** |
+| **Para el chat de ayuda (Asistente de IA):** código, categoría y modelo de sus propios equipos | Sí (es lo único que el chat conoce del equipo) |
+| **Para el chat de ayuda:** serie, IMEI y número de línea | **Nunca** al chat ni a su proveedor, aunque el empleado sí los ve en su pantalla |
+| **Para el chat de ayuda:** equipos, casos, correo o datos de otra Persona, incluido el jefe | **Nunca**; respuesta «Solo puedo ayudarle con su información» |
 
 ## 5. Estados y transiciones
 
@@ -182,6 +190,8 @@ La confirmación de recepción es un diálogo de Mi espacio; la invitación es u
 
 **Aviso para el Diseñador (D-082):** si el asistente de IA está habilitado para el rol Empleado, Mi espacio gana el botón flotante «Asistente de IA» abajo a la derecha. Debe convivir con «Pedir ayuda» (otro nombre e icono) y quedar **sobre la barra inferior del celular**, sin tapar «Guardar» ni «Confirmar».
 
+**Chat de ayuda del empleado (D-105).** El aviso de transparencia propio (RN-POR-023), la conversación y la pantalla de confirmación (el formulario real PAN-AYU-01 precargado, con los botones «Enviar a TI», «Corregir» y «Descartar») viven en `asistente-ia` (PAN-ASI-01 y PAN-ASI-03). El portal solo aporta la entrada (RF-POR-018). El prototipo muestra el caso con el rol Empleado.
+
 ## 8. Notificaciones y automatismos
 
 Todo es `Fase 2` o posterior y sale por el motor único de NOT; en la v1 solo hay invitación, acceso y aprobación (D-061.4). La invitación es texto fijo. Contenido mínimo para quien no tiene Usuario.
@@ -209,7 +219,7 @@ Los avisos a Personas sin Usuario los define cada módulo; el portal no envía a
 - **Compras (Etapa 5).** Un caso "Solicitar equipo" puede dar origen a una OC en Borrador creada por TI; el portal no compra.
 - **ONB.** El portal no muestra procesos de ingreso ni salida.
 - **Notificaciones.** Entrega de todos los avisos.
-- **Asistente de IA (`asistente-ia`, ASI, Fase 3, ola G).** Opcional y apagado por defecto para el Empleado (D-083). El empleado lo usa solo con los campos de la tabla 4.4, sin acciones propias; como borrador solo prepara un caso de ayuda; los pedidos de datos personales los remite a PAN-POR-02. Aviso de transparencia propio para empleados.
+- **Asistente de IA (`asistente-ia`, ASI, Fase 3, ola G).** Opcional y apagado por defecto para el Empleado (D-083). El empleado lo usa solo con los campos de la tabla 4.4, sin acciones propias; como borrador solo prepara un caso de ayuda (en la entrega ASI-A, admisión de casos por chat) y lo envía la persona con el botón normal; los pedidos de datos personales los remite a PAN-POR-02. Del equipo solo conoce código, categoría y modelo. Aviso de transparencia propio para empleados (RN-POR-023).
 
 ## 10. Criterios de aceptación
 
