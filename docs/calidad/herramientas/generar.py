@@ -7,7 +7,7 @@ import lectura as L, etapas as T, juicios as J, huecos as H
 
 E = L.etiqueta
 HOY = '2026-10-29'
-ANTERIOR = '2026-10-26'   # fecha de la versión anterior de los archivos generados (commit b8e01d3)
+ANTERIOR = '2026-10-26'   # fecha de la versión anterior de los archivos generados (commit 5ed0dcb)
 NOMBRES = {'ACC': 'Acceso', 'AYU': 'Mesa de ayuda', 'CAM': 'Gestión de cambios', 'CMD': 'CMDB ligera', 'DOM': 'Dominios y certificados',
            'ENT': 'Entregas y devoluciones', 'GAR': 'Garantías y mantenimiento', 'INT': 'Integraciones y API', 'LIC': 'Licencias de software',
            'LIN': 'Líneas móviles', 'NOT': 'Notificaciones', 'ONB': 'Onboarding y offboarding', 'POR': 'Portal de autoservicio',
@@ -93,7 +93,7 @@ def generar_criterios(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio
     o = []
     o.append('# Criterios de aceptación por etapa\n')
     o.append(f"**Autor:** QA (qa-tester) · **Fecha:** {HOY} · **Checkpoint:** commit `{commit}`{(' (más cambios sin guardar en: ' + sucio + ')') if sucio else ' (árbol de documentos fuente limpio al generar)'} · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los {len(MODULOS_LEIDOS)} módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.\n")
-    o.append(f"**Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del {ANTERIOR} ({ANT_TOTAL} criterios, commit `b8e01d3`). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).\n")
+    o.append(f"**Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del {ANTERIOR} ({ANT_TOTAL} criterios, commit `5ed0dcb`). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).\n")
     o.append('## Cómo leer las columnas\n')
     o.append("- **Cubre:** la cabecera del criterio, tal como la escribió el Analista o el escuadrón.\n- **Etapa del requisito:** la más temprana entre los requisitos que cubre. **Se ejecuta en:** la etapa en que el criterio **empieza** a correr. **Se completa en:** la etapa posterior en que ya existe todo lo que necesita (solo cuando 22.1 o el módulo lo dicen).\n- **Tipo:** unitaria (reglas y cálculos sin base de datos); integración (base real, servidor, permisos, concurrencia, reloj, correo); navegador (Playwright: pantallas, PDF); manual (personas o ensayo, con apoyo automático donde se pueda). Es una clasificación hecha con palabras del texto del criterio, corregida por QA donde se equivoca (anotado en la columna Nota); QA la afina al escribir cada prueba.\n- **Bloqueante:** sí = si falla, la etapa no se aprueba. \"No (bloquea su módulo)\" = es de Fase 2 o 3 y bloquea la entrega de ese módulo, no la v1 (D-056).\n- **Etapa heredada:** el criterio solo cita reglas RN y no hay fila RF que lo cite; tomó la etapa más frecuente de su módulo. Debe confirmarlo el escuadrón.\n")
     o.append('## Resumen (checkpoint ' + commit + ', ' + HOY + ')\n')
@@ -216,7 +216,8 @@ def generar_criterios(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio
 def main():
     escribir = '--escribir' in sys.argv
     commit = git('rev-parse', '--short', 'HEAD')
-    sucio = git('status', '--short', 'docs/documento-funcional.md', 'docs/modulos', 'docs/registro-permisos.md', 'docs/equipo/decisiones.md').replace('\n', ', ').replace(' M ', '').replace('M ', '').strip()
+    estado = git('status', '--short', 'docs/documento-funcional.md', 'docs/modulos', 'docs/registro-permisos.md', 'docs/equipo/decisiones.md')
+    sucio = ', '.join(('sin commit: ' if l.startswith('??') else 'modificado: ') + l[3:].strip() for l in estado.split('\n') if l.strip())
     datos = cargar()
     nreqs, nrns, ncas, mreqs, mrns, mcas, todos = datos
     por, comp = cifras(todos)

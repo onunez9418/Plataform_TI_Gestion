@@ -1,85 +1,88 @@
 # Criterios de aceptación por etapa
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-26 · **Checkpoint:** commit `5ed0dcb` (árbol de documentos fuente limpio al generar) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-076), `docs/registro-permisos.md` v1.1 y los 17 módulos de `docs/modulos/` en v0.3. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `f3c76eb` (árbol de documentos fuente limpio al generar) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los 18 módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
 
-**Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del 2026-10-25 (424 criterios sobre el documento v0.3 sin partir). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).
+**Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del 2026-10-26 (451 criterios, commit `5ed0dcb`). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).
 
 ## Cómo leer las columnas
 
 - **Cubre:** la cabecera del criterio, tal como la escribió el Analista o el escuadrón.
 - **Etapa del requisito:** la más temprana entre los requisitos que cubre. **Se ejecuta en:** la etapa en que el criterio **empieza** a correr. **Se completa en:** la etapa posterior en que ya existe todo lo que necesita (solo cuando 22.1 o el módulo lo dicen).
-- **Tipo:** unitaria (reglas y cálculos sin base de datos); integración (base real, servidor, permisos, concurrencia, reloj, correo); navegador (Playwright: pantallas, PDF); manual (personas o ensayo, con apoyo automático donde se pueda). Es una clasificación hecha con palabras del texto del criterio; QA la afina al escribir cada prueba.
+- **Tipo:** unitaria (reglas y cálculos sin base de datos); integración (base real, servidor, permisos, concurrencia, reloj, correo); navegador (Playwright: pantallas, PDF); manual (personas o ensayo, con apoyo automático donde se pueda). Es una clasificación hecha con palabras del texto del criterio, corregida por QA donde se equivoca (anotado en la columna Nota); QA la afina al escribir cada prueba.
 - **Bloqueante:** sí = si falla, la etapa no se aprueba. "No (bloquea su módulo)" = es de Fase 2 o 3 y bloquea la entrega de ese módulo, no la v1 (D-056).
 - **Etapa heredada:** el criterio solo cita reglas RN y no hay fila RF que lo cite; tomó la etapa más frecuente de su módulo. Debe confirmarlo el escuadrón.
 
-## Resumen (checkpoint 5ed0dcb, 2026-10-26)
+## Resumen (checkpoint f3c76eb, 2026-10-29)
 
-**451 criterios:** 116 del núcleo (identificadores con letra, que son 94 números, CA-001 a CA-094) y 335 de los 17 módulos. El 2026-10-25 eran 424 (93 y 331). Qué cambió: el Analista agregó CA-083 a CA-094 (CA-094 es el código del activo, D-079) y partió CA-016, la auditoría inalterable (hoy CA-040a y CA-040b), CA-052a y b, CA-054, CA-060, CA-064 y CA-065; los escuadrones partieron CA-NOT-05 y CA-NOT-07 y agregaron un criterio a gestión de cambios y otro a gestión de problemas.
+**559 criterios:** 145 del núcleo (identificadores con letra, que son 105 números, CA-001 a CA-105) y 414 de los 18 módulos completos. El 2026-10-26 eran 451 (116 y 335): +108. Qué cambió: **11 criterios dejaron de existir como uno solo** porque se partieron (CA-038, CA-094, CA-GAR-01, CA-GAR-04, CA-PRS-01, CA-PRS-03, CA-PRS-08, CA-PRS-12, CA-PRS-14, CA-PRV-02, CA-PRV-04) y **67 criterios nuevos** los reemplazan o se suman: en el núcleo 31 (CA-015g, h e i de lectura de soporte; CA-038a a d; CA-094a a c; CA-095a a j de congelación por incidente, D-080; CA-096 a CA-105, con CA-104 en a y b) y en los módulos PRS 21, GAR 9 y PRV 6.
 
 | Se ejecuta en | Criterios que empiezan aquí | Criterios que se completan aquí (empezaron antes) |
 |---|---|---|
-| Etapa 0 | 0 | 0 |
-| Etapa 1 | 52 | 0 |
-| Etapa 2 | 37 | 2 |
+| Etapa 0 | 1 | 0 |
+| Etapa 1 | 54 | 0 |
+| Etapa 2 | 58 | 2 |
 | Etapa 3 | 4 | 1 |
-| Etapa 4 | 44 | 10 |
-| Etapa 5 | 24 | 5 |
+| Etapa 4 | 61 | 6 |
+| Etapa 5 | 33 | 5 |
 | Etapa 6 | 2 | 2 |
-| Etapa 7 | 3 | 0 |
-| Fase 2 | 134 | 5 |
-| Fase 3 | 151 | 0 |
-| **Total** | 451 | 25 |
+| Etapa 7 | 5 | 0 |
+| Fase 2 | 138 | 5 |
+| Fase 3 | 203 | 0 |
+| **Total** | 559 | 21 |
 
-**Criterios de la v1 (Etapas 0 a 7): 166.** De fases posteriores: 285. Antes (2026-10-25): 139 y 285.
+**Criterios de la v1 (Etapas 0 a 7): 218.** De fases posteriores: 341. Antes (2026-10-26): 166 y 285.
 
-Comparación con la versión anterior (2026-10-25). **Ojo, no es la misma medida:** la versión anterior contaba cada criterio en la etapa donde "se ejecuta completo" (la más tardía); esta cuenta dónde **empieza** y, aparte, dónde **termina**. La comparable con la anterior es la última columna.
+Comparación con la versión anterior (2026-10-26). Las dos medidas son las mismas que entonces: dónde **empieza** cada criterio y dónde **termina**.
 
-| Etapa | Antes (completo) | Ahora (empiezan) | Ahora (terminan) |
-|---|---|---|---|
-| Etapa 1 | 30 | 52 | 38 |
-| Etapa 2 | 26 | 37 | 32 |
-| Etapa 3 | 3 | 4 | 3 |
-| Etapa 4 | 47 | 44 | 54 |
-| Etapa 5 | 26 | 24 | 28 |
-| Etapa 6 | 3 | 2 | 3 |
-| Etapa 7 | 4 | 3 | 3 |
-| Fase 2 | 136 | 134 | 139 |
-| Fase 3 | 149 | 151 | 151 |
+| Etapa | Antes (empiezan) | Ahora (empiezan) | Antes (terminan) | Ahora (terminan) |
+|---|---|---|---|---|
+| Etapa 0 | 0 | 1 | 0 | 1 |
+| Etapa 1 | 52 | 54 | 38 | 40 |
+| Etapa 2 | 37 | 58 | 32 | 57 |
+| Etapa 3 | 4 | 4 | 3 | 3 |
+| Etapa 4 | 44 | 61 | 54 | 67 |
+| Etapa 5 | 24 | 33 | 28 | 37 |
+| Etapa 6 | 2 | 2 | 3 | 3 |
+| Etapa 7 | 3 | 5 | 3 | 5 |
+| Fase 2 | 134 | 138 | 139 | 143 |
+| Fase 3 | 151 | 203 | 151 | 203 |
 
-Qué explica la diferencia: el Analista y los escuadrones agregaron 26 criterios (CA-083 a CA-094 y las particiones), y la tabla 22.1 hace empezar en la Etapa 1 varios criterios que antes se contaban completos más tarde (por ejemplo CA-001, CA-011a y b, CA-041, CA-045, CA-048, CA-069, CA-071 y CA-074). Por eso la columna "empiezan" de las Etapas 4 y 5 baja: parte de lo que allí se completa ya empezó antes.
+Qué explica la diferencia: la mayor parte son criterios partidos y nuevos de la Etapa 2 (congelación por incidente CA-095a a g, PRS y PRV), de la Etapa 4 (importación en cuatro, código del activo, tope y lote de importación, estados, garantía, PRS) y de la Etapa 5 (CA-096 a CA-104b, recepción de garantía). La Etapa 0 gana CA-105 (verificación documental). Ningún criterio que ya existía cambió de etapa.
 
 Por la etapa más temprana de su requisito:
 
 | Etapa más temprana del requisito | Criterios |
 |---|---|
 | Etapa 0 | 3 |
-| Etapa 1 | 60 |
-| Etapa 2 | 45 |
+| Etapa 1 | 63 |
+| Etapa 2 | 63 |
 | Etapa 3 | 4 |
-| Etapa 4 | 31 |
-| Etapa 5 | 16 |
+| Etapa 4 | 46 |
+| Etapa 5 | 26 |
 | Etapa 6 | 2 |
-| Etapa 7 | 1 |
-| Fase 2 | 114 |
-| Fase 3 | 118 |
-| sin requisito RF (heredada) | 57 |
+| Etapa 7 | 4 |
+| Fase 2 | 118 |
+| Fase 3 | 125 |
+| sin requisito RF (heredada) | 105 |
 
 | Tipo de prueba | Criterios |
 |---|---|
-| integración | 252 |
-| unitaria | 82 |
-| integración + navegador | 70 |
-| navegador | 39 |
-| manual (con apoyo de integración) | 8 |
+| integración | 304 |
+| integración + navegador | 112 |
+| unitaria | 79 |
+| navegador | 53 |
+| manual (con apoyo de integración) | 10 |
+| manual (verificación documental) | 1 |
 
 | Módulo | Criterios |
 |---|---|
+| Asistente de IA (en redacción) (ASI) | 52 |
 | Mesa de ayuda (AYU) | 27 |
 | Gestión de cambios (CAM) | 20 |
 | CMDB ligera (CMD) | 21 |
 | Dominios y certificados (DOM) | 14 |
 | Entregas y devoluciones (ENT) | 15 |
-| Garantías y mantenimiento (GAR) | 20 |
+| Garantías y mantenimiento (GAR) | 27 |
 | Integraciones y API (INT) | 26 |
 | Licencias de software (LIC) | 20 |
 | Líneas móviles (LIN) | 16 |
@@ -88,10 +91,10 @@ Por la etapa más temprana de su requisito:
 | Portal de autoservicio (POR) | 16 |
 | Gestión de problemas (PRB) | 17 |
 | Presupuesto y costos (PRE) | 26 |
-| Personas y ubicaciones (PRS) | 16 |
-| Proveedores y contratos (PRV) | 22 |
+| Personas y ubicaciones (PRS) | 32 |
+| Proveedores y contratos (PRV) | 26 |
 | Reportes y tableros (REP) | 22 |
-| Núcleo | 116 |
+| Núcleo | 145 |
 
 ### Lo que cada etapa exige (D-076)
 
@@ -99,24 +102,23 @@ Bloqueantes de una etapa = los criterios que **empiezan** en ella más los que *
 
 | Etapa | Empiezan | Se completan | Bloqueantes en total | Puntos de D-076 aún pendientes antes de abrirla |
 |---|---|---|---|---|
-| Etapa 1 | 52 | 0 | 52 | 3 |
-| Etapa 2 | 37 | 2 | 39 | 1 |
+| Etapa 1 | 54 | 0 | 54 | 1 |
+| Etapa 2 | 58 | 2 | 60 | 3 |
 | Etapa 3 | 4 | 1 | 5 | 0 |
-| Etapa 4 | 44 | 10 | 54 | 4 |
-| Etapa 5 | 24 | 5 | 29 | 2 |
+| Etapa 4 | 61 | 6 | 67 | 4 |
+| Etapa 5 | 33 | 5 | 38 | 1 |
 | Etapa 6 | 2 | 2 | 4 | 0 |
-| Etapa 7 | 3 | 0 | 3 | 1 |
+| Etapa 7 | 5 | 0 | 5 | 2 |
 
-### Criterios que NO corren en la etapa de su requisito (41)
+### Criterios que NO corren en la etapa de su requisito (36)
 
-Dos casos distintos. **(A) Corren antes de lo que necesitan: 4.** Es un defecto del criterio: no se puede ejecutar. **(B) Arrancan después de la etapa más temprana de su requisito: 37.** El requisito se entrega antes de que su criterio corra; la etapa de ese requisito se cierra sin esa prueba. Muchos son consecuencia legítima de que el criterio necesita un módulo posterior (órdenes, activos, actas); aun así, el Gerente de TI debe saberlo al cerrar la etapa.
+Dos casos distintos. **(A) Corren antes de lo que necesitan: 3.** Es un defecto del criterio: no se puede ejecutar. **(B) Arrancan después de la etapa más temprana de su requisito: 33.** El requisito se entrega antes de que su criterio corra; la etapa de ese requisito se cierra sin esa prueba. Muchos son consecuencia legítima de que el criterio necesita un módulo posterior (órdenes, activos, actas); aun así, el Gerente de TI debe saberlo al cerrar la etapa.
 
 **(A) Corren antes:**
 
 | Criterio | Corre en | Sus requisitos llegan hasta | Qué hay que corregir |
 |---|---|---|---|
-| CA-024 | Etapa 4 | Etapa 7 | Cubre RF-OC-028 (Etapa 7) y corre en Etapa 4: o se saca RF-OC-028 de su cabecera o se parte. |
-| CA-082 | Etapa 1 | Etapa 4 | La cabecera dice "(RF-ACC-018, RF-INV-008 en CA-082b)": parece cubrir RF-INV-008 (Etapa 4) en una etapa 1. Dejar solo RF-ACC-018. |
+| CA-024 | Etapa 4 | Etapa 7 | La cabecera cubre RF-OC-028 (Etapa 7, P-009) y el criterio corre en Etapa 4: no se puede ejecutar entero. Propuesta de QA: Quitar RF-OC-028 de la cabecera de CA-024 y de su fila (la baja con motivo ya la prueba CA-024 en Etapa 4); la decisión P-009 de la Etapa 7 se verifica con un criterio documental nuevo. |
 | CA-NOT-10 | Etapa 1 | Fase 2 | La tabla del módulo lo pone en Etapa 1 pero cubre requisitos de Fase 2 (rebotes y bandeja). El escuadrón C debe decir qué parte corre en Etapa 1. |
 | CA-NOT-13 | Etapa 1 | Fase 2 | Igual que CA-NOT-10: cubre requisitos de Fase 2 (campana de no leídas). |
 
@@ -125,22 +127,21 @@ Dos casos distintos. **(A) Corren antes de lo que necesitan: 4.** Es un defecto 
 | Criterio | Módulo | Etapa del requisito | Arranca en | Por qué |
 |---|---|---|---|---|
 | CA-012 | Núcleo | Etapa 1 | Etapa 5 | RF-ROL-009: Etapa 1; el criterio arranca en Etapa 5. Necesita órdenes de compra (Etapa 5). Hasta entonces "quien crea no aprueba" solo se prueba por la matriz (CA-011a) y CA-010. |
+| CA-015h | Núcleo | Etapa 1 | Etapa 2 | RF-PLA-013: Etapa 1; el criterio arranca en Etapa 2. RF-PLA-013 es de Etapa 1, pero la mitad «sin secretos ni derechos» necesita campos secretos (Etapa 2) y la cola de derechos (Etapa 2). La Etapa 1 se cierra con CA-015g y CA-015i. |
 | CA-016b | Núcleo | Etapa 2 | Etapa 4 | RF-PER-001: Etapa 2; el criterio arranca en Etapa 4. Necesita registrar una entrega de equipo (Etapa 4). |
 | CA-019 | Núcleo | Etapa 2 | Etapa 3 | RF-CAT-011: Etapa 2; el criterio arranca en Etapa 3 |
 | CA-020 | Núcleo | Etapa 2 | Etapa 3 (se completa en Etapa 5) | RF-CAT-002, RF-CAT-010, RF-CAT-012: Etapa 2; el criterio arranca en Etapa 3 |
 | CA-023 | Núcleo | Etapa 3 | Etapa 4 | RF-SKU-009: Etapa 3; el criterio arranca en Etapa 4 |
 | CA-032 | Núcleo | Etapa 2 | Etapa 5 | RF-CAT-005: Etapa 2; el criterio arranca en Etapa 5 |
 | CA-036 | Núcleo | Etapa 4 | Etapa 5 | RF-INV-007: Etapa 4; el criterio arranca en Etapa 5 |
-| CA-038 | Núcleo | Etapa 0 | Etapa 4 | RF-IMP-017: Etapa 0; el criterio arranca en Etapa 4. RF-IMP-017 es una condición documental de la Etapa 0; la importación se prueba cuando existe (Etapa 4). |
-| CA-042 | Núcleo | Etapa 1 | Etapa 2 (se completa en Etapa 4) | RF-AUD-006: Etapa 1; el criterio arranca en Etapa 2 |
+| CA-042 | Núcleo | Etapa 1 | Etapa 2 (se completa en Etapa 4) | RF-AUD-006, RF-UX-008: Etapa 1; el criterio arranca en Etapa 2 |
 | CA-046 | Núcleo | Etapa 1 | Etapa 4 | RNF-002: Etapa 1; el criterio arranca en Etapa 4 |
 | CA-052a2 | Núcleo | Etapa 2 | Etapa 4 | RF-PER-006: Etapa 2; el criterio arranca en Etapa 4 |
 | CA-052b2 | Núcleo | Etapa 2 | Etapa 4 | RF-PER-006, RF-PER-013: Etapa 2; el criterio arranca en Etapa 4 |
 | CA-052c | Núcleo | Etapa 1 | Etapa 2 | RF-USR-001, RF-USR-003: Etapa 1; el criterio arranca en Etapa 2 |
 | CA-053 | Núcleo | Etapa 0 | Etapa 7 | RNF-017: Etapa 0; el criterio arranca en Etapa 7. Existe como plan desde la Etapa 0 y se ejecuta en la Etapa 7. El ensayo de restauración previo a la Etapa 1 (CI-17) cubre una parte. |
-| CA-054a | Núcleo | Etapa 1 | Etapa 2 | RF-AUD-014: Etapa 1; el criterio arranca en Etapa 2 |
+| CA-054a | Núcleo | Etapa 1 | Etapa 2 | RF-AUD-014, RF-USR-006: Etapa 1; el criterio arranca en Etapa 2 |
 | CA-054b | Núcleo | Etapa 2 | Etapa 4 | RF-PER-014: Etapa 2; el criterio arranca en Etapa 4 |
-| CA-054c | Núcleo | Etapa 1 | Etapa 7 | RF-USR-006: Etapa 1; el criterio arranca en Etapa 7. RF-USR-006 está mal citado (ver trazabilidad); la restauración de un respaldo es de la Etapa 7. |
 | CA-057 | Núcleo | Etapa 1 | Fase 3 | RF-ROL-002: Etapa 1; el criterio arranca en Fase 3. Portal de autoservicio (Fase 3). |
 | CA-061 | Núcleo | Etapa 3 | Etapa 5 | RF-SKU-010: Etapa 3; el criterio arranca en Etapa 5 |
 | CA-064b | Núcleo | Etapa 2 | Etapa 4 | RF-CAT-027: Etapa 2; el criterio arranca en Etapa 4 |
@@ -149,27 +150,22 @@ Dos casos distintos. **(A) Corren antes de lo que necesitan: 4.** Es un defecto 
 | CA-073 | Núcleo | Etapa 0 | Etapa 1 | RF-DAT-010: Etapa 0; el criterio arranca en Etapa 1. La infraestructura del nombre canario es de la Etapa 0; el criterio corre cuando hay Personas de prueba (Etapa 1). |
 | CA-081b | Núcleo | Etapa 2 | Etapa 4 | RF-PER-006: Etapa 2; el criterio arranca en Etapa 4 |
 | CA-093 | Núcleo | Etapa 1 | Etapa 2 | RF-ACC-025: Etapa 1; el criterio arranca en Etapa 2. La tarea "Designar suplente" aparece en Primeros pasos (Etapa 1), pero depende del registro de derechos de datos (RF-PER-012, Etapa 2). |
-| CA-094 | Núcleo | Etapa 2 | Etapa 4 | RF-CAT-008: Etapa 2; el criterio arranca en Etapa 4 |
-| CA-GAR-01 | Garantías y mantenimiento | Etapa 4 | Etapa 5 | RF-GAR-002, RF-GAR-005: Etapa 4; el criterio arranca en Etapa 5 |
-| CA-GAR-04 | Garantías y mantenimiento | Etapa 4 | Fase 2 | RF-GAR-003, RF-GAR-006, RF-GAR-008: Etapa 4; el criterio arranca en Fase 2 |
+| CA-094a | Núcleo | Etapa 2 | Etapa 4 | RF-CAT-008: Etapa 2; el criterio arranca en Etapa 4. RF-CAT-008 (prefijo reservado, Etapa 2) se podría probar antes con CA-017; el resto de CA-094a necesita ingreso manual e importación (Etapa 4). |
+| CA-099 | Núcleo | Etapa 1 | Etapa 4 | RF-PLA-010: Etapa 1; el criterio arranca en Etapa 4. RF-PLA-010 (subir el tope, Etapa 1) ya lo prueba CA-084 para invitaciones; el tope de importaciones necesita importar (Etapa 4). |
 | CA-LIN-09 | Líneas móviles | Fase 2 | Fase 3 | RF-LIN-014, RNF-LIN-001, RNF-LIN-006: Fase 2; el criterio arranca en Fase 3 |
-| CA-NOT-01 | Notificaciones | Etapa 1 | Etapa 5 | RF-NOT-013, RF-NOT-020: Etapa 1; el criterio arranca en Etapa 5. El módulo lo fija en Etapa 5 porque necesita órdenes de compra; el envío base (RF-NOT-013) es de Etapa 1 y se prueba con CA-NOT-12 y CA-NOT-14. |
+| CA-NOT-01 | Notificaciones | Etapa 1 | Etapa 5 | RF-ACC-021, RF-NOT-013, RF-NOT-020: Etapa 1; el criterio arranca en Etapa 5. El módulo lo fija en Etapa 5 porque necesita órdenes de compra; el envío base (RF-NOT-013) es de Etapa 1 y se prueba con CA-NOT-12 y CA-NOT-14. |
 | CA-NOT-07a | Notificaciones | Etapa 1 | Etapa 5 | RF-NOT-013: Etapa 1; el criterio arranca en Etapa 5. Igual que CA-NOT-01: necesita órdenes de compra. |
 | CA-NOT-11 | Notificaciones | Etapa 1 | Fase 2 | RF-NOT-015, RF-NOT-017: Etapa 1; el criterio arranca en Fase 2 |
 | CA-NOT-20 | Notificaciones | Etapa 1 | Etapa 5 | RF-ACC-021, RF-NOT-007, RF-NOT-013: Etapa 1; el criterio arranca en Etapa 5. Igual que CA-NOT-01: necesita órdenes de compra. |
-| CA-PRS-03 | Personas y ubicaciones | Etapa 2 | Etapa 4 | RF-PRS-004, RF-PRS-011: Etapa 2; el criterio arranca en Etapa 4. Pide una laptop asignada (Etapa 4); RF-PRS-011 es de Etapa 2. Propuesta al escuadrón D: partir en 03a (cese sin recursos, Etapa 2; lo cubre hoy CA-052a1 del núcleo) y 03b (con laptop, Etapa 4). |
-| CA-PRS-04 | Personas y ubicaciones | Etapa 2 | Etapa 4 | RF-PRS-011: Etapa 2; el criterio arranca en Etapa 4 |
-| CA-PRV-02 | Proveedores y contratos | Etapa 2 | Fase 2 | RF-PRV-007: Etapa 2; el criterio arranca en Fase 2 |
-| CA-PRV-04 | Proveedores y contratos | Etapa 2 | Fase 2 | RF-PRV-003: Etapa 2; el criterio arranca en Fase 2. Necesita un contrato Vigente (PRV-B, Fase 2); RF-PRV-003 es de Etapa 2. Propuesta al escuadrón A: 04a (Etapa 2) desactivar y reactivar un proveedor con motivo y auditoría; 04b (Fase 2) rechazo por contrato Vigente. |
+| CA-PRS-04 | Personas y ubicaciones | Etapa 2 | Etapa 4 | RF-PRS-011: Etapa 2; el criterio arranca en Etapa 4. Necesita un equipo pendiente (Etapa 4); sin equipos lo cubre CA-052b1 en Etapa 2. |
+| CA-PRS-11 | Personas y ubicaciones | Etapa 2 | Etapa 4 | RF-PER-010: Etapa 2; el criterio arranca en Etapa 4. Importar Personas necesita el asistente de importación (Etapa 4); el alta manual con homónimo es CA-PRS-01d (Etapa 2). |
 
-### Criterios de módulos que cruzan etapas y esperan que su escuadrón los parta (10)
+### Criterios de módulos que cruzan etapas y esperan que su escuadrón los parta (8)
 
 Cubren requisitos de etapas distintas y el módulo no trae partición. Corren en la etapa más tardía (la única donde existe todo lo que piden). Solo los de módulos con parte en la v1 (PRS, ENT, PRV, GAR, NOT) afectan a una etapa de la v1; el resto cruza Fase 2 y Fase 3 (D-076.4: se cierra al activar el módulo).
 
 | Criterio | Requisitos de | Corre en | Propuesta de QA |
 |---|---|---|---|
-| CA-GAR-01 | Etapa 4 a Etapa 5 | Etapa 5 | Corre en Etapa 5 (recepción). La ficha de garantía de un activo importado (RF-GAR-002, Etapa 4) se prueba con CA-GAR-15 y CA-082b mientras tanto. |
-| CA-GAR-04 | Etapa 4 a Fase 2 | Fase 2 | Partir: 04a (Etapa 4) garantía del fabricante Vigente y Vencida al mover el reloj, sin proceso (prueba también RN-018); 04b (Fase 2) garantía extendida y efectiva. |
 | CA-LIN-09 | Fase 2 a Fase 3 | Fase 3 | Fase 2 a Fase 3: se cierra al activar el módulo |
 | CA-NOT-01 | Etapa 1 a Etapa 5 | Etapa 5 |  |
 | CA-NOT-10 | Etapa 1 a Fase 2 | Etapa 1 |  |
@@ -177,9 +173,9 @@ Cubren requisitos de etapas distintas y el módulo no trae partición. Corren en
 | CA-NOT-13 | Etapa 1 a Fase 2 | Etapa 1 |  |
 | CA-NOT-20 | Etapa 1 a Etapa 5 | Etapa 5 |  |
 | CA-PRS-04 | Etapa 2 a Etapa 4 | Etapa 4 | Corre en Etapa 4; el rechazo de anonimizar con pendientes de la Etapa 2 (sin equipos) lo cubre CA-052b1. |
-| CA-PRV-02 | Etapa 2 a Fase 2 | Fase 2 | Partir: 02a (Etapa 2) un proveedor de B pedido por identificador interno responde "no encontrado"; 02b (Fase 2) lo mismo con el contrato. |
+| CA-PRS-11 | Etapa 2 a Etapa 4 | Etapa 4 | Importar Personas es de la Etapa 4 (RF-PER-010 con importación). El alta manual con homónimo ya es CA-PRS-01d (Etapa 2). |
 
-### Criterios que arrancan en una etapa y se completan en otra (25)
+### Criterios que arrancan en una etapa y se completan en otra (21)
 
 | Criterio | Arranca en | Se completa en | Fuente |
 |---|---|---|---|
@@ -204,157 +200,325 @@ Cubren requisitos de etapas distintas y el módulo no trae partición. Corren en
 | CA-077 | Etapa 1 | Fase 2 | tabla 22.1 del documento funcional |
 | CA-NOT-08 | Etapa 1 | Fase 2 | tabla del módulo o lectura de QA |
 | CA-NOT-09 | Etapa 1 | Fase 2 | tabla del módulo o lectura de QA |
-| CA-PRS-01 | Etapa 2 | Etapa 4 | tabla del módulo o lectura de QA |
-| CA-PRS-08 | Etapa 2 | Etapa 4 | tabla del módulo o lectura de QA |
-| CA-PRS-12 | Etapa 2 | Etapa 4 | tabla del módulo o lectura de QA |
-| CA-PRS-14 | Etapa 2 | Etapa 4 | tabla del módulo o lectura de QA |
 
-### Criterios sin requisito RF que los cite (57)
+### Criterios sin requisito RF que los cite (105)
 
-Citan solo reglas RN, seguridad (RS) o secciones. Los del núcleo (CA-003, CA-051, CA-083, CA-085, CA-086, CA-088) los cita una regla RN o RS y son válidos. Los de módulos heredan la etapa del módulo; confirmar con cada escuadrón.
+Citan solo reglas RN, seguridad (RS) o secciones. Los del núcleo (CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j) los cita una regla RN o RS y son válidos. Los de módulos heredan la etapa del módulo; confirmar con cada escuadrón.
 
-CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-AYU-26, CA-CAM-07, CA-CMD-15, CA-CMD-16, CA-CMD-17, CA-CMD-19, CA-CMD-20, CA-DOM-08, CA-DOM-14, CA-ENT-05, CA-ENT-09, CA-ENT-14, CA-GAR-14, CA-GAR-18, CA-INT-04, CA-INT-10, CA-INT-21, CA-INT-22, CA-INT-23, CA-LIC-18, CA-LIC-19, CA-LIC-20, CA-LIN-15, CA-LIN-16, CA-NOT-19, CA-ONB-06, CA-ONB-08, CA-ONB-09, CA-ONB-11, CA-ONB-14, CA-POR-02, CA-POR-03, CA-POR-09, CA-POR-13, CA-PRB-13, CA-PRB-15, CA-PRE-11, CA-PRE-12, CA-PRE-13, CA-PRE-16, CA-PRE-20, CA-PRE-23, CA-PRE-24, CA-PRE-25, CA-PRE-26, CA-PRV-14, CA-REP-07, CA-REP-18, CA-REP-19, CA-REP-20, CA-REP-21
+CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j, CA-ASI-03, CA-ASI-04, CA-ASI-05, CA-ASI-06, CA-ASI-07, CA-ASI-08, CA-ASI-09, CA-ASI-10, CA-ASI-11, CA-ASI-12, CA-ASI-13, CA-ASI-14, CA-ASI-15, CA-ASI-16, CA-ASI-17, CA-ASI-18, CA-ASI-19, CA-ASI-20, CA-ASI-21, CA-ASI-22, CA-ASI-23, CA-ASI-24, CA-ASI-25, CA-ASI-26, CA-ASI-27, CA-ASI-28, CA-ASI-29, CA-ASI-30, CA-ASI-31, CA-ASI-32, CA-ASI-33, CA-ASI-37, CA-ASI-38, CA-ASI-39, CA-ASI-40, CA-ASI-41, CA-ASI-42, CA-ASI-43, CA-ASI-44, CA-ASI-45, CA-ASI-47, CA-ASI-49, CA-ASI-50, CA-ASI-51, CA-ASI-52, CA-AYU-26, CA-CAM-07, CA-CMD-15, CA-CMD-16, CA-CMD-17, CA-CMD-19, CA-CMD-20, CA-DOM-08, CA-DOM-14, CA-ENT-05, CA-ENT-09, CA-ENT-14, CA-GAR-14, CA-GAR-18, CA-INT-04, CA-INT-10, CA-INT-21, CA-INT-22, CA-INT-23, CA-LIC-18, CA-LIC-19, CA-LIC-20, CA-LIN-15, CA-LIN-16, CA-NOT-19, CA-ONB-06, CA-ONB-08, CA-ONB-09, CA-ONB-11, CA-ONB-14, CA-POR-02, CA-POR-03, CA-POR-09, CA-POR-13, CA-PRB-13, CA-PRB-15, CA-PRE-11, CA-PRE-12, CA-PRE-13, CA-PRE-16, CA-PRE-20, CA-PRE-23, CA-PRE-24, CA-PRE-25, CA-PRE-26, CA-PRV-04b, CA-PRV-14, CA-REP-07, CA-REP-18, CA-REP-19, CA-REP-20, CA-REP-21
 
 ### Criterios ambiguos o por partir (H-QA-31, D-076.3)
 
 | Criterio | Corre en | Problema y propuesta de QA |
 |---|---|---|
-| CA-006 | Etapa 1 | Pide "el mismo tiempo de respuesta" sin tolerancia. Propuesta de QA: diferencia menor a 100 ms en el percentil 95 sobre 200 intentos con correo existente y 200 con correo inexistente. |
-| CA-077 | Etapa 1 | Dice "reloj fijado" sin fechas ni datos. Propuesta de QA: reloj R0 2026-11-02 08:00; empresas A (Lima) y B (Ciudad de México) con un vencimiento a 7 días cada una; correr dos veces el mismo día (un solo aviso por empresa); adelantar 3 días sin correr (la corrida siguiente procesa los 3 días en orden); empresa D suspendida se salta. |
-| CA-038 | Etapa 4 | Junta ocho aserciones (vista previa, nada se guarda, no confirmar con errores, corregir, deshacer, serie dañada, y las de RF-IMP-008 y 009 que no menciona). D-076.3 pide partirlo. Propuesta de QA: 038a vista previa y todo o nada; 038b deshacer el lote; 038c series dañadas y formatos de fecha; 038d stock inicial y estados. |
-| CA-053 | Etapa 7 | Junta diez aserciones (respaldo, restauración con cronómetro, plan de vuelta atrás, manuales, rendimiento, procedimiento de incidente). Propuesta de QA: 053a respaldo y restauración; 053b vuelta atrás; 053c rendimiento (RNF-011); 053d manuales y procedimiento de incidente. |
-| CA-ENT-08 | Etapa 4 | "falla la entrega de uno" no dice cómo provocar la falla. Propuesta: el segundo equipo ya está Asignado a otra Persona. |
-| CA-ENT-10 | Etapa 4 | "cuando pasa el tiempo" no dice cuánto ni con qué reloj. Propuesta: reloj +30 días y +365 días desde el cese (reloj R5). |
-| CA-PRS-14 | Etapa 2 | Dice "cesada hace más de 2 años", pero la anonimización manual por derechos no exige plazo (RN-PRS-020); solo la automática lo exige. Separar el caso manual del automático. |
-| CA-PRS-16 | Etapa 2 | Cita RN-PRS-004 (referencia correlativa) cuando prueba el alcance "propio" sin Persona vinculada (regla del registro de permisos). |
-| CA-082 | Etapa 1 | La cabecera dice "(RF-ACC-018, RF-INV-008 en CA-082b)": parece cubrir RF-INV-008 (Etapa 4) en una etapa 1. Dejar solo RF-ACC-018. |
-| CA-094 | Etapa 4 | Prueba el código ACTV con una recepción (Etapa 5) y con el correo de un aviso de garantía (Fase 2), que no existen en la Etapa 4. En la Etapa 4 se prueba con ingreso manual (RF-INV-025) e importación; la recepción y el correo se completan en la Etapa 5 y en Fase 2. Propuesta: partir en 094a (Etapa 4: contador por empresa, concurrencia, búsqueda, prefijo reservado, no se reutiliza) y 094b (Etapa 5: recepción; Fase 2: correo de garantía). |
-| CA-024 | Etapa 4 | Cubre RF-OC-028 (Etapa 7) y corre en Etapa 4: o se saca RF-OC-028 de su cabecera o se parte. |
+| CA-PRS-16 | Etapa 2 | Cita RN-PRS-004 (referencia correlativa) cuando prueba el alcance «propio» sin Persona vinculada (regla del registro de permisos). Cambiar la cita. |
+| CA-095f | Etapa 2 | Dice «el permiso lo fija el registro de permisos, P-017», pero ese permiso no existe todavía. Se puede probar que un Administrador de empresa no declara ni levanta (rechazo); no se puede probar el caso positivo de la plataforma hasta que P-017 lo cree. Mientras tanto QA lo ejecuta solo por la mitad del rechazo y lo declara parcial. |
+| CA-095g | Etapa 2 | Igual que CA-095f: el acto de declarar y de levantar necesita el permiso de P-017. Además P-017 pregunta si levantar exige una segunda persona de plataforma; el criterio no lo dice. |
+| CA-095j | Fase 2 | Está en Fase 2 «al activar cada módulo», pero la v1 ya tiene rutinas de purga o anonimización: contactos de proveedor (Etapa 2), anonimización automática de Personas con la bandera de pruebas (Etapa 2), filas de importación en preparación a los 7 días (Etapa 4) y eventos de seguridad a los 12 meses (Etapa 7). Propuesta de QA: partir en 095j1 (Etapa 2: contactos de proveedor y Personas), 095j2 (Etapa 4: filas de importación), 095j3 (Etapa 7: eventos de seguridad) y dejar 095j para los módulos de Fase 2 (registro de envíos, IP del acuse). |
+| CA-102 | Etapa 5 | No dice qué pasa cuando la suma es exactamente el límite (5.000,00) ni cuando la compra anterior es de hace exactamente 30 días. Propuesta de QA: avisa solo si la suma supera el límite y cuenta 30 días corridos con el día 30 incluido; agregar los casos 5.000,00 (sin aviso) y día 30 (con aviso) y día 31 (sin aviso). |
+| CA-103 | Etapa 5 | Prueba el borrador sin cambios. El caso con cambios espera a P-019 (¿7 días desde que se creó o desde el último cambio?). No se puede probar más hasta que el Gerente de TI responda. |
+| CA-094a | Etapa 4 | Incluye «crear una categoría con el prefijo `ACTV` se rechaza», que se puede probar desde la Etapa 2 (RF-CAT-008). Propuesta: que CA-017 nombre `ACTV`; CA-094a lo repite. |
+| CA-GAR-04a | Etapa 4 | Dice «el 15/03/2027 a las 23:59 todavía» sin decir en qué zona horaria. Propuesta de QA: la de la empresa, como CA-046 y CA-082b; agregar una empresa de otra zona para el mismo instante. |
+| CA-038d | Etapa 4 | Usa los textos `EN STOCK`, ` en reparación ` y `Chatarra`; el Excel real puede traer otros (P-007). La prueba usa esos tres hasta que llegue el Excel. |
+| CA-105 | Etapa 0 | Es una verificación de documentos que depende de que el Cliente (CEO) entregue el Excel, la orden de compra y la orden de servicio reales (P-002). Mientras no lleguen, no se puede ejecutar y la Etapa 0 no cierra en ese punto. |
+| CA-024 | Etapa 4 | «Sin hacer» del Analista. La cabecera cubre RF-OC-028 (Etapa 7, P-009) y el criterio corre en Etapa 4: no se puede ejecutar entero. Propuesta de QA: Quitar RF-OC-028 de la cabecera de CA-024 y de su fila (la baja con motivo ya la prueba CA-024 en Etapa 4); la decisión P-009 de la Etapa 7 se verifica con un criterio documental nuevo. |
+| CA-053 | Etapa 7 | «Sin hacer» del Analista. Sigue entero: junta respaldo, restauración con cronómetro, vuelta atrás, manuales, rendimiento y procedimiento de incidente (D-076.3 pide partirlo). Propuesta de QA: 053a respaldo y restauración (RNF-014, RF-DAT-005); 053b vuelta atrás (RNF-015); 053c rendimiento (RNF-010 a 012; RNF-011 corre en la carga nocturna desde la Etapa 4, se completa en la 7); 053d manuales, costo y procedimiento de incidente (RNF-016 a 018, RF-DAT-015). |
+| CA-ENT-08 | Etapa 4 | «Sin hacer» del Analista. Dice «falla la entrega de uno» y no dice cómo se provoca la falla. Propuesta de QA: Dada la inyección de fallos del entorno de pruebas: se corta la conexión entre la primera y la segunda asignación del traspaso; resultado esperado: ninguna devolución ni entrega registrada, los dos equipos siguen con la Persona cesada y no queda ningún acta. Segundo caso sin inyección: la Persona destino pasa a Cesada justo antes de confirmar. |
+| CA-ENT-10 | Etapa 4 | «Sin hacer» del Analista. Dice «cuando pasa el tiempo» sin decir cuánto ni con qué reloj. Propuesta de QA: Con el reloj de pruebas a +30 días y a +365 días desde el cese (reloj R5), el equipo sigue Asignado como «Pendiente de devolución» y no suma a pérdidas. |
+
+### Etapa de los 67 criterios nuevos: lectura de QA (2026-10-29)
+
+QA leyó cada criterio nuevo o partido desde la versión del 2026-10-26 y decidió en qué etapa corre y por qué. La columna «Documento» es la etapa que fija el documento funcional (tabla 22.1) o el módulo. **Coinciden en los 67 casos salvo los marcados.** Donde QA no está de acuerdo con el documento, la columna lo dice y el motivo queda en ambiguos.
+
+| Criterio | Etapa según QA | Documento | Por qué |
+|---|---|---|---|
+| CA-015g | Etapa 1 | Etapa 1 | Usa solo lo de la Etapa 1: autorizaciones de soporte (RF-PLA-005), reloj y tres personas de plataforma. Sin campos secretos ni solicitudes de derechos, por eso esa mitad es CA-015h. |
+| CA-015h | Etapa 2 | Etapa 2 | Necesita un campo secreto (CA-042, Etapa 2) y la cola de solicitudes de derechos (RF-PER-012, Etapa 2); antes no hay qué proteger. RF-PLA-013 es de Etapa 1: queda anotado como «arranca después». |
+| CA-015i | Etapa 1 | Etapa 1 | Lectura válida: solo esa empresa y solo lectura. Usa la autorización de CA-015g y el rol de plataforma de CA-015a. |
+| CA-038a | Etapa 4 | Etapa 4 | La importación nace en la Etapa 4 (RF-IMP-001). Pide el trabajador reiniciable (CI-16) y un SKU que exige serie. |
+| CA-038b | Etapa 4 | Etapa 4 | Deshacer el lote necesita el lote ya confirmado y una asignación posterior (entregas, Etapa 4). |
+| CA-038c | Etapa 4 | Etapa 4 | Necesita un SKU con 10 activos y un campo identificador (CA-065a, Etapa 2; unidades CA-065b, Etapa 4). |
+| CA-038d | Etapa 4 | Etapa 4 | El stock inicial por ubicación y los 5 estados del activo existen desde la Etapa 4 (RF-INV-001). Los sinónimos de estado dependen de P-007. |
+| CA-094a | Etapa 4 | Etapa 4 | Se prueba con ingreso manual (RF-INV-025) y con importación, ambos de la Etapa 4. La parte del prefijo `ACTV` se podría probar antes (ver ambiguos). |
+| CA-094b | Etapa 5 | Etapa 5 | Necesita la recepción de una orden de compra (RF-OC-035), que existe desde la Etapa 5. |
+| CA-094c | Fase 2 | Fase 2 | Necesita los avisos de garantía por correo (GAR-B con NOT-completo), de Fase 2. |
+| CA-095a | Etapa 2 | Etapa 2 | La anonimización manual con dos personas es de la Etapa 2 (RF-PER-013); el registro de anonimizaciones existe desde la Etapa 2 (RF-DAT-016). |
+| CA-095b | Etapa 2 | Etapa 2 | Igual que CA-095a: dos Personas cesadas de la Etapa 2; congelación solo sobre una. |
+| CA-095c | Etapa 2 | Etapa 2 | El registro de solicitudes de derechos es de la Etapa 2 (RF-PER-012). |
+| CA-095d | Etapa 2 | Etapa 2 | Retomar la propuesta rechazada de CA-095a; no necesita nada posterior. |
+| CA-095e | Etapa 2 | Etapa 2 | Levantamiento parcial con dos Personas y dos personas para anonimizar; todo de la Etapa 2. Espera a P-017 en lo del permiso. |
+| CA-095f | Etapa 2 | Etapa 2 | Quién declara y levanta se decide por el registro de permisos; el rechazo se prueba en la Etapa 2. El caso positivo espera a P-017. |
+| CA-095g | Etapa 2 | Etapa 2 | El registro de plataforma y la auditoría de la empresa existen desde la Etapa 1; el rastro se prueba junto con la primera anonimización (Etapa 2). |
+| CA-095h | Etapa 7 | Etapa 7 | El proceso de mantenimiento separado de la aplicación, con dos personas, es de la Etapa 7 (RF-AUD-016). |
+| CA-095i | Etapa 7 | Etapa 7 | Restaurar un respaldo y reaplicar registros (RS-49) es el ensayo de la Etapa 7 (CI-17); manual con apoyo de integración. |
+| CA-095j | Fase 2 | Fase 2 | El documento la deja en Fase 2. QA no está de acuerdo en que toda ella lo sea: la v1 ya tiene cuatro rutinas (ver ambiguos). |
+| CA-096 | Etapa 5 | Etapa 5 | Necesita órdenes de compra en dos monedas, la lista, la bandeja «Por aprobar» y la exportación (RF-OC-005, Etapa 5). |
+| CA-097 | Etapa 5 | Etapa 5 | El interruptor único con ocho casillas es de la Etapa 5 (RF-OC-026). |
+| CA-098 | Etapa 5 | Etapa 5 | Activar una casilla pide motivo; la segunda verificación viene de la Etapa 1, la casilla de la Etapa 5. |
+| CA-099 | Etapa 4 | Etapa 4 | El tope de 10 importaciones por día necesita los tres tipos de importación (activos, Personas y SKU), de la Etapa 4. Subir el tope por la plataforma (RF-PLA-010) ya existe desde la Etapa 1. |
+| CA-100 | Etapa 4 | Etapa 4 | Una entrada de lote en la auditoría necesita la importación (Etapa 4). |
+| CA-101 | Etapa 4 | Etapa 4 | Asignar, reparar, dar de baja y reingresar son de la Etapa 4 (RF-INV-018, RF-ENT-001). |
+| CA-102 | Etapa 5 | Etapa 5 | Necesita órdenes con proveedor, límite de aprobación y reloj; es de la Etapa 5. |
+| CA-103 | Etapa 5 | Etapa 5 | El borrador de recepción es de la Etapa 5 (RF-OC-049). |
+| CA-104a | Etapa 5 | Etapa 5 | La pantalla de aprobación es de la Etapa 5 (RF-OC-051). |
+| CA-104b | Etapa 5 | Etapa 5 | Necesita un módulo de prueba que use el espacio de la pantalla de aprobación; no existe un módulo real hasta Fase 3 (PRE). |
+| CA-105 | Etapa 0 | Etapa 0 | Verificación documental de los archivos reales que entrega el Cliente (CEO); es condición de cierre de la Etapa 0 (D-064 condición 8). No se puede ejecutar hasta que lleguen (P-002). |
+| CA-GAR-01a | Etapa 4 | Etapa 4 | Garantía de un activo ingresado a mano (RF-INV-025): ficha y fecha, sin recepción. |
+| CA-GAR-01b | Etapa 5 | Etapa 5 | Captura de la garantía en la recepción de un lote (RF-GAR-001). |
+| CA-GAR-01c | Etapa 5 | Etapa 5 | Los activos creados por la recepción muestran la garantía. |
+| CA-GAR-04a | Etapa 4 | Etapa 4 | Vigente y Vencida al mover el reloj, sin proceso diario (RN-018); necesita una sola garantía por activo. |
+| CA-GAR-04b | Fase 2 | Fase 2 | La garantía extendida y la efectiva necesitan varias garantías por activo (RF-GAR-004, Fase 2). |
+| CA-GAR-04c | Etapa 4 | Etapa 4 | Filtro «vence en los próximos 30 días» (RF-GAR-003). |
+| CA-GAR-04d | Etapa 4 | Etapa 4 | Filtro «sin garantía vigente» (RF-GAR-003). |
+| CA-GAR-04e | Etapa 4 | Etapa 4 | Corregir fechas con motivo (RF-GAR-006). |
+| CA-GAR-04f | Fase 2 | Fase 2 | Una ampliación es una garantía nueva: necesita varias garantías por activo (RF-GAR-004). |
+| CA-PRS-01a | Etapa 2 | Etapa 2 | Alta de Persona (RF-PRS-001) sin cuenta. |
+| CA-PRS-01b | Etapa 2 | Etapa 2 | Persona sin cuenta no aparece en usuarios. |
+| CA-PRS-01c | Etapa 2 | Etapa 2 | Centro de costo efectivo (RF-PRS-006). |
+| CA-PRS-01d | Etapa 2 | Etapa 2 | Homónimo con aviso en el alta manual. El script lo ponía en Etapa 4 por RF-PER-010; se corrigió. |
+| CA-PRS-03a | Etapa 2 | Etapa 2 | Cese de una Persona sin equipos, líneas ni procesos (RF-PRS-004, 011). |
+| CA-PRS-03b | Etapa 4 | Etapa 4 | Pide una laptop asignada (RF-INV-029, Etapa 4). |
+| CA-PRS-03c | Etapa 4 | Etapa 4 | La marca «Pendiente de devolución» y los reportes de pérdidas son de la Etapa 4. |
+| CA-PRS-08a | Etapa 2 | Etapa 2 | Árbol de ubicaciones y ciclos (RF-PRS-007). |
+| CA-PRS-08b | Etapa 2 | Etapa 2 | Mover un Piso con sus Salas (RF-PRS-007). |
+| CA-PRS-08c | Etapa 4 | Etapa 4 | Mover un Piso con 40 equipos sin movimiento por activo necesita activos (RF-INV-027). |
+| CA-PRS-08d | Etapa 2 | Etapa 2 | Marcar un almacén de TI (RF-PRS-008). |
+| CA-PRS-12a | Etapa 4 | Etapa 4 | Asignar un equipo a una Persona Cesada necesita activos y asignaciones. |
+| CA-PRS-12b | Etapa 2 | Etapa 2 | Reactivar con motivo (RF-PRS-012). |
+| CA-PRS-12c | Etapa 4 | Etapa 4 | Asignar un equipo a una Persona reactivada necesita asignaciones. |
+| CA-PRS-12d | Etapa 2 | Etapa 2 | Una Persona anonimizada no se reactiva (RF-PRS-012). |
+| CA-PRS-14a | Etapa 2 | Etapa 2 | Anonimización manual con dos personas (RF-PRS-015). |
+| CA-PRS-14b | Etapa 2 | Etapa 2 | Nombre y correo canarios no aparecen en ninguna parte (RNF-PRS-009). |
+| CA-PRS-14c | Etapa 2 | Etapa 2 | La auditoría no se toca. |
+| CA-PRS-14d | Etapa 4 | Etapa 4 | Historial de asignaciones necesita asignaciones cerradas (RF-INV-015). |
+| CA-PRS-14e | Etapa 4 | Etapa 4 | Copia del nombre en el acta hasta `retener_hasta` necesita actas (RF-DAT-006, 011). |
+| CA-PRS-14f | Etapa 2 | Etapa 2 | La anonimización automática está apagada; se prueba con el reloj de pruebas (RN-PRS-019). |
+| CA-PRV-02a | Etapa 2 | Etapa 2 | Proveedor de otra empresa por identificador interno (RF-PRV-007). |
+| CA-PRV-02b | Fase 2 | Fase 2 | Necesita contratos (PRV-B, Fase 2). |
+| CA-PRV-02c | Fase 2 | Fase 2 | Necesita contratos y vínculos con activos (PRV-B, Fase 2). |
+| CA-PRV-04a | Etapa 2 | Etapa 2 | Desactivar un proveedor con motivo (RF-PRV-003). |
+| CA-PRV-04b | Fase 2 | Fase 2 | Necesita un contrato Vigente (PRV-B, Fase 2). |
+| CA-PRV-04c | Etapa 2 | Etapa 2 | Reactivar un proveedor con motivo (RF-PRV-003). |
+
+### Módulos nuevos en redacción
+
+| Archivo | Sigla | Módulo | Estado al 2026-10-29 | Qué hace QA |
+|---|---|---|---|---|
+| `docs/modulos/microsoft-entra-intune.md` | MSF | Microsoft Entra e Intune (en redacción) | incompleto | NO incluido: pendiente. Se incorpora al regenerar cuando el archivo exista con sigla, requisitos, reglas RN, sección de criterios y al menos un criterio `CA-MSF-NN`. |
+| `docs/modulos/asistente-ia.md` | ASI | Asistente de IA (en redacción) | completo | incluido en las cifras |
+
+Tampoco hay mención de estos módulos en el documento funcional (sección 26.2 de prefijos), en el registro de permisos ni en las decisiones; QA no puede suponer su alcance. Cuando lleguen: criterios por etapa, trazabilidad, aislamiento por empresa de cada tabla nueva y permisos denegados por petición directa, como en todo módulo.
 
 ---
 
 ## Detalle por módulo
 
-### Núcleo (documento funcional, sección 22) (116)
+### Núcleo (documento funcional, sección 22) (145)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
-| CA-001 | RN-001, RS-10, RS-13, RF-AUD-012, RF-PER-008, RF-CAT-003 | Etapa 1 | Etapa 1 | Etapa 2 | integración | sí |  | documento-funcional.md:928 |
-| CA-002 | RN-001, RF-AUD-010 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:929 |
-| CA-003 | RS-11 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:930 |
-| CA-004 | RF-ACC-011, RF-ACC-012, RF-DAT-009 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:931 |
-| CA-005 | RF-ACC-003, 007, 009, 010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:932 |
-| CA-006 | RF-ACC-001, 004, 005, 017 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:933 |
-| CA-007 | RF-ACC-013, 024, RF-PLA-001 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:934 |
-| CA-008 | RF-ACC-015, 016, RF-USR-003, RF-ROL-011 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:935 |
-| CA-009 | RF-ROL-008, RF-ACC-020 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:936 |
-| CA-010 | RF-ROL-007, RF-ACC-008 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:937 |
-| CA-011a | RF-ROL-004, 010, 014 | Etapa 1 | Etapa 1 | Etapa 2 | integración + navegador | sí |  | documento-funcional.md:938 |
-| CA-011b | RF-ROL-003, 005, PER-009, IMP-013, AUD-007, INV-032 | Etapa 1 | Etapa 1 | Etapa 4 | integración + navegador | sí |  | documento-funcional.md:939 |
-| CA-012 | RF-OC-021, 022, 025, RF-ROL-009 | Etapa 1 | Etapa 5 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:940 |
-| CA-013 | RF-OC-023, 024 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:941 |
-| CA-014 | RF-OC-026 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:942 |
-| CA-015a | RF-PLA-004, 006 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:943 |
-| CA-015b | RF-PLA-005, RF-AUD-017 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:944 |
-| CA-015c | RF-PLA-003, RF-ACC-019 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:945 |
-| CA-015d | RF-ACC-002, 022, RF-PLA-002 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:948 |
-| CA-015e | RF-PLA-011, 012 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:946 |
-| CA-015f | RF-PLA-001, 009 | Etapa 1 | Etapa 1 | - | integración | sí | Incluye un paso manual: verificar la identidad por otro medio | documento-funcional.md:947 |
-| CA-016a | RF-PER-001 a 003, RF-DAT-001, RF-CAT-024 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:959 |
-| CA-016b | RF-PER-001, RF-INV-013 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:960 |
-| CA-017 | RF-SKU-001, 002, RF-CAT-007 a 009, 023, 025 | Etapa 2 | Etapa 2 | Etapa 3 | unitaria | sí |  | documento-funcional.md:961 |
-| CA-018 | RN-004, RF-SKU-003, 004, RF-OC-003, 046, RF-OS-005 | Etapa 3 | Etapa 3 | Etapa 6 | integración | sí |  | documento-funcional.md:962 |
-| CA-019 | RF-SKU-005, 006, RF-CAT-011 | Etapa 2 | Etapa 3 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:963 |
-| CA-020 | RF-CAT-002, 010, 012 a 016, 022, RF-SKU-013, 015, 016, RF-OC-039 | Etapa 2 | Etapa 3 | Etapa 5 | unitaria | sí | Arranca después de su requisito | documento-funcional.md:964 |
-| CA-021 | RF-CAT-017 a 021 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:965 |
-| CA-022 | RF-SKU-007, 008 | Etapa 3 | Etapa 3 | - | integración | sí |  | documento-funcional.md:966 |
-| CA-023 | RF-INV-002, 003, 006, RF-SKU-009 | Etapa 3 | Etapa 4 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:975 |
-| CA-024 | RF-INV-001, 011, 018, 031, RF-UX-009, RF-OC-028 | Etapa 4 | Etapa 4 | - | integración | sí | Corre antes de lo que necesita | documento-funcional.md:976 |
-| CA-025 | RF-INV-013 a 015, 024 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:978 |
-| CA-026 | RF-INV-019 a 021 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:979 |
-| CA-027 | RF-INV-022 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:980 |
-| CA-028 | RF-INV-004 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:981 |
-| CA-029 | RF-OC-001, 011 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:993 |
-| CA-030 | RF-OC-010, 014, 044 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:994 |
-| CA-031 | RF-OC-005, 015, 018 a 020 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:995 |
-| CA-032 | RF-OC-002, 004 a 008, 042, 043, RF-SKU-010, 011, RF-CAT-005, RF-INV-023 | Etapa 2 | Etapa 5 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:997 |
-| CA-033 | RF-OC-029, 035, 036, 040 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:999 |
-| CA-034 | RF-OC-030, 031, 033, 037, 038, RNF-005 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1000 |
-| CA-035 | RF-OC-033, 034 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1001 |
-| CA-036 | RF-OC-032, RF-INV-007 | Etapa 4 | Etapa 5 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1003 |
-| CA-037 | RF-OC-012, 013 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1005 |
-| CA-038 | RF-IMP-001 a 010, RF-INV-005 | Etapa 0 | Etapa 4 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1010 |
-| CA-039 | RF-IMP-011, 014, 015, RS-42 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1012 |
-| CA-040a | RF-AUD-001, 002, RN-006; Etapa 1 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:1016 |
-| CA-040b | RF-AUD-018, RF-DAT-002; Etapa 7 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí |  | documento-funcional.md:1017 |
-| CA-041 | RF-AUD-003 a 005, 008, 009, 013, 019, RF-USR-007, RF-ROL-013, RF-PLA-007 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:1018 |
-| CA-042 | RF-CAT-028, RF-SKU-013, 014, RF-AUD-006 | Etapa 1 | Etapa 2 | Etapa 4 | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:971 |
-| CA-043 | RF-EXP-005, 006, 007, RNF-006 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | documento-funcional.md:1013 |
-| CA-044 | RF-OS-001 a 011, RF-INV-012 | Etapa 6 | Etapa 6 | Fase 2 | unitaria | sí |  | documento-funcional.md:1040 |
-| CA-045 | RF-AUD-011, RN-007, RF-USR-002, RF-CAT-004 | Etapa 1 | Etapa 1 | Etapa 5 | integración | sí |  | documento-funcional.md:1020 |
-| CA-046 | RF-INV-016, 017, RF-DAT-006, RNF-002 | Etapa 1 | Etapa 4 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:986 |
-| CA-047 | RF-ROL-001, 002, 006, 012, RF-USR-001 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:949 |
-| CA-048 | RNF-007, RF-CAT-001, RF-SKU-012, RF-UX-007 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:1042 |
-| CA-049 | RF-ACC-023, RF-DAT-014 | Etapa 1 | Etapa 1 | - | navegador | sí |  | documento-funcional.md:950 |
-| CA-050a | RNF-003, 004, RF-UX-010, 012 | Etapa 1 | Etapa 1 | Etapa 4 | navegador | sí | Seguimiento (no bloquea) hasta la etapa en que se completa; bloquea desde allí | documento-funcional.md:1043 |
-| CA-050b | RNF-001, 008, RF-UX-001 a 003, 005, 006, 011, RF-ACC-025 | Etapa 1 | Etapa 1 | Etapa 5 | integración + navegador | sí | Seguimiento (no bloquea) hasta la etapa en que se completa; bloquea desde allí | documento-funcional.md:1044 |
-| CA-051 | RN-014 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:1045 |
-| CA-052a1 | RF-PER-005, 011 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1021 |
-| CA-052a2 | RF-PER-006 | Etapa 2 | Etapa 4 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1022 |
-| CA-052b1 | RF-PER-013 | Etapa 2 | Etapa 2 | - | navegador | sí |  | documento-funcional.md:1023 |
-| CA-052b2 | RF-PER-006, 013 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1024 |
-| CA-052c | RF-USR-001, 003, 008 | Etapa 1 | Etapa 2 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1025 |
-| CA-052d | RF-USR-005, RF-PER-007 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1026 |
-| CA-053 | RNF-010 a 018, RF-DAT-015 | Etapa 0 | Etapa 7 | - | manual (con apoyo de integración) | sí | Arranca después de su requisito | documento-funcional.md:1047 |
-| CA-054a | RF-AUD-014, 015, RF-PER-004, 013, 014, RF-DAT-016 | Etapa 1 | Etapa 2 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1027 |
-| CA-054b | RF-DAT-006, 011 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1028 |
-| CA-054c | RF-DAT-003, 005, RF-AUD-016 | Etapa 1 | Etapa 7 | - | manual (con apoyo de integración) | sí | Arranca después de su requisito | documento-funcional.md:1029 |
-| CA-055 | RF-OC-015, 016, 017, 047, 048, RF-OS-008 | Etapa 5 | Etapa 5 | Etapa 6 | unitaria | sí |  | documento-funcional.md:996 |
-| CA-056 | RF-IMP-004, 005, RF-DAT-004 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1011 |
-| CA-057 | RF-IMP-018, RF-ROL-002; Fase 3 | Etapa 1 | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Arranca después de su requisito | documento-funcional.md:1046 |
-| CA-058 | RF-INV-009, 010, 024, 028 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:977 |
-| CA-059 | RF-INV-025 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:982 |
-| CA-060a | RF-CAT-006 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:983 |
-| CA-060b | RF-INV-027 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:984 |
-| CA-061 | RF-OC-010, 049, 050, RF-SKU-010 | Etapa 3 | Etapa 5 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1002 |
-| CA-062 | RF-OC-032 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1004 |
-| CA-063 | RF-INV-026 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:985 |
-| CA-064a | RF-CAT-027 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:967 |
-| CA-064b | RF-CAT-027, RF-SKU-013 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:968 |
-| CA-065a | RF-CAT-012 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:969 |
-| CA-065b | RF-CAT-012, 029 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:970 |
-| CA-066 | RF-AUD-010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1019 |
-| CA-067 | RF-EXP-001 a 004, RF-PLA-010 | Etapa 1 | Etapa 2 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1014 |
-| CA-068 | RF-ACC-006, 026 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:951 |
-| CA-069 | RF-ACC-014, RNF-013 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:952 |
-| CA-070 | RF-OC-026, RF-PLA-008 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1006 |
-| CA-071 | RF-EMP-001 a 004 | Etapa 1 | Etapa 1 | Etapa 5 | navegador | sí |  | documento-funcional.md:1034 |
-| CA-072 | RF-OC-006, 045 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:998 |
-| CA-073 | RF-DAT-008, 010, RNF-009 | Etapa 0 | Etapa 1 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1030 |
-| CA-074 | RF-ACC-021, RF-DAT-012, RF-CAT-026 | Etapa 1 | Etapa 1 | Etapa 5 | integración | sí |  | documento-funcional.md:1031 |
-| CA-075 | RF-EMP-005 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1033 |
-| CA-076 | RF-PER-012, RF-DAT-007, 013 | Etapa 2 | Etapa 2 | Fase 2 | integración + navegador | sí |  | documento-funcional.md:1032 |
-| CA-077 | RNF-019 a 022, RF-ROL-015 | Etapa 1 | Etapa 1 | Fase 2 | integración | sí |  | documento-funcional.md:1035 |
-| CA-078 | RF-OC-009, RS-47, RS-42 | Etapa 5 | Etapa 5 | - | navegador | sí |  | documento-funcional.md:1036 |
-| CA-079 | RF-ACC-012 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:953 |
-| CA-079b | RF-INV-030 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:987 |
-| CA-080 | RF-UX-004 | Etapa 6 | Etapa 6 | - | unitaria | sí |  | documento-funcional.md:1041 |
-| CA-081 | RF-ACC-013 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:954 |
-| CA-081b | RF-PER-006, RF-INV-029 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:988 |
-| CA-082 | RF-ACC-018, RF-INV-008 en CA-082b | Etapa 1 | Etapa 1 | - | integración | sí | Corre antes de lo que necesita | documento-funcional.md:955 |
-| CA-082b | RF-INV-008 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:989 |
-| CA-083 | RS-51 | - | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:1051 |
-| CA-084 | RF-PLA-010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1052 |
-| CA-085 | RN-008 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:1053 |
-| CA-086 | RN-015 | - | Etapa 2 | - | integración | sí |  | documento-funcional.md:1054 |
-| CA-087 | RN-016, RF-CAT-003 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1055 |
-| CA-088 | RN-020 | - | Etapa 2 | - | integración | sí |  | documento-funcional.md:1056 |
-| CA-089 | RF-OC-019, PS-232 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1057 |
-| CA-090 | RNF-013 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1058 |
-| CA-091 | RF-DAT-013, PS-234 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1059 |
-| CA-092 | RF-CAT-026 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1060 |
-| CA-093 | RF-PER-012, RF-ACC-025 | Etapa 1 | Etapa 2 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1061 |
-| CA-094 | RF-INV-034, RN-023, RN-004, RF-CAT-008 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1062 |
+| CA-001 | RN-001, RS-10, RS-13, RF-AUD-012, RF-PER-008, RF-CAT-003 | Etapa 1 | Etapa 1 | Etapa 2 | integración | sí |  | documento-funcional.md:933 |
+| CA-002 | RN-001, RF-AUD-010 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:934 |
+| CA-003 | RS-11 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:935 |
+| CA-004 | RF-ACC-011, RF-ACC-012, RF-DAT-009 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:936 |
+| CA-005 | RF-ACC-003, 007, 009, 010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:937 |
+| CA-006 | RF-ACC-001, 004, 005, 017 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:938 |
+| CA-007 | RF-ACC-013, 024, RF-PLA-001 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:939 |
+| CA-008 | RF-ACC-015, 016, RF-USR-003, RF-ROL-011 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:940 |
+| CA-009 | RF-ROL-008, RF-ACC-020 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:941 |
+| CA-010 | RF-ROL-007, RF-ACC-008 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:942 |
+| CA-011a | RF-ROL-004, 010, 014 | Etapa 1 | Etapa 1 | Etapa 2 | integración + navegador | sí |  | documento-funcional.md:943 |
+| CA-011b | RF-ROL-003, 005, PER-009, IMP-013, AUD-007, INV-032 | Etapa 1 | Etapa 1 | Etapa 4 | integración + navegador | sí |  | documento-funcional.md:944 |
+| CA-012 | RF-OC-021, 022, 025, RF-ROL-009 | Etapa 1 | Etapa 5 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:945 |
+| CA-013 | RF-OC-023, 024 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:946 |
+| CA-014 | RF-OC-026 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:947 |
+| CA-015a | RF-PLA-004, 006 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:948 |
+| CA-015b | RF-PLA-005, RF-AUD-017 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:949 |
+| CA-015c | RF-PLA-003, RF-ACC-019 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:950 |
+| CA-015d | RF-ACC-002, 022, RF-PLA-002 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:953 |
+| CA-015e | RF-PLA-011, 012 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:951 |
+| CA-015f | RF-PLA-001, 009 | Etapa 1 | Etapa 1 | - | integración | sí | Incluye un paso manual: verificar la identidad por otro medio | documento-funcional.md:952 |
+| CA-015g | RF-PLA-013, RF-PLA-005; Etapa 1 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:954 |
+| CA-015h | RF-PLA-013; Etapa 2, porque necesita campos secretos y solicitudes de derechos | Etapa 1 | Etapa 2 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:955 |
+| CA-015i | RF-PLA-013, RF-PLA-004, RF-PLA-005; Etapa 1 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:956 |
+| CA-016a | RF-PER-001 a 003, RF-DAT-001, RF-CAT-024 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-PER-010 es de Etapa 2 con importación en Etapa 4; CA-016a prueba el alta manual (Etapa 2). | documento-funcional.md:967 |
+| CA-016b | RF-PER-001, RF-INV-013 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:968 |
+| CA-017 | RF-SKU-001, 002, RF-CAT-007 a 009, 023, 025 | Etapa 2 | Etapa 2 | Etapa 3 | unitaria | sí |  | documento-funcional.md:969 |
+| CA-018 | RN-004, RF-SKU-003, 004, RF-OC-003, 046, RF-OS-005 | Etapa 3 | Etapa 3 | Etapa 6 | integración | sí |  | documento-funcional.md:970 |
+| CA-019 | RF-SKU-005, 006, RF-CAT-011 | Etapa 2 | Etapa 3 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:971 |
+| CA-020 | RF-CAT-002, 010, 012 a 016, 022, RF-SKU-013, 015, 016, RF-OC-039 | Etapa 2 | Etapa 3 | Etapa 5 | unitaria | sí | Arranca después de su requisito | documento-funcional.md:972 |
+| CA-021 | RF-CAT-017 a 021 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:973 |
+| CA-022 | RF-SKU-007, 008 | Etapa 3 | Etapa 3 | - | integración | sí |  | documento-funcional.md:974 |
+| CA-023 | RF-INV-002, 003, 006, RF-SKU-009 | Etapa 3 | Etapa 4 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:983 |
+| CA-024 | RF-INV-001, 011, 018, 031, RF-UX-009, RF-OC-028 | Etapa 4 | Etapa 4 | - | integración | sí | Corre antes de lo que necesita | documento-funcional.md:984 |
+| CA-025 | RF-INV-013 a 015, 024 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:986 |
+| CA-026 | RF-INV-019 a 021 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:987 |
+| CA-027 | RF-INV-022 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:988 |
+| CA-028 | RF-INV-004 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:989 |
+| CA-029 | RF-OC-001, 011 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1001 |
+| CA-030 | RF-OC-010, 014, 044 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1002 |
+| CA-031 | RF-OC-005, 015, 018 a 020 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1003 |
+| CA-032 | RF-OC-002, 004 a 008, 042, 043, RF-SKU-010, 011, RF-CAT-005, RF-INV-023 | Etapa 2 | Etapa 5 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1005 |
+| CA-033 | RF-OC-029, 035, 036, 040 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1007 |
+| CA-034 | RF-OC-030, 031, 033, 037, 038, RNF-005 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1008 |
+| CA-035 | RF-OC-033, 034 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1009 |
+| CA-036 | RF-OC-032, RF-INV-007 | Etapa 4 | Etapa 5 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1011 |
+| CA-037 | RF-OC-012, 013 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1013 |
+| CA-038a | RF-IMP-001 a 003, 007, RN-003; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1019 |
+| CA-038b | RF-IMP-006; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1020 |
+| CA-038c | RF-IMP-010, RF-INV-005; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1021 |
+| CA-038d | RF-IMP-008, 009; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí | Tipo ajustado por QA: Vista previa por fila en pantalla y movimientos «saldo inicial» en la base. | documento-funcional.md:1022 |
+| CA-039 | RF-IMP-011, 014, 015, RS-42 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1024 |
+| CA-040a | RF-AUD-001, 002, RN-006; Etapa 1 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:1028 |
+| CA-040b | RF-AUD-018, RF-DAT-002; Etapa 7 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí |  | documento-funcional.md:1029 |
+| CA-041 | RF-AUD-003 a 005, 008, 009, 013, 019, RF-USR-007, RF-ROL-013, RF-PLA-007 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:1030 |
+| CA-042 | RF-CAT-028, RF-SKU-013, 014, RF-AUD-006 | Etapa 1 | Etapa 2 | Etapa 4 | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:979 |
+| CA-043 | RF-EXP-005, 006, 007, RNF-006 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | documento-funcional.md:1025 |
+| CA-044 | RF-OS-001 a 011, RF-INV-012 | Etapa 6 | Etapa 6 | Fase 2 | unitaria | sí |  | documento-funcional.md:1052 |
+| CA-045 | RF-AUD-011, RN-007, RF-USR-002, RF-CAT-004 | Etapa 1 | Etapa 1 | Etapa 5 | integración | sí |  | documento-funcional.md:1032 |
+| CA-046 | RF-INV-016, 017, RF-DAT-006, RNF-002 | Etapa 1 | Etapa 4 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:994 |
+| CA-047 | RF-ROL-001, 002, 006, 012, RF-USR-001 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:957 |
+| CA-048 | RNF-007, RF-CAT-001, RF-SKU-012, RF-UX-007 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:1054 |
+| CA-049 | RF-ACC-023, RF-DAT-014 | Etapa 1 | Etapa 1 | - | navegador | sí |  | documento-funcional.md:958 |
+| CA-050a | RNF-003, 004, RF-UX-010, 012 | Etapa 1 | Etapa 1 | Etapa 4 | navegador | sí | Seguimiento (no bloquea) hasta la etapa en que se completa; bloquea desde allí | documento-funcional.md:1055 |
+| CA-050b | RNF-001, 008, RF-UX-001 a 003, 005, 006, 011, RF-ACC-025 | Etapa 1 | Etapa 1 | Etapa 5 | integración + navegador | sí | Seguimiento (no bloquea) hasta la etapa en que se completa; bloquea desde allí | documento-funcional.md:1056 |
+| CA-051 | RN-014 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:1057 |
+| CA-052a1 | RF-PER-005, 011 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1033 |
+| CA-052a2 | RF-PER-006 | Etapa 2 | Etapa 4 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1034 |
+| CA-052b1 | RF-PER-013 | Etapa 2 | Etapa 2 | - | navegador | sí |  | documento-funcional.md:1035 |
+| CA-052b2 | RF-PER-006, 013 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1036 |
+| CA-052c | RF-USR-001, 003, 008 | Etapa 1 | Etapa 2 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1037 |
+| CA-052d | RF-USR-005, RF-PER-007 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1038 |
+| CA-053 | RNF-010 a 018, RF-DAT-015 | Etapa 0 | Etapa 7 | - | manual (con apoyo de integración) | sí | Arranca después de su requisito | documento-funcional.md:1059 |
+| CA-054a | RF-AUD-014, 015, RF-PER-004, 013, 014, RF-DAT-016 | Etapa 1 | Etapa 2 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1039 |
+| CA-054b | RF-DAT-006, 011 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1040 |
+| CA-054c | RF-DAT-003, 005, RF-AUD-016 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí |  | documento-funcional.md:1041 |
+| CA-055 | RF-OC-015, 016, 017, 047, 048, RF-OS-008 | Etapa 5 | Etapa 5 | Etapa 6 | unitaria | sí |  | documento-funcional.md:1004 |
+| CA-056 | RF-IMP-004, 005, RF-DAT-004 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1023 |
+| CA-057 | RF-IMP-018, RF-ROL-002; Fase 3 | Etapa 1 | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Arranca después de su requisito | documento-funcional.md:1058 |
+| CA-058 | RF-INV-009, 010, 024, 028 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:985 |
+| CA-059 | RF-INV-025 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:990 |
+| CA-060a | RF-CAT-006 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:991 |
+| CA-060b | RF-INV-027 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:992 |
+| CA-061 | RF-OC-010, 049, 050, RF-SKU-010 | Etapa 3 | Etapa 5 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1010 |
+| CA-062 | RF-OC-032 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1012 |
+| CA-063 | RF-INV-026 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:993 |
+| CA-064a | RF-CAT-027 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:975 |
+| CA-064b | RF-CAT-027, RF-SKU-013 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:976 |
+| CA-065a | RF-CAT-012 | Etapa 2 | Etapa 2 | - | unitaria | sí | Etapa del requisito leída por QA: RF-INV-005 es de Etapa 4, pero CA-065a prueba solo la definición del campo identificador (Etapa 2); las unidades las prueba CA-065b. | documento-funcional.md:977 |
+| CA-065b | RF-CAT-012, 029 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:978 |
+| CA-066 | RF-AUD-010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1031 |
+| CA-067 | RF-EXP-001 a 004, RF-PLA-010 | Etapa 1 | Etapa 2 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1026 |
+| CA-068 | RF-ACC-006, 026 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:959 |
+| CA-069 | RF-ACC-014, RNF-013 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:960 |
+| CA-070 | RF-OC-026, RF-PLA-008 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1014 |
+| CA-071 | RF-EMP-001 a 004 | Etapa 1 | Etapa 1 | Etapa 5 | integración + navegador | sí |  | documento-funcional.md:1046 |
+| CA-072 | RF-OC-006, 045 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1006 |
+| CA-073 | RF-DAT-008, 010, RNF-009 | Etapa 0 | Etapa 1 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1042 |
+| CA-074 | RF-ACC-021, RF-DAT-012, RF-CAT-026 | Etapa 1 | Etapa 1 | Etapa 5 | integración | sí |  | documento-funcional.md:1043 |
+| CA-075 | RF-EMP-005 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1045 |
+| CA-076 | RF-PER-012, RF-DAT-007, 013 | Etapa 2 | Etapa 2 | Fase 2 | integración + navegador | sí |  | documento-funcional.md:1044 |
+| CA-077 | RNF-019 a 022, RF-ROL-015 | Etapa 1 | Etapa 1 | Fase 2 | integración | sí |  | documento-funcional.md:1047 |
+| CA-078 | RF-OC-009, RS-47, RS-42 | Etapa 5 | Etapa 5 | - | navegador | sí |  | documento-funcional.md:1048 |
+| CA-079 | RF-ACC-012 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:961 |
+| CA-079b | RF-INV-030 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:995 |
+| CA-080 | RF-UX-004 | Etapa 6 | Etapa 6 | - | unitaria | sí |  | documento-funcional.md:1053 |
+| CA-081 | RF-ACC-013 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:962 |
+| CA-081b | RF-PER-006, RF-INV-029 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:996 |
+| CA-082 | RF-ACC-018 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:963 |
+| CA-082b | RF-INV-008 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:997 |
+| CA-083 | RS-51 | - | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:1063 |
+| CA-084 | RF-PLA-010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1064 |
+| CA-085 | RN-008 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:1065 |
+| CA-086 | RN-015 | - | Etapa 2 | - | integración | sí |  | documento-funcional.md:1066 |
+| CA-087 | RN-016, RF-CAT-003 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1067 |
+| CA-088 | RN-020 | - | Etapa 2 | - | integración | sí |  | documento-funcional.md:1068 |
+| CA-089 | RF-OC-019, PS-232 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1069 |
+| CA-090 | RNF-013 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1070 |
+| CA-091 | RF-DAT-013, PS-234 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1071 |
+| CA-092 | RF-CAT-026 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1072 |
+| CA-093 | RF-PER-012, RF-ACC-025 | Etapa 1 | Etapa 2 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1073 |
+| CA-094a | RF-INV-034, RN-004, RN-012, RF-CAT-008; Etapa 4 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1075 |
+| CA-094b | RF-OC-035, RN-004, RN-023; Etapa 5 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1076 |
+| CA-094c | RN-023; Fase 2 | - | Fase 2 | - | integración | no (bloquea su módulo) |  | documento-funcional.md:1077 |
+| CA-095a | RF-DAT-017, RN-024, RF-PER-013; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es la anonimización manual (Etapa 2). | documento-funcional.md:1078 |
+| CA-095b | RF-DAT-017, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es la anonimización manual (Etapa 2). | documento-funcional.md:1079 |
+| CA-095c | RF-DAT-017, RN-024, RF-PER-012; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es la anonimización manual y el registro de pedidos (Etapa 2). | documento-funcional.md:1080 |
+| CA-095d | RF-DAT-017, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es retomar lo propuesto (Etapa 2). · Tipo ajustado por QA: Retomar una propuesta guardada en la base; no es un cálculo. | documento-funcional.md:1081 |
+| CA-095e | RF-DAT-017, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es el levantamiento parcial (Etapa 2). | documento-funcional.md:1082 |
+| CA-095f | RF-DAT-017, RN-024, RN-002; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es quién declara y levanta (Etapa 2). | documento-funcional.md:1083 |
+| CA-095g | RF-DAT-017; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es el rastro de declarar y levantar (Etapa 2). | documento-funcional.md:1084 |
+| CA-095h | RF-AUD-016, RF-DAT-017, RN-024; Etapa 7 | Etapa 7 | Etapa 7 | - | integración | sí | Etapa del requisito leída por QA: Prueba la parte de la auditoría vencida de RF-DAT-017, que es del proceso de mantenimiento (Etapa 7). | documento-funcional.md:1085 |
+| CA-095i | RF-DAT-017, RS-49; Etapa 7 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí | Etapa del requisito leída por QA: Prueba la parte de la restauración de RF-DAT-017 (RS-49), que es de la Etapa 7. | documento-funcional.md:1086 |
+| CA-095j | RN-024; Fase 2, al activar cada módulo con una rutina así | - | Fase 2 | - | integración | no (bloquea su módulo) |  | documento-funcional.md:1087 |
+| CA-096 | RN-009, RF-OC-005; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1088 |
+| CA-097 | RF-OC-026, tabla de la sección 12.4; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1089 |
+| CA-098 | RF-OC-026; Etapa 5 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1090 |
+| CA-099 | RF-IMP-015, RS-45, RF-PLA-010; Etapa 4 | Etapa 1 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1091 |
+| CA-100 | RF-IMP-016, RF-AUD-019; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1092 |
+| CA-101 | RF-INV-033, RF-INV-018; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí | Tipo ajustado por QA: Cuenta eventos emitidos por el servidor (integración) y un doble clic en la asignación (navegador). | documento-funcional.md:1093 |
+| CA-102 | RF-OC-048; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Reloj y suma por proveedor en el servidor; el aviso se ve en la pantalla de la orden. | documento-funcional.md:1094 |
+| CA-103 | RF-OC-049; Etapa 5 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1095 |
+| CA-104a | RF-OC-051; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Comprueba qué muestra la pantalla de aprobación y que aprobar no cambia. | documento-funcional.md:1096 |
+| CA-104b | RF-OC-051; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Necesita un módulo de prueba que declare información y justificación; se ve en la pantalla. | documento-funcional.md:1097 |
+| CA-105 | RF-IMP-017, RF-DAT-010; Etapa 0 | Etapa 0 | Etapa 0 | - | manual (verificación documental) | sí | Tipo ajustado por QA: El propio criterio dice que es una verificación de documentos y no una prueba automática. | documento-funcional.md:1098 |
+
+### ASI · Asistente de IA (en redacción) (52)
+
+| CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
+|---|---|---|---|---|---|---|---|---|
+| CA-ASI-01 | RF-ASI-001, RF-ASI-002 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:470 |
+| CA-ASI-02 | RF-ASI-001, RF-ASI-002, RF-ASI-029; RN-ASI-007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:471 |
+| CA-ASI-03 | RF-ASI-003, RF-ASI-004; RNF-ASI-001 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:472 |
+| CA-ASI-04 | RF-ASI-005; RN-ASI-032 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:473 |
+| CA-ASI-05 | RF-ASI-006, RF-ASI-007, RF-ASI-008 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:474 |
+| CA-ASI-06 | RF-ASI-008; RN-AYU-024 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:475 |
+| CA-ASI-07 | RF-ASI-009, RF-ASI-011, RF-ASI-040 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:476 |
+| CA-ASI-08 | RF-ASI-009; RN-ASI-001, RN-ASI-004, RN-ASI-006 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:477 |
+| CA-ASI-09 | RF-ASI-009; RN-ASI-005 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:478 |
+| CA-ASI-10 | RF-ASI-012, RF-ASI-049; RN-ASI-003, RN-ASI-027 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:479 |
+| CA-ASI-11 | RN-ASI-003; RNF-ASI-002 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:480 |
+| CA-ASI-12 | RF-ASI-013, RF-ASI-036; RN-ASI-009, RN-ASI-010, RN-ASI-036; RNF-ASI-004 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:481 |
+| CA-ASI-13 | RF-ASI-011, RF-ASI-042; RN-ASI-026 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:482 |
+| CA-ASI-14 | RF-ASI-013, RF-ASI-036; RN-ASI-008 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:483 |
+| CA-ASI-15 | RF-ASI-037, RF-ASI-046; RN-ASI-025 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:484 |
+| CA-ASI-16 | RF-ASI-040, RF-ASI-043; RN-ASI-014, RN-ASI-039 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:485 |
+| CA-ASI-17 | RF-ASI-039; RN-ASI-013 | - | Fase 3 | - | manual (con apoyo de integración) | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:486 |
+| CA-ASI-18 | RF-ASI-041 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:487 |
+| CA-ASI-19 | RF-ASI-032; RN-ASI-029 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:488 |
+| CA-ASI-20 | RF-ASI-032, RF-ASI-033; RN-ASI-029, RN-ASI-034 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:489 |
+| CA-ASI-21 | RF-ASI-034; RN-ASI-030; RNF-ASI-006 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:490 |
+| CA-ASI-22 | RF-ASI-029, RF-ASI-049; RN-ASI-028 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:491 |
+| CA-ASI-23 | RF-ASI-031; RN-ASI-028, RN-ASI-035 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:492 |
+| CA-ASI-24 | RF-ASI-049; RN-ASI-002 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:493 |
+| CA-ASI-25 | RF-ASI-038; RN-ASI-012 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:494 |
+| CA-ASI-26 | RF-ASI-035, RF-ASI-048; RN-ASI-031 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:495 |
+| CA-ASI-27 | RF-ASI-006, RF-ASI-010, RF-ASI-014; RN-ASI-024; RNF-ASI-009 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:496 |
+| CA-ASI-28 | RF-ASI-045 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:497 |
+| CA-ASI-29 | RF-ASI-044; RN-ASI-021, RN-ASI-023 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:498 |
+| CA-ASI-30 | RF-ASI-028; RN-ASI-022 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:499 |
+| CA-ASI-31 | RF-ASI-045, RF-ASI-047 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:500 |
+| CA-ASI-32 | RF-ASI-044; RN-ASI-001 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:501 |
+| CA-ASI-33 | RF-ASI-044; RN-ASI-023, RN-ASI-036, RN-ASI-040; RNF-ASI-005 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:502 |
+| CA-ASI-34 | RF-ASI-015, RF-ASI-017, RF-ASI-018; RN-ASI-015, RN-ASI-038; CA-AYU-01 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:503 |
+| CA-ASI-35 | RF-ASI-015; RN-ASI-005 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/asistente-ia.md:504 |
+| CA-ASI-36 | RF-ASI-015; RN-ASI-007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:505 |
+| CA-ASI-37 | RF-ASI-019; RN-POR-020 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:506 |
+| CA-ASI-38 | RF-ASI-016; RN-AYU-032 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:507 |
+| CA-ASI-39 | RF-ASI-020 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:508 |
+| CA-ASI-40 | RF-ASI-022, RF-ASI-023, RF-ASI-025; RN-ASI-015, RN-ASI-038 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:509 |
+| CA-ASI-41 | RF-ASI-023, RF-ASI-024; RN-ASI-017 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:510 |
+| CA-ASI-42 | RF-ASI-022; RN-ASI-016 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:511 |
+| CA-ASI-43 | RF-ASI-026; RN-ASI-018, RN-ASI-019 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:512 |
+| CA-ASI-44 | RF-ASI-026; RN-ASI-020 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:513 |
+| CA-ASI-45 | RF-ASI-025; RN-ASI-037 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:514 |
+| CA-ASI-46 | RF-ASI-019, RF-ASI-021, RF-ASI-027; RN-ASI-018 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:515 |
+| CA-ASI-47 | RF-ASI-025; RN-ASI-002, RN-ASI-007 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:516 |
+| CA-ASI-48 | RF-ASI-021, RF-ASI-030; RN-ASI-011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:517 |
+| CA-ASI-49 | RF-ASI-002; RN-ASI-035 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:518 |
+| CA-ASI-50 | RF-ASI-033 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:519 |
+| CA-ASI-51 | RN-ASI-033 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:520 |
+| CA-ASI-52 | RNF-ASI-010 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:521 |
 
 ### AYU · Mesa de ayuda (27)
 
@@ -478,30 +642,37 @@ CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-AYU-26, CA-CAM-07, CA-CMD-15,
 | CA-ENT-14 | RN-ENT-006 | - | Etapa 4 | - | integración | sí | Etapa heredada del módulo | modulos/entregas-devoluciones.md:244 |
 | CA-ENT-15 | RF-ENT-007, 015, 017; RN-ENT-010 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/entregas-devoluciones.md:245 |
 
-### GAR · Garantías y mantenimiento (20)
+### GAR · Garantías y mantenimiento (27)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
-| CA-GAR-01 | RF-GAR-001, 002, 005 | Etapa 4 | Etapa 5 | - | navegador | sí | Arranca después de su requisito · Corre en Etapa 5 (recepción). La ficha de garantía de un activo importado (RF-GAR-002, Etapa 4) se prueba con CA-GAR-15 y CA-082b mientras tanto. | modulos/garantias-mantenimiento.md:265 |
-| CA-GAR-02 | RF-GAR-019, 028, RN-GAR-033 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:266 |
-| CA-GAR-03 | RF-GAR-014 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:267 |
-| CA-GAR-04 | RF-GAR-003, 004, 006, 008 | Etapa 4 | Fase 2 | - | integración | no (bloquea su módulo) | Arranca después de su requisito · Partir: 04a (Etapa 4) garantía del fabricante Vigente y Vencida al mover el reloj, sin proceso (prueba también RN-018); 04b (Fase 2) garantía extendida y efectiva. | modulos/garantias-mantenimiento.md:268 |
-| CA-GAR-05 | RF-GAR-012, 013, 015, 016, 017, RN-GAR-019 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:269 |
-| CA-GAR-06 | RF-GAR-014, 022, RN-GAR-028 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:270 |
-| CA-GAR-07 | RF-GAR-023, RN-GAR-030 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:271 |
-| CA-GAR-08 | RF-GAR-020, 021, RN-GAR-027 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:272 |
-| CA-GAR-09 | RF-GAR-010, 011, RN-GAR-014 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:273 |
-| CA-GAR-10 | RF-GAR-011, RN-GAR-016 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:274 |
-| CA-GAR-11 | RF-GAR-018, 030, RN-GAR-022 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:275 |
-| CA-GAR-12 | RF-GAR-025, RN-GAR-031 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:276 |
-| CA-GAR-13 | RF-GAR-007, 009, RN-GAR-010 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:277 |
-| CA-GAR-14 | RN-GAR-037, 034 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/garantias-mantenimiento.md:278 |
-| CA-GAR-15 | RF-GAR-005, 008, RN-GAR-003 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | modulos/garantias-mantenimiento.md:279 |
-| CA-GAR-16 | RF-GAR-024, 026, 027, 029 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:280 |
-| CA-GAR-17 | RF-GAR-015, RN-GAR-038 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:281 |
-| CA-GAR-18 | RN-GAR-039 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/garantias-mantenimiento.md:282 |
-| CA-GAR-19 | RF-GAR-030, RN-GAR-025 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:284 |
-| CA-GAR-20 | RF-GAR-031, RN-GAR-041 | Fase 2 | Fase 2 | - | manual (con apoyo de integración) | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:283 |
+| CA-GAR-01a | RF-GAR-002, 005 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | modulos/garantias-mantenimiento.md:265 |
+| CA-GAR-01b | RF-GAR-001 | Etapa 5 | Etapa 5 | - | navegador | sí | Tipo ajustado por QA: Se prueba que la pantalla de recepción pide la garantía una sola vez para el lote. | modulos/garantias-mantenimiento.md:266 |
+| CA-GAR-01c | RF-GAR-001 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | modulos/garantias-mantenimiento.md:267 |
+| CA-GAR-02 | RF-GAR-019, 028, RN-GAR-033 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:268 |
+| CA-GAR-03 | RF-GAR-014 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:269 |
+| CA-GAR-04a | RF-GAR-008, RN-GAR-004, RN-GAR-036, RN-018 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/garantias-mantenimiento.md:270 |
+| CA-GAR-04b | RF-GAR-004, RN-GAR-006 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:271 |
+| CA-GAR-04c | RF-GAR-003 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/garantias-mantenimiento.md:272 |
+| CA-GAR-04d | RF-GAR-003 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/garantias-mantenimiento.md:273 |
+| CA-GAR-04e | RF-GAR-006, RN-GAR-007 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/garantias-mantenimiento.md:274 |
+| CA-GAR-04f | RF-GAR-004, RN-GAR-007 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:275 |
+| CA-GAR-05 | RF-GAR-012, 013, 015, 016, 017, RN-GAR-019 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:276 |
+| CA-GAR-06 | RF-GAR-014, 022, RN-GAR-028 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:277 |
+| CA-GAR-07 | RF-GAR-023, RN-GAR-030 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:278 |
+| CA-GAR-08 | RF-GAR-020, 021, RN-GAR-027 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:279 |
+| CA-GAR-09 | RF-GAR-010, 011, RN-GAR-014 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:280 |
+| CA-GAR-10 | RF-GAR-011, RN-GAR-016 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:281 |
+| CA-GAR-11 | RF-GAR-018, 030, RN-GAR-022 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:282 |
+| CA-GAR-12 | RF-GAR-025, RN-GAR-031 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:283 |
+| CA-GAR-13 | RF-GAR-007, 009, RN-GAR-010 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:284 |
+| CA-GAR-14 | RN-GAR-037, 034 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/garantias-mantenimiento.md:285 |
+| CA-GAR-15 | RF-GAR-005, 008, RN-GAR-003 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | modulos/garantias-mantenimiento.md:286 |
+| CA-GAR-16 | RF-GAR-024, 026, 027, 029 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:287 |
+| CA-GAR-17 | RF-GAR-015, RN-GAR-038 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:288 |
+| CA-GAR-18 | RN-GAR-039 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/garantias-mantenimiento.md:289 |
+| CA-GAR-19 | RF-GAR-030, RN-GAR-025 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:291 |
+| CA-GAR-20 | RF-GAR-031, RN-GAR-041 | Fase 2 | Fase 2 | - | manual (con apoyo de integración) | no (bloquea su módulo) |  | modulos/garantias-mantenimiento.md:290 |
 
 ### INT · Integraciones y API (26)
 
@@ -701,53 +872,73 @@ CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-AYU-26, CA-CAM-07, CA-CMD-15,
 | CA-PRE-25 | Exportación.** *Cubre RN-PRE-038 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/presupuesto-costos.md:295 |
 | CA-PRE-26 | Cese del responsable.** *Cubre RN-PRE-040 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/presupuesto-costos.md:296 |
 
-### PRS · Personas y ubicaciones (16)
+### PRS · Personas y ubicaciones (32)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
-| CA-PRS-01 | RF-PRS-001, 005, 006, 010; RN-PRS-001 | Etapa 2 | Etapa 2 | Etapa 4 | integración | sí | Empieza en Etapa 2; "puede recibir un equipo" necesita activos y se completa en Etapa 4. | modulos/personas-ubicaciones.md:226 |
-| CA-PRS-02 | RF-PRS-001; RN-PRS-005 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:227 |
-| CA-PRS-03 | RF-PRS-004, 011; RN-PRS-008 | Etapa 2 | Etapa 4 | - | integración | sí | Pide una laptop asignada (Etapa 4); RF-PRS-011 es de Etapa 2. Propuesta al escuadrón D: partir en 03a (cese sin recursos, Etapa 2; lo cubre hoy CA-052a1 del núcleo) y 03b (con laptop, Etapa 4). | modulos/personas-ubicaciones.md:228 |
-| CA-PRS-04 | RF-PRS-011, 017; RN-PRS-011, 012 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito · Corre en Etapa 4; el rechazo de anonimizar con pendientes de la Etapa 2 (sin equipos) lo cubre CA-052b1. | modulos/personas-ubicaciones.md:229 |
-| CA-PRS-05 | RF-PRS-011; RN-PRS-011 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:230 |
-| CA-PRS-06 | permiso denegado)** (RF-PRS-015; RN-PRS-020 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | modulos/personas-ubicaciones.md:231 |
-| CA-PRS-07 | RF-PRS-003; RN-PRS-032 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | modulos/personas-ubicaciones.md:232 |
-| CA-PRS-08 | RF-PRS-007, 008; RN-PRS-024 | Etapa 2 | Etapa 2 | Etapa 4 | unitaria | sí | El movimiento por activo se prueba con 40 equipos (Etapa 4); el ciclo y la jerarquía, en Etapa 2. | modulos/personas-ubicaciones.md:233 |
-| CA-PRS-09 | RF-PRS-009; RN-PRS-014 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | modulos/personas-ubicaciones.md:234 |
-| CA-PRS-10 | RF-PRS-013; RN-PRS-017 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | modulos/personas-ubicaciones.md:235 |
-| CA-PRS-11 | RF-PRS-014 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/personas-ubicaciones.md:236 |
-| CA-PRS-12 | RF-PRS-012; RN-PRS-013, 016 | Etapa 2 | Etapa 2 | Etapa 4 | unitaria | sí | La reactivación corre en Etapa 2; "asignarle un equipo se rechaza" necesita activos (Etapa 4). | modulos/personas-ubicaciones.md:237 |
-| CA-PRS-13 | RF-PRS-002; RN-PRS-018 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:238 |
-| CA-PRS-14 | RF-PRS-015; RN-PRS-018, 021; RNF-PRS-009 | Etapa 2 | Etapa 2 | Etapa 4 | integración | sí | La copia del nombre en las actas necesita actas (Etapa 4). Además mezcla anonimización manual y automática (ver ambiguos). | modulos/personas-ubicaciones.md:239 |
-| CA-PRS-15 | aislamiento)** (RF-PRS-016; RN-PRS-028, 030 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:240 |
-| CA-PRS-16 | RN-PRS-004; RF-PRS-001 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:241 |
+| CA-PRS-01a | RF-PRS-001, 005, 010; RN-PRS-001, 004; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:227 |
+| CA-PRS-01b | RF-PRS-001; RN-PRS-001; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:228 |
+| CA-PRS-01c | RF-PRS-006; Etapa 2 | Etapa 2 | Etapa 2 | - | navegador | sí |  | modulos/personas-ubicaciones.md:229 |
+| CA-PRS-01d | RF-PRS-001; RN-PRS-006; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | La tabla del criterio dice Etapa 2 y la prueba es el alta manual con homónimo; el requisito RF-PER-010 dice «importación en Etapa 4», que prueba CA-PRS-11. · Etapa del requisito leída por QA: Prueba el alta manual con homónimo; la importación la prueba CA-PRS-11. | modulos/personas-ubicaciones.md:230 |
+| CA-PRS-02 | RF-PRS-001; RN-PRS-005 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:231 |
+| CA-PRS-03a | RF-PRS-004, 011; RN-PRS-008; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | modulos/personas-ubicaciones.md:232 |
+| CA-PRS-03b | RF-PRS-017, RF-INV-029; RN-PRS-008; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/personas-ubicaciones.md:233 |
+| CA-PRS-03c | RF-INV-029; RN-PRS-008; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí | Tipo ajustado por QA: Consulta de pérdidas contra la base. | modulos/personas-ubicaciones.md:234 |
+| CA-PRS-04 | RF-PRS-011, 017; RN-PRS-011, 012 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito · Corre en Etapa 4; el rechazo de anonimizar con pendientes de la Etapa 2 (sin equipos) lo cubre CA-052b1. | modulos/personas-ubicaciones.md:235 |
+| CA-PRS-05 | RF-PRS-011; RN-PRS-011 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:236 |
+| CA-PRS-06 | permiso denegado)** (RF-PRS-015; RN-PRS-020 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | modulos/personas-ubicaciones.md:237 |
+| CA-PRS-07 | RF-PRS-003; RN-PRS-032 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | modulos/personas-ubicaciones.md:238 |
+| CA-PRS-08a | RF-PRS-007; RN-PRS-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Tipo ajustado por QA: El ciclo en el árbol de ubicaciones se detecta con la consulta recursiva de PostgreSQL. | modulos/personas-ubicaciones.md:239 |
+| CA-PRS-08b | RF-PRS-007; RN-PRS-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:240 |
+| CA-PRS-08c | RF-INV-027; RN-PRS-024; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/personas-ubicaciones.md:241 |
+| CA-PRS-08d | RF-PRS-008; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | modulos/personas-ubicaciones.md:242 |
+| CA-PRS-09 | RF-PRS-009; RN-PRS-014 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | modulos/personas-ubicaciones.md:243 |
+| CA-PRS-10 | RF-PRS-013; RN-PRS-017 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | modulos/personas-ubicaciones.md:244 |
+| CA-PRS-11 | RF-PRS-014 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito · Importar Personas es de la Etapa 4 (RF-PER-010 con importación). El alta manual con homónimo ya es CA-PRS-01d (Etapa 2). | modulos/personas-ubicaciones.md:245 |
+| CA-PRS-12a | RF-INV-013; RN-PRS-013; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí | Tipo ajustado por QA: La asignación rechazada pasa por la base y la regla de estado de la Persona. | modulos/personas-ubicaciones.md:246 |
+| CA-PRS-12b | RF-PRS-012; RN-PRS-016; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Tipo ajustado por QA: Reactivar conserva la referencia y el historial en la base. | modulos/personas-ubicaciones.md:247 |
+| CA-PRS-12c | RF-INV-013; RN-PRS-013; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/personas-ubicaciones.md:248 |
+| CA-PRS-12d | RF-PRS-012; RN-PRS-016; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Tipo ajustado por QA: Rechazo guardado y verificado en la base. | modulos/personas-ubicaciones.md:249 |
+| CA-PRS-13 | RF-PRS-002; RN-PRS-018 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:250 |
+| CA-PRS-14a | RF-PRS-015; RN-PRS-018, 020; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | modulos/personas-ubicaciones.md:251 |
+| CA-PRS-14b | RF-PRS-015; RNF-PRS-009; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:252 |
+| CA-PRS-14c | RF-PRS-015; RN-PRS-018; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:253 |
+| CA-PRS-14d | RF-INV-015; RN-PRS-018; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí | Tipo ajustado por QA: Historial de asignaciones tras anonimizar, contra la base. | modulos/personas-ubicaciones.md:254 |
+| CA-PRS-14e | RF-DAT-006, 011; RN-PRS-021; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí | Tipo ajustado por QA: Se imprime el acta (PDF) con el reloj en `retener_hasta`. | modulos/personas-ubicaciones.md:255 |
+| CA-PRS-14f | RF-PRS-015; RN-PRS-019; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:256 |
+| CA-PRS-15 | aislamiento)** (RF-PRS-016; RN-PRS-028, 030 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:257 |
+| CA-PRS-16 | RN-PRS-004; RF-PRS-001 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/personas-ubicaciones.md:258 |
 
-### PRV · Proveedores y contratos (22)
+### PRV · Proveedores y contratos (26)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
 | CA-PRV-01 | RF-PRV-001 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/proveedores-contratos.md:254 |
-| CA-PRV-02 | RF-PRV-007, 019, RN-PRV-032 | Etapa 2 | Fase 2 | - | integración | no (bloquea su módulo) | Arranca después de su requisito · Partir: 02a (Etapa 2) un proveedor de B pedido por identificador interno responde "no encontrado"; 02b (Fase 2) lo mismo con el contrato. | modulos/proveedores-contratos.md:255 |
-| CA-PRV-03 | RF-PRV-001, 002, 005 | Etapa 2 | Etapa 2 | - | navegador | sí |  | modulos/proveedores-contratos.md:256 |
-| CA-PRV-04 | RF-PRV-003 | Etapa 2 | Fase 2 | - | unitaria | no (bloquea su módulo) | Necesita un contrato Vigente (PRV-B, Fase 2); RF-PRV-003 es de Etapa 2. Propuesta al escuadrón A: 04a (Etapa 2) desactivar y reactivar un proveedor con motivo y auditoría; 04b (Fase 2) rechazo por contrato Vigente. | modulos/proveedores-contratos.md:257 |
-| CA-PRV-05 | RF-PRV-008, 010, 023 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:258 |
-| CA-PRV-06 | RF-PRV-010, RN-PRV-015 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:259 |
-| CA-PRV-07 | RF-PRV-011, 015, 027 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:260 |
-| CA-PRV-08 | RF-PRV-012 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:261 |
-| CA-PRV-09 | RF-PRV-016, 017, 018 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:262 |
-| CA-PRV-10 | RF-PRV-022, 024 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:263 |
-| CA-PRV-11 | RF-PRV-021 | Fase 2 | Fase 2 | - | navegador | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:264 |
-| CA-PRV-12 | RF-PRV-020, 025, 026 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:265 |
-| CA-PRV-13 | RF-PRV-014, RN-PRV-019 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:266 |
-| CA-PRV-14 | RN-PRV-041, 036 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/proveedores-contratos.md:267 |
-| CA-PRV-15 | RF-PRV-004, RN-PRV-037 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/proveedores-contratos.md:268 |
-| CA-PRV-16 | RF-PRV-006, RN-PRV-034 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/proveedores-contratos.md:269 |
-| CA-PRV-17 | RN-PRV-042 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:270 |
-| CA-PRV-18 | RF-PRV-013, RN-PRV-040 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:271 |
-| CA-PRV-19 | RN-PRV-015 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:272 |
-| CA-PRV-20 | RF-PRV-002, RN-PRV-039 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/proveedores-contratos.md:273 |
-| CA-PRV-21 | RF-PRV-028 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:274 |
-| CA-PRV-22 | RF-PRV-029, RN-PRV-043 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:275 |
+| CA-PRV-02a | RF-PRV-007, RN-PRV-032 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | modulos/proveedores-contratos.md:255 |
+| CA-PRV-02b | RF-PRV-019, RN-PRV-032 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:256 |
+| CA-PRV-02c | RF-PRV-019, RN-PRV-032 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:257 |
+| CA-PRV-03 | RF-PRV-001, 002, 005 | Etapa 2 | Etapa 2 | - | navegador | sí |  | modulos/proveedores-contratos.md:258 |
+| CA-PRV-04a | RF-PRV-003, RN-PRV-005 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/proveedores-contratos.md:259 |
+| CA-PRV-04b | RN-PRV-004 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo · Tipo ajustado por QA: Necesita un contrato Vigente en la base (Fase 2). | modulos/proveedores-contratos.md:260 |
+| CA-PRV-04c | RF-PRV-003 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/proveedores-contratos.md:261 |
+| CA-PRV-05 | RF-PRV-008, 010, 023 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:262 |
+| CA-PRV-06 | RF-PRV-010, RN-PRV-015 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:263 |
+| CA-PRV-07 | RF-PRV-011, 015, 027 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:264 |
+| CA-PRV-08 | RF-PRV-012 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:265 |
+| CA-PRV-09 | RF-PRV-016, 017, 018 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:266 |
+| CA-PRV-10 | RF-PRV-022, 024 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:267 |
+| CA-PRV-11 | RF-PRV-021 | Fase 2 | Fase 2 | - | navegador | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:268 |
+| CA-PRV-12 | RF-PRV-020, 025, 026 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:269 |
+| CA-PRV-13 | RF-PRV-014, RN-PRV-019 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:270 |
+| CA-PRV-14 | RN-PRV-041, 036 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/proveedores-contratos.md:271 |
+| CA-PRV-15 | RF-PRV-004, RN-PRV-037 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/proveedores-contratos.md:272 |
+| CA-PRV-16 | RF-PRV-006, RN-PRV-034 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/proveedores-contratos.md:273 |
+| CA-PRV-17 | RN-PRV-042 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:274 |
+| CA-PRV-18 | RF-PRV-013, RN-PRV-040 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:275 |
+| CA-PRV-19 | RN-PRV-015 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:276 |
+| CA-PRV-20 | RF-PRV-002, RN-PRV-039 | Etapa 2 | Etapa 2 | - | integración | sí |  | modulos/proveedores-contratos.md:277 |
+| CA-PRV-21 | RF-PRV-028 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:278 |
+| CA-PRV-22 | RF-PRV-029, RN-PRV-043 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/proveedores-contratos.md:279 |
 
 ### REP · Reportes y tableros (22)
 
