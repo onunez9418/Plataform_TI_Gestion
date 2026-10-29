@@ -5,6 +5,7 @@ import { canjearEnlace, obtenerContexto } from '../../src/nucleo/acceso'
 import { cerrarConexiones } from '../../src/nucleo/aislamiento'
 import { aprobarOrden, crearOrden, enviarAAprobacion, listarOrdenes, obtenerOrden, rechazarOrden, recibirOrden } from '../../src/modulos/compras'
 import { listarActivos, registrarActivos } from '../../src/modulos/inventario'
+import { crearCategoria } from '../../src/modulos/categorias'
 import { crearSku } from '../../src/modulos/skus'
 import { invitarUsuario } from '../../src/modulos/usuarios'
 import { exigirEntorno } from '../apoyo/base'
@@ -77,7 +78,7 @@ describe('DEF-SRV-03 · una misma serie en OTRO SKU de la empresa se acepta con 
     await registrarActivos(admin, { skuId: d.skuSerie.id, ubicacionId: d.ubicacionA, series: ['COMPARTIDA-1'] })
     const r = (await registrarActivos(admin, { skuId: otroSku.id, ubicacionId: d.ubicacionA, series: ['COMPARTIDA-1'] })) as Record<string, unknown>
     expect((await listarActivos(admin, { texto: 'COMPARTIDA-1' })).length).toBe(2) // se acepta
-    const avisos = (r.avisos ?? r.advertencias ?? r.aviso) as unknown
+    const avisos = r.avisos as unknown
     expect(avisos, 'la respuesta no trae ningún aviso de que la serie ya existe en otro SKU').toBeTruthy()
     expect(JSON.stringify(avisos)).toContain(d.skuSerie.codigo)
   })
@@ -107,5 +108,28 @@ describe('DEF-SRV-04 · separación de funciones de compras según el documento 
     const aprobada = await aprobarOrden(contextoDe(e, 'jefa'), o.id)
     const r = await codigo(recibirOrden(contextoDe(e, 'tecnico'), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: aprobada.lineas[0]!.id, cantidad: 1, series: ['PREP-REC-1'] }] }))
     expect(r).toBe('SEPARACION_FUNCIONES')
+  })
+})
+
+describe('DEF-CAM-01 · los campos de tipo número y texto aceptan listas y objetos que no son números ni textos', () => {
+  it('un número no puede llegar como lista, y un texto no puede guardarse como «[object Object]»', async () => {
+    const admin = contextoDe(e, 'admin')
+    const cat = await crearCategoria(admin, {
+      nombre: 'Tipos raros', prefijo: 'TRA',
+      campos: [{ clave: 'peso', etiqueta: 'Peso', tipo: 'numero', obligatorio: false }, { clave: 'nota', etiqueta: 'Nota', tipo: 'texto', obligatorio: false }],
+    })
+    const alta = (valores: Record<string, unknown>) => crearSku(admin, { categoriaId: cat.id, nombre: 'Raro', control: 'serie', valores })
+    expect(await codigo(alta({ peso: [16] })), 'número como lista [16]').toBe('VALIDACION')
+    expect(await codigo(alta({ nota: { a: 1 } })), 'texto como objeto').toBe('VALIDACION')
+    expect(await codigo(alta({ nota: ['a', 'b'] })), 'texto como lista').toBe('VALIDACION')
+  })
+})
+
+describe('DEF-SKU-01 · el código automático se rinde con CONFLICTO si hay 10 o más códigos propios seguidos por delante', () => {
+  it('con 12 códigos propios ocupando 0001 a 0012, el alta automática funciona', async () => {
+    const admin = contextoDe(e, 'admin')
+    const cat = await crearCategoria(admin, { nombre: 'Adelantados', prefijo: 'ADE', campos: [] })
+    for (let n = 1; n <= 12; n++) await crearSku(admin, { categoriaId: cat.id, nombre: `Propio ${n}`, control: 'serie', codigo: `ADE-${String(n).padStart(4, '0')}`, valores: {} })
+    expect(await codigo(crearSku(admin, { categoriaId: cat.id, nombre: 'Automático', control: 'serie', valores: {} }))).toBe('OK')
   })
 })
