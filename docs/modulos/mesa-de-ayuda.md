@@ -405,6 +405,7 @@ Resultado según D-057 y D-058: **Confirmado**, **Cambiado** o **Retirado**.
 | La orden de servicio la crea el técnico desde el caso; el extravío es un caso que se confirma con el diálogo único "Cambiar estado" | D-053 (DS-01); H-AUD-19; D-012; RF-AYU-023, RF-AYU-047, RN-AYU-033 |
 | "Solicitar un equipo" crea un caso; TI crea la OC en Borrador; vínculo solo como referencia | D-058 (S-POR-02); H-AUD-11; RN-AYU-032, RF-AYU-044 |
 | Botón único "Pedir ayuda": al activar el módulo abre el catálogo | D-053 DS-01; S-31; RF-AYU-043 |
+| **Versión 0.4 (29/10/2026).** «Pedir ayuda» sigue siendo el único camino para crear un caso; el Asistente de IA (módulo `asistente-ia`) puede precargar el formulario pero no es un agente ni crea casos; comentarios internos y casos restringidos tampoco por el asistente ni hacia su proveedor (RN-AYU-009, RN-AYU-027, RNF-AYU-007, CA-AYU-06, CA-AYU-17); fila nueva de integración; el texto libre de casos viaja al proveedor solo si la plataforma levantó el bloqueo | D-081 a D-083; D-086.4; sección 9.2 de `asistente-ia` |
 | 4 servicios iniciales que no se borran | D-058 (S-POR-02, 03); acuerdo con `portal-autoservicio` |
 | Procesos periódicos: idempotentes, recuperables, por empresa, "hoy" de la empresa, registro de corrida; vigencia del SLA calculada al leer | D-038.4; D-062.2; H-SEG-02; H-QA-12 |
 | Correos de contenido mínimo; sin asunto, nombres de terceros ni enlaces a Persona sin usuario; confirmación del caso siempre se envía | D-061.4; H-CUM-06; H-SEG-16; H-QA-14b |
