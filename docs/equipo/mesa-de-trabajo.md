@@ -19,6 +19,23 @@ Aquí se registra cada mesa de revisión. Una entrada por tema, de la más recie
 
 ## Registro
 
+### 2026-10-29 · Aclaración del CEO: demo con acceso real y limitado para clientes prospecto («empresa de demostración») · decisión D-116
+- **Preside:** gerente-ti (decisión sobre una aclaración del CEO relayada por la Jefatura de Proyecto; no se abrió ronda de críticas porque no hay código; los roles de abajo revisan antes de que se escriba nada).
+- **Participantes:** Jefatura de Proyecto (mensaje del CEO, completado con «7 días de prueba»), Gerente de TI.
+- **Propuesta:** D-116 en `decisiones.md`: empresa de demostración con vigencia y tope de usuarios configurables (por defecto 7 días y 5 usuarios [SUPUESTO]), invitaciones con correo verificado, funciones apagadas, bloqueo al vencer, conversión creando empresa nueva, hito «demo para cliente» tras las Etapas 1 a 4.
+- **Decisión del Gerente de TI:** D-116 (ver el archivo). Enmienda D-115 en cuatro puntos (consola necesaria, acceso de clientes solo al llegar al hito, reconstrucción por demostración, entorno de demostración permanente). D-064 y la regla de datos de ejemplo siguen enteras.
+- **Pedidos abiertos (cada uno se responde en esta mesa y en su archivo):**
+  - **Analista:** RF/RN/CA de «empresa de demostración» en el módulo PLA del núcleo (`documento-funcional.md`); qué cambia en `docs/registro-permisos.md` (¿crear y prorrogar son PS-01 o permiso nuevo?; mantener PS-03 sin excepción); el único correo nuevo («vence en 2 días») como excepción acotada a D-061.4; lo que no esté en D-116 se pregunta, no se inventa.
+  - **Diseñador:** franja «Versión de demostración» (fija, con días restantes, sin cerrar); pantalla de vencimiento; correo de aviso; textos de advertencia («no cargue datos reales», «todo se borra al vencer»); cómo se ve una función apagada (que no parezca un error).
+  - **Arquitecto:** enmienda de ADR-01: tipo de empresa «demostración», guardas en ambos sentidos, límites en configuración de plataforma.
+  - **Seguridad:** revisar límites contra abuso, guarda en producción, importación y exportación apagadas, juego de roles de demostración sin permisos sensibles (sin quitar la regla RF-ACC-013).
+  - **QA:** criterios de aislamiento entre dos demostraciones, de cada función apagada, de vigencia, bloqueo y borrado, y de las guardas en ambos sentidos.
+  - **Cumplimiento:** borrador de acuerdo de prueba y de aviso para invitados de demostración, tabla de datos personales de la demostración, y la pregunta para el abogado (plazo de conservación tras vencer, constancia mínima).
+  - **DevOps y Backend:** verificar en páginas oficiales los límites de las cuentas gratuitas con varias demostraciones a la vez; Backend propone los topes de filas y de peticiones.
+- **Riesgos:** #65 a #68 nuevos en `riesgos.md`.
+- **Requiere decisión del CEO:** sí, solo dinero, legal e irreversible, en `hoja-ceo.md` (ampliada: consulta al abogado, borrado de demostraciones, servicio extra de consola si hiciera falta).
+- **Retrospectiva corta:** la aclaración llegó cortada y se resolvió dejando el valor configurable en vez de preguntar; una frase del CEO («de ejemplo») es una pista de valor por defecto, no una regla.
+
 ### 2026-10-29 · Pedido del CEO: piloto gratuito para probar con clientes (dónde vive la base y dónde se publica) · decisión D-115
 - **Preside:** gerente-ti (decisión sobre una propuesta de la Jefatura de Proyecto; no se abrió ronda de críticas: no hay código y la propuesta se cruzó con ADR-01, ADR-02 y D-064; Seguridad, QA y Cumplimiento revisan en los pasos de abajo, antes de que algo se publique).
 - **Participantes:** Jefatura de Proyecto (propuesta), Gerente de TI. Revisores asignados: DevOps, Seguridad, Arquitecto, Analista, Diseñador, QA, Cumplimiento.
