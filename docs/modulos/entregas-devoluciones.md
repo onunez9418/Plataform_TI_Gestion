@@ -294,6 +294,7 @@ Se reutilizan el **asistente "Entregar"** y el **diálogo "Cambiar estado"** (D-
 | S-ENT-09 | Aceptado **sin excepción** (D-058 #8, D-043.2) | Autoentrega prohibida a todos. |
 | S-ENT-10 | **Cambiado** (D-049.2) | Numeración `ACT-E-` y `ACT-D-` con 6 dígitos. |
 | S-ENT-11 | [SUPUESTO] | "Pendiente de devolución" es una marca calculada (asignación abierta de una Persona Cesada), no un estado ni un campo. |
+| S-ENT-12 | [SUPUESTO] | Renovar un préstamo (RF-ENT-016) usa el permiso `entregas.crear` (PS-55): no se crea un permiso nuevo. Lo confirma el Gerente de TI. El tope de 365 días de RN-ENT-017 se cuenta **desde la fecha de la entrega** (no desde la renovación); también lo confirma el Gerente de TI. |
 | E-ENT-01 | [ESCALAR AL CEO] | **Legal.** Validez del acta firmada en papel archivada por TI sin copia, y de la aceptación en pantalla; si el acta puede usarse para descontar o cobrar un equipo perdido. Hasta la opinión legal el acta dice "constancia de entrega" y no menciona cobros. Si legal exige anonimizar el nombre del acta antes de `retener_hasta` (L-05, L-12), se aplica sobre lo existente y es irreversible. |
 | E-ENT-02 | [ESCALAR AL CEO] | **Dinero.** Habilitar el adjunto del acta firmada implica almacenamiento mensual (D-022). Se consulta al cierre de la Etapa 4. |
 | E-ENT-03 | [ESCALAR AL CEO] | **Legal.** El texto del aviso de privacidad al pie del acta lo entrega la empresa y lo revisa legal (D-061.8). |
