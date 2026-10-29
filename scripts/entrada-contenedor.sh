@@ -4,11 +4,11 @@
 #   4) arranca la aplicación con el rol sin privilegios (app_empresa), sin las claves de los otros roles.
 set -eu
 
-: "${MIGRATION_DATABASE_URL:?Falta MIGRATION_DATABASE_URL}"
-: "${DATABASE_URL:?Falta DATABASE_URL}"
-
 # Guarda de MODO_LOCAL antes de tocar nada: con una base externa, el contenedor no arranca.
 npx tsx scripts/verificar-arranque.ts
+
+: "${MIGRATION_DATABASE_URL:?Falta MIGRATION_DATABASE_URL}"
+: "${DATABASE_URL:?Falta DATABASE_URL}"
 
 echo "[arranque] Esperando a la base de datos..."
 node scripts/base.mjs esperar

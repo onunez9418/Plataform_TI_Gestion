@@ -65,7 +65,6 @@ docker compose -f docker-compose.yml $OVER restart app >/dev/null 2>&1
 j=0; until curl -fs http://127.0.0.1:3000/api/salud >/dev/null 2>&1; do j=$((j+1)); [ $j -ge 60 ] && break; sleep 3; done
 docker compose -f docker-compose.yml $OVER logs --since 90s app 2>&1 | grep -q "La base ya tiene datos" && ok "reinicio de la app conserva los datos (no vuelve a sembrar)" || falla "tras reiniciar no dijo que la base ya tiene datos"
 
-IMG=$(docker compose -f docker-compose.yml $OVER images app --format json 2>/dev/null | head -1)
 SALIDA=$(docker run --rm --entrypoint sh -e MODO_LOCAL=1 -e ENTORNO=desarrollo -e APP_URL=http://localhost:3000 \
   -e DATABASE_URL=postgres://app_empresa:x12345678@base.externa.example.com:5432/plataforma \
   $(docker compose -f docker-compose.yml $OVER config --images | grep -v postgres | head -1) /app/scripts/entrada-contenedor.sh 2>&1)
