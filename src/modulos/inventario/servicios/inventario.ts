@@ -1,22 +1,16 @@
 import { conEmpresa } from '../../../nucleo/aislamiento'
 import { registrarAuditoria } from '../../../nucleo/auditoria'
-import { conflicto, duplicado, esViolacionUnica, noEncontrado, separacionFunciones, validacion } from '../../../nucleo/errores'
+import { conflicto, esViolacionUnica, noEncontrado, separacionFunciones, validacion } from '../../../nucleo/errores'
 import { definirServicio } from '../../../nucleo/permisos'
 import { esId } from '../../../nucleo/tipos-comunes'
 import * as repo from '../repos/inventario'
+import { ingresarCantidad, ingresarSeries } from './ingreso'
 import type {
   Activo, EntradaAsignarActivo, EntradaDevolverActivo, EntradaListarActivos, EntradaRegistrarActivos,
   Existencia, MovimientoActivo, ResultadoRegistrarActivos,
 } from '../tipos'
 
 const ESTADOS = ['en_stock', 'asignado', 'en_reparacion', 'extraviado', 'de_baja']
-export const MAX_SERIES_POR_LOTE = 200
-const MAX_CANTIDAD_POR_REGISTRO = 1_000_000
-const MAX_LARGO_SERIE = 80
-
-/** Igual que la base: sin mayúsculas ni espacios, para detectar series repetidas dentro del mismo lote. */
-const normalizarSerie = (s: string): string => s.toLowerCase().replace(/\s+/g, '')
-const lista = (valores: string[]): string => valores.join(', ')
 
 export const listarActivos = definirServicio<EntradaListarActivos | undefined, Activo[]>(
   'inventario.listar', { permiso: 'activos.ver' },
@@ -80,82 +74,10 @@ export const registrarActivos = definirServicio<EntradaRegistrarActivos, Resulta
       if (!ubicacion) throw noEncontrado('La ubicación')
       if (!ubicacion.activo) throw validacion('La ubicación está desactivada.', { ubicacionId: 'Elija una ubicación activa.' })
 
-      // ---- SKU por cantidad: suma al saldo de esa ubicación -----------------------------------------
       if (sku.control === 'cantidad') {
-        if (series && series.length > 0) {
-          throw validacion(`«${sku.codigo}» se controla por cantidad: no lleva series. Indique la cantidad.`, { series: 'Este artículo no usa series.' })
-        }
-        const cantidad = entrada.cantidad
-        if (!hayCantidad || typeof cantidad !== 'number' || !Number.isInteger(cantidad) || cantidad < 1 || cantidad > MAX_CANTIDAD_POR_REGISTRO) {
-          throw validacion('Escriba la cantidad: un número entero mayor que cero.', { cantidad: 'Escriba un número entero mayor que cero.' })
-        }
-        let saldo: number
-        try {
-          saldo = await tx.intentar(() => repo.sumarExistencia(tx, ctx.empresaId, sku.id, ubicacion.id, cantidad))
-        } catch (e) {
-          if (esViolacionCheck(e)) throw validacion('La cantidad total en esa ubicación superaría el máximo permitido.', { cantidad: 'La cantidad es demasiado grande.' })
-          throw e
-        }
-        await registrarAuditoria(tx, ctx, {
-          accion: 'existencia.registrar', entidadTipo: 'existencia', entidadId: sku.id,
-          cambios: { sku: sku.codigo, ubicacionId: ubicacion.id, cantidadAgregada: cantidad, saldo },
-        })
-        return { creados: cantidad }
+        return ingresarCantidad(tx, ctx, { sku, ubicacion, cantidad: entrada.cantidad, series, origen: undefined })
       }
-
-      // ---- SKU por serie: una fila por serie ------------------------------------------------------------
-      if (hayCantidad && !(series && series.length > 0)) {
-        throw validacion(`«${sku.codigo}» se controla por serie: escriba las series, una por equipo.`, { series: 'Escriba al menos una serie.' })
-      }
-      const limpias = (series ?? []).map((s) => (typeof s === 'string' ? s.trim() : ''))
-      if (limpias.length === 0) throw validacion('Escriba al menos una serie.', { series: 'Escriba al menos una serie.' })
-      if (limpias.length > MAX_SERIES_POR_LOTE) {
-        throw validacion(`Se pueden registrar hasta ${MAX_SERIES_POR_LOTE} series a la vez.`, { series: `Máximo ${MAX_SERIES_POR_LOTE} series por vez.` })
-      }
-      if (limpias.some((s) => s === '')) throw validacion('Hay una serie vacía.', { series: 'Quite las líneas vacías.' })
-      const largas = limpias.filter((s) => s.length > MAX_LARGO_SERIE)
-      if (largas.length > 0) {
-        throw validacion(`Series demasiado largas (máximo ${MAX_LARGO_SERIE} caracteres): ${lista(largas.slice(0, 5))}.`, { series: 'Una serie es demasiado larga.' })
-      }
-      // Repetidas dentro del mismo lote.
-      const vistas = new Set<string>()
-      const repetidasEnLote: string[] = []
-      for (const s of limpias) {
-        const n = normalizarSerie(s)
-        if (vistas.has(n)) repetidasEnLote.push(s)
-        vistas.add(n)
-      }
-      if (repetidasEnLote.length > 0) {
-        const m = `Estas series están repetidas en su lista: ${lista(repetidasEnLote)}.`
-        throw duplicado(m, { series: m })
-      }
-      // Ya registradas antes para este artículo.
-      const yaExisten = await repo.seriesExistentes(tx, ctx.empresaId, sku.id, [...vistas])
-      if (yaExisten.length > 0) {
-        const m = `Estas series ya están registradas para «${sku.codigo}»: ${lista(yaExisten)}.`
-        throw duplicado(m, { series: m })
-      }
-
-      const ids: string[] = []
-      for (const serie of limpias) {
-        try {
-          // Punto de guardado: si una serie choca (otra persona la registró a la vez), se explica cuál.
-          ids.push(await tx.intentar(() => repo.insertarActivo(tx, ctx.empresaId, sku.id, ubicacion.id, serie)))
-        } catch (e) {
-          if (esViolacionUnica(e)) {
-            const m = `La serie ${serie} ya está registrada para «${sku.codigo}».`
-            throw duplicado(m, { series: m })
-          }
-          throw e
-        }
-      }
-      for (const [i, id] of ids.entries()) {
-        await registrarAuditoria(tx, ctx, {
-          accion: 'activo.registrar', entidadTipo: 'activo', entidadId: id,
-          cambios: { sku: sku.codigo, serie: limpias[i], ubicacionId: ubicacion.id },
-        })
-      }
-      return { creados: ids.length }
+      return ingresarSeries(tx, ctx, { sku, ubicacion, series, hayCantidad, origen: undefined })
     })
   },
 )
@@ -235,9 +157,3 @@ const ETIQUETAS_ESTADO: Record<string, string> = {
 }
 const etiquetaEstado = (e: string): string => ETIQUETAS_ESTADO[e] ?? e
 
-/** Error 23514 de la base (una regla CHECK). */
-function esViolacionCheck(e: unknown): boolean {
-  if (typeof e !== 'object' || e === null) return false
-  const { codigo, code } = e as Record<string, unknown>
-  return (codigo ?? code) === '23514'
-}
