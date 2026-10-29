@@ -64,7 +64,7 @@ jobs:
           psql -X -h localhost -U postgres -d plataforma -v ON_ERROR_STOP=1
           -v p_migraciones=ci-migraciones -v p_app_empresa=ci-app-empresa
           -v p_app_plataforma=ci-app-plataforma -v p_lector_auditoria=ci-lector
-          -f scripts/db-init/01-roles.sql
+          -f scripts/db-init/roles.psql
       - name: Migraciones
         run: npm run db:migrar
       - name: Semilla

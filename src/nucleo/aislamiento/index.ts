@@ -16,6 +16,7 @@ import { AsyncLocalStorage } from 'node:async_hooks'
 import type pg from 'pg'
 import { poolDe, cerrarConexiones, type NombrePool } from './cliente'
 import { ErrorBaseDatos, ErrorUsoAislamiento } from './errores-base'
+import { validarSql } from './sql-permitido'
 
 export { ErrorBaseDatos, ErrorUsoAislamiento } from './errores-base'
 export { cerrarConexiones }
@@ -42,26 +43,6 @@ export interface OpcionesTransaccion {
 const PLAZO_POR_DEFECTO_MS = 60_000
 const PLAZO_MAXIMO_MS = 240_000
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
-// Defensa en profundidad (ADR-03, H-SEG-36): la empresa solo la fija esta puerta.
-const SQL_PROHIBIDO: { patron: RegExp; motivo: string }[] = [
-  { patron: /\bset_config\s*\(/i, motivo: 'set_config solo lo usa nucleo/aislamiento' },
-  { patron: /^\s*(set|reset)\b/i, motivo: 'SET/RESET de sesión no se permite (el agrupador de conexiones lo prohíbe)' },
-  { patron: /^\s*(begin|start|commit|end|rollback|abort|savepoint|release)\b/i, motivo: 'la transacción la maneja conEmpresa (usa tx.intentar para puntos de guardado)' },
-  { patron: /^\s*(do|copy|listen|notify|unlisten|truncate)\b/i, motivo: 'sentencia no permitida desde los servicios' },
-  { patron: /\bpg_advisory_lock\s*\(|\bpg_advisory_lock_shared\s*\(/i, motivo: 'use pg_advisory_xact_lock' },
-]
-
-function validarSql(sql: string): void {
-  if (typeof sql !== 'string' || sql.trim() === '') throw new ErrorUsoAislamiento('SQL vacío.')
-  for (const { patron, motivo } of SQL_PROHIBIDO) {
-    if (patron.test(sql)) throw new ErrorUsoAislamiento(`SQL no permitido: ${motivo}.`)
-  }
-  // Una sentencia por llamada: sin ';' salvo al final.
-  if (sql.replace(/;\s*$/, '').includes(';')) {
-    throw new ErrorUsoAislamiento('SQL no permitido: una sola sentencia por llamada.')
-  }
-}
 
 function aErrorBase(e: unknown): unknown {
   const x = e as { code?: unknown; message?: unknown; constraint?: unknown; table?: unknown; severity?: unknown }
@@ -133,6 +114,11 @@ async function transaccion<T>(
   const cliente = await poolDe(pool).connect()
   let destruir = false
   let temporizador: NodeJS.Timeout | undefined
+  // Una conexión cortada por el servidor emite 'error' en el cliente prestado; sin escucha tumbaría el proceso.
+  const alErrorDeConexion = () => {
+    destruir = true
+  }
+  cliente.on('error', alErrorDeConexion)
   try {
     await cliente.query('BEGIN')
     if (empresaId !== null) {
@@ -162,6 +148,7 @@ async function transaccion<T>(
     throw aErrorBase(e)
   } finally {
     if (temporizador) clearTimeout(temporizador)
+    cliente.removeListener('error', alErrorDeConexion)
     cliente.release(destruir ? true : undefined)
   }
 }

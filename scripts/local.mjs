@@ -89,7 +89,7 @@ async function prepararBase() {
     '-v', `p_app_empresa=${process.env.PG_PASS_APP_EMPRESA}`,
     '-v', `p_app_plataforma=${process.env.PG_PASS_APP_PLATAFORMA}`,
     '-v', `p_lector_auditoria=${process.env.PG_PASS_LECTOR_AUDITORIA}`,
-    '-f', 'scripts/db-init/01-roles.sql',
+    '-f', 'scripts/db-init/roles.psql',
   ], { env: { ...process.env, PGPASSWORD: process.env.POSTGRES_PASSWORD } });
 }
 
