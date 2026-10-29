@@ -13,6 +13,7 @@ Estos documentos explican **cómo se construye por dentro** la plataforma, para 
 1. **Posible gasto pequeño nuevo:** poner la consola de la plataforma en su propio servicio puede sumar un costo mensual al alojamiento. No damos cifras: DevOps las verifica. El equipo recomienda hacerlo igual por seguridad. **[ESCALAR AL CEO]**
 2. **Asistente de IA:** cobra por uso y envía texto de las empresas a un proveedor externo. Antes de activarlo usted deberá aprobar el proveedor, el tope mensual y, con un abogado, el envío de datos. Ya estaba marcado en el módulo del asistente; aquí queda un diseño con **dos topes independientes** (uno nuestro y otro en la cuenta del proveedor, que verifica DevOps; mientras el segundo no exista no se promete un gasto «acotado por construcción»). El proveedor es Claude (Anthropic), decisión suya, y el primer uso será un chat para que los empleados llenen bien un caso de mesa de ayuda. **[ESCALAR AL CEO]**
 3. **Conexión con Microsoft:** solo lee (nunca modifica nada en Microsoft). Las licencias de Intune son de cada empresa. Si algún día quiere bloquear o borrar equipos desde la plataforma, eso es irreversible y se le consultará. **[ESCALAR AL CEO] solo en ese caso.**
+4. **Clientes que piden su propia base (ADR-25):** el diseño ya permite instalar la plataforma en la nube o en los servidores de un cliente con su propia base PostgreSQL, y ofrecer una copia de solo lectura hacia su SQL Server por API. No se construye nada de eso en la v1; cada paso necesita un cliente real. Usar SQL Server como base principal sería un segundo producto de mantener. Modelo comercial, contrato de responsabilidad, residencia de datos y entrega de la aplicación a servidores ajenos son suyos. **[ESCALAR AL CEO]**
 
 Antes de escribir la primera pantalla real, el equipo hará una **prueba técnica de 4 días, más 1 de reserva** (antes 3 a 4), con datos inventados para comprobar que estas ideas funcionan; si algo falla, se corrige antes de gastar tiempo en construir encima.
 
@@ -46,6 +47,7 @@ Cada ADR es corto: contexto, opciones, decisión, consecuencias, **qué prueba l
 | [22](adr-22-asistente-ia.md) | **Nuevo.** Asistente de IA (proveedor Claude, D-102) | Módulo ASI |
 | [23](adr-23-acciones-plataforma-congelacion.md) | **Nuevo.** Acciones de plataforma con segunda persona dentro de la base, contacto autorizado y congelación por incidente | H-SEG-38, 62 a 67; D-080(b) |
 | [24](adr-24-admision-casos-asistente.md) | **Nuevo.** Chat de admisión de casos del asistente (ASI-A): el modelo propone una ficha y la persona envía el formulario normal | D-102 a D-110 |
+| [25](adr-25-despliegues-dedicados-y-motor-de-base.md) | **Nuevo.** Despliegues dedicados por cliente (nube compartida, base en la nube del cliente, instalación en sus servidores), SQL Server como base principal (no en la v1) y réplica de solo lectura por API o archivo | Pregunta del CEO; D-039.10 |
 
 Además: [prototipo-tecnico.md](prototipo-tecnico.md) (alcance, criterios de éxito y fracaso de los 4 días previos a la Etapa 1), [indices-claves-naturales.md](indices-claves-naturales.md) y [revision-datos.md](revision-datos.md) (insumos de Datos).
 
@@ -286,6 +288,7 @@ Estado de los ADR según Seguridad (ronda 6): aprobados 01, 02, 07, 09, 10, 12, 
 18. *(Ronda 6, propuesta)* Congelación provisional inmediata de 72 horas al declarar — precisa D-080(b).
 19. *(Ronda 6)* El contacto autorizado como segunda persona: valor de un solo uso atado a la acción, contacto confirmado 24 horas antes — precisa RF-PLA-011.
 20. *(Ronda 6)* El gasto del asistente se acota con dos topes independientes (el nuestro y el de la cuenta del proveedor) — precisa D-101 y D-110.2.
+21. *(ADR-25, propuesta)* Tres niveles de despliegue (nube compartida, base dedicada en la nube del cliente, instalación en servidores del cliente) con el mismo código y PostgreSQL; SQL Server como base principal no se construye en la v1; la réplica hacia el SQL Server del cliente es de solo lectura, la jala el cliente por API y por archivo, y exige las piezas de 3.4 y 3.5 del ADR-25 en el módulo de Integraciones — decisión nueva.
 
 **Documento funcional y módulos que deben ajustarse** (lo hacen el Analista y los escuadrones; yo no los toqué):
 - `documento-funcional.md`: RF-AUD-013 (cuatro autores y marca de origen), RF-AUD-016 ("omite a las empresas" → pospone la purga de la partición), RF-ACC sobre verificación reciente, RF-PLA-001 (ingreso de la consola solo con llave física; vencimientos 15 min y 4 h), RF-PLA-005, §18.1 y aviso de privacidad (respaldos conservan la exportación cifrada; motivo; datos de Microsoft; envío al proveedor de IA), nuevos RS de cabeceras, cookies y asistente.
