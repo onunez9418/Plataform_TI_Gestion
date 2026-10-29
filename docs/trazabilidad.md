@@ -1,6 +1,6 @@
 # Trazabilidad: requisito, etapa, criterio de aceptación
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `9856696` · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los 19 módulos de `docs/modulos/` que ya están completos (incluidos los dos nuevos, `microsoft-entra-intune` y `asistente-ia`, en su versión 0.1). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del 2026-10-26.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `c787dd6` · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los 19 módulos de `docs/modulos/` que ya están completos (incluidos los dos nuevos, `microsoft-entra-intune` y `asistente-ia`, en su versión 0.1). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del 2026-10-26.
 
 **Cómo se hizo.** Un script lee las tablas de requisitos (columnas Cuándo y CA), la tabla de reglas RN con su columna CA, la sección 22 con su tabla 22.1 "Se ejecuta en" y los criterios de los módulos. Después QA leyó el texto de los requisitos y criterios dudosos. Estados:
 
@@ -15,7 +15,7 @@ El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): 
 
 ## Resumen de huecos
 
-| Medida | Antes (2026-10-26, commit 5ed0dcb) | Hoy (2026-10-29, commit 9856696) |
+| Medida | Antes (2026-10-26, commit 5ed0dcb) | Hoy (2026-10-29, commit c787dd6) |
 |---|---|---|
 | Filas RF y RNF del núcleo (con las retiradas) | 316 | 320 |
 | Retiradas (RF-USR-004, RF-IMP-012, RF-OS-007) | 3 | 3 |
@@ -34,15 +34,15 @@ El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): 
 | Reglas RN cuyo criterio no las prueba del todo | 4 (RN-009, RN-018, RN-021, RN-023) | 3 (RN-021, RN-023, RN-024) |
 | Criterios sin ningún requisito ni regla que los cite o liste | - | 3 (CA-AYU-26, CA-MSF-38, CA-PRE-12) |
 | Criterios citados solo por reglas RN o RS (sin fila RF) | 57 | 108 |
-| Reglas RN de módulos sin criterio (de ellas, en módulos con parte en la v1) | - | 179 (90) |
+| Reglas RN de módulos sin criterio (de ellas, en módulos con parte en la v1) | - | 176 (87) |
 | RF y RNF de módulos sin criterio (de ellos, en módulos con parte en la v1) | - | 61 (39) |
-| «Sin hacer» del Analista que siguen abiertos | - | 6 |
+| «Sin hacer» del Analista que siguen abiertos | - | 4 |
 
 Lectura: las 25 reglas del núcleo tienen criterio (RN-024, la congelación, entró con CA-095a a 095j). De los 19 requisitos que el 2026-10-26 no se probaban de verdad, quedan 4: RF-ENT-002, RF-ENT-016 y RF-OC-028 (los «Sin hacer» del Analista) y RF-OC-048 (el informe mensual espera la respuesta P-018). Los demás los resolvieron los criterios CA-015g a 015i, CA-038c y 038d, CA-071, CA-097 a CA-105 y las particiones de PRV y GAR. Las cuatro citas mal apuntadas de entonces (RF-USR-006, RF-PER-010, RF-ACC-021, RF-UX-008) y RF-OC-041 se corrigieron; aparecen dos nuevas: RF-CAT-008 (núcleo) y RF-GAR-006 (garantías).
 
 ## Lo que falta, exacto, y de quién
 
-Lista cerrada al 2026-10-29 (commit 9856696). Cada fila dice qué falta, el texto que QA propone y quién lo cierra. El texto de QA es una **propuesta**: lo decide y lo redacta el Analista (o el escuadrón). Estas filas se recalculan al regenerar: cuando el Analista las resuelva, desaparecen solas de la primera tabla.
+Lista cerrada al 2026-10-29 (commit c787dd6). Cada fila dice qué falta, el texto que QA propone y quién lo cierra. El texto de QA es una **propuesta**: lo decide y lo redacta el Analista (o el escuadrón). Estas filas se recalculan al regenerar: cuando el Analista las resuelva, desaparecen solas de la primera tabla.
 
 **1. «Sin hacer» del Analista (se detectan leyendo el texto actual)**
 
@@ -50,10 +50,8 @@ Lista cerrada al 2026-10-29 (commit 9856696). Cada fila dice qué falta, el text
 |---|---|---|---|---|
 | CA-024 | La cabecera cubre RF-OC-028 (Etapa 7, P-009) y el criterio corre en Etapa 4: no se puede ejecutar entero. | Quitar RF-OC-028 de la cabecera de CA-024 y de su fila (la baja con motivo ya la prueba CA-024 en Etapa 4); la decisión P-009 de la Etapa 7 se verifica con un criterio documental nuevo. | Analista | Etapa 4 |
 | CA-053 | Sigue entero: junta respaldo, restauración con cronómetro, vuelta atrás, manuales, rendimiento y procedimiento de incidente (D-076.3 pide partirlo). | 053a respaldo y restauración (RNF-014, RF-DAT-005); 053b vuelta atrás (RNF-015); 053c rendimiento (RNF-010 a 012; RNF-011 corre en la carga nocturna desde la Etapa 4, se completa en la 7); 053d manuales, costo y procedimiento de incidente (RNF-016 a 018, RF-DAT-015). | Analista | Etapa 7 (053c desde la Etapa 4) |
-| CA-ENT-08 | Dice «falla la entrega de uno» y no dice cómo se provoca la falla. | Dada la inyección de fallos del entorno de pruebas: se corta la conexión entre la primera y la segunda asignación del traspaso; resultado esperado: ninguna devolución ni entrega registrada, los dos equipos siguen con la Persona cesada y no queda ningún acta. Segundo caso sin inyección: la Persona destino pasa a Cesada justo antes de confirmar. | Analista (escuadrón D) | Etapa 4 |
-| CA-ENT-10 | Dice «cuando pasa el tiempo» sin decir cuánto ni con qué reloj. | Con el reloj de pruebas a +30 días y a +365 días desde el cese (reloj R5), el equipo sigue Asignado como «Pendiente de devolución» y no suma a pérdidas. | Analista (escuadrón D) | Etapa 4 |
-| RF-ENT-002 | Su único criterio (CA-ENT-01) no prueba lo que dice el requisito. | Dado un técnico que captura una entrega de dos equipos (L1 y M1) a Ana y sale sin confirmar, cuando vuelve, entonces ve lo capturado; L1 y M1 siguen En stock y otro técnico puede entregar L1 a Luis; el borrador sin efecto se borra y desaparece; una entrega confirmada no se puede borrar (CA-045). | Analista (escuadrón D) | Etapa 4 |
-| RF-ENT-016 | Su único criterio (CA-ENT-01) no prueba lo que dice el requisito. | Dado un préstamo de L1 a Ana con fecha prevista 30/11/2026, cuando el técnico lo renueva al 31/12/2026 con motivo, entonces la fecha cambia, el historial guarda la anterior y la nueva y la auditoría guarda el motivo; sin motivo o sin permiso se rechaza; una entrega definitiva no se renueva. | Analista (escuadrón D) | Etapa 4 |
+| RF-ENT-002 | Su único criterio (CA-ENT-16) no prueba lo que dice el requisito. | Dado un técnico que captura una entrega de dos equipos (L1 y M1) a Ana y sale sin confirmar, cuando vuelve, entonces ve lo capturado; L1 y M1 siguen En stock y otro técnico puede entregar L1 a Luis; el borrador sin efecto se borra y desaparece; una entrega confirmada no se puede borrar (CA-045). | Analista (escuadrón D) | Etapa 4 |
+| RF-ENT-016 | Su único criterio (CA-ENT-17) no prueba lo que dice el requisito. | Dado un préstamo de L1 a Ana con fecha prevista 30/11/2026, cuando el técnico lo renueva al 31/12/2026 con motivo, entonces la fecha cambia, el historial guarda la anterior y la nueva y la auditoría guarda el motivo; sin motivo o sin permiso se rechaza; una entrega definitiva no se renueva. | Analista (escuadrón D) | Etapa 4 |
 
 **2. Otros huecos de redacción que QA encontró al leer**
 
@@ -74,7 +72,7 @@ Lista cerrada al 2026-10-29 (commit 9856696). Cada fila dice qué falta, el text
 | RF-IMP-010 (plantilla) | Ningún criterio prueba que la plantilla trae costo, moneda, fecha de compra, fin de garantía y centro de costo. | Una línea en CA-038a. | Analista | Etapa 4 |
 | RN-010 | No nombra CA-079b (autoentrega sin excepción). | Agregar CA-079b a la columna CA. | Analista | Etapa 1 |
 | 39 RNF de los módulos PRS, ENT, PRV, GAR y NOT | Ninguna fila ni criterio los cita (H-QA-27). | Cada escuadrón cita el criterio de cada RNF; hasta entonces QA los prueba con CA-050a, CA-053 y CA-001. | Analista (escuadrones A, B, C, D) | Etapas 2, 4 y 5 |
-| 90 reglas RN de los módulos con parte en la v1 | Sin criterio que las cite o las liste. | Cada escuadrón cita el criterio de cada regla antes de la etapa del módulo (D-076.4). | Analista (escuadrones A, B, C, D) | Etapas 2, 4 y 5 |
+| 87 reglas RN de los módulos con parte en la v1 | Sin criterio que las cite o las liste. | Cada escuadrón cita el criterio de cada regla antes de la etapa del módulo (D-076.4). | Analista (escuadrones A, B, C, D) | Etapas 2, 4 y 5 |
 | CA-AYU-26, CA-PRE-12 | Ningún requisito ni regla los cita ni los lista. | Fase 2 y Fase 3: el escuadrón los vincula al activar el módulo. | Analista (escuadrones de mesa de ayuda y presupuesto) | Fase 2 y 3 |
 | CA-105 (Etapa 0) | El texto está; no se puede ejecutar hasta recibir el Excel, la orden de compra y la orden de servicio reales con nombres reemplazados (P-002). | QA revisa el archivo cuando llegue. | Cliente (CEO) entrega; Jefatura de Proyecto lo pide | Etapa 0 (cierre) y Etapa 4 |
 | Módulo MSF v0.1 | 3 criterios con etapa heredada porque la columna «Cuándo» de sus requisitos no dice «Fase 3»; criterio sin requisito: CA-MSF-38. | El Analista completa las citas antes de activar el módulo (D-076.4); no frena la v1. | Analista | Fase 3 |
@@ -198,7 +196,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 | ASI · Asistente de IA | 41 | 0 | 41 | 0 |
 | CMD · CMDB ligera | 30 | 29 | 0 | 1 |
 | DOM · Dominios y certificados | 26 | 0 | 8 | 18 |
-| ENT · Entregas y devoluciones | 29 | 0 | 16 | 13 |
+| ENT · Entregas y devoluciones | 29 | 0 | 19 | 10 |
 | GAR · Garantías y mantenimiento | 41 | 0 | 21 | 20 |
 | CAM · Gestión de cambios | 30 | 29 | 0 | 1 |
 | PRB · Gestión de problemas | 21 | 21 | 0 | 0 |
@@ -604,7 +602,7 @@ Solo las filas con etapa de la v1 (E0 a E7). Las filas de Fase 2 y 3 se cierran 
 | ID | Requisito (resumido) | Etapa | Criterio (corre en) | Estado | Observación |
 |---|---|---|---|---|---|
 | RF-ENT-001 | Asistente único "Entregar" (el botón de la ficha del activo lo abre con el equipo cargado; lo… | E4 | CA-ENT-01 (E4), CA-ENT-02 (E4), CA-ENT-03 (E4) | cubierto |  |
-| RF-ENT-002 | Borrador automático de la entrega: se puede salir y volver sin perder lo capturado. No reserva… | E4 | CA-ENT-01 (E4) | no probado de verdad | CA-ENT-01 no prueba el borrador automático (salir y volver sin perder lo capturado; no reserva equipos; el borrador sin efecto se puede borrar). «Sin hacer» del Analista al 2026-10-29. |
+| RF-ENT-002 | Borrador automático de la entrega: se puede salir y volver sin perder lo capturado. No reserva… | E4 | CA-ENT-16 (E4) | no probado de verdad | CA-ENT-01 no prueba el borrador automático (salir y volver sin perder lo capturado; no reserva equipos; el borrador sin efecto se puede borrar). «Sin hacer» del Analista al 2026-10-29. |
 | RF-ENT-003 | Acta de entrega en PDF: empresa, número ACT-E-NNNNNN, fecha y hora, Persona, quién entrega, eq… | E4 | CA-ENT-01 (E4), CA-ENT-12 (E4), CA-ENT-13 (E4) | cubierto |  |
 | RF-ENT-004 | Devolución (modo del mismo asistente): la Persona (Activa o Cesada), los equipos que devuelve… | E4 | CA-ENT-04 (E4), CA-ENT-08 (E4) | cubierto |  |
 | RF-ENT-005 | Acta de devolución en PDF ACT-D-NNNNNN con el mismo formato. | E4 | CA-ENT-12 (E4) | cubierto |  |
@@ -615,7 +613,7 @@ Solo las filas con etapa de la v1 (E0 a E7). Las filas de Fase 2 y 3 se cierran 
 | RF-ENT-012 | Historial por Persona: pestaña "Entregas y actas" de su ficha, con asignaciones vigentes y cer… | E4 | CA-ENT-01 (E4) | cubierto |  |
 | RF-ENT-013 | Historial por activo: pestaña "Entregas y actas" de su ficha (Persona, desde, hasta, condición… | E4 | CA-ENT-01 (E4) | cubierto |  |
 | RF-ENT-014 | Lista de actas con buscador y filtros (tipo, Persona, activo, fecha, estado, "préstamo vencido… | E4 | CA-ENT-07 (E4) | cubierto |  |
-| RF-ENT-016 | Renovar un préstamo: nueva fecha prevista con motivo y auditoría. | E4 | CA-ENT-01 (E4) | no probado de verdad | CA-ENT-01 no prueba renovar un préstamo (nueva fecha con motivo y auditoría). «Sin hacer» del Analista al 2026-10-29. |
+| RF-ENT-016 | Renovar un préstamo: nueva fecha prevista con motivo y auditoría. | E4 | CA-ENT-17 (E4) | no probado de verdad | CA-ENT-01 no prueba renovar un préstamo (nueva fecha con motivo y auditoría). «Sin hacer» del Analista al 2026-10-29. |
 | RF-GAR-001 | Al recibir mercadería con serie o importar, capturar la garantía del fabricante una sola vez p… | E5 | CA-GAR-01b (E5), CA-GAR-01c (E5) | cubierto |  |
 | RF-GAR-002 | Mostrar en la ficha del activo si está en garantía, con texto y fecha ("En garantía hasta 15/0… | E4 | CA-GAR-01a (E4) | cubierto |  |
 | RF-GAR-003 | Filtro de activos "garantía vence en los próximos N días" y "sin garantía vigente". | E4 | CA-GAR-04c (E4), CA-GAR-04d (E4) | cubierto |  |

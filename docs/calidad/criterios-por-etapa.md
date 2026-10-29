@@ -1,6 +1,6 @@
 # Criterios de aceptación por etapa
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `9856696` (árbol de documentos fuente limpio al generar) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los 19 módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `c787dd6` (árbol de documentos fuente limpio al generar) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los 19 módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
 
 **Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del 2026-10-26 (451 criterios, commit `5ed0dcb`). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).
 
@@ -12,9 +12,9 @@
 - **Bloqueante:** sí = si falla, la etapa no se aprueba. "No (bloquea su módulo)" = es de Fase 2 o 3 y bloquea la entrega de ese módulo, no la v1 (D-056).
 - **Etapa heredada:** el criterio solo cita reglas RN y no hay fila RF que lo cite; tomó la etapa más frecuente de su módulo. Debe confirmarlo el escuadrón.
 
-## Resumen (checkpoint 9856696, 2026-10-29)
+## Resumen (checkpoint c787dd6, 2026-10-29)
 
-**610 criterios:** 149 del núcleo (identificadores con letra, que son 109 números, CA-001 a CA-109) y 461 de los 19 módulos completos. El 2026-10-26 eran 451 (116 y 335): +159. Qué cambió: **11 criterios dejaron de existir como uno solo** porque se partieron (CA-038, CA-094, CA-GAR-01, CA-GAR-04, CA-PRS-01, CA-PRS-03, CA-PRS-08, CA-PRS-12, CA-PRS-14, CA-PRV-02, CA-PRV-04) y **74 criterios nuevos** los reemplazan o se suman: en el núcleo 35 (CA-015g, h e i de lectura de soporte; CA-038a a d; CA-094a a c; CA-095a a j de congelación por incidente, D-080; CA-096 a CA-105, con CA-104 en a y b) y en los módulos PRS 21, GAR 9 y PRV 6.
+**612 criterios:** 149 del núcleo (identificadores con letra, que son 109 números, CA-001 a CA-109) y 463 de los 19 módulos completos. El 2026-10-26 eran 451 (116 y 335): +161. Qué cambió: **11 criterios dejaron de existir como uno solo** porque se partieron (CA-038, CA-094, CA-GAR-01, CA-GAR-04, CA-PRS-01, CA-PRS-03, CA-PRS-08, CA-PRS-12, CA-PRS-14, CA-PRV-02, CA-PRV-04) y **74 criterios nuevos** los reemplazan o se suman: en el núcleo 35 (CA-015g, h e i de lectura de soporte; CA-038a a d; CA-094a a c; CA-095a a j de congelación por incidente, D-080; CA-096 a CA-105, con CA-104 en a y b) y en los módulos PRS 21, GAR 9 y PRV 6.
 
 | Se ejecuta en | Criterios que empiezan aquí | Criterios que se completan aquí (empezaron antes) |
 |---|---|---|
@@ -22,15 +22,15 @@
 | Etapa 1 | 55 | 0 |
 | Etapa 2 | 60 | 2 |
 | Etapa 3 | 4 | 1 |
-| Etapa 4 | 61 | 6 |
+| Etapa 4 | 63 | 6 |
 | Etapa 5 | 33 | 5 |
 | Etapa 6 | 2 | 2 |
 | Etapa 7 | 5 | 0 |
 | Fase 2 | 138 | 5 |
 | Fase 3 | 251 | 0 |
-| **Total** | 610 | 21 |
+| **Total** | 612 | 21 |
 
-**Criterios de la v1 (Etapas 0 a 7): 221.** De fases posteriores: 389. Antes (2026-10-26): 166 y 285.
+**Criterios de la v1 (Etapas 0 a 7): 223.** De fases posteriores: 389. Antes (2026-10-26): 166 y 285.
 
 Comparación con la versión anterior (2026-10-26). Las dos medidas son las mismas que entonces: dónde **empieza** cada criterio y dónde **termina**.
 
@@ -40,7 +40,7 @@ Comparación con la versión anterior (2026-10-26). Las dos medidas son las mism
 | Etapa 1 | 52 | 55 | 38 | 41 |
 | Etapa 2 | 37 | 60 | 32 | 59 |
 | Etapa 3 | 4 | 4 | 3 | 3 |
-| Etapa 4 | 44 | 61 | 54 | 67 |
+| Etapa 4 | 44 | 63 | 54 | 69 |
 | Etapa 5 | 24 | 33 | 28 | 37 |
 | Etapa 6 | 2 | 2 | 3 | 3 |
 | Etapa 7 | 3 | 5 | 3 | 5 |
@@ -57,7 +57,7 @@ Por la etapa más temprana de su requisito:
 | Etapa 1 | 64 |
 | Etapa 2 | 65 |
 | Etapa 3 | 4 |
-| Etapa 4 | 46 |
+| Etapa 4 | 48 |
 | Etapa 5 | 26 |
 | Etapa 6 | 3 |
 | Etapa 7 | 4 |
@@ -67,10 +67,10 @@ Por la etapa más temprana de su requisito:
 
 | Tipo de prueba | Criterios |
 |---|---|
-| integración | 321 |
+| integración | 323 |
 | integración + navegador | 125 |
-| unitaria | 86 |
-| navegador | 65 |
+| unitaria | 85 |
+| navegador | 66 |
 | manual (con apoyo de integración) | 12 |
 | manual (verificación documental) | 1 |
 
@@ -81,7 +81,7 @@ Por la etapa más temprana de su requisito:
 | Gestión de cambios (CAM) | 20 |
 | CMDB ligera (CMD) | 21 |
 | Dominios y certificados (DOM) | 14 |
-| Entregas y devoluciones (ENT) | 15 |
+| Entregas y devoluciones (ENT) | 17 |
 | Garantías y mantenimiento (GAR) | 27 |
 | Integraciones y API (INT) | 26 |
 | Licencias de software (LIC) | 20 |
@@ -106,7 +106,7 @@ Bloqueantes de una etapa = los criterios que **empiezan** en ella más los que *
 | Etapa 1 | 55 | 0 | 55 | 2 |
 | Etapa 2 | 60 | 2 | 62 | 3 |
 | Etapa 3 | 4 | 1 | 5 | 0 |
-| Etapa 4 | 61 | 6 | 67 | 3 |
+| Etapa 4 | 63 | 6 | 69 | 3 |
 | Etapa 5 | 33 | 5 | 38 | 1 |
 | Etapa 6 | 2 | 2 | 4 | 0 |
 | Etapa 7 | 5 | 0 | 5 | 2 |
@@ -226,8 +226,6 @@ CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j, CA-109, CA-ASI
 | CA-105 | Etapa 0 | Es una verificación de documentos que depende de que el Cliente (CEO) entregue el Excel, la orden de compra y la orden de servicio reales (P-002). Mientras no lleguen, no se puede ejecutar y la Etapa 0 no cierra en ese punto. |
 | CA-024 | Etapa 4 | «Sin hacer» del Analista. La cabecera cubre RF-OC-028 (Etapa 7, P-009) y el criterio corre en Etapa 4: no se puede ejecutar entero. Propuesta de QA: Quitar RF-OC-028 de la cabecera de CA-024 y de su fila (la baja con motivo ya la prueba CA-024 en Etapa 4); la decisión P-009 de la Etapa 7 se verifica con un criterio documental nuevo. |
 | CA-053 | Etapa 7 | «Sin hacer» del Analista. Sigue entero: junta respaldo, restauración con cronómetro, vuelta atrás, manuales, rendimiento y procedimiento de incidente (D-076.3 pide partirlo). Propuesta de QA: 053a respaldo y restauración (RNF-014, RF-DAT-005); 053b vuelta atrás (RNF-015); 053c rendimiento (RNF-010 a 012; RNF-011 corre en la carga nocturna desde la Etapa 4, se completa en la 7); 053d manuales, costo y procedimiento de incidente (RNF-016 a 018, RF-DAT-015). |
-| CA-ENT-08 | Etapa 4 | «Sin hacer» del Analista. Dice «falla la entrega de uno» y no dice cómo se provoca la falla. Propuesta de QA: Dada la inyección de fallos del entorno de pruebas: se corta la conexión entre la primera y la segunda asignación del traspaso; resultado esperado: ninguna devolución ni entrega registrada, los dos equipos siguen con la Persona cesada y no queda ningún acta. Segundo caso sin inyección: la Persona destino pasa a Cesada justo antes de confirmar. |
-| CA-ENT-10 | Etapa 4 | «Sin hacer» del Analista. Dice «cuando pasa el tiempo» sin decir cuánto ni con qué reloj. Propuesta de QA: Con el reloj de pruebas a +30 días y a +365 días desde el cese (reloj R5), el equipo sigue Asignado como «Pendiente de devolución» y no suma a pérdidas. |
 
 ### Etapa de los 74 criterios nuevos: lectura de QA (2026-10-29)
 
@@ -641,25 +639,27 @@ Ninguno de los dos aparece todavía en el registro de prefijos del documento fun
 | CA-DOM-13 | exportación y alcance; RF-DOM-014, RNF-DOM-007 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/dominios-certificados.md:246 |
 | CA-DOM-14 | escritura con referencias cruzadas; RN-DOM-001 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/dominios-certificados.md:247 |
 
-### ENT · Entregas y devoluciones (15)
+### ENT · Entregas y devoluciones (17)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
-| CA-ENT-01 | RF-ENT-001, 002, 003, 012, 013, 016; RN-ENT-005 | Etapa 4 | Etapa 4 | - | navegador | sí |  | modulos/entregas-devoluciones.md:231 |
+| CA-ENT-01 | RF-ENT-001, 003, 012, 013; RN-ENT-005 | Etapa 4 | Etapa 4 | - | navegador | sí |  | modulos/entregas-devoluciones.md:231 |
 | CA-ENT-02 | RN-ENT-002, 003 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | modulos/entregas-devoluciones.md:232 |
 | CA-ENT-03 | RN-ENT-003; RNF-ENT-003 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/entregas-devoluciones.md:233 |
 | CA-ENT-04 | RF-ENT-004; RN-ENT-011, 012 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/entregas-devoluciones.md:234 |
 | CA-ENT-05 | RN-ENT-014 | - | Etapa 4 | - | unitaria | sí | Etapa heredada del módulo | modulos/entregas-devoluciones.md:235 |
 | CA-ENT-06 | permiso denegado)** (RF-ENT-001, 009; RN-ENT-007 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | modulos/entregas-devoluciones.md:236 |
 | CA-ENT-07 | aislamiento)** (RF-ENT-014; RN-ENT-023 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | modulos/entregas-devoluciones.md:237 |
-| CA-ENT-08 | RF-ENT-004, 006; RN-ENT-001, 018 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/entregas-devoluciones.md:238 |
-| CA-ENT-09 | RN-ENT-007 | - | Etapa 4 | - | integración | sí | Etapa heredada del módulo | modulos/entregas-devoluciones.md:239 |
-| CA-ENT-10 | RF-ENT-010, 011; RN-ENT-016 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | modulos/entregas-devoluciones.md:240 |
-| CA-ENT-11 | RF-ENT-009; RN-ENT-019 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | modulos/entregas-devoluciones.md:241 |
-| CA-ENT-12 | RF-ENT-003, 005, 008; RN-ENT-026 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | modulos/entregas-devoluciones.md:242 |
-| CA-ENT-13 | RF-ENT-003; RN-ENT-025; RNF-ENT-008 | Etapa 4 | Etapa 4 | - | navegador | sí |  | modulos/entregas-devoluciones.md:243 |
-| CA-ENT-14 | RN-ENT-006 | - | Etapa 4 | - | integración | sí | Etapa heredada del módulo | modulos/entregas-devoluciones.md:244 |
-| CA-ENT-15 | RF-ENT-007, 015, 017; RN-ENT-010 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/entregas-devoluciones.md:245 |
+| CA-ENT-08 | · Traspaso de todo o nada** (RF-ENT-004, 006; RN-ENT-001, 018, 020 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/entregas-devoluciones.md:238 |
+| CA-ENT-09 | RN-ENT-007 | - | Etapa 4 | - | integración | sí | Etapa heredada del módulo | modulos/entregas-devoluciones.md:243 |
+| CA-ENT-10 | · Pendiente de devolución no es pérdida** (RF-ENT-010, 011, 014; RN-ENT-016; S-ENT-11 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/entregas-devoluciones.md:244 |
+| CA-ENT-11 | RF-ENT-009; RN-ENT-019 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | modulos/entregas-devoluciones.md:248 |
+| CA-ENT-12 | RF-ENT-003, 005, 008; RN-ENT-026 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | modulos/entregas-devoluciones.md:249 |
+| CA-ENT-13 | RF-ENT-003; RN-ENT-025; RNF-ENT-008 | Etapa 4 | Etapa 4 | - | navegador | sí |  | modulos/entregas-devoluciones.md:250 |
+| CA-ENT-14 | RN-ENT-006 | - | Etapa 4 | - | integración | sí | Etapa heredada del módulo | modulos/entregas-devoluciones.md:251 |
+| CA-ENT-15 | RF-ENT-007, 015, 017; RN-ENT-010 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/entregas-devoluciones.md:252 |
+| CA-ENT-16 | · Borrador de la entrega** (RF-ENT-002; RN-ENT-020, 024 | Etapa 4 | Etapa 4 | - | navegador | sí |  | modulos/entregas-devoluciones.md:253 |
+| CA-ENT-17 | · Renovar un préstamo** (RF-ENT-016; RN-ENT-017; S-ENT-12 | Etapa 4 | Etapa 4 | - | integración | sí |  | modulos/entregas-devoluciones.md:259 |
 
 ### GAR · Garantías y mantenimiento (27)
 
@@ -705,7 +705,7 @@ Ninguno de los dos aparece todavía en el registro de prefijos del documento fun
 | CA-INT-06 | Límite de uso.** *Cubre RF-INT-005, 011, RN-INT-015, 016 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/integraciones-api.md:302 |
 | CA-INT-07 | Revocación inmediata.** *Cubre RF-INT-003, 004, 025, RN-INT-004, RNF-INT-002 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/integraciones-api.md:303 |
 | CA-INT-08 | Escritura sin duplicar.** *Cubre RF-INT-009, 010, RN-INT-047 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/integraciones-api.md:304 |
-| CA-INT-09 | La API no aprueba.** *Cubre RF-INT-008, RN-INT-010, 011 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/integraciones-api.md:305 |
+| CA-INT-09 | La API no aprueba.** *Cubre RF-INT-008, RN-INT-010, 011; RN-025 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/integraciones-api.md:305 |
 | CA-INT-10 | Clave desconocida y bloqueos.** *Cubre RN-INT-003, 006, 017, 018 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/integraciones-api.md:306 |
 | CA-INT-11 | Webhook firmado con reintentos.** *Cubre RF-INT-014, 015, RN-INT-014, 024 a 028, 030, RNF-INT-003 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/integraciones-api.md:307 |
 | CA-INT-12 | Anti-SSRF.** *Cubre RF-INT-013, RN-INT-023 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/integraciones-api.md:308 |
