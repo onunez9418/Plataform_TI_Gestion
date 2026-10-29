@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { Aviso } from '@/componentes/ui/Piezas'
 import { misEmpresas } from '@/nucleo/acceso'
+import { modoLocalActivo } from '@/nucleo/configuracion'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,14 +23,27 @@ async function empresasConSesion() {
   }
 }
 
+/** La lista de usuarios de ejemplo solo se muestra con el modo local en regla (H-SEG-L10). */
+function enModoLocal(): boolean {
+  try {
+    return modoLocalActivo()
+  } catch {
+    return false
+  }
+}
+
 export default async function Inicio() {
   const empresas = await empresasConSesion()
+  const mostrarEjemplos = enModoLocal()
   return (
     <main id="contenido" className="centrado ancho" tabIndex={-1}>
       <h1>Plataforma de Gestión de Áreas de TI</h1>
       <p className="suave">
-        Versión local de prueba. Todo lo que ve son <strong>datos inventados</strong> de dos empresas de ejemplo (Alfa y Beta).
-        No use datos reales.
+        {mostrarEjemplos ? (
+          <>Versión local de prueba. Todo lo que ve son <strong>datos inventados</strong> de dos empresas de ejemplo (Alfa y Beta). No use datos reales.</>
+        ) : (
+          <>Gestione los equipos, las compras y los accesos de su área de TI.</>
+        )}
       </p>
 
       {empresas.length > 0 ? (
@@ -40,6 +54,7 @@ export default async function Inicio() {
         </Aviso>
       ) : null}
 
+      {mostrarEjemplos ? (
       <section className="tarjeta" aria-labelledby="t-ejemplo">
         <h2 id="t-ejemplo">Usuarios de ejemplo</h2>
         <p className="suave">
@@ -71,9 +86,10 @@ export default async function Inicio() {
           Mismos códigos en las dos empresas a propósito (por ejemplo LAP-0001): cada empresa ve solo lo suyo.
         </p>
       </section>
+      ) : null}
 
       <p style={{ marginTop: 'var(--e4)' }}>
-        <Link className="btn" href="/entrar" data-testid="ir-entrar">Escribir otro correo</Link>
+        <Link className="btn" href="/entrar" data-testid="ir-entrar">{mostrarEjemplos ? 'Escribir otro correo' : 'Entrar'}</Link>
       </p>
     </main>
   )

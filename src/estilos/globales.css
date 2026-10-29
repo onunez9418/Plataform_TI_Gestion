@@ -529,3 +529,10 @@ dl { margin: 0; }
 @media (max-width: 640px) { .fila-lista { grid-template-columns: 1fr; } }
 .etiqueta-segura { font-weight: 600; }
 .pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* El mensaje de error aparece sin mover el resto de la pantalla (si no, el primer clic en «Guardar» se pierde). */
+.campo .error-reserva { min-height: 1.5rem; margin-top: var(--e1); }
+.campo .error { min-height: 1.5rem; }
+/* Un botón dentro de un aviso conserva su propio color de texto (contraste). */
+.aviso .btn.primario { color: var(--c-primario-texto); }
+.aviso .btn.peligro { color: var(--c-peligro-texto); }

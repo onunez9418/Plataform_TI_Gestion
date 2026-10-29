@@ -1,5 +1,6 @@
 // Panel de la empresa: accesos rápidos según lo que la persona puede hacer.
 import Link from 'next/link'
+import { misEmpresas } from '@/nucleo/acceso'
 import { cargarContexto, puedeAlguno } from '@/app/_lib/sesion'
 import { CabeceraPantalla, ErrorDePantalla } from '@/componentes/ui/Piezas'
 import { ENTRADAS_MENU } from '@/componentes/estructura/menu'
@@ -23,11 +24,12 @@ export default async function Panel({ params }: { params: Promise<{ empresa: str
   const { empresa } = await params
   const c = await cargarContexto(empresa)
   if (!c.ok) return <ErrorDePantalla mensaje={c.error.mensaje} codigo={c.error.codigo} />
+  const nombreEmpresa = (await misEmpresas().catch(() => [])).find((e) => e.slug === empresa)?.nombre ?? empresa
   const accesos = ENTRADAS_MENU.filter((e) => e.ruta !== '' && e.permisos && puedeAlguno(c.ctx, e.permisos))
 
   return (
     <>
-      <CabeceraPantalla titulo="Panel" descripcion={`Empresa activa: ${empresa}. Elija por dónde empezar.`} />
+      <CabeceraPantalla titulo="Panel" descripcion={`Empresa activa: ${nombreEmpresa}. Elija por dónde empezar.`} />
       {accesos.length === 0 ? (
         <p className="suave" data-testid="panel-sin-accesos">Su rol no tiene secciones disponibles. Pida a un administrador que se las asigne.</p>
       ) : (

@@ -14,7 +14,7 @@ export function SelectorPermisos({ catalogo, marcados = [], prefijoId }: { catal
             return (
               <div className="opcion" key={p.clave}>
                 <input type="checkbox" id={id} name="permisos" value={p.clave} defaultChecked={activos.has(p.clave)} data-testid={`permiso-${prefijoId}-${p.clave}`} />
-                <label htmlFor={id}>{p.etiqueta} <span className="suave cod">({p.clave})</span></label>
+                <label htmlFor={id}>{p.etiqueta}</label>
               </div>
             )
           })}

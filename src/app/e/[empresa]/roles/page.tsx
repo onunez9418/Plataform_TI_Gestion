@@ -56,7 +56,7 @@ export default async function PaginaRoles({ params }: { params: Promise<{ empres
                 ) : (
                   <ul>
                     {r.permisos.map((p) => (
-                      <li key={p}>{etiquetaDe.get(p) ?? p} <span className="suave cod">({p})</span></li>
+                      <li key={p}>{etiquetaDe.get(p) ?? p}</li>
                     ))}
                   </ul>
                 )}

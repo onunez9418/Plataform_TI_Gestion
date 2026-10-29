@@ -56,4 +56,28 @@ describe('Formulario', () => {
     await waitFor(() => expect(screen.getByTestId('error-formulario').textContent).toContain('No se pudo completar'))
     expect((screen.getByTestId('f-enviar') as HTMLButtonElement).disabled).toBe(false)
   })
+
+  it('el mensaje de error no desaparece al salir del campo (si no, el botón se movería y se perdería el primer clic)', async () => {
+    const accion = vi.fn(async (_d: FormData) => ({ ok: true as const, datos: null }))
+    armar(accion)
+    await userEvent.click(screen.getByTestId('f-enviar'))
+    expect(screen.getByTestId('campo-nombre-error')).toBeTruthy()
+    // entrar y salir del campo sin escribir: el aviso sigue
+    await userEvent.click(screen.getByTestId('campo-nombre'))
+    await userEvent.click(screen.getByTestId('campo-correo'))
+    expect(screen.getByTestId('campo-nombre-error')).toBeTruthy()
+    // al escribir, sí se quita; y el primer clic en enviar ya funciona
+    await userEvent.type(screen.getByTestId('campo-nombre'), 'Ana')
+    expect(screen.queryByTestId('campo-nombre-error')).toBeNull()
+    await userEvent.click(screen.getByTestId('f-enviar'))
+    await waitFor(() => expect(accion).toHaveBeenCalledTimes(1))
+  })
+
+  it('al salir de un campo obligatorio vacío se avisa, y el espacio del aviso ya estaba reservado', async () => {
+    armar(vi.fn())
+    expect(document.querySelectorAll('.error-reserva').length).toBe(1)
+    await userEvent.click(screen.getByTestId('campo-nombre'))
+    await userEvent.click(screen.getByTestId('campo-correo'))
+    expect(screen.getByTestId('campo-nombre-error').textContent).toBe('Este dato es obligatorio.')
+  })
 })

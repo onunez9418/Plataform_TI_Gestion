@@ -155,22 +155,26 @@ export function Campo({ nombre, etiqueta, tipo = 'text', requerido, ayuda, opcio
     'aria-describedby': error ? idError : undefined,
   } as const
 
+  // Al salir de un campo obligatorio vacío se avisa. El mensaje NUNCA se quita al salir del campo (solo al escribir
+  // o cambiar): si se quitara, el botón de enviar subiría entre "apretar" y "soltar" y el primer clic se perdería.
   function validarAlSalir(e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     if (requerido && e.target.value.trim() === '') poner(nombre, 'Este dato es obligatorio.')
-    else if (error) poner(nombre, null)
+  }
+  function alEscribir() {
+    if (error) poner(nombre, null)
   }
 
   let control: ReactNode
   if (tipo === 'checkbox') {
     control = (
       <div className="opcion">
-        <input type="checkbox" {...comunes} defaultChecked={Boolean(valorInicial)} onChange={(e) => alCambiar?.(e.target.checked ? 'si' : 'no')} />
+        <input type="checkbox" {...comunes} defaultChecked={Boolean(valorInicial)} onChange={(e) => { alEscribir(); alCambiar?.(e.target.checked ? 'si' : 'no') }} />
         <label htmlFor={id}>{etiqueta}</label>
       </div>
     )
   } else if (tipo === 'select') {
     control = (
-      <select {...comunes} defaultValue={valorInicial === undefined ? '' : String(valorInicial)} onBlur={validarAlSalir} onChange={(e) => alCambiar?.(e.target.value)}>
+      <select {...comunes} defaultValue={valorInicial === undefined ? '' : String(valorInicial)} onBlur={validarAlSalir} onChange={(e) => { alEscribir(); alCambiar?.(e.target.value) }}>
         <option value="">{vacio ?? 'Elija una opción'}</option>
         {(opciones ?? []).map((o) => (
           <option key={o.valor} value={o.valor}>{o.etiqueta}</option>
@@ -178,7 +182,7 @@ export function Campo({ nombre, etiqueta, tipo = 'text', requerido, ayuda, opcio
       </select>
     )
   } else if (tipo === 'textarea') {
-    control = <textarea {...comunes} rows={filas ?? 4} placeholder={placeholder} defaultValue={valorInicial === undefined ? '' : String(valorInicial)} onBlur={validarAlSalir} />
+    control = <textarea {...comunes} rows={filas ?? 4} placeholder={placeholder} defaultValue={valorInicial === undefined ? '' : String(valorInicial)} onBlur={validarAlSalir} onChange={alEscribir} />
   } else {
     control = (
       <input
@@ -188,7 +192,7 @@ export function Campo({ nombre, etiqueta, tipo = 'text', requerido, ayuda, opcio
         placeholder={placeholder}
         defaultValue={valorInicial === undefined ? '' : String(valorInicial)}
         onBlur={validarAlSalir}
-        onChange={(e) => alCambiar?.(e.target.value)}
+        onChange={(e) => { alEscribir(); alCambiar?.(e.target.value) }}
         autoComplete="off"
       />
     )
@@ -208,6 +212,9 @@ export function Campo({ nombre, etiqueta, tipo = 'text', requerido, ayuda, opcio
         <div className="error" id={idError} role="alert" data-testid={`${id}-error`}>
           {error}
         </div>
+      ) : requerido ? (
+        // Espacio reservado para el mensaje: así el botón de enviar no se mueve cuando aparece.
+        <div className="error-reserva" aria-hidden="true" />
       ) : null}
     </div>
   )
