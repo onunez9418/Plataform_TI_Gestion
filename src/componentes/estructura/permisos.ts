@@ -1,0 +1,31 @@
+// Qué permiso corresponde a cada sección o botón. Es SOLO para mostrar u ocultar (comodidad):
+// el servidor vuelve a comprobar el permiso en cada servicio y su mensaje se muestra siempre.
+// Nombres: docs/registro-permisos.md, tal como los publica src/nucleo/permisos/catalogo.ts.
+export const P = {
+  usuariosVer: 'usuarios.ver',
+  usuariosInvitar: 'usuarios.invitar',
+  usuariosCambiarRol: 'usuarios.cambiar_rol',
+  usuariosSuspender: 'usuarios.suspender',
+  rolesVer: 'roles.ver',
+  rolesAdministrar: 'roles.administrar',
+  auditoriaVer: 'auditoria.ver',
+  catalogosVer: 'catalogos.ver',
+  ubicacionesGestionar: 'ubicaciones.gestionar',
+  proveedoresVer: 'proveedores.ver',
+  proveedoresCrearEditar: 'proveedores.crear_editar',
+  personasVer: 'personas.ver',
+  personasCrearEditar: 'personas.crear_editar',
+  categoriasGestionar: 'categorias.gestionar',
+  skusVer: 'skus.ver',
+  skusCrearEditar: 'skus.crear_editar',
+  skusCodigoPropio: 'skus.codigo_propio',
+  activosVer: 'activos.ver',
+  activosRegistrar: 'activos.ingreso_manual',
+  entregasVer: 'entregas.ver',
+  entregasCrear: 'entregas.crear',
+  entregasDevolver: 'entregas.devolver',
+  comprasVer: 'ordenes_compra.ver',
+  comprasPreparar: 'ordenes_compra.crear_editar',
+  comprasAprobar: 'ordenes_compra.aprobar',
+  comprasRecibir: 'recepciones.crear_confirmar',
+} as const
