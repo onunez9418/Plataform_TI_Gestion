@@ -144,3 +144,6 @@ temp/
 
 __pycache__/
 *.pyc
+
+# --- Base local privada de "npm run local" (scripts/local.mjs) ----------------
+.local/

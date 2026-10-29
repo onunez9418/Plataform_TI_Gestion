@@ -1,0 +1,74 @@
+# Revisión automática de cada cambio: tipos, pruebas, búsqueda de secretos y compilación.
+# Un cambio que falla aquí no se publica. Responsable: DevOps.
+name: Revisión del código
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Tipos, pruebas, secretos y compilación
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Tipos + pruebas + búsqueda de secretos
+        run: npm run verificar
+      - name: Compilación
+        run: npm run build
+
+  aislamiento:
+    name: Aislamiento entre empresas (base real)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Solo cuando ya existen el esquema y las pruebas de aislamiento.
+    if: ${{ hashFiles('prisma/schema.prisma') != '' }}
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: ci-solo-para-pruebas
+          POSTGRES_DB: plataforma
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d plataforma"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      PGPASSWORD: ci-solo-para-pruebas
+      DATABASE_URL: postgres://app_empresa:ci-app-empresa@localhost:5432/plataforma
+      PLATFORM_DATABASE_URL: postgres://app_plataforma:ci-app-plataforma@localhost:5432/plataforma
+      MIGRATION_DATABASE_URL: postgres://migraciones:ci-migraciones@localhost:5432/plataforma
+      AUDIT_READER_DATABASE_URL: postgres://lector_auditoria:ci-lector@localhost:5432/plataforma
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Crear roles de la base
+        run: >-
+          psql -X -h localhost -U postgres -d plataforma -v ON_ERROR_STOP=1
+          -v p_migraciones=ci-migraciones -v p_app_empresa=ci-app-empresa
+          -v p_app_plataforma=ci-app-plataforma -v p_lector_auditoria=ci-lector
+          -f scripts/db-init/01-roles.sql
+      - name: Migraciones
+        run: npm run db:migrar
+      - name: Semilla
+        if: ${{ hashFiles('prisma/semilla/index.ts') != '' }}
+        run: npm run db:semilla
+      - name: Pruebas de aislamiento
+        run: npm run probar:aislamiento

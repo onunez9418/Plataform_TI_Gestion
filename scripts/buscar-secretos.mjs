@@ -6,18 +6,17 @@ import { join } from 'node:path';
 
 const IGNORAR_RUTAS = [/^package-lock\.json$/, /^\.claude\//, /\.(png|jpg|jpeg|gif|ico|woff2?|pdf|zip)$/i, /^scripts\/buscar-secretos\.mjs$/];
 
-// Valores de relleno aceptados: no son secretos.
-const RELLENO = /cambiar-esto|ejemplo|placeholder|xxxx|\$\{[^}]*\}|\$[A-Z_]+|<[^>]+>|%[A-Za-z_]+%|\.\.\.|^$/i;
+// Valores de relleno aceptados: no son secretos (los "ci-..." son claves desechables de la integración continua).
+const RELLENO = /^ci-|cambiar-esto|ejemplo|placeholder|xxxx|\$\{[^}]*\}|\$[A-Z_]+|<[^>]+>|%[A-Za-z_]+%|\.\.\.|^$/i;
 
 const REGLAS = [
-  { nombre: 'Llave privada', re: /-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----/ },
   { nombre: 'Clave de AWS', re: /\bAKIA[0-9A-Z]{16}\b/ },
   { nombre: 'Token de GitHub', re: /\bgh[pousr]_[A-Za-z0-9]{30,}\b/ },
   { nombre: 'Clave de API tipo sk-', re: /\bsk-[A-Za-z0-9]{32,}\b/ },
   { nombre: 'Token de Slack', re: /\bxox[baprs]-[A-Za-z0-9-]{10,}\b/ },
   {
     nombre: 'Dirección de base de datos con contraseña real',
-    re: /\bpostgres(?:ql)?:\/\/[^:\s/@'"`]+:([^@\s'"`]+)@/,
+    re: /\bpostgres(?:ql)?:\/\/[^:\s/@'"`]+:([^@\s'"`]{6,})@/,
     valor: 1,
   },
   {
@@ -62,6 +61,10 @@ for (const ruta of archivos()) {
     continue;
   }
   if (texto.includes('\0')) continue;
+  // Una llave privada de verdad trae su cuerpo en las líneas siguientes; el texto que solo la nombra no cuenta.
+  if (/-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----\s*\n[A-Za-z0-9+/=]{40,}/.test(texto)) {
+    hallazgos.push(`${ruta}: Llave privada`);
+  }
   texto.split('\n').forEach((linea, i) => {
     for (const regla of REGLAS) {
       const m = regla.re.exec(linea);

@@ -1,0 +1,16 @@
+.git
+.github
+.claude
+.env
+.env.*
+!.env.example
+.local
+node_modules
+.next
+docs
+coverage
+playwright-report
+test-results
+*.log
+*.bat
+LEEME-PROBAR.md

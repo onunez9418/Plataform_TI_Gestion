@@ -1,0 +1,55 @@
+# Versión local 0.1: PostgreSQL 16 + la aplicación. Solo datos inventados.
+# Las contraseñas viven en ".env" (lo crea iniciar.bat o scripts/crear-env.mjs); no están en este archivo.
+name: plataforma-ti
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: plataforma
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Falta .env: ejecute iniciar.bat}
+      PG_PASS_MIGRACIONES: ${PG_PASS_MIGRACIONES:?Falta .env}
+      PG_PASS_APP_EMPRESA: ${PG_PASS_APP_EMPRESA:?Falta .env}
+      PG_PASS_APP_PLATAFORMA: ${PG_PASS_APP_PLATAFORMA:?Falta .env}
+      PG_PASS_LECTOR_AUDITORIA: ${PG_PASS_LECTOR_AUDITORIA:?Falta .env}
+    volumes:
+      - datos_pg:/var/lib/postgresql/data
+      - ./scripts/db-init:/docker-entrypoint-initdb.d:ro
+    # Sin "ports": la base solo se alcanza desde la red interna de Docker.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d plataforma"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MODO_LOCAL: "1"
+      NODE_ENV: production
+      ENTORNO: desarrollo
+      APP_URL: http://localhost:3000
+      AUTH_SECRET: ${AUTH_SECRET:?Falta .env}
+      DATABASE_URL: postgres://app_empresa:${PG_PASS_APP_EMPRESA}@db:5432/plataforma
+      PLATFORM_DATABASE_URL: postgres://app_plataforma:${PG_PASS_APP_PLATAFORMA}@db:5432/plataforma
+      MIGRATION_DATABASE_URL: postgres://migraciones:${PG_PASS_MIGRACIONES}@db:5432/plataforma
+      AUDIT_READER_DATABASE_URL: postgres://lector_auditoria:${PG_PASS_LECTOR_AUDITORIA}@db:5432/plataforma
+    # Solo esta computadora puede abrir la aplicación (no la red local).
+    ports:
+      - "127.0.0.1:3000:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/salud').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 60s
+
+volumes:
+  datos_pg:
