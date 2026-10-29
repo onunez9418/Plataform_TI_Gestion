@@ -1,6 +1,6 @@
 # Criterios de aceptación por etapa
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `627d5ac` (árbol de documentos fuente limpio al generar) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los 19 módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `9856696` (árbol de documentos fuente limpio al generar) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los 19 módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
 
 **Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del 2026-10-26 (451 criterios, commit `5ed0dcb`). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).
 
@@ -12,40 +12,40 @@
 - **Bloqueante:** sí = si falla, la etapa no se aprueba. "No (bloquea su módulo)" = es de Fase 2 o 3 y bloquea la entrega de ese módulo, no la v1 (D-056).
 - **Etapa heredada:** el criterio solo cita reglas RN y no hay fila RF que lo cite; tomó la etapa más frecuente de su módulo. Debe confirmarlo el escuadrón.
 
-## Resumen (checkpoint 627d5ac, 2026-10-29)
+## Resumen (checkpoint 9856696, 2026-10-29)
 
-**603 criterios:** 145 del núcleo (identificadores con letra, que son 105 números, CA-001 a CA-105) y 458 de los 19 módulos completos. El 2026-10-26 eran 451 (116 y 335): +152. Qué cambió: **11 criterios dejaron de existir como uno solo** porque se partieron (CA-038, CA-094, CA-GAR-01, CA-GAR-04, CA-PRS-01, CA-PRS-03, CA-PRS-08, CA-PRS-12, CA-PRS-14, CA-PRV-02, CA-PRV-04) y **67 criterios nuevos** los reemplazan o se suman: en el núcleo 31 (CA-015g, h e i de lectura de soporte; CA-038a a d; CA-094a a c; CA-095a a j de congelación por incidente, D-080; CA-096 a CA-105, con CA-104 en a y b) y en los módulos PRS 21, GAR 9 y PRV 6.
+**610 criterios:** 149 del núcleo (identificadores con letra, que son 109 números, CA-001 a CA-109) y 461 de los 19 módulos completos. El 2026-10-26 eran 451 (116 y 335): +159. Qué cambió: **11 criterios dejaron de existir como uno solo** porque se partieron (CA-038, CA-094, CA-GAR-01, CA-GAR-04, CA-PRS-01, CA-PRS-03, CA-PRS-08, CA-PRS-12, CA-PRS-14, CA-PRV-02, CA-PRV-04) y **74 criterios nuevos** los reemplazan o se suman: en el núcleo 35 (CA-015g, h e i de lectura de soporte; CA-038a a d; CA-094a a c; CA-095a a j de congelación por incidente, D-080; CA-096 a CA-105, con CA-104 en a y b) y en los módulos PRS 21, GAR 9 y PRV 6.
 
 | Se ejecuta en | Criterios que empiezan aquí | Criterios que se completan aquí (empezaron antes) |
 |---|---|---|
 | Etapa 0 | 1 | 0 |
-| Etapa 1 | 54 | 0 |
-| Etapa 2 | 58 | 2 |
+| Etapa 1 | 55 | 0 |
+| Etapa 2 | 60 | 2 |
 | Etapa 3 | 4 | 1 |
 | Etapa 4 | 61 | 6 |
 | Etapa 5 | 33 | 5 |
 | Etapa 6 | 2 | 2 |
 | Etapa 7 | 5 | 0 |
 | Fase 2 | 138 | 5 |
-| Fase 3 | 247 | 0 |
-| **Total** | 603 | 21 |
+| Fase 3 | 251 | 0 |
+| **Total** | 610 | 21 |
 
-**Criterios de la v1 (Etapas 0 a 7): 218.** De fases posteriores: 385. Antes (2026-10-26): 166 y 285.
+**Criterios de la v1 (Etapas 0 a 7): 221.** De fases posteriores: 389. Antes (2026-10-26): 166 y 285.
 
 Comparación con la versión anterior (2026-10-26). Las dos medidas son las mismas que entonces: dónde **empieza** cada criterio y dónde **termina**.
 
 | Etapa | Antes (empiezan) | Ahora (empiezan) | Antes (terminan) | Ahora (terminan) |
 |---|---|---|---|---|
 | Etapa 0 | 0 | 1 | 0 | 1 |
-| Etapa 1 | 52 | 54 | 38 | 40 |
-| Etapa 2 | 37 | 58 | 32 | 57 |
+| Etapa 1 | 52 | 55 | 38 | 41 |
+| Etapa 2 | 37 | 60 | 32 | 59 |
 | Etapa 3 | 4 | 4 | 3 | 3 |
 | Etapa 4 | 44 | 61 | 54 | 67 |
 | Etapa 5 | 24 | 33 | 28 | 37 |
 | Etapa 6 | 2 | 2 | 3 | 3 |
 | Etapa 7 | 3 | 5 | 3 | 5 |
 | Fase 2 | 134 | 138 | 139 | 143 |
-| Fase 3 | 151 | 247 | 151 | 247 |
+| Fase 3 | 151 | 251 | 151 | 251 |
 
 Qué explica la diferencia: la mayor parte son criterios partidos y nuevos de la Etapa 2 (congelación por incidente CA-095a a g, PRS y PRV), de la Etapa 4 (importación en cuatro, código del activo, tope y lote de importación, estados, garantía, PRS) y de la Etapa 5 (CA-096 a CA-104b, recepción de garantía). La Etapa 0 gana CA-105 (verificación documental). Ningún criterio que ya existía cambió de etapa.
 
@@ -54,29 +54,29 @@ Por la etapa más temprana de su requisito:
 | Etapa más temprana del requisito | Criterios |
 |---|---|
 | Etapa 0 | 3 |
-| Etapa 1 | 63 |
-| Etapa 2 | 63 |
+| Etapa 1 | 64 |
+| Etapa 2 | 65 |
 | Etapa 3 | 4 |
 | Etapa 4 | 46 |
 | Etapa 5 | 26 |
-| Etapa 6 | 2 |
+| Etapa 6 | 3 |
 | Etapa 7 | 4 |
 | Fase 2 | 118 |
 | Fase 3 | 166 |
-| sin requisito RF (heredada) | 108 |
+| sin requisito RF (heredada) | 111 |
 
 | Tipo de prueba | Criterios |
 |---|---|
 | integración | 321 |
-| integración + navegador | 120 |
-| unitaria | 85 |
-| navegador | 64 |
+| integración + navegador | 125 |
+| unitaria | 86 |
+| navegador | 65 |
 | manual (con apoyo de integración) | 12 |
 | manual (verificación documental) | 1 |
 
 | Módulo | Criterios |
 |---|---|
-| Asistente de IA (ASI) | 52 |
+| Asistente de IA (ASI) | 55 |
 | Mesa de ayuda (AYU) | 27 |
 | Gestión de cambios (CAM) | 20 |
 | CMDB ligera (CMD) | 21 |
@@ -95,7 +95,7 @@ Por la etapa más temprana de su requisito:
 | Personas y ubicaciones (PRS) | 32 |
 | Proveedores y contratos (PRV) | 26 |
 | Reportes y tableros (REP) | 22 |
-| Núcleo | 145 |
+| Núcleo | 149 |
 
 ### Lo que cada etapa exige (D-076)
 
@@ -103,17 +103,17 @@ Bloqueantes de una etapa = los criterios que **empiezan** en ella más los que *
 
 | Etapa | Empiezan | Se completan | Bloqueantes en total | Puntos de D-076 aún pendientes antes de abrirla |
 |---|---|---|---|---|
-| Etapa 1 | 54 | 0 | 54 | 2 |
-| Etapa 2 | 58 | 2 | 60 | 3 |
+| Etapa 1 | 55 | 0 | 55 | 2 |
+| Etapa 2 | 60 | 2 | 62 | 3 |
 | Etapa 3 | 4 | 1 | 5 | 0 |
 | Etapa 4 | 61 | 6 | 67 | 3 |
 | Etapa 5 | 33 | 5 | 38 | 1 |
 | Etapa 6 | 2 | 2 | 4 | 0 |
 | Etapa 7 | 5 | 0 | 5 | 2 |
 
-### Criterios que NO corren en la etapa de su requisito (36)
+### Criterios que NO corren en la etapa de su requisito (37)
 
-Dos casos distintos. **(A) Corren antes de lo que necesitan: 3.** Es un defecto del criterio: no se puede ejecutar. **(B) Arrancan después de la etapa más temprana de su requisito: 33.** El requisito se entrega antes de que su criterio corra; la etapa de ese requisito se cierra sin esa prueba. Muchos son consecuencia legítima de que el criterio necesita un módulo posterior (órdenes, activos, actas); aun así, el Gerente de TI debe saberlo al cerrar la etapa.
+Dos casos distintos. **(A) Corren antes de lo que necesitan: 3.** Es un defecto del criterio: no se puede ejecutar. **(B) Arrancan después de la etapa más temprana de su requisito: 34.** El requisito se entrega antes de que su criterio corra; la etapa de ese requisito se cierra sin esa prueba. Muchos son consecuencia legítima de que el criterio necesita un módulo posterior (órdenes, activos, actas); aun así, el Gerente de TI debe saberlo al cerrar la etapa.
 
 **(A) Corren antes:**
 
@@ -153,6 +153,7 @@ Dos casos distintos. **(A) Corren antes de lo que necesitan: 3.** Es un defecto 
 | CA-093 | Núcleo | Etapa 1 | Etapa 2 | RF-ACC-025: Etapa 1; el criterio arranca en Etapa 2. La tarea "Designar suplente" aparece en Primeros pasos (Etapa 1), pero depende del registro de derechos de datos (RF-PER-012, Etapa 2). |
 | CA-094a | Núcleo | Etapa 2 | Etapa 4 | RF-CAT-008: Etapa 2; el criterio arranca en Etapa 4. RF-CAT-008 (prefijo reservado, Etapa 2) se podría probar antes con CA-017; el resto de CA-094a necesita ingreso manual e importación (Etapa 4). |
 | CA-099 | Núcleo | Etapa 1 | Etapa 4 | RF-PLA-010: Etapa 1; el criterio arranca en Etapa 4. RF-PLA-010 (subir el tope, Etapa 1) ya lo prueba CA-084 para invitaciones; el tope de importaciones necesita importar (Etapa 4). |
+| CA-ASI-53 | Asistente de IA | Etapa 6 | Fase 3 | RF-UX-004: Etapa 6; el criterio arranca en Fase 3 |
 | CA-LIN-09 | Líneas móviles | Fase 2 | Fase 3 | RF-LIN-014, RNF-LIN-001, RNF-LIN-006: Fase 2; el criterio arranca en Fase 3 |
 | CA-NOT-01 | Notificaciones | Etapa 1 | Etapa 5 | RF-ACC-021, RF-NOT-013, RF-NOT-020: Etapa 1; el criterio arranca en Etapa 5. El módulo lo fija en Etapa 5 porque necesita órdenes de compra; el envío base (RF-NOT-013) es de Etapa 1 y se prueba con CA-NOT-12 y CA-NOT-14. |
 | CA-NOT-07a | Notificaciones | Etapa 1 | Etapa 5 | RF-NOT-013: Etapa 1; el criterio arranca en Etapa 5. Igual que CA-NOT-01: necesita órdenes de compra. |
@@ -161,12 +162,13 @@ Dos casos distintos. **(A) Corren antes de lo que necesitan: 3.** Es un defecto 
 | CA-PRS-04 | Personas y ubicaciones | Etapa 2 | Etapa 4 | RF-PRS-011: Etapa 2; el criterio arranca en Etapa 4. Necesita un equipo pendiente (Etapa 4); sin equipos lo cubre CA-052b1 en Etapa 2. |
 | CA-PRS-11 | Personas y ubicaciones | Etapa 2 | Etapa 4 | RF-PER-010: Etapa 2; el criterio arranca en Etapa 4. Importar Personas necesita el asistente de importación (Etapa 4); el alta manual con homónimo es CA-PRS-01d (Etapa 2). |
 
-### Criterios de módulos que cruzan etapas y esperan que su escuadrón los parta (8)
+### Criterios de módulos que cruzan etapas y esperan que su escuadrón los parta (9)
 
 Cubren requisitos de etapas distintas y el módulo no trae partición. Corren en la etapa más tardía (la única donde existe todo lo que piden). Solo los de módulos con parte en la v1 (PRS, ENT, PRV, GAR, NOT) afectan a una etapa de la v1; el resto cruza Fase 2 y Fase 3 (D-076.4: se cierra al activar el módulo).
 
 | Criterio | Requisitos de | Corre en | Propuesta de QA |
 |---|---|---|---|
+| CA-ASI-53 | Etapa 6 a Fase 3 | Fase 3 |  |
 | CA-LIN-09 | Fase 2 a Fase 3 | Fase 3 | Fase 2 a Fase 3: se cierra al activar el módulo |
 | CA-NOT-01 | Etapa 1 a Etapa 5 | Etapa 5 |  |
 | CA-NOT-10 | Etapa 1 a Fase 2 | Etapa 1 |  |
@@ -202,11 +204,11 @@ Cubren requisitos de etapas distintas y el módulo no trae partición. Corren en
 | CA-NOT-08 | Etapa 1 | Fase 2 | tabla del módulo o lectura de QA |
 | CA-NOT-09 | Etapa 1 | Fase 2 | tabla del módulo o lectura de QA |
 
-### Criterios sin requisito RF que los cite (108)
+### Criterios sin requisito RF que los cite (111)
 
-Citan solo reglas RN, seguridad (RS) o secciones. Los del núcleo (CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j) los cita una regla RN o RS y son válidos. Los de módulos heredan la etapa del módulo; confirmar con cada escuadrón.
+Citan solo reglas RN, seguridad (RS) o secciones. Los del núcleo (CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j, CA-109) los cita una regla RN o RS y son válidos. Los de módulos heredan la etapa del módulo; confirmar con cada escuadrón.
 
-CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j, CA-ASI-03, CA-ASI-04, CA-ASI-05, CA-ASI-06, CA-ASI-07, CA-ASI-08, CA-ASI-09, CA-ASI-10, CA-ASI-11, CA-ASI-12, CA-ASI-13, CA-ASI-14, CA-ASI-15, CA-ASI-16, CA-ASI-17, CA-ASI-18, CA-ASI-19, CA-ASI-20, CA-ASI-21, CA-ASI-22, CA-ASI-23, CA-ASI-24, CA-ASI-25, CA-ASI-26, CA-ASI-27, CA-ASI-28, CA-ASI-29, CA-ASI-30, CA-ASI-31, CA-ASI-32, CA-ASI-33, CA-ASI-37, CA-ASI-38, CA-ASI-39, CA-ASI-40, CA-ASI-41, CA-ASI-42, CA-ASI-43, CA-ASI-44, CA-ASI-45, CA-ASI-47, CA-ASI-49, CA-ASI-50, CA-ASI-51, CA-ASI-52, CA-AYU-26, CA-CAM-07, CA-CMD-15, CA-CMD-16, CA-CMD-17, CA-CMD-19, CA-CMD-20, CA-DOM-08, CA-DOM-14, CA-ENT-05, CA-ENT-09, CA-ENT-14, CA-GAR-14, CA-GAR-18, CA-INT-04, CA-INT-10, CA-INT-21, CA-INT-22, CA-INT-23, CA-LIC-18, CA-LIC-19, CA-LIC-20, CA-LIN-15, CA-LIN-16, CA-MSF-38, CA-MSF-40, CA-MSF-41, CA-NOT-19, CA-ONB-06, CA-ONB-08, CA-ONB-09, CA-ONB-11, CA-ONB-14, CA-POR-02, CA-POR-03, CA-POR-09, CA-POR-13, CA-PRB-13, CA-PRB-15, CA-PRE-11, CA-PRE-12, CA-PRE-13, CA-PRE-16, CA-PRE-20, CA-PRE-23, CA-PRE-24, CA-PRE-25, CA-PRE-26, CA-PRV-04b, CA-PRV-14, CA-REP-07, CA-REP-18, CA-REP-19, CA-REP-20, CA-REP-21
+CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j, CA-109, CA-ASI-03, CA-ASI-04, CA-ASI-05, CA-ASI-06, CA-ASI-07, CA-ASI-08, CA-ASI-09, CA-ASI-10, CA-ASI-11, CA-ASI-12, CA-ASI-13, CA-ASI-14, CA-ASI-15, CA-ASI-16, CA-ASI-17, CA-ASI-18, CA-ASI-19, CA-ASI-20, CA-ASI-21, CA-ASI-22, CA-ASI-23, CA-ASI-24, CA-ASI-25, CA-ASI-26, CA-ASI-27, CA-ASI-28, CA-ASI-29, CA-ASI-30, CA-ASI-31, CA-ASI-32, CA-ASI-33, CA-ASI-37, CA-ASI-38, CA-ASI-39, CA-ASI-40, CA-ASI-41, CA-ASI-42, CA-ASI-43, CA-ASI-44, CA-ASI-45, CA-ASI-47, CA-ASI-49, CA-ASI-50, CA-ASI-51, CA-ASI-52, CA-ASI-54, CA-ASI-55, CA-AYU-26, CA-CAM-07, CA-CMD-15, CA-CMD-16, CA-CMD-17, CA-CMD-19, CA-CMD-20, CA-DOM-08, CA-DOM-14, CA-ENT-05, CA-ENT-09, CA-ENT-14, CA-GAR-14, CA-GAR-18, CA-INT-04, CA-INT-10, CA-INT-21, CA-INT-22, CA-INT-23, CA-LIC-18, CA-LIC-19, CA-LIC-20, CA-LIN-15, CA-LIN-16, CA-MSF-38, CA-MSF-40, CA-MSF-41, CA-NOT-19, CA-ONB-06, CA-ONB-08, CA-ONB-09, CA-ONB-11, CA-ONB-14, CA-POR-02, CA-POR-03, CA-POR-09, CA-POR-13, CA-PRB-13, CA-PRB-15, CA-PRE-11, CA-PRE-12, CA-PRE-13, CA-PRE-16, CA-PRE-20, CA-PRE-23, CA-PRE-24, CA-PRE-25, CA-PRE-26, CA-PRV-04b, CA-PRV-14, CA-REP-07, CA-REP-18, CA-REP-19, CA-REP-20, CA-REP-21
 
 ### Criterios ambiguos o por partir (H-QA-31, D-076.3)
 
@@ -227,9 +229,9 @@ CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j, CA-ASI-03, CA-
 | CA-ENT-08 | Etapa 4 | «Sin hacer» del Analista. Dice «falla la entrega de uno» y no dice cómo se provoca la falla. Propuesta de QA: Dada la inyección de fallos del entorno de pruebas: se corta la conexión entre la primera y la segunda asignación del traspaso; resultado esperado: ninguna devolución ni entrega registrada, los dos equipos siguen con la Persona cesada y no queda ningún acta. Segundo caso sin inyección: la Persona destino pasa a Cesada justo antes de confirmar. |
 | CA-ENT-10 | Etapa 4 | «Sin hacer» del Analista. Dice «cuando pasa el tiempo» sin decir cuánto ni con qué reloj. Propuesta de QA: Con el reloj de pruebas a +30 días y a +365 días desde el cese (reloj R5), el equipo sigue Asignado como «Pendiente de devolución» y no suma a pérdidas. |
 
-### Etapa de los 67 criterios nuevos: lectura de QA (2026-10-29)
+### Etapa de los 74 criterios nuevos: lectura de QA (2026-10-29)
 
-QA leyó cada criterio nuevo o partido desde la versión del 2026-10-26 y decidió en qué etapa corre y por qué. La columna «Documento» es la etapa que fija el documento funcional (tabla 22.1) o el módulo. **Coinciden en los 67 casos salvo los marcados.** Donde QA no está de acuerdo con el documento, la columna lo dice y el motivo queda en ambiguos.
+QA leyó cada criterio nuevo o partido desde la versión del 2026-10-26 y decidió en qué etapa corre y por qué. La columna «Documento» es la etapa que fija el documento funcional (tabla 22.1) o el módulo. **Coinciden en los 74 casos salvo los marcados.** Donde QA no está de acuerdo con el documento, la columna lo dice y el motivo queda en ambiguos.
 
 | Criterio | Etapa según QA | Documento | Por qué |
 |---|---|---|---|
@@ -264,6 +266,13 @@ QA leyó cada criterio nuevo o partido desde la versión del 2026-10-26 y decidi
 | CA-104a | Etapa 5 | Etapa 5 | La pantalla de aprobación es de la Etapa 5 (RF-OC-051). |
 | CA-104b | Etapa 5 | Etapa 5 | Necesita un módulo de prueba que use el espacio de la pantalla de aprobación; no existe un módulo real hasta Fase 3 (PRE). |
 | CA-105 | Etapa 0 | Etapa 0 | Verificación documental de los archivos reales que entrega el Cliente (CEO); es condición de cierre de la Etapa 0 (D-064 condición 8). No se puede ejecutar hasta que lleguen (P-002). |
+| CA-106 | Etapa 1 | Etapa 1 | La marca de origen «vía asistente» (RF-AUD-020) es una columna de la auditoría de la Etapa 1; se prueba con una prueba del mecanismo que escribe el origen, sin que el módulo del asistente exista. La búsqueda de la pregunta o del nombre «canario» en la marca no da resultados. |
+| CA-107 | Etapa 2 | Etapa 2 | La marca «se gestiona en MDM» (RF-CAT-030) cuelga de la categoría y de su naturaleza (Laptop frente a Licencia), de la Etapa 2; usa PS-34 y la auditoría de la Etapa 1. |
+| CA-108 | Etapa 2 | Etapa 2 | El gancho de limpieza al anonimizar (RF-DAT-018) necesita la anonimización manual de la Etapa 2 (RF-PER-013) y un módulo de prueba que registre su rutina; la congelación la trae CA-095a (Etapa 2). |
+| CA-109 | Fase 3 | Fase 3 | La lista única de lo que nunca hace un programa (RN-025) necesita claves de API (Fase 3) y, cuando exista, el asistente. QA propone un adelanto: la lista del registro 12C y la respuesta «No se puede por una regla» se pueden probar en la Etapa 1 con un llamador de prueba que no tenga persona detrás; hoy el documento la deja en Fase 3. |
+| CA-ASI-53 | Fase 3 | Fase 3 | Dos botones de ayuda (RF-ASI-050): pantalla y celular; necesita el módulo ASI-A (Fase 3). |
+| CA-ASI-54 | Fase 3 | Fase 3 | El Empleado del portal con el asistente apagado por defecto (RN-ASI-041, PS-235 y PS-236) necesita el portal y ASI-A (Fase 3). |
+| CA-ASI-55 | Fase 3 | Fase 3 | Levantar el bloqueo del texto libre por empresa con PS-240 (RN-ASI-011) necesita la consola de plataforma y ASI-A (Fase 3). |
 | CA-GAR-01a | Etapa 4 | Etapa 4 | Garantía de un activo ingresado a mano (RF-INV-025): ficha y fecha, sin recepción. |
 | CA-GAR-01b | Etapa 5 | Etapa 5 | Captura de la garantía en la recepción de un lote (RF-GAR-001). |
 | CA-GAR-01c | Etapa 5 | Etapa 5 | Los activos creados por la recepción muestran la garantía. |
@@ -308,7 +317,7 @@ Regla de QA: un módulo nuevo entra a las cifras cuando su archivo existe, está
 | Archivo | Sigla | Estado al 2026-10-29 | Qué hace QA |
 |---|---|---|---|
 | `docs/modulos/microsoft-entra-intune.md` | MSF | completo (v0.1, primera redacción) | 44 criterios, 52 RF y RNF, 65 RN; todos en Fase 3 (no bloquean la v1; se cierran al activar el módulo, D-076.4); 3 con etapa heredada del módulo |
-| `docs/modulos/asistente-ia.md` | ASI | completo (v0.1, primera redacción) | 52 criterios, 60 RF y RNF, 40 RN; todos en Fase 3 (no bloquean la v1; se cierran al activar el módulo, D-076.4); 45 con etapa heredada del módulo |
+| `docs/modulos/asistente-ia.md` | ASI | completo (v0.1, primera redacción) | 55 criterios, 61 RF y RNF, 41 RN; todos en Fase 3 (no bloquean la v1; se cierran al activar el módulo, D-076.4); 47 con etapa heredada del módulo |
 
 Ninguno de los dos aparece todavía en el registro de prefijos del documento funcional (sección 26.2) ni en el registro de permisos: QA los lee como propuestas del Analista pendientes de verificación del Auditor Técnico, QA, Seguridad y Cumplimiento. Pruebas que pide QA al activarlos: aislamiento por empresa de cada tabla nueva, permiso denegado por petición directa de cada acción, y las pruebas propias de cada uno (asistente: aislamiento con 100 intentos por herramienta de lectura, instrucciones ocultas y datos enviados al proveedor; Microsoft: simulador de Microsoft, credencial como secreto y solo lectura).
 
@@ -316,244 +325,251 @@ Ninguno de los dos aparece todavía en el registro de prefijos del documento fun
 
 ## Detalle por módulo
 
-### Núcleo (documento funcional, sección 22) (145)
+### Núcleo (documento funcional, sección 22) (149)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
-| CA-001 | RN-001, RS-10, RS-13, RF-AUD-012, RF-PER-008, RF-CAT-003 | Etapa 1 | Etapa 1 | Etapa 2 | integración | sí |  | documento-funcional.md:933 |
-| CA-002 | RN-001, RF-AUD-010 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:934 |
-| CA-003 | RS-11 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:935 |
-| CA-004 | RF-ACC-011, RF-ACC-012, RF-DAT-009 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:936 |
-| CA-005 | RF-ACC-003, 007, 009, 010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:937 |
-| CA-006 | RF-ACC-001, 004, 005, 017 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:938 |
-| CA-007 | RF-ACC-013, 024, RF-PLA-001 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:939 |
-| CA-008 | RF-ACC-015, 016, RF-USR-003, RF-ROL-011 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:940 |
-| CA-009 | RF-ROL-008, RF-ACC-020 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:941 |
-| CA-010 | RF-ROL-007, RF-ACC-008 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:942 |
-| CA-011a | RF-ROL-004, 010, 014 | Etapa 1 | Etapa 1 | Etapa 2 | integración + navegador | sí |  | documento-funcional.md:943 |
-| CA-011b | RF-ROL-003, 005, PER-009, IMP-013, AUD-007, INV-032 | Etapa 1 | Etapa 1 | Etapa 4 | integración + navegador | sí |  | documento-funcional.md:944 |
-| CA-012 | RF-OC-021, 022, 025, RF-ROL-009 | Etapa 1 | Etapa 5 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:945 |
-| CA-013 | RF-OC-023, 024 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:946 |
-| CA-014 | RF-OC-026 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:947 |
-| CA-015a | RF-PLA-004, 006 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:948 |
-| CA-015b | RF-PLA-005, RF-AUD-017 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:949 |
-| CA-015c | RF-PLA-003, RF-ACC-019 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:950 |
-| CA-015d | RF-ACC-002, 022, RF-PLA-002 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:953 |
-| CA-015e | RF-PLA-011, 012 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:951 |
-| CA-015f | RF-PLA-001, 009 | Etapa 1 | Etapa 1 | - | integración | sí | Incluye un paso manual: verificar la identidad por otro medio | documento-funcional.md:952 |
-| CA-015g | RF-PLA-013, RF-PLA-005; Etapa 1 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:954 |
-| CA-015h | RF-PLA-013; Etapa 2, porque necesita campos secretos y solicitudes de derechos | Etapa 1 | Etapa 2 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:955 |
-| CA-015i | RF-PLA-013, RF-PLA-004, RF-PLA-005; Etapa 1 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:956 |
-| CA-016a | RF-PER-001 a 003, RF-DAT-001, RF-CAT-024 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-PER-010 es de Etapa 2 con importación en Etapa 4; CA-016a prueba el alta manual (Etapa 2). | documento-funcional.md:967 |
-| CA-016b | RF-PER-001, RF-INV-013 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:968 |
-| CA-017 | RF-SKU-001, 002, RF-CAT-007 a 009, 023, 025 | Etapa 2 | Etapa 2 | Etapa 3 | unitaria | sí |  | documento-funcional.md:969 |
-| CA-018 | RN-004, RF-SKU-003, 004, RF-OC-003, 046, RF-OS-005 | Etapa 3 | Etapa 3 | Etapa 6 | integración | sí |  | documento-funcional.md:970 |
-| CA-019 | RF-SKU-005, 006, RF-CAT-011 | Etapa 2 | Etapa 3 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:971 |
-| CA-020 | RF-CAT-002, 010, 012 a 016, 022, RF-SKU-013, 015, 016, RF-OC-039 | Etapa 2 | Etapa 3 | Etapa 5 | unitaria | sí | Arranca después de su requisito | documento-funcional.md:972 |
-| CA-021 | RF-CAT-017 a 021 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:973 |
-| CA-022 | RF-SKU-007, 008 | Etapa 3 | Etapa 3 | - | integración | sí |  | documento-funcional.md:974 |
-| CA-023 | RF-INV-002, 003, 006, RF-SKU-009 | Etapa 3 | Etapa 4 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:983 |
-| CA-024 | RF-INV-001, 011, 018, 031, RF-UX-009, RF-OC-028 | Etapa 4 | Etapa 4 | - | integración | sí | Corre antes de lo que necesita | documento-funcional.md:984 |
-| CA-025 | RF-INV-013 a 015, 024 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:986 |
-| CA-026 | RF-INV-019 a 021 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:987 |
-| CA-027 | RF-INV-022 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:988 |
-| CA-028 | RF-INV-004 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:989 |
-| CA-029 | RF-OC-001, 011 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1001 |
-| CA-030 | RF-OC-010, 014, 044 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1002 |
-| CA-031 | RF-OC-005, 015, 018 a 020 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1003 |
-| CA-032 | RF-OC-002, 004 a 008, 042, 043, RF-SKU-010, 011, RF-CAT-005, RF-INV-023 | Etapa 2 | Etapa 5 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1005 |
-| CA-033 | RF-OC-029, 035, 036, 040 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1007 |
-| CA-034 | RF-OC-030, 031, 033, 037, 038, RNF-005 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1008 |
-| CA-035 | RF-OC-033, 034 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1009 |
-| CA-036 | RF-OC-032, RF-INV-007 | Etapa 4 | Etapa 5 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1011 |
-| CA-037 | RF-OC-012, 013 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1013 |
-| CA-038a | RF-IMP-001 a 003, 007, RN-003; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1019 |
-| CA-038b | RF-IMP-006; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1020 |
-| CA-038c | RF-IMP-010, RF-INV-005; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1021 |
-| CA-038d | RF-IMP-008, 009; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí | Tipo ajustado por QA: Vista previa por fila en pantalla y movimientos «saldo inicial» en la base. | documento-funcional.md:1022 |
-| CA-039 | RF-IMP-011, 014, 015, RS-42 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1024 |
-| CA-040a | RF-AUD-001, 002, RN-006; Etapa 1 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:1028 |
-| CA-040b | RF-AUD-018, RF-DAT-002; Etapa 7 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí |  | documento-funcional.md:1029 |
-| CA-041 | RF-AUD-003 a 005, 008, 009, 013, 019, RF-USR-007, RF-ROL-013, RF-PLA-007 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:1030 |
-| CA-042 | RF-CAT-028, RF-SKU-013, 014, RF-AUD-006 | Etapa 1 | Etapa 2 | Etapa 4 | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:979 |
-| CA-043 | RF-EXP-005, 006, 007, RNF-006 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | documento-funcional.md:1025 |
-| CA-044 | RF-OS-001 a 011, RF-INV-012 | Etapa 6 | Etapa 6 | Fase 2 | unitaria | sí |  | documento-funcional.md:1052 |
-| CA-045 | RF-AUD-011, RN-007, RF-USR-002, RF-CAT-004 | Etapa 1 | Etapa 1 | Etapa 5 | integración | sí |  | documento-funcional.md:1032 |
-| CA-046 | RF-INV-016, 017, RF-DAT-006, RNF-002 | Etapa 1 | Etapa 4 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:994 |
-| CA-047 | RF-ROL-001, 002, 006, 012, RF-USR-001 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:957 |
-| CA-048 | RNF-007, RF-CAT-001, RF-SKU-012, RF-UX-007 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:1054 |
-| CA-049 | RF-ACC-023, RF-DAT-014 | Etapa 1 | Etapa 1 | - | navegador | sí |  | documento-funcional.md:958 |
-| CA-050a | RNF-003, 004, RF-UX-010, 012 | Etapa 1 | Etapa 1 | Etapa 4 | navegador | sí | Seguimiento (no bloquea) hasta la etapa en que se completa; bloquea desde allí | documento-funcional.md:1055 |
-| CA-050b | RNF-001, 008, RF-UX-001 a 003, 005, 006, 011, RF-ACC-025 | Etapa 1 | Etapa 1 | Etapa 5 | integración + navegador | sí | Seguimiento (no bloquea) hasta la etapa en que se completa; bloquea desde allí | documento-funcional.md:1056 |
-| CA-051 | RN-014 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:1057 |
-| CA-052a1 | RF-PER-005, 011 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1033 |
-| CA-052a2 | RF-PER-006 | Etapa 2 | Etapa 4 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1034 |
-| CA-052b1 | RF-PER-013 | Etapa 2 | Etapa 2 | - | navegador | sí |  | documento-funcional.md:1035 |
-| CA-052b2 | RF-PER-006, 013 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1036 |
-| CA-052c | RF-USR-001, 003, 008 | Etapa 1 | Etapa 2 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1037 |
-| CA-052d | RF-USR-005, RF-PER-007 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1038 |
-| CA-053 | RNF-010 a 018, RF-DAT-015 | Etapa 0 | Etapa 7 | - | manual (con apoyo de integración) | sí | Arranca después de su requisito | documento-funcional.md:1059 |
-| CA-054a | RF-AUD-014, 015, RF-PER-004, 013, 014, RF-DAT-016 | Etapa 1 | Etapa 2 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1039 |
-| CA-054b | RF-DAT-006, 011 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1040 |
-| CA-054c | RF-DAT-003, 005, RF-AUD-016 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí |  | documento-funcional.md:1041 |
-| CA-055 | RF-OC-015, 016, 017, 047, 048, RF-OS-008 | Etapa 5 | Etapa 5 | Etapa 6 | unitaria | sí |  | documento-funcional.md:1004 |
-| CA-056 | RF-IMP-004, 005, RF-DAT-004 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1023 |
-| CA-057 | RF-IMP-018, RF-ROL-002; Fase 3 | Etapa 1 | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Arranca después de su requisito | documento-funcional.md:1058 |
-| CA-058 | RF-INV-009, 010, 024, 028 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:985 |
-| CA-059 | RF-INV-025 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:990 |
-| CA-060a | RF-CAT-006 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:991 |
-| CA-060b | RF-INV-027 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:992 |
-| CA-061 | RF-OC-010, 049, 050, RF-SKU-010 | Etapa 3 | Etapa 5 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1010 |
-| CA-062 | RF-OC-032 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1012 |
-| CA-063 | RF-INV-026 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:993 |
-| CA-064a | RF-CAT-027 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:975 |
-| CA-064b | RF-CAT-027, RF-SKU-013 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:976 |
-| CA-065a | RF-CAT-012 | Etapa 2 | Etapa 2 | - | unitaria | sí | Etapa del requisito leída por QA: RF-INV-005 es de Etapa 4, pero CA-065a prueba solo la definición del campo identificador (Etapa 2); las unidades las prueba CA-065b. | documento-funcional.md:977 |
-| CA-065b | RF-CAT-012, 029 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:978 |
-| CA-066 | RF-AUD-010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1031 |
-| CA-067 | RF-EXP-001 a 004, RF-PLA-010 | Etapa 1 | Etapa 2 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1026 |
-| CA-068 | RF-ACC-006, 026 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:959 |
-| CA-069 | RF-ACC-014, RNF-013 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:960 |
-| CA-070 | RF-OC-026, RF-PLA-008 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1014 |
-| CA-071 | RF-EMP-001 a 004 | Etapa 1 | Etapa 1 | Etapa 5 | integración + navegador | sí |  | documento-funcional.md:1046 |
-| CA-072 | RF-OC-006, 045 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1006 |
-| CA-073 | RF-DAT-008, 010, RNF-009 | Etapa 0 | Etapa 1 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1042 |
-| CA-074 | RF-ACC-021, RF-DAT-012, RF-CAT-026 | Etapa 1 | Etapa 1 | Etapa 5 | integración | sí |  | documento-funcional.md:1043 |
-| CA-075 | RF-EMP-005 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1045 |
-| CA-076 | RF-PER-012, RF-DAT-007, 013 | Etapa 2 | Etapa 2 | Fase 2 | integración + navegador | sí |  | documento-funcional.md:1044 |
-| CA-077 | RNF-019 a 022, RF-ROL-015 | Etapa 1 | Etapa 1 | Fase 2 | integración | sí |  | documento-funcional.md:1047 |
-| CA-078 | RF-OC-009, RS-47, RS-42 | Etapa 5 | Etapa 5 | - | navegador | sí |  | documento-funcional.md:1048 |
-| CA-079 | RF-ACC-012 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:961 |
-| CA-079b | RF-INV-030 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:995 |
-| CA-080 | RF-UX-004 | Etapa 6 | Etapa 6 | - | unitaria | sí |  | documento-funcional.md:1053 |
-| CA-081 | RF-ACC-013 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:962 |
-| CA-081b | RF-PER-006, RF-INV-029 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:996 |
-| CA-082 | RF-ACC-018 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:963 |
-| CA-082b | RF-INV-008 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:997 |
-| CA-083 | RS-51 | - | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:1063 |
-| CA-084 | RF-PLA-010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1064 |
-| CA-085 | RN-008 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:1065 |
-| CA-086 | RN-015 | - | Etapa 2 | - | integración | sí |  | documento-funcional.md:1066 |
-| CA-087 | RN-016, RF-CAT-003 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1067 |
-| CA-088 | RN-020 | - | Etapa 2 | - | integración | sí |  | documento-funcional.md:1068 |
-| CA-089 | RF-OC-019, PS-232 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1069 |
-| CA-090 | RNF-013 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1070 |
-| CA-091 | RF-DAT-013, PS-234 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1071 |
-| CA-092 | RF-CAT-026 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1072 |
-| CA-093 | RF-PER-012, RF-ACC-025 | Etapa 1 | Etapa 2 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1073 |
-| CA-094a | RF-INV-034, RN-004, RN-012, RF-CAT-008; Etapa 4 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1075 |
-| CA-094b | RF-OC-035, RN-004, RN-023; Etapa 5 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1076 |
-| CA-094c | RN-023; Fase 2 | - | Fase 2 | - | integración | no (bloquea su módulo) |  | documento-funcional.md:1077 |
-| CA-095a | RF-DAT-017, RN-024, RF-PER-013; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es la anonimización manual (Etapa 2). | documento-funcional.md:1078 |
-| CA-095b | RF-DAT-017, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es la anonimización manual (Etapa 2). | documento-funcional.md:1079 |
-| CA-095c | RF-DAT-017, RN-024, RF-PER-012; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es la anonimización manual y el registro de pedidos (Etapa 2). | documento-funcional.md:1080 |
-| CA-095d | RF-DAT-017, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es retomar lo propuesto (Etapa 2). · Tipo ajustado por QA: Retomar una propuesta guardada en la base; no es un cálculo. | documento-funcional.md:1081 |
-| CA-095e | RF-DAT-017, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es el levantamiento parcial (Etapa 2). | documento-funcional.md:1082 |
-| CA-095f | RF-DAT-017, RN-024, RN-002; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es quién declara y levanta (Etapa 2). | documento-funcional.md:1083 |
-| CA-095g | RF-DAT-017; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es el rastro de declarar y levantar (Etapa 2). | documento-funcional.md:1084 |
-| CA-095h | RF-AUD-016, RF-DAT-017, RN-024; Etapa 7 | Etapa 7 | Etapa 7 | - | integración | sí | Etapa del requisito leída por QA: Prueba la parte de la auditoría vencida de RF-DAT-017, que es del proceso de mantenimiento (Etapa 7). | documento-funcional.md:1085 |
-| CA-095i | RF-DAT-017, RS-49; Etapa 7 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí | Etapa del requisito leída por QA: Prueba la parte de la restauración de RF-DAT-017 (RS-49), que es de la Etapa 7. | documento-funcional.md:1086 |
-| CA-095j | RN-024; Fase 2, al activar cada módulo con una rutina así | - | Fase 2 | - | integración | no (bloquea su módulo) |  | documento-funcional.md:1087 |
-| CA-096 | RN-009, RF-OC-005; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1088 |
-| CA-097 | RF-OC-026, tabla de la sección 12.4; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1089 |
-| CA-098 | RF-OC-026; Etapa 5 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1090 |
-| CA-099 | RF-IMP-015, RS-45, RF-PLA-010; Etapa 4 | Etapa 1 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1091 |
-| CA-100 | RF-IMP-016, RF-AUD-019; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1092 |
-| CA-101 | RF-INV-033, RF-INV-018; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí | Tipo ajustado por QA: Cuenta eventos emitidos por el servidor (integración) y un doble clic en la asignación (navegador). | documento-funcional.md:1093 |
-| CA-102 | RF-OC-048; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Reloj y suma por proveedor en el servidor; el aviso se ve en la pantalla de la orden. | documento-funcional.md:1094 |
-| CA-103 | RF-OC-049; Etapa 5 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1095 |
-| CA-104a | RF-OC-051; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Comprueba qué muestra la pantalla de aprobación y que aprobar no cambia. | documento-funcional.md:1096 |
-| CA-104b | RF-OC-051; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Necesita un módulo de prueba que declare información y justificación; se ve en la pantalla. | documento-funcional.md:1097 |
-| CA-105 | RF-IMP-017, RF-DAT-010; Etapa 0 | Etapa 0 | Etapa 0 | - | manual (verificación documental) | sí | Tipo ajustado por QA: El propio criterio dice que es una verificación de documentos y no una prueba automática. | documento-funcional.md:1098 |
+| CA-001 | RN-001, RS-10, RS-13, RF-AUD-012, RF-PER-008, RF-CAT-003 | Etapa 1 | Etapa 1 | Etapa 2 | integración | sí |  | documento-funcional.md:949 |
+| CA-002 | RN-001, RF-AUD-010 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:950 |
+| CA-003 | RS-11 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:951 |
+| CA-004 | RF-ACC-011, RF-ACC-012, RF-DAT-009 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:952 |
+| CA-005 | RF-ACC-003, 007, 009, 010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:953 |
+| CA-006 | RF-ACC-001, 004, 005, 017 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:954 |
+| CA-007 | RF-ACC-013, 024, RF-PLA-001 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:955 |
+| CA-008 | RF-ACC-015, 016, RF-USR-003, RF-ROL-011 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:956 |
+| CA-009 | RF-ROL-008, RF-ACC-020 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:957 |
+| CA-010 | RF-ROL-007, RF-ACC-008 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:958 |
+| CA-011a | RF-ROL-004, 010, 014 | Etapa 1 | Etapa 1 | Etapa 2 | integración + navegador | sí |  | documento-funcional.md:959 |
+| CA-011b | RF-ROL-003, 005, PER-009, IMP-013, AUD-007, INV-032 | Etapa 1 | Etapa 1 | Etapa 4 | integración + navegador | sí |  | documento-funcional.md:960 |
+| CA-012 | RF-OC-021, 022, 025, RF-ROL-009 | Etapa 1 | Etapa 5 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:961 |
+| CA-013 | RF-OC-023, 024 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:962 |
+| CA-014 | RF-OC-026 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:963 |
+| CA-015a | RF-PLA-004, 006 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:964 |
+| CA-015b | RF-PLA-005, RF-AUD-017 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:965 |
+| CA-015c | RF-PLA-003, RF-ACC-019 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:966 |
+| CA-015d | RF-ACC-002, 022, RF-PLA-002 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:969 |
+| CA-015e | RF-PLA-011, 012 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:967 |
+| CA-015f | RF-PLA-001, 009 | Etapa 1 | Etapa 1 | - | integración | sí | Incluye un paso manual: verificar la identidad por otro medio | documento-funcional.md:968 |
+| CA-015g | RF-PLA-013, RF-PLA-005; Etapa 1 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:970 |
+| CA-015h | RF-PLA-013; Etapa 2, porque necesita campos secretos y solicitudes de derechos | Etapa 1 | Etapa 2 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:971 |
+| CA-015i | RF-PLA-013, RF-PLA-004, RF-PLA-005; Etapa 1 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:972 |
+| CA-016a | RF-PER-001 a 003, RF-DAT-001, RF-CAT-024 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-PER-010 es de Etapa 2 con importación en Etapa 4; CA-016a prueba el alta manual (Etapa 2). | documento-funcional.md:983 |
+| CA-016b | RF-PER-001, RF-INV-013 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:984 |
+| CA-017 | RF-SKU-001, 002, RF-CAT-007 a 009, 023, 025 | Etapa 2 | Etapa 2 | Etapa 3 | unitaria | sí |  | documento-funcional.md:985 |
+| CA-018 | RN-004, RF-SKU-003, 004, RF-OC-003, 046, RF-OS-005 | Etapa 3 | Etapa 3 | Etapa 6 | integración | sí |  | documento-funcional.md:986 |
+| CA-019 | RF-SKU-005, 006, RF-CAT-011 | Etapa 2 | Etapa 3 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:987 |
+| CA-020 | RF-CAT-002, 010, 012 a 016, 022, RF-SKU-013, 015, 016, RF-OC-039 | Etapa 2 | Etapa 3 | Etapa 5 | unitaria | sí | Arranca después de su requisito | documento-funcional.md:988 |
+| CA-021 | RF-CAT-017 a 021 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:989 |
+| CA-022 | RF-SKU-007, 008 | Etapa 3 | Etapa 3 | - | integración | sí |  | documento-funcional.md:990 |
+| CA-023 | RF-INV-002, 003, 006, RF-SKU-009 | Etapa 3 | Etapa 4 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:999 |
+| CA-024 | RF-INV-001, 011, 018, 031, RF-UX-009, RF-OC-028 | Etapa 4 | Etapa 4 | - | integración | sí | Corre antes de lo que necesita | documento-funcional.md:1000 |
+| CA-025 | RF-INV-013 a 015, 024 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1002 |
+| CA-026 | RF-INV-019 a 021 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1003 |
+| CA-027 | RF-INV-022 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:1004 |
+| CA-028 | RF-INV-004 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1005 |
+| CA-029 | RF-OC-001, 011 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1017 |
+| CA-030 | RF-OC-010, 014, 044 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1018 |
+| CA-031 | RF-OC-005, 015, 018 a 020 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1019 |
+| CA-032 | RF-OC-002, 004 a 008, 042, 043, RF-SKU-010, 011, RF-CAT-005, RF-INV-023 | Etapa 2 | Etapa 5 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1021 |
+| CA-033 | RF-OC-029, 035, 036, 040 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1023 |
+| CA-034 | RF-OC-030, 031, 033, 037, 038, RNF-005 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1024 |
+| CA-035 | RF-OC-033, 034 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1025 |
+| CA-036 | RF-OC-032, RF-INV-007 | Etapa 4 | Etapa 5 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1027 |
+| CA-037 | RF-OC-012, 013 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1029 |
+| CA-038a | RF-IMP-001 a 003, 007, RN-003; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1035 |
+| CA-038b | RF-IMP-006; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1036 |
+| CA-038c | RF-IMP-010, RF-INV-005; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1037 |
+| CA-038d | RF-IMP-008, 009; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí | Tipo ajustado por QA: Vista previa por fila en pantalla y movimientos «saldo inicial» en la base. | documento-funcional.md:1038 |
+| CA-039 | RF-IMP-011, 014, 015, RS-42 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1040 |
+| CA-040a | RF-AUD-001, 002, RN-006; Etapa 1 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:1044 |
+| CA-040b | RF-AUD-018, RF-DAT-002; Etapa 7 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí |  | documento-funcional.md:1045 |
+| CA-041 | RF-AUD-003 a 005, 008, 009, 013, 019, RF-USR-007, RF-ROL-013, RF-PLA-007 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:1046 |
+| CA-042 | RF-CAT-028, RF-SKU-013, 014, RF-AUD-006 | Etapa 1 | Etapa 2 | Etapa 4 | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:995 |
+| CA-043 | RF-EXP-005, 006, 007, RNF-006 | Etapa 2 | Etapa 2 | - | integración + navegador | sí |  | documento-funcional.md:1041 |
+| CA-044 | RF-OS-001 a 011, RF-INV-012 | Etapa 6 | Etapa 6 | Fase 2 | unitaria | sí |  | documento-funcional.md:1068 |
+| CA-045 | RF-AUD-011, RN-007, RF-USR-002, RF-CAT-004 | Etapa 1 | Etapa 1 | Etapa 5 | integración | sí |  | documento-funcional.md:1048 |
+| CA-046 | RF-INV-016, 017, RF-DAT-006, RNF-002 | Etapa 1 | Etapa 4 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1010 |
+| CA-047 | RF-ROL-001, 002, 006, 012, RF-USR-001 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:973 |
+| CA-048 | RNF-007, RF-CAT-001, RF-SKU-012, RF-UX-007 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:1070 |
+| CA-049 | RF-ACC-023, RF-DAT-014 | Etapa 1 | Etapa 1 | - | navegador | sí |  | documento-funcional.md:974 |
+| CA-050a | RNF-003, 004, RF-UX-010, 012 | Etapa 1 | Etapa 1 | Etapa 4 | navegador | sí | Seguimiento (no bloquea) hasta la etapa en que se completa; bloquea desde allí | documento-funcional.md:1071 |
+| CA-050b | RNF-001, 008, RF-UX-001 a 003, 005, 006, 011, RF-ACC-025 | Etapa 1 | Etapa 1 | Etapa 5 | integración + navegador | sí | Seguimiento (no bloquea) hasta la etapa en que se completa; bloquea desde allí | documento-funcional.md:1072 |
+| CA-051 | RN-014 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:1073 |
+| CA-052a1 | RF-PER-005, 011 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1049 |
+| CA-052a2 | RF-PER-006 | Etapa 2 | Etapa 4 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1050 |
+| CA-052b1 | RF-PER-013 | Etapa 2 | Etapa 2 | - | navegador | sí |  | documento-funcional.md:1051 |
+| CA-052b2 | RF-PER-006, 013 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1052 |
+| CA-052c | RF-USR-001, 003, 008 | Etapa 1 | Etapa 2 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1053 |
+| CA-052d | RF-USR-005, RF-PER-007 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1054 |
+| CA-053 | RNF-010 a 018, RF-DAT-015 | Etapa 0 | Etapa 7 | - | manual (con apoyo de integración) | sí | Arranca después de su requisito | documento-funcional.md:1075 |
+| CA-054a | RF-AUD-014, 015, RF-PER-004, 013, 014, RF-DAT-016 | Etapa 1 | Etapa 2 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1055 |
+| CA-054b | RF-DAT-006, 011 | Etapa 2 | Etapa 4 | - | unitaria | sí | Arranca después de su requisito | documento-funcional.md:1056 |
+| CA-054c | RF-DAT-003, 005, RF-AUD-016 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí |  | documento-funcional.md:1057 |
+| CA-055 | RF-OC-015, 016, 017, 047, 048, RF-OS-008 | Etapa 5 | Etapa 5 | Etapa 6 | unitaria | sí |  | documento-funcional.md:1020 |
+| CA-056 | RF-IMP-004, 005, RF-DAT-004 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1039 |
+| CA-057 | RF-IMP-018, RF-ROL-002; Fase 3 | Etapa 1 | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Arranca después de su requisito | documento-funcional.md:1074 |
+| CA-058 | RF-INV-009, 010, 024, 028 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1001 |
+| CA-059 | RF-INV-025 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1006 |
+| CA-060a | RF-CAT-006 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:1007 |
+| CA-060b | RF-INV-027 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:1008 |
+| CA-061 | RF-OC-010, 049, 050, RF-SKU-010 | Etapa 3 | Etapa 5 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1026 |
+| CA-062 | RF-OC-032 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1028 |
+| CA-063 | RF-INV-026 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1009 |
+| CA-064a | RF-CAT-027 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:991 |
+| CA-064b | RF-CAT-027, RF-SKU-013 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:992 |
+| CA-065a | RF-CAT-012 | Etapa 2 | Etapa 2 | - | unitaria | sí | Etapa del requisito leída por QA: RF-INV-005 es de Etapa 4, pero CA-065a prueba solo la definición del campo identificador (Etapa 2); las unidades las prueba CA-065b. | documento-funcional.md:993 |
+| CA-065b | RF-CAT-012, 029 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:994 |
+| CA-066 | RF-AUD-010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1047 |
+| CA-067 | RF-EXP-001 a 004, RF-PLA-010 | Etapa 1 | Etapa 2 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1042 |
+| CA-068 | RF-ACC-006, 026 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:975 |
+| CA-069 | RF-ACC-014, RNF-013 | Etapa 1 | Etapa 1 | Etapa 4 | integración | sí |  | documento-funcional.md:976 |
+| CA-070 | RF-OC-026, RF-PLA-008 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1030 |
+| CA-071 | RF-EMP-001 a 004 | Etapa 1 | Etapa 1 | Etapa 5 | integración + navegador | sí |  | documento-funcional.md:1062 |
+| CA-072 | RF-OC-006, 045 | Etapa 5 | Etapa 5 | - | unitaria | sí |  | documento-funcional.md:1022 |
+| CA-073 | RF-DAT-008, 010, RNF-009 | Etapa 0 | Etapa 1 | - | integración + navegador | sí | Arranca después de su requisito | documento-funcional.md:1058 |
+| CA-074 | RF-ACC-021, RF-DAT-012, RF-CAT-026 | Etapa 1 | Etapa 1 | Etapa 5 | integración | sí |  | documento-funcional.md:1059 |
+| CA-075 | RF-EMP-005 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1061 |
+| CA-076 | RF-PER-012, RF-DAT-007, 013 | Etapa 2 | Etapa 2 | Fase 2 | integración + navegador | sí |  | documento-funcional.md:1060 |
+| CA-077 | RNF-019 a 022, RF-ROL-015 | Etapa 1 | Etapa 1 | Fase 2 | integración | sí |  | documento-funcional.md:1063 |
+| CA-078 | RF-OC-009, RS-47, RS-42 | Etapa 5 | Etapa 5 | - | navegador | sí |  | documento-funcional.md:1064 |
+| CA-079 | RF-ACC-012 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:977 |
+| CA-079b | RF-INV-030 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:1011 |
+| CA-080 | RF-UX-004 | Etapa 6 | Etapa 6 | - | unitaria | sí |  | documento-funcional.md:1069 |
+| CA-081 | RF-ACC-013 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:978 |
+| CA-081b | RF-PER-006, RF-INV-029 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1012 |
+| CA-082 | RF-ACC-018 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:979 |
+| CA-082b | RF-INV-008 | Etapa 4 | Etapa 4 | - | unitaria | sí |  | documento-funcional.md:1013 |
+| CA-083 | RS-51 | - | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:1079 |
+| CA-084 | RF-PLA-010 | Etapa 1 | Etapa 1 | - | integración | sí |  | documento-funcional.md:1080 |
+| CA-085 | RN-008 | - | Etapa 1 | - | integración | sí |  | documento-funcional.md:1081 |
+| CA-086 | RN-015 | - | Etapa 2 | - | integración | sí |  | documento-funcional.md:1082 |
+| CA-087 | RN-016, RF-CAT-003 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1083 |
+| CA-088 | RN-020 | - | Etapa 2 | - | integración | sí |  | documento-funcional.md:1084 |
+| CA-089 | RF-OC-019, PS-232 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1085 |
+| CA-090 | RNF-013 | Etapa 4 | Etapa 4 | - | integración + navegador | sí |  | documento-funcional.md:1086 |
+| CA-091 | RF-DAT-013, PS-234 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1087 |
+| CA-092 | RF-CAT-026 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1088 |
+| CA-093 | RF-PER-012, RF-ACC-025 | Etapa 1 | Etapa 2 | - | navegador | sí | Arranca después de su requisito | documento-funcional.md:1089 |
+| CA-094a | RF-INV-034, RN-004, RN-012, RF-CAT-008; Etapa 4 | Etapa 2 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1091 |
+| CA-094b | RF-OC-035, RN-004, RN-023; Etapa 5 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1092 |
+| CA-094c | RN-023; Fase 2 | - | Fase 2 | - | integración | no (bloquea su módulo) |  | documento-funcional.md:1093 |
+| CA-095a | RF-DAT-017, RN-024, RF-PER-013; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es la anonimización manual (Etapa 2). | documento-funcional.md:1094 |
+| CA-095b | RF-DAT-017, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es la anonimización manual (Etapa 2). | documento-funcional.md:1095 |
+| CA-095c | RF-DAT-017, RN-024, RF-PER-012; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es la anonimización manual y el registro de pedidos (Etapa 2). | documento-funcional.md:1096 |
+| CA-095d | RF-DAT-017, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es retomar lo propuesto (Etapa 2). · Tipo ajustado por QA: Retomar una propuesta guardada en la base; no es un cálculo. | documento-funcional.md:1097 |
+| CA-095e | RF-DAT-017, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es el levantamiento parcial (Etapa 2). | documento-funcional.md:1098 |
+| CA-095f | RF-DAT-017, RN-024, RN-002; Etapa 2 | Etapa 2 | Etapa 2 | - | integración + navegador | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es quién declara y levanta (Etapa 2). | documento-funcional.md:1099 |
+| CA-095g | RF-DAT-017; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí | Etapa del requisito leída por QA: RF-DAT-017 es de Etapas 2 y 7; esta parte es el rastro de declarar y levantar (Etapa 2). | documento-funcional.md:1100 |
+| CA-095h | RF-AUD-016, RF-DAT-017, RN-024; Etapa 7 | Etapa 7 | Etapa 7 | - | integración | sí | Etapa del requisito leída por QA: Prueba la parte de la auditoría vencida de RF-DAT-017, que es del proceso de mantenimiento (Etapa 7). | documento-funcional.md:1101 |
+| CA-095i | RF-DAT-017, RS-49; Etapa 7 | Etapa 7 | Etapa 7 | - | manual (con apoyo de integración) | sí | Etapa del requisito leída por QA: Prueba la parte de la restauración de RF-DAT-017 (RS-49), que es de la Etapa 7. | documento-funcional.md:1102 |
+| CA-095j | RN-024; Fase 2, al activar cada módulo con una rutina así | - | Fase 2 | - | integración | no (bloquea su módulo) |  | documento-funcional.md:1103 |
+| CA-096 | RN-009, RF-OC-005; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1104 |
+| CA-097 | RF-OC-026, tabla de la sección 12.4; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí |  | documento-funcional.md:1105 |
+| CA-098 | RF-OC-026; Etapa 5 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1106 |
+| CA-099 | RF-IMP-015, RS-45, RF-PLA-010; Etapa 4 | Etapa 1 | Etapa 4 | - | integración | sí | Arranca después de su requisito | documento-funcional.md:1107 |
+| CA-100 | RF-IMP-016, RF-AUD-019; Etapa 4 | Etapa 4 | Etapa 4 | - | integración | sí |  | documento-funcional.md:1108 |
+| CA-101 | RF-INV-033, RF-INV-018; Etapa 4 | Etapa 4 | Etapa 4 | - | integración + navegador | sí | Tipo ajustado por QA: Cuenta eventos emitidos por el servidor (integración) y un doble clic en la asignación (navegador). | documento-funcional.md:1109 |
+| CA-102 | RF-OC-048; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Reloj y suma por proveedor en el servidor; el aviso se ve en la pantalla de la orden. | documento-funcional.md:1110 |
+| CA-103 | RF-OC-049; Etapa 5 | Etapa 5 | Etapa 5 | - | integración | sí |  | documento-funcional.md:1111 |
+| CA-104a | RF-OC-051; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Comprueba qué muestra la pantalla de aprobación y que aprobar no cambia. | documento-funcional.md:1112 |
+| CA-104b | RF-OC-051; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Necesita un módulo de prueba que declare información y justificación; se ve en la pantalla. | documento-funcional.md:1113 |
+| CA-105 | RF-IMP-017, RF-DAT-010; Etapa 0 | Etapa 0 | Etapa 0 | - | manual (verificación documental) | sí | Tipo ajustado por QA: El propio criterio dice que es una verificación de documentos y no una prueba automática. | documento-funcional.md:1114 |
+| CA-106 | RF-AUD-013, RF-AUD-020; Etapa 1 | Etapa 1 | Etapa 1 | - | integración + navegador | sí |  | documento-funcional.md:1115 |
+| CA-107 | RF-CAT-027, RF-CAT-030; Etapa 2 | Etapa 2 | Etapa 2 | - | integración | sí |  | documento-funcional.md:1116 |
+| CA-108 | RF-DAT-018, RF-AUD-015, RN-024; Etapa 2 | Etapa 2 | Etapa 2 | - | unitaria | sí |  | documento-funcional.md:1117 |
+| CA-109 | RN-025; Fase 3 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | documento-funcional.md:1118 |
 
-### ASI · Asistente de IA (52)
+### ASI · Asistente de IA (55)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
-| CA-ASI-01 | RF-ASI-001, RF-ASI-002 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:470 |
-| CA-ASI-02 | RF-ASI-001, RF-ASI-002, RF-ASI-029; RN-ASI-007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:471 |
-| CA-ASI-03 | RF-ASI-003, RF-ASI-004; RNF-ASI-001 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:472 |
-| CA-ASI-04 | RF-ASI-005; RN-ASI-032 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:473 |
-| CA-ASI-05 | RF-ASI-006, RF-ASI-007, RF-ASI-008 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:474 |
-| CA-ASI-06 | RF-ASI-008; RN-AYU-024 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:475 |
-| CA-ASI-07 | RF-ASI-009, RF-ASI-011, RF-ASI-040 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:476 |
-| CA-ASI-08 | RF-ASI-009; RN-ASI-001, RN-ASI-004, RN-ASI-006 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:477 |
-| CA-ASI-09 | RF-ASI-009; RN-ASI-005 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:478 |
-| CA-ASI-10 | RF-ASI-012, RF-ASI-049; RN-ASI-003, RN-ASI-027 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:479 |
-| CA-ASI-11 | RN-ASI-003; RNF-ASI-002 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:480 |
-| CA-ASI-12 | RF-ASI-013, RF-ASI-036; RN-ASI-009, RN-ASI-010, RN-ASI-036; RNF-ASI-004 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:481 |
-| CA-ASI-13 | RF-ASI-011, RF-ASI-042; RN-ASI-026 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:482 |
-| CA-ASI-14 | RF-ASI-013, RF-ASI-036; RN-ASI-008 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:483 |
-| CA-ASI-15 | RF-ASI-037, RF-ASI-046; RN-ASI-025 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:484 |
-| CA-ASI-16 | RF-ASI-040, RF-ASI-043; RN-ASI-014, RN-ASI-039 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:485 |
-| CA-ASI-17 | RF-ASI-039; RN-ASI-013 | - | Fase 3 | - | manual (con apoyo de integración) | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:486 |
-| CA-ASI-18 | RF-ASI-041 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:487 |
-| CA-ASI-19 | RF-ASI-032; RN-ASI-029 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:488 |
-| CA-ASI-20 | RF-ASI-032, RF-ASI-033; RN-ASI-029, RN-ASI-034 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:489 |
-| CA-ASI-21 | RF-ASI-034; RN-ASI-030; RNF-ASI-006 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:490 |
-| CA-ASI-22 | RF-ASI-029, RF-ASI-049; RN-ASI-028 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:491 |
-| CA-ASI-23 | RF-ASI-031; RN-ASI-028, RN-ASI-035 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:492 |
-| CA-ASI-24 | RF-ASI-049; RN-ASI-002 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:493 |
-| CA-ASI-25 | RF-ASI-038; RN-ASI-012 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:494 |
-| CA-ASI-26 | RF-ASI-035, RF-ASI-048; RN-ASI-031 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:495 |
-| CA-ASI-27 | RF-ASI-006, RF-ASI-010, RF-ASI-014; RN-ASI-024; RNF-ASI-009 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:496 |
-| CA-ASI-28 | RF-ASI-045 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:497 |
-| CA-ASI-29 | RF-ASI-044; RN-ASI-021, RN-ASI-023 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:498 |
-| CA-ASI-30 | RF-ASI-028; RN-ASI-022 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:499 |
-| CA-ASI-31 | RF-ASI-045, RF-ASI-047 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:500 |
-| CA-ASI-32 | RF-ASI-044; RN-ASI-001 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:501 |
-| CA-ASI-33 | RF-ASI-044; RN-ASI-023, RN-ASI-036, RN-ASI-040; RNF-ASI-005 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:502 |
-| CA-ASI-34 | RF-ASI-015, RF-ASI-017, RF-ASI-018; RN-ASI-015, RN-ASI-038; CA-AYU-01 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:503 |
-| CA-ASI-35 | RF-ASI-015; RN-ASI-005 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/asistente-ia.md:504 |
-| CA-ASI-36 | RF-ASI-015; RN-ASI-007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:505 |
-| CA-ASI-37 | RF-ASI-019; RN-POR-020 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:506 |
-| CA-ASI-38 | RF-ASI-016; RN-AYU-032 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:507 |
-| CA-ASI-39 | RF-ASI-020 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:508 |
-| CA-ASI-40 | RF-ASI-022, RF-ASI-023, RF-ASI-025; RN-ASI-015, RN-ASI-038 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:509 |
-| CA-ASI-41 | RF-ASI-023, RF-ASI-024; RN-ASI-017 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:510 |
-| CA-ASI-42 | RF-ASI-022; RN-ASI-016 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:511 |
-| CA-ASI-43 | RF-ASI-026; RN-ASI-018, RN-ASI-019 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:512 |
-| CA-ASI-44 | RF-ASI-026; RN-ASI-020 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:513 |
-| CA-ASI-45 | RF-ASI-025; RN-ASI-037 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:514 |
-| CA-ASI-46 | RF-ASI-019, RF-ASI-021, RF-ASI-027; RN-ASI-018 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:515 |
-| CA-ASI-47 | RF-ASI-025; RN-ASI-002, RN-ASI-007 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:516 |
-| CA-ASI-48 | RF-ASI-021, RF-ASI-030; RN-ASI-011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:517 |
-| CA-ASI-49 | RF-ASI-002; RN-ASI-035 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:518 |
-| CA-ASI-50 | RF-ASI-033 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:519 |
-| CA-ASI-51 | RN-ASI-033 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:520 |
-| CA-ASI-52 | RNF-ASI-010 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:521 |
+| CA-ASI-01 | RF-ASI-001, RF-ASI-002 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:478 |
+| CA-ASI-02 | RF-ASI-001, RF-ASI-002, RF-ASI-029; RN-ASI-007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:479 |
+| CA-ASI-03 | RF-ASI-003, RF-ASI-004; RNF-ASI-001 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:480 |
+| CA-ASI-04 | RF-ASI-005; RN-ASI-032 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:481 |
+| CA-ASI-05 | RF-ASI-006, RF-ASI-007, RF-ASI-008 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:482 |
+| CA-ASI-06 | RF-ASI-008; RN-AYU-024 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:483 |
+| CA-ASI-07 | RF-ASI-009, RF-ASI-011, RF-ASI-040 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:484 |
+| CA-ASI-08 | RF-ASI-009; RN-ASI-001, RN-ASI-004, RN-ASI-006 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:485 |
+| CA-ASI-09 | RF-ASI-009; RN-ASI-005 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:486 |
+| CA-ASI-10 | RF-ASI-012, RF-ASI-049; RN-ASI-003, RN-ASI-027 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:487 |
+| CA-ASI-11 | RN-ASI-003; RNF-ASI-002 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:488 |
+| CA-ASI-12 | RF-ASI-013, RF-ASI-036; RN-ASI-009, RN-ASI-010, RN-ASI-036; RNF-ASI-004 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:489 |
+| CA-ASI-13 | RF-ASI-011, RF-ASI-042; RN-ASI-026 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:490 |
+| CA-ASI-14 | RF-ASI-013, RF-ASI-036; RN-ASI-008 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:491 |
+| CA-ASI-15 | RF-ASI-037, RF-ASI-046; RN-ASI-025 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:492 |
+| CA-ASI-16 | RF-ASI-040, RF-ASI-043; RN-ASI-014, RN-ASI-039 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:493 |
+| CA-ASI-17 | RF-ASI-039; RN-ASI-013 | - | Fase 3 | - | manual (con apoyo de integración) | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:494 |
+| CA-ASI-18 | RF-ASI-041 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:495 |
+| CA-ASI-19 | RF-ASI-032; RN-ASI-029 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:496 |
+| CA-ASI-20 | RF-ASI-032, RF-ASI-033; RN-ASI-029, RN-ASI-034 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:497 |
+| CA-ASI-21 | RF-ASI-034; RN-ASI-030; RNF-ASI-006 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:498 |
+| CA-ASI-22 | RF-ASI-029, RF-ASI-049; RN-ASI-028 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:499 |
+| CA-ASI-23 | RF-ASI-031; RN-ASI-028, RN-ASI-035 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:500 |
+| CA-ASI-24 | RF-ASI-049; RN-ASI-002 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:501 |
+| CA-ASI-25 | RF-ASI-038; RN-ASI-012 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:502 |
+| CA-ASI-26 | RF-ASI-035, RF-ASI-048; RN-ASI-031 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:503 |
+| CA-ASI-27 | RF-ASI-006, RF-ASI-010, RF-ASI-014; RN-ASI-024; RNF-ASI-009 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:504 |
+| CA-ASI-28 | RF-ASI-045 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:505 |
+| CA-ASI-29 | RF-ASI-044; RN-ASI-021, RN-ASI-023 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:506 |
+| CA-ASI-30 | RF-ASI-028; RN-ASI-022 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:507 |
+| CA-ASI-31 | RF-ASI-045, RF-ASI-047 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:508 |
+| CA-ASI-32 | RF-ASI-044; RN-ASI-001 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:509 |
+| CA-ASI-33 | RF-ASI-044; RN-ASI-023, RN-ASI-036, RN-ASI-040; RNF-ASI-005 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:510 |
+| CA-ASI-34 | RF-ASI-015, RF-ASI-017, RF-ASI-018; RN-ASI-015, RN-ASI-038; CA-AYU-01 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:511 |
+| CA-ASI-35 | RF-ASI-015; RN-ASI-005 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/asistente-ia.md:512 |
+| CA-ASI-36 | RF-ASI-015; RN-ASI-007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:513 |
+| CA-ASI-37 | RF-ASI-019; RN-POR-020 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:514 |
+| CA-ASI-38 | RF-ASI-016; RN-AYU-032 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:515 |
+| CA-ASI-39 | RF-ASI-020 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:516 |
+| CA-ASI-40 | RF-ASI-022, RF-ASI-023, RF-ASI-025; RN-ASI-015, RN-ASI-038 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:517 |
+| CA-ASI-41 | RF-ASI-023, RF-ASI-024; RN-ASI-017 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:518 |
+| CA-ASI-42 | RF-ASI-022; RN-ASI-016 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:519 |
+| CA-ASI-43 | RF-ASI-026; RN-ASI-018, RN-ASI-019 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:520 |
+| CA-ASI-44 | RF-ASI-026; RN-ASI-020 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:521 |
+| CA-ASI-45 | RF-ASI-025; RN-ASI-037 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:522 |
+| CA-ASI-46 | RF-ASI-019, RF-ASI-021, RF-ASI-027; RN-ASI-018 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:523 |
+| CA-ASI-47 | RF-ASI-025; RN-ASI-002, RN-ASI-007 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:524 |
+| CA-ASI-48 | RF-ASI-021, RF-ASI-030; RN-ASI-011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/asistente-ia.md:525 |
+| CA-ASI-49 | RF-ASI-002; RN-ASI-035 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:526 |
+| CA-ASI-50 | RF-ASI-033 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:527 |
+| CA-ASI-51 | RN-ASI-033 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:528 |
+| CA-ASI-52 | RNF-ASI-010 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:529 |
+| CA-ASI-53 | RF-ASI-001, RF-ASI-004, RF-ASI-050; RF-UX-004 | Etapa 6 | Fase 3 | - | navegador | no (bloquea su módulo) | Arranca después de su requisito | modulos/asistente-ia.md:530 |
+| CA-ASI-54 | RF-ASI-005; RN-ASI-041; RN-ASI-005; RNF-POR-008 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:531 |
+| CA-ASI-55 | RF-ASI-030; RN-ASI-011 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/asistente-ia.md:532 |
 
 ### AYU · Mesa de ayuda (27)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
-| CA-AYU-01 | RF-AYU-001, RF-AYU-003, RF-AYU-004, RF-AYU-005; RN-AYU-003 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:315 |
-| CA-AYU-02 | RF-AYU-002; RN-AYU-002, RN-AYU-029 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:316 |
-| CA-AYU-03 | RF-AYU-005; RN-AYU-004 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:317 |
-| CA-AYU-04 | RF-AYU-016, RF-AYU-017, RF-AYU-018; RN-AYU-006, RN-AYU-007; RNF-AYU-005 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:318 |
-| CA-AYU-05 | RF-AYU-015; RN-AYU-006 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:319 |
-| CA-AYU-06 | RF-AYU-013; RN-AYU-009; RNF-AYU-007 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:320 |
-| CA-AYU-07 | RF-AYU-009; RN-AYU-011 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:321 |
-| CA-AYU-08 | RF-AYU-009; RN-AYU-011 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:322 |
-| CA-AYU-09 | RF-AYU-023, RF-AYU-025; RN-AYU-010 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:323 |
-| CA-AYU-10 | RF-AYU-027; RN-AYU-008, RN-AYU-012 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:324 |
-| CA-AYU-11 | RF-AYU-010, RF-AYU-011, RF-AYU-012; RN-AYU-015, RN-AYU-017, RN-AYU-018 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:325 |
-| CA-AYU-12 | RF-AYU-019, RF-AYU-020; RN-AYU-020 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:326 |
-| CA-AYU-13 | RF-AYU-006, RF-AYU-007, RF-AYU-008, RF-AYU-041; RN-AYU-018 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:327 |
-| CA-AYU-14 | RF-AYU-030, RF-AYU-031, RF-AYU-035, RF-AYU-036; RN-AYU-023, RN-AYU-035 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:328 |
-| CA-AYU-15 | RF-AYU-032, RF-AYU-033, RF-AYU-034; RN-AYU-024, RN-AYU-025 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:329 |
-| CA-AYU-16 | RF-AYU-028, RF-AYU-029; RN-AYU-022 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:330 |
-| CA-AYU-17 | RF-AYU-045; RN-AYU-027 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:331 |
-| CA-AYU-18 | RF-AYU-014, RF-AYU-046; RN-AYU-025 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:332 |
-| CA-AYU-19 | RF-AYU-026, RF-AYU-036; RN-AYU-019, RN-AYU-028, RN-AYU-030; RNF-AYU-004 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:333 |
-| CA-AYU-20 | RF-AYU-047; RN-AYU-033 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:334 |
-| CA-AYU-21 | RF-AYU-043, RF-AYU-044; RN-AYU-032 | Fase 2 | Fase 2 | - | navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:335 |
-| CA-AYU-22 | RF-AYU-040, RF-AYU-048; RN-AYU-002 | Fase 2 | Fase 2 | - | navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:336 |
-| CA-AYU-23 | RN-AYU-001; RNF-AYU-009 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:337 |
-| CA-AYU-24 | RF-AYU-021, RF-AYU-022, RF-AYU-024, RF-AYU-042, RF-AYU-044; RN-AYU-001, RN-AYU-014 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:338 |
-| CA-AYU-25 | RN-AYU-001; RF-AYU-001 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:339 |
-| CA-AYU-26 |  | - | Fase 2 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/mesa-de-ayuda.md:340 |
-| CA-AYU-27 | RF-AYU-037, RF-AYU-038, RF-AYU-039; RN-AYU-009, RN-AYU-027 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:341 |
+| CA-AYU-01 | RF-AYU-001, RF-AYU-003, RF-AYU-004, RF-AYU-005; RN-AYU-003 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:316 |
+| CA-AYU-02 | RF-AYU-002; RN-AYU-002, RN-AYU-029 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:317 |
+| CA-AYU-03 | RF-AYU-005; RN-AYU-004 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:318 |
+| CA-AYU-04 | RF-AYU-016, RF-AYU-017, RF-AYU-018; RN-AYU-006, RN-AYU-007; RNF-AYU-005 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:319 |
+| CA-AYU-05 | RF-AYU-015; RN-AYU-006 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:320 |
+| CA-AYU-06 | RF-AYU-013; RN-AYU-009; RNF-AYU-007 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:321 |
+| CA-AYU-07 | RF-AYU-009; RN-AYU-011 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:322 |
+| CA-AYU-08 | RF-AYU-009; RN-AYU-011 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:323 |
+| CA-AYU-09 | RF-AYU-023, RF-AYU-025; RN-AYU-010 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:324 |
+| CA-AYU-10 | RF-AYU-027; RN-AYU-008, RN-AYU-012 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:325 |
+| CA-AYU-11 | RF-AYU-010, RF-AYU-011, RF-AYU-012; RN-AYU-015, RN-AYU-017, RN-AYU-018 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:326 |
+| CA-AYU-12 | RF-AYU-019, RF-AYU-020; RN-AYU-020 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:327 |
+| CA-AYU-13 | RF-AYU-006, RF-AYU-007, RF-AYU-008, RF-AYU-041; RN-AYU-018 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:328 |
+| CA-AYU-14 | RF-AYU-030, RF-AYU-031, RF-AYU-035, RF-AYU-036; RN-AYU-023, RN-AYU-035 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:329 |
+| CA-AYU-15 | RF-AYU-032, RF-AYU-033, RF-AYU-034; RN-AYU-024, RN-AYU-025 | Fase 2 | Fase 2 | - | unitaria | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:330 |
+| CA-AYU-16 | RF-AYU-028, RF-AYU-029; RN-AYU-022 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:331 |
+| CA-AYU-17 | RF-AYU-045; RN-AYU-027 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:332 |
+| CA-AYU-18 | RF-AYU-014, RF-AYU-046; RN-AYU-025 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:333 |
+| CA-AYU-19 | RF-AYU-026, RF-AYU-036; RN-AYU-019, RN-AYU-028, RN-AYU-030; RNF-AYU-004 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:334 |
+| CA-AYU-20 | RF-AYU-047; RN-AYU-033 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:335 |
+| CA-AYU-21 | RF-AYU-043, RF-AYU-044; RN-AYU-032 | Fase 2 | Fase 2 | - | navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:336 |
+| CA-AYU-22 | RF-AYU-040, RF-AYU-048; RN-AYU-002 | Fase 2 | Fase 2 | - | navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:337 |
+| CA-AYU-23 | RN-AYU-001; RNF-AYU-009 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:338 |
+| CA-AYU-24 | RF-AYU-021, RF-AYU-022, RF-AYU-024, RF-AYU-042, RF-AYU-044; RN-AYU-001, RN-AYU-014 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:339 |
+| CA-AYU-25 | RN-AYU-001; RF-AYU-001 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:340 |
+| CA-AYU-26 |  | - | Fase 2 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/mesa-de-ayuda.md:341 |
+| CA-AYU-27 | RF-AYU-037, RF-AYU-038, RF-AYU-039; RN-AYU-009, RN-AYU-027 | Fase 2 | Fase 2 | - | integración | no (bloquea su módulo) |  | modulos/mesa-de-ayuda.md:342 |
 
 ### CAM · Gestión de cambios (20)
 
@@ -758,50 +774,50 @@ Ninguno de los dos aparece todavía en el registro de prefijos del documento fun
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
-| CA-MSF-01 | Conectar y confirmar el directorio.** *Cubre RF-MSF-001, RN-MSF-004, 005, 006 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:506 |
-| CA-MSF-02 | Solo lectura y conexión por partes.** *Cubre RF-MSF-001, 003, RN-MSF-007, 065 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:507 |
-| CA-MSF-03 | La credencial es un secreto.** *Cubre RF-MSF-002, RN-MSF-002, 003, RNF-MSF-004 | Fase 3 | Fase 3 | - | manual (con apoyo de integración) | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:508 |
-| CA-MSF-04 | Estado, vencimiento y pérdida de acceso.** *Cubre RF-MSF-004, RN-MSF-056, RNF-MSF-009 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:509 |
-| CA-MSF-05 | Reemplazar la credencial.** *Cubre RF-MSF-005 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:510 |
-| CA-MSF-06 | Pausar y reanudar.** *Cubre RF-MSF-006 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:511 |
-| CA-MSF-07 | Desconectar.** *Cubre RF-MSF-007, RN-MSF-013, 060 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:512 |
-| CA-MSF-08 | Sincronizar ahora y límites de Microsoft.** *Cubre RF-MSF-008, RN-MSF-051 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:513 |
-| CA-MSF-09 | Historial de lecturas y procesos con dos empresas.** *Cubre RF-MSF-009, RN-MSF-050, RNF-MSF-003, 005 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:514 |
-| CA-MSF-10 | Vista previa y filtros.** *Cubre RF-MSF-010, 011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:515 |
-| CA-MSF-11 | Coincidencia y vínculo.** *Cubre RF-MSF-012, RN-MSF-014, 015, 016 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:516 |
-| CA-MSF-12 | Propuestas de alta y cambio.** *Cubre RF-MSF-013, RN-MSF-017, 018, 023, 025 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:517 |
-| CA-MSF-13 | Revisar y aplicar con permisos de Personas.** *Cubre RF-MSF-014, RN-MSF-019, 020 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:518 |
-| CA-MSF-14 | Aplicar en bloque.** *Cubre RF-MSF-015, RN-MSF-026 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:519 |
-| CA-MSF-15 | Una baja en Microsoft no es un cese.** *Cubre RF-MSF-016, RN-MSF-012, 021 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:520 |
-| CA-MSF-16 | Áreas desconocidas.** *Cubre RF-MSF-017, RN-MSF-024 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:521 |
-| CA-MSF-17 | Desvincular una cuenta.** *Cubre RF-MSF-018 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:522 |
-| CA-MSF-18 | Anonimización.** *Cubre RF-MSF-019, RN-MSF-022, 059 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:523 |
-| CA-MSF-19 | Marca de categoría y «Pendiente de enrolar».** *Cubre RF-MSF-020, 021, RN-MSF-027, 028, 029 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:524 |
-| CA-MSF-20 | De la orden de compra a Intune, de punta a punta.** *Cubre RF-MSF-022, 025, 032 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:525 |
-| CA-MSF-21 | Solo equipos corporativos y datos mínimos.** *Cubre RF-MSF-023, RN-MSF-008, 009, 010 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:526 |
-| CA-MSF-22 | Vínculo automático por serie o IMEI.** *Cubre RF-MSF-024, RN-MSF-030, 031, 032, 033, 036 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:527 |
-| CA-MSF-23 | Coincidencia dudosa y desvinculación.** *Cubre RF-MSF-029, RN-MSF-033, 034, 035 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:528 |
-| CA-MSF-24 | Bloque «Intune» y datos personales.** *Cubre RF-MSF-026, RN-MSF-037, 038, 039, 040, 054, RNF-MSF-007 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:529 |
-| CA-MSF-25 | Historial de cumplimiento.** *Cubre RF-MSF-027 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:530 |
-| CA-MSF-26 | Lista, filtros y exportación.** *Cubre RF-MSF-028, RN-MSF-053, 054 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:531 |
-| CA-MSF-27 | Panel de conciliación calculado.** *Cubre RF-MSF-030, 032, RN-MSF-042, 043 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:532 |
-| CA-MSF-28 | En Intune y no en el inventario.** *Cubre RF-MSF-031, 036, RN-MSF-011, 048, 049 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:533 |
-| CA-MSF-29 | Diferencia de asignado a.** *Cubre RF-MSF-033, RN-MSF-046, 047 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:534 |
-| CA-MSF-30 | Extraviado que se comunica y baja que sigue.** *Cubre RF-MSF-034, RN-MSF-044, 045 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:535 |
-| CA-MSF-31 | Duplicados en Intune.** *Cubre RF-MSF-035, RN-MSF-032 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:536 |
-| CA-MSF-32 | Línea informativa en el cese.** *Cubre RF-MSF-037 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:537 |
-| CA-MSF-33 | Sin acciones remotas.** *Cubre RF-MSF-038, RN-MSF-061 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:538 |
-| CA-MSF-34 | Avisos con contenido mínimo.** *Cubre RF-MSF-039, RN-MSF-055 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:539 |
-| CA-MSF-35 | Dato con fecha y lectura fallida.** *Cubre RF-MSF-040, RN-MSF-041, 042 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:540 |
-| CA-MSF-36 | Suspensión, módulo apagado y restauración.** *Cubre RF-MSF-041, RN-MSF-058, 064 | Fase 3 | Fase 3 | - | manual (con apoyo de integración) | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:541 |
-| CA-MSF-37 | Aislamiento entre empresas.** *Cubre RN-MSF-001, 002, RNF-MSF-005, 010 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:542 |
-| CA-MSF-38 | Permiso denegado.** *Cubre la sección 3 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/microsoft-entra-intune.md:543 |
-| CA-MSF-39 | Auditoría sin valores personales.** *Cubre RN-MSF-052, 053, RNF-MSF-008 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:544 |
-| CA-MSF-40 | Texto libre.** *Cubre RN-MSF-057 | - | Fase 3 | - | unitaria | no (bloquea su módulo) | Etapa heredada del módulo | modulos/microsoft-entra-intune.md:545 |
-| CA-MSF-41 | Independencia y sin API.** *Cubre RN-MSF-062, 063 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/microsoft-entra-intune.md:546 |
-| CA-MSF-42 | Rendimiento y segundo plano.** *Cubre RNF-MSF-001, 002 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:547 |
-| CA-MSF-43 | Indicadores para reportes.** *Cubre RF-MSF-042 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:548 |
-| CA-MSF-44 | Sin datos reales en las pruebas.** *Cubre RNF-MSF-006 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:549 |
+| CA-MSF-01 | Conectar y confirmar el directorio.** *Cubre RF-MSF-001, RN-MSF-004, 005, 006 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:509 |
+| CA-MSF-02 | Solo lectura, comprobada en cada lectura, y conexión por partes.** *Cubre RF-MSF-001, 003, RN-MSF-007, 065,... | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:510 |
+| CA-MSF-03 | La credencial es un secreto.** *Cubre RF-MSF-002, RN-MSF-002, 003, RNF-MSF-004 | Fase 3 | Fase 3 | - | manual (con apoyo de integración) | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:511 |
+| CA-MSF-04 | Estado, vencimiento y pérdida de acceso.** *Cubre RF-MSF-004, RN-MSF-056, RNF-MSF-009 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:512 |
+| CA-MSF-05 | Reemplazar la credencial.** *Cubre RF-MSF-005 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:513 |
+| CA-MSF-06 | Pausar y reanudar.** *Cubre RF-MSF-006 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:514 |
+| CA-MSF-07 | Desconectar.** *Cubre RF-MSF-007, RN-MSF-013, 060 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:515 |
+| CA-MSF-08 | Sincronizar ahora y límites de Microsoft.** *Cubre RF-MSF-008, RN-MSF-051 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:516 |
+| CA-MSF-09 | Historial de lecturas y procesos con dos empresas.** *Cubre RF-MSF-009, RN-MSF-050, RNF-MSF-003, 005 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:517 |
+| CA-MSF-10 | Vista previa y filtros.** *Cubre RF-MSF-010, 011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:518 |
+| CA-MSF-11 | Coincidencia y vínculo.** *Cubre RF-MSF-012, RN-MSF-014, 015, 016 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:519 |
+| CA-MSF-12 | Propuestas de alta y cambio.** *Cubre RF-MSF-013, RN-MSF-017, 018, 023, 025 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:520 |
+| CA-MSF-13 | Revisar y aplicar con permisos de Personas.** *Cubre RF-MSF-014, RN-MSF-019, 020 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:521 |
+| CA-MSF-14 | Aplicar en bloque (excepción a D-050).** *Cubre RF-MSF-015, RN-MSF-026 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:522 |
+| CA-MSF-15 | Una baja en Microsoft no es un cese.** *Cubre RF-MSF-016, RN-MSF-012, 021 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:523 |
+| CA-MSF-16 | Áreas desconocidas.** *Cubre RF-MSF-017, RN-MSF-024 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:524 |
+| CA-MSF-17 | Desvincular una cuenta.** *Cubre RF-MSF-018 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:525 |
+| CA-MSF-18 | Anonimización.** *Cubre RF-MSF-019, RN-MSF-022, 059 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:526 |
+| CA-MSF-19 | Marca de categoría y «Pendiente de enrolar».** *Cubre RF-MSF-020, 021, RN-MSF-027, 028, 029 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:527 |
+| CA-MSF-20 | De la orden de compra a Intune, de punta a punta.** *Cubre RF-MSF-022, 025, 032 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:528 |
+| CA-MSF-21 | Solo equipos corporativos y datos mínimos.** *Cubre RF-MSF-023, RN-MSF-008, 009, 010 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:529 |
+| CA-MSF-22 | Vínculo automático por serie o IMEI.** *Cubre RF-MSF-024, RN-MSF-030, 031, 032, 033, 036 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:530 |
+| CA-MSF-23 | Coincidencia dudosa y desvinculación.** *Cubre RF-MSF-029, RN-MSF-033, 034, 035 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:531 |
+| CA-MSF-24 | Bloque «Intune» y datos personales.** *Cubre RF-MSF-026, RN-MSF-037, 038, 039, 040, 054, RNF-MSF-007 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:532 |
+| CA-MSF-25 | Historial de cumplimiento.** *Cubre RF-MSF-027 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:533 |
+| CA-MSF-26 | Lista, filtros y exportación.** *Cubre RF-MSF-028, RN-MSF-053, 054 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:534 |
+| CA-MSF-27 | Panel de conciliación calculado.** *Cubre RF-MSF-030, 032, RN-MSF-042, 043 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:535 |
+| CA-MSF-28 | En Intune y no en el inventario.** *Cubre RF-MSF-031, 036, RN-MSF-011, 048, 049 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:536 |
+| CA-MSF-29 | Diferencia de asignado a.** *Cubre RF-MSF-033, RN-MSF-046, 047 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:537 |
+| CA-MSF-30 | Extraviado que se comunica y baja que sigue.** *Cubre RF-MSF-034, RN-MSF-044, 045 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:538 |
+| CA-MSF-31 | Duplicados en Intune.** *Cubre RF-MSF-035, RN-MSF-032 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:539 |
+| CA-MSF-32 | Línea informativa en el cese.** *Cubre RF-MSF-037 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:540 |
+| CA-MSF-33 | Sin acciones remotas.** *Cubre RF-MSF-038, RN-MSF-061 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:541 |
+| CA-MSF-34 | Avisos con contenido mínimo.** *Cubre RF-MSF-039, RN-MSF-055 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:542 |
+| CA-MSF-35 | Dato con fecha y lectura fallida.** *Cubre RF-MSF-040, RN-MSF-041, 042 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:543 |
+| CA-MSF-36 | Suspensión, módulo apagado y restauración.** *Cubre RF-MSF-041, RN-MSF-058, 064 | Fase 3 | Fase 3 | - | manual (con apoyo de integración) | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:544 |
+| CA-MSF-37 | Aislamiento entre empresas.** *Cubre RN-MSF-001, 002, RNF-MSF-005, 010 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:545 |
+| CA-MSF-38 | Permiso denegado.** *Cubre la sección 3 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/microsoft-entra-intune.md:546 |
+| CA-MSF-39 | Auditoría sin valores personales.** *Cubre RN-MSF-052, 053, RNF-MSF-008 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:547 |
+| CA-MSF-40 | Texto libre.** *Cubre RN-MSF-057 | - | Fase 3 | - | unitaria | no (bloquea su módulo) | Etapa heredada del módulo | modulos/microsoft-entra-intune.md:548 |
+| CA-MSF-41 | Independencia y sin API.** *Cubre RN-MSF-062, 063 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/microsoft-entra-intune.md:549 |
+| CA-MSF-42 | Rendimiento y segundo plano.** *Cubre RNF-MSF-001, 002 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:550 |
+| CA-MSF-43 | Indicadores para reportes.** *Cubre RF-MSF-042 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:551 |
+| CA-MSF-44 | Sin datos reales en las pruebas.** *Cubre RNF-MSF-006 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:552 |
 
 ### NOT · Notificaciones (22)
 
@@ -854,22 +870,22 @@ Ninguno de los dos aparece todavía en el registro de prefijos del documento fun
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
-| CA-POR-01 | RF-POR-001, 002, 003, 005; RN-POR-001 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:213 |
-| CA-POR-02 | aislamiento entre empresas)** (RN-POR-002; RNF-POR-007 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/portal-autoservicio.md:214 |
-| CA-POR-03 | aislamiento entre Personas)** (RN-POR-001, 002; RNF-POR-003 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/portal-autoservicio.md:215 |
-| CA-POR-04 | permiso denegado)** (RF-POR-006, 007, 016; RN-POR-018 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:216 |
-| CA-POR-05 | RF-POR-002; RN-POR-011, 022; RNF-POR-008 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:217 |
-| CA-POR-06 | RF-POR-004; RN-POR-011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:218 |
-| CA-POR-07 | RF-POR-013, 014, 017; RN-POR-005, 007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:219 |
-| CA-POR-08 | RF-POR-014; RN-POR-007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:220 |
-| CA-POR-09 | RN-POR-004 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/portal-autoservicio.md:221 |
-| CA-POR-10 | RF-POR-009, 010, 015; RN-POR-009 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:222 |
-| CA-POR-11 | RF-POR-008; RN-POR-008 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:223 |
-| CA-POR-12 | RF-POR-011; RN-POR-020 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:224 |
-| CA-POR-13 | RN-POR-003 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/portal-autoservicio.md:225 |
-| CA-POR-14 | Fase 3)** (RF-POR-012; RN-POR-014, 015 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:226 |
-| CA-POR-15 | RF-POR-011; RN-POR-011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:227 |
-| CA-POR-16 | RF-POR-013; RN-POR-016 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:228 |
+| CA-POR-01 | RF-POR-001, 002, 003, 005; RN-POR-001 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:216 |
+| CA-POR-02 | aislamiento entre empresas)** (RN-POR-002; RNF-POR-007 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/portal-autoservicio.md:217 |
+| CA-POR-03 | aislamiento entre Personas)** (RN-POR-001, 002; RNF-POR-003 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/portal-autoservicio.md:218 |
+| CA-POR-04 | permiso denegado)** (RF-POR-006, 007, 016; RN-POR-018 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:219 |
+| CA-POR-05 | RF-POR-002; RN-POR-011, 022; RNF-POR-008 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:220 |
+| CA-POR-06 | RF-POR-004; RN-POR-011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:221 |
+| CA-POR-07 | RF-POR-013, 014, 017; RN-POR-005, 007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:222 |
+| CA-POR-08 | RF-POR-014; RN-POR-007 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:223 |
+| CA-POR-09 | RN-POR-004 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/portal-autoservicio.md:224 |
+| CA-POR-10 | RF-POR-009, 010, 015; RN-POR-009 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:225 |
+| CA-POR-11 | RF-POR-008; RN-POR-008 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:226 |
+| CA-POR-12 | RF-POR-011; RN-POR-020 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:227 |
+| CA-POR-13 | RN-POR-003 | - | Fase 3 | - | navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/portal-autoservicio.md:228 |
+| CA-POR-14 | Fase 3)** (RF-POR-012; RN-POR-014, 015 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:229 |
+| CA-POR-15 | RF-POR-011; RN-POR-011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:230 |
+| CA-POR-16 | RF-POR-013; RN-POR-016 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/portal-autoservicio.md:231 |
 
 ### PRB · Gestión de problemas (17)
 

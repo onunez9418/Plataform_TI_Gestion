@@ -65,7 +65,7 @@ Solo nombres y PS-nn de `docs/registro-permisos.md`. Los alcances de una clave s
 Notas
 - **Empleado (portal): no aplica.**
 - Una clave **nunca** tiene más permisos que su creador (equivale a D-004.6) y se revisa cuando el creador cambia de rol.
-- Ninguna clave puede **aprobar, rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar o desactivar Personas, crear o cambiar proveedores, ver claves de licencia o la auditoría, ni administrar usuarios o roles** (D-043, D-047.3). Esas acciones son siempre de una persona.
+- Lo que una clave nunca puede hacer lo fija la **lista única** de la sección 12C de `docs/registro-permisos.md` (regla RN-025 del documento funcional). Este módulo no la repite: la cita. Esas acciones son siempre de una persona.
 - Los errores de la API usan los tres mensajes del catálogo: "No encontrado", "No tiene permiso" y "No se puede por una regla" (D-053).
 
 ---
@@ -83,7 +83,7 @@ Notas
 | RF-INT-005 | Mostrar por clave: último uso, direcciones, pedidos del día y errores. | Fase 3 (INT-1) | CA-INT-06 |
 | RF-INT-006 | API de lectura de activos, SKU, ubicaciones, catálogos, categorías y campos personalizados, con filtros y páginas. | Fase 3 (INT-1) | CA-INT-02, CA-INT-03 |
 | RF-INT-007 | API de lectura de Personas, OC, recepciones, OS, proveedores y centros de costo. | Fase 3 (INT-2) | CA-INT-02 |
-| RF-INT-008 | API de escritura limitada: Personas (crear y editar, nunca cesar), SKU, valores de catálogo (nunca proveedores), OC en Borrador, OS y solicitudes de mesa de ayuda. | Fase 3 (INT-2) | CA-INT-09, CA-INT-17 |
+| RF-INT-008 | API de escritura limitada a: Personas (crear y editar), SKU, valores de catálogo, OC en Borrador, OS y solicitudes de mesa de ayuda. Todo lo demás es de la lista única de la sección 12C de `docs/registro-permisos.md` (RN-025). | Fase 3 (INT-2) | CA-INT-09, CA-INT-17 |
 | RF-INT-009 | Escrituras con clave de idempotencia; repetirlas devuelve el resultado original. | Fase 3 (INT-2) | CA-INT-08 |
 | RF-INT-010 | Escritura por lote (hasta 100 elementos), todo o nada. | Fase 3 (INT-2) | CA-INT-08 |
 | RF-INT-011 | Límites de uso, con respuesta que indica la espera. | Fase 3 (INT-1) | CA-INT-06 |
@@ -115,8 +115,8 @@ Notas
 | RN-INT-006 | Con direcciones de red permitidas, un pedido desde otra dirección se rechaza y cuenta como fallo. | Fase 3 (INT-1) | CA-INT-10 |
 | RN-INT-007 | Los permisos de una clave son un subconjunto del registro, con alcance "todo". La escritura no incluye la lectura; se da aparte. | Fase 3 (INT-1) | CA-INT-02 |
 | RN-INT-008 | Precios y datos de Personas solo salen con `precios.ver` y `datos_personales.ver` en la clave. **IMEI y número de línea** (datos personales) solo con `datos_personales.ver`. Sin ellos esos campos no se envían. | Fase 3 (INT-1) | CA-INT-02 |
-| RN-INT-009 | Ninguna clave da acceso a claves de licencia, auditoría, usuarios, roles, invitaciones ni configuración de seguridad. | Fase 3 (INT-1) | CA-INT-02 |
-| RN-INT-010 | Ninguna clave aprueba, rechaza, recibe, da de baja, anula, cierra, reingresa, cesa ni desactiva Personas, ni crea o cambia proveedores. La OC creada por API queda en Borrador. | Fase 3 (INT-2) | CA-INT-09 |
+| RN-INT-009 | Ninguna clave da acceso a lo que la lista única de la sección 12C de `docs/registro-permisos.md` (RN-025) reserva a las personas, ni a la configuración de seguridad de la empresa. | Fase 3 (INT-1) | CA-INT-02 |
+| RN-INT-010 | Ninguna clave hace las acciones de la lista única de la sección 12C de `docs/registro-permisos.md` (RN-025). La OC creada por API queda en Borrador. | Fase 3 (INT-2) | CA-INT-09 |
 | RN-INT-011 | Quien creó, rotó, **asumió o revocó** una clave no puede aprobar una OC creada por esa integración (D-015, D-043). | Fase 3 (INT-2) | CA-INT-09 |
 | RN-INT-012 | Las acciones por API se auditan con autor "integración <nombre>" (tipo de autor propio) y, en escrituras, antes y después sin valores de campos personales (D-030, D-041.4). | Fase 3 (INT-1) | CA-INT-21 |
 | RN-INT-013 | Las lecturas no se auditan una a una: se guarda el registro de uso (clave, día, módulo, pedidos, errores). La lectura de Personas se registra por pedido (clave, filas y **solo el nombre de los campos filtrados, nunca el texto buscado ni valores personales**, D-030). Una **lectura masiva** (más de 5.000 filas por día por clave) se audita como exportación. | Fase 3 (INT-1) | CA-INT-22 |
@@ -302,7 +302,7 @@ Cada criterio cita el requisito que cubre.
 - **CA-INT-06 Límite de uso.** *Cubre RF-INT-005, 011, RN-INT-015, 016.* Dado un límite de 60 pedidos por minuto, cuando el pedido 61 llega, entonces recibe límite superado con los segundos de espera y los anteriores no se afectan.
 - **CA-INT-07 Revocación inmediata.** *Cubre RF-INT-003, 004, 025, RN-INT-004, RNF-INT-002.* Dado una clave activa, cuando se revoca, entonces el siguiente pedido (en 10 segundos o menos) se rechaza, la auditoría guarda quién, cuándo y motivo, y con la empresa suspendida todas sus claves responden suspendidas.
 - **CA-INT-08 Escritura sin duplicar.** *Cubre RF-INT-009, 010, RN-INT-047.* Dado un pedido que crea una OC en Borrador con clave de idempotencia X, cuando se repite por un corte, entonces existe una sola OC y la segunda respuesta es la misma; un lote con un elemento inválido no escribe ninguno.
-- **CA-INT-09 La API no aprueba.** *Cubre RF-INT-008, RN-INT-010, 011.* Dado una clave con escritura de OC, cuando intenta aprobar o recibir, entonces la acción no existe para claves; la OC queda en Borrador; si Pedro creó la clave y la integración creó la OC-000100, Pedro no puede aprobarla.
+- **CA-INT-09 La API no aprueba.** *Cubre RF-INT-008, RN-INT-010, 011; RN-025.* Dado una clave con escritura de OC, cuando intenta aprobar o recibir, entonces la acción no existe para claves; la OC queda en Borrador; si Pedro creó la clave y la integración creó la OC-000100, Pedro no puede aprobarla.
 - **CA-INT-10 Clave desconocida y bloqueos.** *Cubre RN-INT-003, 006, 017, 018.* Dado 20 intentos fallidos con el identificador público de una clave, entonces esa clave se bloquea 15 minutos sin afectar a otras; la respuesta no revela si la clave existe.
 - **CA-INT-11 Webhook firmado con reintentos.** *Cubre RF-INT-014, 015, RN-INT-014, 024 a 028, 030, RNF-INT-003.* Dado un webhook para `compras.orden_aprobada`, cuando se aprueba una OC y el receptor falla, entonces se reintenta a 1, 5 y 30 minutos; el aviso lleva firma y fecha, sin importes ni datos personales, y la pantalla muestra código y duración, nunca el cuerpo de la respuesta.
 - **CA-INT-12 Anti-SSRF.** *Cubre RF-INT-013, RN-INT-023.* Dado el registro de webhooks a `http://192.168.1.10/hook`, `https://localhost/hook`, `https://169.254.169.254/`, una dirección IPv6 interna, un puerto 8443, un nombre que resuelve a una dirección interna, y una dirección pública que responde con redirección a una interna, entonces cada caso se rechaza al registrar o al enviar, sin seguir la redirección y sin mostrar la respuesta; un nombre que cambia de dirección entre el registro y el envío se vuelve a validar.
@@ -373,7 +373,7 @@ Cada criterio cita el requisito que cubre.
 - Consulta automática de SAP desde la plataforma.
 - Usuario y contraseña en la API; solo claves por integración.
 - Autorización delegada por usuario (una aplicación que actúa en nombre de una persona).
-- Aprobar, recibir, dar de baja, cesar o ver la auditoría por API; crear o cambiar proveedores.
+- Cualquier acción de la lista única de la sección 12C de `docs/registro-permisos.md` (RN-025) por API.
 - Webhooks con datos completos; tienda de aplicaciones de terceros.
 - Límites distintos por plan comercial o cobro por uso.
 - Otros proveedores de identidad e ingreso único corporativo administrado.
@@ -410,3 +410,4 @@ Cada criterio cita el requisito que cubre.
 | S-INT-08 y S-INT-09 siguen escalados por costo y por tema legal | D-058; Cumplimiento (C4) |
 | **v0.3:** PS-135 `integraciones.administrar_webhooks` pasa a sensible con reautenticación reciente; "Cuándo" con las tres palabras (`Fase 3 (INT-1)`, `(INT-2)`, `(INT-3)`); confirmado el evento único `inventario.activo_estado_cambiado` | D-068, D-075 (N-AUD-06); `docs/equipo/plan-aplicacion.md` |
 | La auditoría de lecturas de Personas guarda solo los nombres de los campos filtrados; RN-INT-011 incluye a quien asume o revoca la clave | D-030; Auditor de Cumplimiento R-07 y R-12 (ronda 3) |
+| Se quita la lista propia de acciones que una clave no puede hacer (nota de la sección 3, RF-INT-008, RN-INT-009, RN-INT-010 y sección 13); el módulo cita la lista única de la sección 12C de `docs/registro-permisos.md` (RN-025) | D-081.4d; `docs/trazabilidad.md` |

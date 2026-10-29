@@ -1,6 +1,6 @@
 """Juicios de QA que salen de LEER el texto de requisito y criterio (no los puede deducir un script).
-Se revisan cada vez que cambia el documento funcional. Fecha de la lectura: 2026-10-29, commit 0e6239e
-(lectura anterior: 2026-10-26, commit b8e01d3). Cada texto está escrito para quien lo lee sin haber visto el código."""
+Se revisan cada vez que cambia el documento funcional. Fecha de la lectura: 2026-10-29, commit 9856696
+(lecturas anteriores: 2026-10-29 commit 0e6239e y 2026-10-26 commit b8e01d3). Cada texto está escrito para quien lo lee sin haber visto el código."""
 
 # ---------------------------------------------------------------------------
 # 1. Requisitos cuyo criterio citado existe pero no los prueba de verdad (lectura al 2026-10-29).
@@ -195,6 +195,13 @@ ETAPA_NUEVOS = {
     'CA-PRV-04a': (2, 'Desactivar un proveedor con motivo (RF-PRV-003).'),
     'CA-PRV-04b': (8, 'Necesita un contrato Vigente (PRV-B, Fase 2).'),
     'CA-PRV-04c': (2, 'Reactivar un proveedor con motivo (RF-PRV-003).'),
+    'CA-106': (1, 'La marca de origen «vía asistente» (RF-AUD-020) es una columna de la auditoría de la Etapa 1; se prueba con una prueba del mecanismo que escribe el origen, sin que el módulo del asistente exista. La búsqueda de la pregunta o del nombre «canario» en la marca no da resultados.'),
+    'CA-107': (2, 'La marca «se gestiona en MDM» (RF-CAT-030) cuelga de la categoría y de su naturaleza (Laptop frente a Licencia), de la Etapa 2; usa PS-34 y la auditoría de la Etapa 1.'),
+    'CA-108': (2, 'El gancho de limpieza al anonimizar (RF-DAT-018) necesita la anonimización manual de la Etapa 2 (RF-PER-013) y un módulo de prueba que registre su rutina; la congelación la trae CA-095a (Etapa 2).'),
+    'CA-109': (9, 'La lista única de lo que nunca hace un programa (RN-025) necesita claves de API (Fase 3) y, cuando exista, el asistente. QA propone un adelanto: la lista del registro 12C y la respuesta «No se puede por una regla» se pueden probar en la Etapa 1 con un llamador de prueba que no tenga persona detrás; hoy el documento la deja en Fase 3.'),
+    'CA-ASI-53': (9, 'Dos botones de ayuda (RF-ASI-050): pantalla y celular; necesita el módulo ASI-A (Fase 3).'),
+    'CA-ASI-54': (9, 'El Empleado del portal con el asistente apagado por defecto (RN-ASI-041, PS-235 y PS-236) necesita el portal y ASI-A (Fase 3).'),
+    'CA-ASI-55': (9, 'Levantar el bloqueo del texto libre por empresa con PS-240 (RN-ASI-011) necesita la consola de plataforma y ASI-A (Fase 3).'),
 }
 
 # Criterios que existían enteros el 2026-10-26 y hoy están partidos por el Analista o por un escuadrón.

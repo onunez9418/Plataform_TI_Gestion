@@ -1,6 +1,6 @@
 # Trazabilidad: requisito, etapa, criterio de aceptación
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `627d5ac` · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los 19 módulos de `docs/modulos/` que ya están completos (incluidos los dos nuevos, `microsoft-entra-intune` y `asistente-ia`, en su versión 0.1). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del 2026-10-26.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `9856696` · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los 19 módulos de `docs/modulos/` que ya están completos (incluidos los dos nuevos, `microsoft-entra-intune` y `asistente-ia`, en su versión 0.1). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del 2026-10-26.
 
 **Cómo se hizo.** Un script lee las tablas de requisitos (columnas Cuándo y CA), la tabla de reglas RN con su columna CA, la sección 22 con su tabla 22.1 "Se ejecuta en" y los criterios de los módulos. Después QA leyó el texto de los requisitos y criterios dudosos. Estados:
 
@@ -15,34 +15,34 @@ El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): 
 
 ## Resumen de huecos
 
-| Medida | Antes (2026-10-26, commit 5ed0dcb) | Hoy (2026-10-29, commit 627d5ac) |
+| Medida | Antes (2026-10-26, commit 5ed0dcb) | Hoy (2026-10-29, commit 9856696) |
 |---|---|---|
-| Filas RF y RNF del núcleo (con las retiradas) | 316 | 317 |
+| Filas RF y RNF del núcleo (con las retiradas) | 316 | 320 |
 | Retiradas (RF-USR-004, RF-IMP-012, RF-OS-007) | 3 | 3 |
-| Filas vigentes | 313 | 314 |
+| Filas vigentes | 313 | 317 |
 | Citas rotas en la columna CA de un requisito o regla (criterio inexistente o «padre» que ya se partió) | 0 | 0 |
-| Citas sueltas en el texto a un criterio inexistente (más alusiones históricas a criterios ya partidos) | - | 1 (más 3) |
+| Citas sueltas en el texto a un criterio inexistente (más alusiones históricas a criterios ya partidos) | - | 0 (más 3) |
 | Cabeceras de criterio que nombran un RF, RNF o RN que no existe | - | 0 |
-| Cubiertos: el criterio los lista | 295 | 311 |
+| Cubiertos: el criterio los lista | 295 | 314 |
 | No probados de verdad (núcleo) | 14 | 2 |
 | No probados de verdad (módulos con parte en la v1) | 5 | 2 |
 | Citas mal apuntadas o incompletas (núcleo) | 4 | 1 |
 | Para verificar leyendo el texto (sin juicio de QA todavía) | 0 | 0 |
-| Reglas RN con un criterio en su columna CA | 23 de 23 | 24 de 24 |
-| Reglas RN que el propio criterio también cita (cita de vuelta) | 10 de 23 | 13 de 24 |
-| Reglas RN que ninguna cabecera de criterio nombra (solo están en la columna CA de la regla) | 13 de 23 | 9 de 24 |
+| Reglas RN con un criterio en su columna CA | 23 de 23 | 25 de 25 |
+| Reglas RN que el propio criterio también cita (cita de vuelta) | 10 de 23 | 14 de 25 |
+| Reglas RN que ninguna cabecera de criterio nombra (solo están en la columna CA de la regla) | 13 de 23 | 9 de 25 |
 | Reglas RN cuyo criterio no las prueba del todo | 4 (RN-009, RN-018, RN-021, RN-023) | 3 (RN-021, RN-023, RN-024) |
 | Criterios sin ningún requisito ni regla que los cite o liste | - | 3 (CA-AYU-26, CA-MSF-38, CA-PRE-12) |
-| Criterios citados solo por reglas RN o RS (sin fila RF) | 57 | 105 |
+| Criterios citados solo por reglas RN o RS (sin fila RF) | 57 | 108 |
 | Reglas RN de módulos sin criterio (de ellas, en módulos con parte en la v1) | - | 179 (90) |
 | RF y RNF de módulos sin criterio (de ellos, en módulos con parte en la v1) | - | 61 (39) |
 | «Sin hacer» del Analista que siguen abiertos | - | 6 |
 
-Lectura: las 24 reglas del núcleo tienen criterio (RN-024, la congelación, entró con CA-095a a 095j). De los 19 requisitos que el 2026-10-26 no se probaban de verdad, quedan 4: RF-ENT-002, RF-ENT-016 y RF-OC-028 (los «Sin hacer» del Analista) y RF-OC-048 (el informe mensual espera la respuesta P-018). Los demás los resolvieron los criterios CA-015g a 015i, CA-038c y 038d, CA-071, CA-097 a CA-105 y las particiones de PRV y GAR. Las cuatro citas mal apuntadas de entonces (RF-USR-006, RF-PER-010, RF-ACC-021, RF-UX-008) y RF-OC-041 se corrigieron; aparecen dos nuevas: RF-CAT-008 (núcleo) y RF-GAR-006 (garantías).
+Lectura: las 25 reglas del núcleo tienen criterio (RN-024, la congelación, entró con CA-095a a 095j). De los 19 requisitos que el 2026-10-26 no se probaban de verdad, quedan 4: RF-ENT-002, RF-ENT-016 y RF-OC-028 (los «Sin hacer» del Analista) y RF-OC-048 (el informe mensual espera la respuesta P-018). Los demás los resolvieron los criterios CA-015g a 015i, CA-038c y 038d, CA-071, CA-097 a CA-105 y las particiones de PRV y GAR. Las cuatro citas mal apuntadas de entonces (RF-USR-006, RF-PER-010, RF-ACC-021, RF-UX-008) y RF-OC-041 se corrigieron; aparecen dos nuevas: RF-CAT-008 (núcleo) y RF-GAR-006 (garantías).
 
 ## Lo que falta, exacto, y de quién
 
-Lista cerrada al 2026-10-29 (commit 627d5ac). Cada fila dice qué falta, el texto que QA propone y quién lo cierra. El texto de QA es una **propuesta**: lo decide y lo redacta el Analista (o el escuadrón). Estas filas se recalculan al regenerar: cuando el Analista las resuelva, desaparecen solas de la primera tabla.
+Lista cerrada al 2026-10-29 (commit 9856696). Cada fila dice qué falta, el texto que QA propone y quién lo cierra. El texto de QA es una **propuesta**: lo decide y lo redacta el Analista (o el escuadrón). Estas filas se recalculan al regenerar: cuando el Analista las resuelva, desaparecen solas de la primera tabla.
 
 **1. «Sin hacer» del Analista (se detectan leyendo el texto actual)**
 
@@ -78,7 +78,7 @@ Lista cerrada al 2026-10-29 (commit 627d5ac). Cada fila dice qué falta, el text
 | CA-AYU-26, CA-PRE-12 | Ningún requisito ni regla los cita ni los lista. | Fase 2 y Fase 3: el escuadrón los vincula al activar el módulo. | Analista (escuadrones de mesa de ayuda y presupuesto) | Fase 2 y 3 |
 | CA-105 (Etapa 0) | El texto está; no se puede ejecutar hasta recibir el Excel, la orden de compra y la orden de servicio reales con nombres reemplazados (P-002). | QA revisa el archivo cuando llegue. | Cliente (CEO) entrega; Jefatura de Proyecto lo pide | Etapa 0 (cierre) y Etapa 4 |
 | Módulo MSF v0.1 | 3 criterios con etapa heredada porque la columna «Cuándo» de sus requisitos no dice «Fase 3»; criterio sin requisito: CA-MSF-38. | El Analista completa las citas antes de activar el módulo (D-076.4); no frena la v1. | Analista | Fase 3 |
-| Módulo ASI v0.1 | 4 RNF sin criterio (RNF-ASI-003, RNF-ASI-007, RNF-ASI-008, RNF-ASI-011); 45 criterios con etapa heredada porque la columna «Cuándo» de sus requisitos no dice «Fase 3». | El Analista completa las citas antes de activar el módulo (D-076.4); no frena la v1. | Analista | Fase 3 |
+| Módulo ASI v0.1 | 4 RNF sin criterio (RNF-ASI-003, RNF-ASI-007, RNF-ASI-008, RNF-ASI-011); 47 criterios con etapa heredada porque la columna «Cuándo» de sus requisitos no dice «Fase 3». | El Analista completa las citas antes de activar el módulo (D-076.4); no frena la v1. | Analista | Fase 3 |
 
 **3. Preguntas que esperan respuesta y frenan una prueba**
 
@@ -99,7 +99,7 @@ Regla (D-076): un requisito necesita un criterio que lo pruebe **antes de que se
 
 | Requisito o regla | Criterio | Estado (lectura de QA) | Responsable |
 |---|---|---|---|
-| RN (todas las reglas de la sección 21) | Columna CA en la tabla de reglas | HECHO. Todas las reglas (24) citan al menos un criterio que existe. 13 de 24 además aparecen citadas por el propio criterio; las otras 11 solo en la columna (basta: D-076.1a dice "citando"). Sugerencia: RN-010 debería nombrar también CA-079b (autoentrega sin excepción). | Analista (hecho); Auditor Técnico verifica con su guion |
+| RN (todas las reglas de la sección 21) | Columna CA en la tabla de reglas | HECHO. Todas las reglas (25) citan al menos un criterio que existe. 14 de 25 además aparecen citadas por el propio criterio; las otras 11 solo en la columna (basta: D-076.1a dice "citando"). Sugerencia: RN-010 debería nombrar también CA-079b (autoentrega sin excepción). | Analista (hecho); Auditor Técnico verifica con su guion |
 | RF-ACC-006 | CA-068 | HECHO. Prueba los 15 minutos (a los 15:01 se rechaza), el uso único y el código de 8 caracteres en otro dispositivo. | Analista (hecho) |
 | RF-ACC-014 | CA-069 | HECHO. Prueba aviso a los 25, vencimiento a los 30 minutos sin actividad y a las 12 horas. | Analista (hecho) |
 | RF-ACC-020 | CA-009 | HECHO. Prueba el aviso de recomendar al menos dos administradores. | Analista (hecho) |
@@ -189,12 +189,13 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 | RN-022 | CA-018 (E3) | - | prueba de verdad |
 | RN-023 | CA-094a (E4), CA-094b (E5), CA-094c (F2), CA-046 (E4) | CA-094b, CA-094c | parcial: CA-094a y CA-094b prueban el código y su contador; el acta lleva código y serie (CA-046). La cláusula «el correo de un aviso de garantía trae el código y no la serie» (CA-094c) necesita los avisos de garantía (Fase 2). En la v1 los correos (invitación, acceso, aprobación) no llevan activo: la regla se prueba por completo al activar GAR-B. |
 | RN-024 | CA-095a (E2), CA-095b (E2), CA-095c (E2), CA-095d (E2), CA-095e (E2), CA-095f (E2), CA-095g (E2), CA-095h (E7), CA-095i (E7), CA-095j (F2) | CA-095a, CA-095b, CA-095c, CA-095d, CA-095e, CA-095f, CA-095h, CA-095j | parcial: En la v1 se prueban la anonimización manual (CA-095a a 095g) y el archivado de la auditoría (CA-095h, CA-095i). «Toda rutina de anonimización o de purga consulta la congelación» (CA-095j) está en Fase 2, pero la v1 ya tiene rutinas: anonimización de contactos de proveedor (CA-092, Etapa 2), anonimización automática de Personas con la bandera de pruebas (Etapa 2), filas de importación en preparación a los 7 días (RF-DAT-004, Etapa 4) y purga de eventos de seguridad a los 12 meses (Etapa 7). Ninguna se prueba con congelación hasta Fase 2. |
+| RN-025 | CA-109 (F3) | CA-109 | prueba de verdad |
 
 **Reglas RN de los módulos**
 
 | Módulo | Reglas RN | Con criterio en su fila | Citadas por un criterio | Sin criterio |
 |---|---|---|---|---|
-| ASI · Asistente de IA | 40 | 0 | 40 | 0 |
+| ASI · Asistente de IA | 41 | 0 | 41 | 0 |
 | CMD · CMDB ligera | 30 | 29 | 0 | 1 |
 | DOM · Dominios y certificados | 26 | 0 | 8 | 18 |
 | ENT · Entregas y devoluciones | 29 | 0 | 16 | 13 |
@@ -245,7 +246,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 
 | Módulo | RF y RNF | Cubiertos | Cubiertos por cabecera | No probados de verdad | Verificar | Sin criterio |
 |---|---|---|---|---|---|---|
-| ASI · Asistente de IA | 60 | 49 | 7 | 0 | 0 | 4 |
+| ASI · Asistente de IA | 61 | 50 | 7 | 0 | 0 | 4 |
 | CMD · CMDB ligera | 29 | 26 | 0 | 0 | 0 | 3 |
 | DOM · Dominios y certificados | 26 | 25 | 0 | 0 | 1 | 0 |
 | ENT · Entregas y devoluciones | 26 | 15 | 2 | 2 | 0 | 7 |
@@ -385,6 +386,7 @@ Etapas: E0 a E7 son las de la v1; F2 y F3 son fases posteriores. "Criterio (corr
 | RF-CAT-022 | Los campos de tipo número admiten decimales y pueden tener mínimo y máximo; los de fecha son d… | E2 | CA-020 (E3, completa E5) | cubierto | el criterio corre en Etapa 3, después de la etapa del requisito |
 | RF-CAT-028 | Campo secreto: se guarda cifrado, aparte; no se busca; no aparece en historial (dice solo "cla… | E2 | CA-042 (E2, completa E4) | cubierto |  |
 | RF-CAT-029 | El número de línea, mientras no exista el módulo de Líneas, es un campo opcional de la unidad… | E2 | CA-065a (E2), CA-065b (E4) | cubierto |  |
+| RF-CAT-030 | Se gestiona en MDM (D-081.4b). Campo sí/no de la categoría, solo para naturaleza equipo físico… | E2 | CA-107 (E2) | cubierto |  |
 | RF-SKU-001 | Cada SKU tiene: código, nombre, categoría (o subcategoría), marca, modelo, unidad de medida, e… | E3 | CA-017 (E2, completa E3) | cubierto |  |
 | RF-SKU-002 | El código es único dentro de la empresa, sin distinguir mayúsculas ni espacios (lap-0001 y LAP… | E3 | CA-017 (E2, completa E3) | cubierto |  |
 | RF-SKU-003 | El código automático es el prefijo de la categoría más un correlativo con mínimo de 4 dígitos… | E3 | CA-018 (E3, completa E6) | cubierto |  |
@@ -541,6 +543,7 @@ Etapas: E0 a E7 son las de la v1; F2 y F3 son fases posteriores. "Criterio (corr
 | RF-AUD-017 | Dos registros: el de plataforma y el de empresa. Todo acceso de soporte aparece en la auditorí… | E1 | CA-015b (E1) | cubierto |  |
 | RF-AUD-018 | Copia externa de la auditoría: solo de agregar, inmutable y encadenada (cada archivo lleva la… | E7 | CA-040b (E7) | cubierto |  |
 | RF-AUD-019 | La auditoría de un lote de importación es una entrada de lote con el detalle en su propia tabl… | E4 | CA-041 (E1, completa E4) | cubierto |  |
+| RF-AUD-020 | Marca de origen «vía asistente» (D-081.4a). Cada entrada de auditoría tiene un campo de origen… | E1 | CA-106 (E1) | cubierto |  |
 | RF-DAT-001 | No se guardan documento de identidad, dirección ni teléfono personal en la v1, salvo decisión… | E2 | CA-016a (E2) | cubierto |  |
 | RF-DAT-002 | Auditoría: 5 años. [ESCALAR AL CEO] confirmar con legal (L-04). | E7 | CA-040b (E7) | cubierto |  |
 | RF-DAT-003 | Datos personales de una Persona o usuario dado de baja o cesado: 2 años; luego se anonimiza (s… | E7 | CA-054c (E7) | cubierto |  |
@@ -557,6 +560,7 @@ Etapas: E0 a E7 son las de la v1; F2 y F3 son fases posteriores. "Criterio (corr
 | RF-DAT-013 | Redacción por seguridad del núcleo (D-074.3, D-075 R-09): operación distinta de "retirar", con… | E4 | CA-091 (E4) | cubierto |  |
 | RF-DAT-014 | Aviso de privacidad configurable: el texto para empleados lo entrega cada empresa; la platafor… | E1 | CA-049 (E1) | cubierto |  |
 | RF-DAT-015 | Procedimiento ante una fuga de datos (D-059): líder del incidente = Especialista en Seguridad;… | E7 | CA-053 (E7) | cubierto |  |
+| RF-DAT-018 | Gancho de limpieza al anonimizar (D-081.4c). Al anonimizar una Persona (RF-AUD-015, RF-PER-013… | E2 | CA-108 (E2) | cubierto |  |
 | RF-DAT-017 | Congelación por incidente (D-080; procedimiento de incidentes, C.5.2): mientras dura la preser… | E2 a E7 | CA-095a (E2), CA-095b (E2), CA-095c (E2), CA-095d (E2), CA-095e (E2), CA-095f (E2), CA-095g (E2), CA-095h (E7), CA-095i (E7) | cubierto | CA-095f y CA-095g dependen de P-017: sin el permiso nuevo en el registro y sin saber si levantar exige una segunda persona de plataforma, solo se pueden probar los rechazos. La parte de rutinas de ot… |
 | RNF-001 | El idioma de la plataforma es español y el trato es de "usted" en toda pantalla, portal y corr… | E1 | CA-050b (E1, completa E5) | cubierto |  |
 | RNF-002 | Cada empresa tiene su zona horaria. Las fechas de garantía y vencimiento son fechas de calenda… | E1 | CA-046 (E4) | cubierto | el criterio corre en Etapa 4, después de la etapa del requisito |

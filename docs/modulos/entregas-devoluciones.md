@@ -70,7 +70,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen.
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
 | RF-ENT-001 | Asistente único **"Entregar"** (el botón de la ficha del activo lo abre con el equipo cargado; lo reutilizan Garantías y Órdenes de servicio): Persona Activa (con alta rápida de Persona si no existe), uno o más equipos En stock, condición, accesorios, observaciones y tipo (Definitiva o Préstamo). Al confirmar, los equipos pasan a Asignado y se genera el acta. | ENT-A, v1, Etapa 4 | CA-ENT-01, 02, 03 |
-| RF-ENT-002 | Borrador automático de la entrega: se puede salir y volver sin perder lo capturado. No reserva equipos. Un borrador sin efecto se puede borrar (D-019). | ENT-A, v1, Etapa 4 | CA-ENT-01 |
+| RF-ENT-002 | Borrador automático de la entrega: se puede salir y volver sin perder lo capturado. No reserva equipos. Un borrador sin efecto se puede borrar (D-019). | ENT-A, v1, Etapa 4 | CA-ENT-16 |
 | RF-ENT-003 | Acta de entrega en PDF: empresa, número `ACT-E-NNNNNN`, fecha y hora, Persona, quién entrega, equipos (artículo, marca, modelo, serie, condición), accesorios, observaciones, fecha prevista si es préstamo, espacio de firma de ambos y aviso de privacidad de la empresa. | ENT-A, v1, Etapa 4 | CA-ENT-01, 12, 13 |
 | RF-ENT-004 | **Devolución** (modo del mismo asistente): la Persona (Activa o Cesada), los equipos que devuelve (todos o algunos), condición, accesorios devueltos o faltantes, si el equipo fue borrado, si se liberó el bloqueo de cuenta, ubicación de retorno y destino. | ENT-A, v1, Etapa 4 | CA-ENT-04, 08 |
 | RF-ENT-005 | Acta de devolución en PDF `ACT-D-NNNNNN` con el mismo formato. | ENT-A, v1, Etapa 4 | CA-ENT-12 |
@@ -84,7 +84,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen.
 | RF-ENT-013 | Historial por activo: pestaña "Entregas y actas" de su ficha (Persona, desde, hasta, condición al entregar y devolver, resultado). | ENT-A, v1, Etapa 4 | CA-ENT-01 |
 | RF-ENT-014 | Lista de actas con buscador y filtros (tipo, Persona, activo, fecha, estado, "préstamo vencido" calculado al leer, "pendiente de devolución") y exportación por la puerta única (D-061.1). | ENT-A, v1, Etapa 4 | CA-ENT-07 |
 | RF-ENT-015 | Pestaña "Entregas" dentro de **"Mi trabajo"** del Técnico: actas sin firma, préstamos por vencer y vencidos, equipos pendientes de devolución. | ENT-B, Fase 2 | CA-ENT-15 |
-| RF-ENT-016 | Renovar un préstamo: nueva fecha prevista con motivo y auditoría. | ENT-A, v1, Etapa 4 | CA-ENT-01 |
+| RF-ENT-016 | Renovar un préstamo: nueva fecha prevista con motivo y auditoría. | ENT-A, v1, Etapa 4 | CA-ENT-17 |
 | RF-ENT-017 | Avisos de ENT-B: entrega registrada, acta sin firma, préstamo por vencer y vencido (ver sección 8). | ENT-B, Fase 2 | CA-ENT-15 |
 
 ### 4.2 Reglas de negocio
@@ -228,21 +228,39 @@ Se reutilizan el **asistente "Entregar"** y el **diálogo "Cambiar estado"** (D-
 
 ## 10. Criterios de aceptación
 
-- **CA-ENT-01** (RF-ENT-001, 002, 003, 012, 013, 016; RN-ENT-005). Dado un técnico con `entregas.crear`, una Persona Activa y una laptop En stock, cuando confirma la entrega con condición "Nuevo", entonces la laptop queda Asignada, se genera `ACT-E-000001` en PDF y el historial del activo y de la Persona muestra la asignación.
+- **CA-ENT-01** (RF-ENT-001, 003, 012, 013; RN-ENT-005). Dado un técnico con `entregas.crear`, una Persona Activa y una laptop En stock, cuando confirma la entrega con condición "Nuevo", entonces la laptop queda Asignada, se genera `ACT-E-000001` en PDF y el historial del activo y de la Persona muestra la asignación.
 - **CA-ENT-02** (RN-ENT-002, 003). Dada una laptop Asignada a Ana, cuando otro técnico intenta entregarla a Luis (no como traspaso), entonces se rechaza con "este equipo ya está asignado".
 - **CA-ENT-03** (RN-ENT-003; RNF-ENT-003). Dados 20 intentos simultáneos de entregar el mismo equipo a Personas distintas, entonces uno queda registrado y el equipo tiene una sola asignación abierta.
 - **CA-ENT-04** (RF-ENT-004; RN-ENT-011, 012). Dada una devolución "Dañado", cuando se elige destino En stock, entonces se impide y se ofrece En reparación o De baja.
 - **CA-ENT-05** (RN-ENT-014). Dada una entrega con un mouse por cantidad y stock 0, cuando se confirma, entonces se rechaza completa, ningún equipo cambia y el stock no queda negativo.
 - **CA-ENT-06 (permiso denegado)** (RF-ENT-001, 009; RN-ENT-007). Dado un usuario Almacén (sin permiso concedido) o "Solo lectura", cuando intenta entregar o anular un acta, por pantalla o llamando al servidor, entonces se rechaza y no cambia nada.
 - **CA-ENT-07 (aislamiento)** (RF-ENT-014; RN-ENT-023). Dada un acta de la empresa A, cuando un usuario de B la pide por su **identificador interno** y por su número `ACT-E-000001` (que existe también en B), entonces responde "no encontrado" para el primero y no muestra el de A en el segundo; las listas de B no incluyen nada de A.
-- **CA-ENT-08** (RF-ENT-004, 006; RN-ENT-001, 018). Dada una Persona **cesada** con 2 equipos, cuando se traspasan a otra Persona Activa y falla la entrega de uno, entonces no se registra ninguna devolución ni entrega; con éxito, ambas actas quedan enlazadas.
+- **CA-ENT-08 · Traspaso de todo o nada** (RF-ENT-004, 006; RN-ENT-001, 018, 020). Dados Ana Ruiz (`PRS-0042`), Persona **Cesada**, con una laptop L1 (`ACTV-000042`, serie SN-100) y un celular M1 (`ACTV-000043`, serie SN-200) Asignados, Luis Prado (`PRS-0043`), Persona Activa, y un técnico con `entregas.traspasar` que no es Luis:
+  - **Con éxito.** Cuando el técnico traspasa L1 y M1 a Luis, entonces las dos asignaciones de Ana quedan cerradas con resultado «Traspasado», Luis tiene dos asignaciones abiertas y se generan dos actas enlazadas (la devolución de Ana y la entrega a Luis), cada una con la otra como acta de origen.
+  - **Falla provocada.** Dada la inyección de fallos del entorno de pruebas (cortar la conexión), cuando se corta la conexión con la base entre la primera y la segunda asignación del traspaso, entonces no queda ninguna devolución ni entrega registrada, L1 y M1 siguen Asignados a Ana con su asignación abierta, no queda ninguna acta Registrada y el técnico ve un aviso de que no se guardó nada; al repetir la confirmación, el traspaso se registra una sola vez.
+  - **Destino que deja de ser Activo, sin inyección.** Cuando Luis pasa a Cesada justo antes de que el técnico confirme (el técnico tenía el asistente abierto con Luis cargado), entonces la confirmación se rechaza con «No se puede por una regla», L1 y M1 siguen con Ana y no se registra nada.
+  - **Destino igual al origen.** Cuando el técnico intenta traspasar L1 y M1 a Ana, entonces se rechaza y no cambia nada.
 - **CA-ENT-09** (RN-ENT-007). Dado un técnico vinculado a la Persona "Luis" y **todas las casillas** de excepciones de la empresa activadas, cuando intenta entregarse una laptop a sí mismo, entonces se rechaza igual.
-- **CA-ENT-10** (RF-ENT-010, 011; RN-ENT-016). Dado un equipo de una Persona cesada, cuando pasa el tiempo, entonces sigue Asignado como "Pendiente de devolución" y no suma a pérdidas; cuando un técnico lo marca "Robo" con motivo, entonces la asignación se cierra con ese resultado, y al hallarlo, un Administrador o Jefatura TI hace el reingreso.
+- **CA-ENT-10 · Pendiente de devolución no es pérdida** (RF-ENT-010, 011, 014; RN-ENT-016; S-ENT-11). Dada Ana Ruiz (`PRS-0042`) cesada el 02/11/2026 con la laptop L1 (`ACTV-000042`) Asignada, y el reloj de pruebas (RNF-020) en esa fecha:
+  - **Con el paso del tiempo.** Cuando el reloj se adelanta a +30 días (02/12/2026) y luego a +365 días (02/11/2027) desde el cese, y en cada fecha se dispara a mano cada proceso diario que exista, entonces L1 sigue Asignada con su asignación abierta, se muestra como «Pendiente de devolución» (marca calculada al leer, no un estado), aparece en el filtro «pendiente de devolución» de la lista de actas y no figura entre los equipos Extraviados o robados ni en ningún reporte de pérdidas.
+  - **Robo.** Cuando un técnico con `activos.registrar_extravio` marca L1 como «Robo» con motivo, fecha del hecho y número de denuncia, entonces la asignación se cierra con resultado «Extraviado o robado» y recién entonces L1 figura como robo; sin motivo se rechaza.
+  - **Hallazgo.** Cuando aparece L1, un técnico (sin `activos.reingreso`) no puede reingresarla y se rechaza; Jefatura TI o el Administrador la reingresa con motivo; si la tiene una Persona, se entrega con acta nueva.
 - **CA-ENT-11** (RF-ENT-009; RN-ENT-019). Dada un acta cuyo equipo ya fue reasignado, cuando se intenta anular, entonces se rechaza por movimiento posterior.
 - **CA-ENT-12** (RF-ENT-003, 005, 008; RN-ENT-026). Dada un acta, cuando la imprime un usuario "Solo lectura" (sin `datos_personales.ver`), entonces el PDF muestra `PRS-0042` y no contiene nombre ni área; cuando la imprime un Técnico, contiene ambos.
 - **CA-ENT-13** (RF-ENT-003; RN-ENT-025; RNF-ENT-008). Dado texto malicioso en observaciones y accesorios, cuando se genera el PDF, entonces el texto sale literal, sin pedidos de red ni lectura de archivos.
 - **CA-ENT-14** (RN-ENT-006). Dada una Persona anonimizada con acta aún dentro de `retener_hasta`, cuando se reimprime el acta, entonces conserva el nombre copiado; vencido `retener_hasta`, la función de anonimización lo reemplaza por la referencia, y en ambos casos la auditoría nunca contuvo el nombre.
 - **CA-ENT-15** (RF-ENT-007, 015, 017; RN-ENT-010). Dada un acta con 7 días sin conformidad, cuando corre el aviso diario (Fase 2), entonces el técnico y Jefatura TI reciben el aviso, aparece en "Mi trabajo" y, dos corridas el mismo día, no duplican el aviso.
+- **CA-ENT-16 · Borrador de la entrega** (RF-ENT-002; RN-ENT-020, 024). Dado un técnico con `entregas.crear` que captura una entrega de dos equipos, una laptop L1 (`ACTV-000042`) y un celular M1 (`ACTV-000043`), ambos En stock, para Ana Ruiz (`PRS-0042`), con condición «Nuevo», y sale del asistente sin confirmar:
+  - **Volver.** Cuando vuelve a abrir el asistente, entonces ve el borrador con la Persona, los dos equipos, la condición y los accesorios que había capturado.
+  - **No reserva.** Mientras el borrador existe, L1 y M1 siguen En stock, sin asignación ni acta Registrada; otro técnico entrega L1 a Luis Prado (`PRS-0043`) y L1 queda Asignada.
+  - **Confirmar un borrador que ya no vale.** Cuando el primer técnico confirma su borrador, entonces se rechaza con «este equipo ya está asignado» por L1, M1 tampoco se entrega (todo o nada) y M1 sigue En stock.
+  - **Borrar.** Cuando el primer técnico borra el borrador sin efecto, entonces desaparece de su lista y no queda rastro en la lista de actas ni en el historial de L1, de M1 ni de Ana.
+  - **Lo registrado no se borra.** Dada una entrega ya Registrada, cuando alguien intenta borrarla (por pantalla o por petición directa), entonces se rechaza; solo se puede anular con motivo (CA-ENT-11, CA-045).
+- **CA-ENT-17 · Renovar un préstamo** (RF-ENT-016; RN-ENT-017; S-ENT-12). Dado, con el reloj de pruebas el 02/11/2026, un préstamo de la laptop L1 (`ACTV-000042`) a Ana Ruiz (`PRS-0042`) con fecha prevista 30/11/2026:
+  - **Renovar.** Cuando el técnico lo renueva al 31/12/2026 con el motivo «Proyecto se extiende», entonces la fecha prevista pasa a 31/12/2026, el historial conserva la fecha anterior (30/11/2026) y la nueva, y la auditoría guarda el motivo, sin nombre ni correo.
+  - **Vencido se calcula al leer.** Cuando el reloj pasa al 05/12/2026, entonces el préstamo no figura como «Vencido» (su fecha prevista es 31/12/2026); sin renovar, habría figurado así desde el 01/12/2026.
+  - **Rechazos.** Una renovación sin motivo se rechaza; una con fecha anterior a hoy (01/11/2026) se rechaza; la pide un usuario Solo lectura o Almacén, por pantalla o por petición directa, y se rechaza sin cambiar nada.
+  - **Entrega definitiva.** Una entrega Definitiva no tiene fecha prevista: «Renovar» no se ofrece y, por petición directa, se rechaza.
 
 ## 11. Casos límite
 
