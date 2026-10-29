@@ -64,7 +64,7 @@ export default async function PaginaRoles({ params }: { params: Promise<{ empres
               {puedeAdministrar ? (
                 <Crear titulo="Editar este rol" testid={`editar-rol-${r.nombre}`}>
                   <Formulario accion={editar.bind(null, empresa, r.id)} enviar="Guardar cambios" testid={`form-editar-rol-${r.nombre}`} exito="Rol actualizado." limpiar={false}>
-                    <Campo nombre="nombre" etiqueta="Nombre del rol" requerido valorInicial={r.nombre} testid={`campo-nombre-${r.nombre}`} />
+                    <Campo nombre="nombre" etiqueta="Nombre del rol" requerido valorInicial={r.nombre} testid={`campo-nombre-${r.id}`} />
                     <SelectorPermisos catalogo={catalogo} marcados={r.permisos} prefijoId={`r-${r.id}`} />
                   </Formulario>
                 </Crear>
