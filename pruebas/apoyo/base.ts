@@ -58,7 +58,20 @@ export async function simulando<T>(c: pg.Client, empresaId: string | null, fn: (
 
 /** Ejecuta una sentencia que debe fallar y devuelve el código SQLSTATE y el mensaje. Usa un punto de guardado. */
 export async function intentar(c: pg.Client, sql: string, valores: unknown[] = []): Promise<{ codigo?: string; mensaje?: string; filas: number }> {
-  await c.query('SAVEPOINT qa_intento')
+  let abierta = true
+  try {
+    await c.query('SAVEPOINT qa_intento')
+  } catch {
+    abierta = false // fuera de una transacción: se abre una solo para esta sentencia
+  }
+  if (!abierta) {
+    await c.query('BEGIN')
+    try {
+      return await intentar(c, sql, valores)
+    } finally {
+      await c.query('ROLLBACK').catch(() => undefined)
+    }
+  }
   try {
     const r = await c.query(sql, valores)
     await c.query('RELEASE SAVEPOINT qa_intento')
