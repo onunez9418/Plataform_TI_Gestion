@@ -72,11 +72,11 @@ Columnas: **Cuándo** = `v1, Etapa 2` (PRV-A) o `Fase 2` (PRV-B). **CA** = crite
 |---|---|---|---|
 | RF-PRV-001 | Registrar un proveedor: razón social, nombre comercial, tipo (Empresa o Persona natural), identificación fiscal, país, "vende bienes", "presta servicios", sitio web, notas. | v1, Etapa 2 | 01, 03 |
 | RF-PRV-002 | Editar un proveedor. La auditoría guarda antes y después de campos ordinarios; de campos personales solo "el campo cambió" (D-030). | v1, Etapa 2 | 03, 20 |
-| RF-PRV-003 | Desactivar y reactivar un proveedor, con motivo. | v1, Etapa 2 | 04 |
+| RF-PRV-003 | Desactivar y reactivar un proveedor, con motivo. | v1, Etapa 2 | CA-PRV-04a, CA-PRV-04c |
 | RF-PRV-004 | Lista de proveedores con buscador, filtros (estado, vende, presta, país) y exportación por la puerta única (D-061.1), sin columnas de contactos. | v1, Etapa 2 | 15 |
 | RF-PRV-005 | Contactos: nombre, cargo, rol (Comercial, Soporte técnico, Facturación, Escalamiento), correo, teléfono laboral, principal. | v1, Etapa 2 | 03 |
 | RF-PRV-006 | Desactivar un contacto sin borrarlo; un contacto inactivo se anonimiza a los 2 años (RN-PRV-034). | v1, Etapa 2 | 16 |
-| RF-PRV-007 | Ficha del proveedor con resumen: órdenes abiertas y, con PRV-B activo, contratos. | v1, Etapa 2 | 02 |
+| RF-PRV-007 | Ficha del proveedor con resumen: órdenes abiertas y, con PRV-B activo, contratos. | v1, Etapa 2 | CA-PRV-02a |
 | RF-PRV-008 | Registrar un contrato en Borrador: proveedor, tipo, título, número del proveedor, objeto, firma, inicio, fin, renovación, preaviso, patrón de costo (RN-PRV-012), responsable, orden de compra relacionada (opcional). | Fase 2 | 05 |
 | RF-PRV-009 | Número correlativo por empresa `CTR-000012` (D-007.8, D-049). | Fase 2 | 05 |
 | RF-PRV-010 | Activar un contrato, con otra persona cuando RN-017 lo exige. | Fase 2 | 05, 06, 17 |
@@ -88,7 +88,7 @@ Columnas: **Cuándo** = `v1, Etapa 2` (PRV-A) o `Fase 2` (PRV-B). **CA** = crite
 | RF-PRV-016 | Terminar un contrato antes de su fin, con fecha efectiva y motivo. | Fase 2 | 09 |
 | RF-PRV-017 | Anular un contrato registrado por error, con motivo. | Fase 2 | 09 |
 | RF-PRV-018 | Mostrar el estado calculado al leer (Programado, Vigente, Vencido); el proceso diario solo emite avisos y renovaciones automáticas. | Fase 2 | 09, 19 |
-| RF-PRV-019 | Vincular activos cubiertos (uno por uno o por filtro de SKU, categoría o ubicación). | Fase 2 | 02 |
+| RF-PRV-019 | Vincular activos cubiertos (uno por uno o por filtro de SKU, categoría o ubicación). | Fase 2 | CA-PRV-02b, CA-PRV-02c |
 | RF-PRV-020 | Registrar compromisos de servicio dentro de un contrato: nombre, prioridad, métrica, objetivo, cobertura, consecuencia pactada (texto). | Fase 2 | 12 |
 | RF-PRV-021 | Registrar documentos de referencia de un proveedor o contrato. | Fase 2 | 11 |
 | RF-PRV-022 | Lista de contratos con filtros (estado mostrado, proveedor, tipo, responsable, vence en N días, preaviso próximo) y exportación por la puerta única. | Fase 2 | 10 |
@@ -252,9 +252,13 @@ Reglas: los avisos de PRV-B no entran a la v1 (D-023, D-061.4); los de la misma 
 | ID | Requisito | Criterio |
 |---|---|---|
 | CA-PRV-01 | RF-PRV-001 | **Dado** un proveedor con identificación fiscal 20123456789 en la empresa A, **cuando** se crea otro con "20-123 456789", **entonces** se rechaza por repetido; en la empresa B se acepta. |
-| CA-PRV-02 | RF-PRV-007, 019, RN-PRV-032 | **Dado** un contrato de la empresa A, **cuando** un usuario de la empresa B consulta su identificador interno o intenta vincularlo con un activo o proveedor propio, **entonces** recibe "no encontrado" y no se escribe nada. |
+| CA-PRV-02a | RF-PRV-007, RN-PRV-032 | (Etapa 2) **Dado** un proveedor de la empresa A, **cuando** un usuario de la empresa B pide su ficha por el identificador interno, **entonces** recibe "no encontrado", el mismo mensaje que para un proveedor que no existe, y no se escribe nada. |
+| CA-PRV-02b | RF-PRV-019, RN-PRV-032 | (Fase 2) **Dado** un contrato de la empresa A, **cuando** un usuario de la empresa B consulta su identificador interno, **entonces** recibe "no encontrado" y no se escribe nada. |
+| CA-PRV-02c | RF-PRV-019, RN-PRV-032 | (Fase 2) **Dado** un contrato de la empresa A, **cuando** un usuario de la empresa B intenta vincularlo con un activo o un proveedor propio, **entonces** recibe "no encontrado" y no se escribe nada. |
 | CA-PRV-03 | RF-PRV-001, 002, 005 | **Dado** un Técnico sin `proveedores.crear_editar`, **cuando** intenta crear o editar un proveedor o contacto (por pantalla o directo al servidor), **entonces** se rechaza y el intento queda en los eventos de seguridad. |
-| CA-PRV-04 | RF-PRV-003 | **Dado** un proveedor con un contrato Vigente, **cuando** se intenta desactivar, **entonces** se rechaza con "Tiene el contrato CTR-000012 vigente". |
+| CA-PRV-04a | RF-PRV-003, RN-PRV-005 | (Etapa 2) **Dado** un proveedor activo sin órdenes abiertas, **cuando** un usuario con permiso lo desactiva con el motivo "Dejó de operar", **entonces** queda Inactivo, no aparece al elegir proveedor en una orden nueva, sigue visible en el historial y la auditoría guarda quién, cuándo y el motivo; sin motivo se rechaza. |
+| CA-PRV-04b | RN-PRV-004 | (Fase 2) **Dado** un proveedor con un contrato Vigente, **cuando** se intenta desactivar, **entonces** se rechaza con "Tiene el contrato CTR-000012 vigente". |
+| CA-PRV-04c | RF-PRV-003 | (Etapa 2) **Dado** un proveedor Inactivo, **cuando** un usuario con permiso lo reactiva con el motivo "Volvió a operar", **entonces** vuelve a Activo, se puede elegir en órdenes nuevas y queda auditado; sin motivo se rechaza. |
 | CA-PRV-05 | RF-PRV-008, 010, 023 | **Dado** un contrato de USD 60 000 con impuesto creado por Ana y límite de 50 000 USD, **cuando** Ana intenta activarlo, **entonces** se rechaza; **cuando** Luis (con `contratos.activar`) lo aprueba, **entonces** pasa a Vigente y se guarda quién y por qué valor. |
 | CA-PRV-06 | RF-PRV-010, RN-PRV-015 | **Dado** un contrato en EUR en una empresa con moneda base USD, **cuando** se activa, **entonces** exige a otra persona sin importar el importe. |
 | CA-PRV-07 | RF-PRV-011, 015, 027 | **Dado** un contrato Vigente con fin 30/11/2026, **cuando** Luis lo renueva hasta 30/11/2027, **entonces** el fin es 30/11/2027, queda el anterior, y los avisos de umbral se reinician; **cuando** hubo otra renovación posterior, revertir la primera se rechaza. |

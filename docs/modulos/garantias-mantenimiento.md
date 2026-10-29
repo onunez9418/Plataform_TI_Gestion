@@ -68,14 +68,14 @@ Columnas: **Cuándo** = `v1, Etapa 4` / `v1, Etapa 5` (GAR-A) o `Fase 2` (GAR-B)
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RF-GAR-001 | Al recibir mercadería con serie o importar, capturar la garantía del fabricante una sola vez para todo el lote: fecha de compra y meses, o fin directo (D-016.5, D-060.8). | v1, Etapa 5 | 01 |
-| RF-GAR-002 | Mostrar en la ficha del activo si está en garantía, con texto y fecha ("En garantía hasta 15/03/2027"). | v1, Etapa 4 | 01 |
-| RF-GAR-003 | Filtro de activos "garantía vence en los próximos N días" y "sin garantía vigente". | v1, Etapa 4 | 04 |
-| RF-GAR-004 | Varias garantías por activo: tipo, garante (proveedor de PRV o marca), inicio, fin, cobertura, condiciones, número de garantía, contrato de PRV (opcional), patrón de costo (opcional). | Fase 2 | 04 |
-| RF-GAR-005 | Calcular el fin desde inicio y meses cuando no se escribe (regla del núcleo, RN-GAR-003). | v1, Etapa 4 | 01, 15 |
-| RF-GAR-006 | Corregir fechas de una garantía con motivo; una ampliación es una garantía nueva. | v1, Etapa 4 | 04 |
+| RF-GAR-001 | Al recibir mercadería con serie o importar, capturar la garantía del fabricante una sola vez para todo el lote: fecha de compra y meses, o fin directo (D-016.5, D-060.8). | v1, Etapa 5 | CA-GAR-01b, CA-GAR-01c |
+| RF-GAR-002 | Mostrar en la ficha del activo si está en garantía, con texto y fecha ("En garantía hasta 15/03/2027"). | v1, Etapa 4 | CA-GAR-01a |
+| RF-GAR-003 | Filtro de activos "garantía vence en los próximos N días" y "sin garantía vigente". | v1, Etapa 4 | CA-GAR-04c, CA-GAR-04d |
+| RF-GAR-004 | Varias garantías por activo: tipo, garante (proveedor de PRV o marca), inicio, fin, cobertura, condiciones, número de garantía, contrato de PRV (opcional), patrón de costo (opcional). | Fase 2 | CA-GAR-04b, CA-GAR-04f |
+| RF-GAR-005 | Calcular el fin desde inicio y meses cuando no se escribe (regla del núcleo, RN-GAR-003). | v1, Etapa 4 | CA-GAR-01a, CA-GAR-15 |
+| RF-GAR-006 | Corregir fechas de una garantía con motivo; una ampliación es una garantía nueva. | v1, Etapa 4 | CA-GAR-04e |
 | RF-GAR-007 | Anular una garantía registrada por error, con motivo. | Fase 2 | 13 |
-| RF-GAR-008 | Estado calculado de cada garantía (Vigente, Vencida) y garantía efectiva. | v1, Etapa 4 | 04, 15 |
+| RF-GAR-008 | Estado calculado de cada garantía (Vigente, Vencida) y garantía efectiva (la efectiva distinta de la del fabricante necesita varias garantías: CA-GAR-04b, Fase 2). | v1, Etapa 4 | CA-GAR-04a, CA-GAR-15 |
 | RF-GAR-009 | Abrir un reclamo desde la ficha del activo: garantía, falla, contacto del garante. | Fase 2 | 13 |
 | RF-GAR-010 | Gestionar el reclamo: enviado al garante, número de caso, resultado (Reparado, Reemplazado, Rechazado). | Fase 2 | 09 |
 | RF-GAR-011 | Reemplazo por garantía: baja del original e ingreso manual del nuevo, vinculados. | Fase 2 | 09, 10 |
@@ -262,10 +262,17 @@ Los correos nunca llevan la serie: usan el código del activo (`ACTV-000123`, RF
 
 | ID | Requisito | Criterio |
 |---|---|---|
-| CA-GAR-01 | RF-GAR-001, 002, 005 | **Dado** una recepción de 10 laptops con serie y garantía de 36 meses desde la compra el 15/03/2024, **cuando** se confirma, **entonces** cada activo muestra "En garantía hasta 14/03/2027". |
+| CA-GAR-01a | RF-GAR-002, 005 | (Etapa 4) **Dado** un activo ingresado a mano (RF-INV-025) con fecha de compra 15/03/2024 y 36 meses de garantía, y el reloj de la empresa fijado al 01/02/2027, **cuando** se abre su ficha, **entonces** muestra "En garantía hasta 14/03/2027". |
+| CA-GAR-01b | RF-GAR-001 | (Etapa 5) **Dado** una recepción de 10 laptops con serie, **cuando** se captura la garantía, **entonces** se pide una sola vez para todo el lote (compra el 15/03/2024 y 36 meses, o fin directo) y no una vez por serie. |
+| CA-GAR-01c | RF-GAR-001 | (Etapa 5) **Dado** esa recepción con garantía de 36 meses desde la compra el 15/03/2024 y el reloj al 01/02/2027, **cuando** se confirma, **entonces** cada uno de los 10 activos creados muestra "En garantía hasta 14/03/2027". |
 | CA-GAR-02 | RF-GAR-019, 028, RN-GAR-033 | **Dado** un activo de la empresa A, **cuando** un usuario de la empresa B consulta su garantía o hoja de vida por identificador interno, o crea un mantenimiento con ese activo, **entonces** recibe "no encontrado" y no se escribe nada. |
 | CA-GAR-03 | RF-GAR-014 | **Dado** un usuario Solo lectura sin `mantenimiento.programar`, **cuando** intenta programar (por pantalla o directo al servidor), **entonces** se rechaza y queda en los eventos de seguridad. |
-| CA-GAR-04 | RF-GAR-003, 004, 006, 008 | **Dado** una garantía del fabricante hasta 15/03/2027 y una extendida hasta 15/03/2028, **cuando** se consulta el 01/02/2027, **entonces** ambas están Vigentes y la efectiva es la extendida; con el reloj al 16/03/2027 la del fabricante figura Vencida sin proceso alguno. |
+| CA-GAR-04a | RF-GAR-008, RN-GAR-004, RN-GAR-036, RN-018 | (Etapa 4) **Dado** una garantía del fabricante con fin 15/03/2027, **cuando** se consulta con el reloj al 01/02/2027, **entonces** figura Vigente; el 15/03/2027 a las 23:59 todavía; el 16/03/2027 figura Vencida sin que haya corrido ningún proceso diario. |
+| CA-GAR-04b | RF-GAR-004, RN-GAR-006 | (Fase 2) **Dado** una garantía del fabricante hasta 15/03/2027 y una extendida hasta 15/03/2028, **cuando** se consulta el 01/02/2027, **entonces** ambas están Vigentes y la efectiva es la extendida (la vigente con fin más lejano); con el reloj al 16/03/2027 la del fabricante figura Vencida y sigue efectiva la extendida. |
+| CA-GAR-04c | RF-GAR-003 | (Etapa 4) **Dado** cinco activos con garantía que vence el 20/02/2027, 15/03/2027 y 30/06/2028, una que venció el 31/12/2026 y uno sin garantía, y el reloj al 01/02/2027, **cuando** se aplica el filtro "garantía vence en los próximos 30 días", **entonces** aparece solo el activo del 20/02/2027. |
+| CA-GAR-04d | RF-GAR-003 | (Etapa 4) **Dado** esos mismos cinco activos y el reloj al 01/02/2027, **cuando** se aplica el filtro "sin garantía vigente", **entonces** aparecen el que venció el 31/12/2026 y el que no tiene garantía. |
+| CA-GAR-04e | RF-GAR-006, RN-GAR-007 | (Etapa 4) **Dado** una garantía con fin 14/03/2027, **cuando** un técnico corrige el fin a 14/04/2027 sin motivo, **entonces** se rechaza; con el motivo "error de captura" se acepta, el historial guarda el valor anterior (14/03/2027) y el nuevo y la auditoría registra el cambio. |
+| CA-GAR-04f | RF-GAR-004, RN-GAR-007 | (Fase 2) **Dado** una garantía del fabricante hasta 14/03/2027, **cuando** se quiere ampliar la cobertura hasta 14/03/2028, **entonces** no se edita el fin de la primera: se registra una garantía nueva (extendida) y la primera conserva sus fechas. |
 | CA-GAR-05 | RF-GAR-012, 013, 015, 016, 017, RN-GAR-019 | **Dado** un plan "limpieza cada 6 meses" para el SKU LAP-0001, **cuando** el técnico cierra el preventivo el 10/05/2027, **entonces** el siguiente se programa para el 10/11/2027 y solo hay un pendiente por activo. |
 | CA-GAR-06 | RF-GAR-014, 022, RN-GAR-028 | **Dado** un correctivo de un activo Asignado, **cuando** el técnico lo pasa a En ejecución, **entonces** se ofrece pasar el activo a En reparación; si no confirma, el activo no cambia. |
 | CA-GAR-07 | RF-GAR-023, RN-GAR-030 | **Dado** un activo En reparación con mantenimiento Realizado, **cuando** el técnico confirma "Devolver a Asignado", **entonces** vuelve a Asignado a la misma Persona y la acción queda en la auditoría. |
