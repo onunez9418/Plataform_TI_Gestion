@@ -46,7 +46,7 @@ describe.skipIf(!hayBaseDeDatos || !hayMigraciones)('acciones de pantalla (Alfa,
     const ctx = await obtenerContexto('alfa')
     const u = await crearItem('alfa', 'ubicaciones', fd({ nombre: `Piso ${sufijo}`, descripcion: 'Segundo piso' }))
     expect(u.ok).toBe(true)
-    const p = await crearItem('alfa', 'proveedores', fd({ nombre: `Prov ${sufijo}`, documento: '20123456789' }))
+    const p = await crearItem('alfa', 'proveedores', fd({ nombre: `Prov ${sufijo}`, documento: `20${String(Math.floor(Math.random() * 1e9)).padStart(9, '0')}` }))
     expect(p.ok).toBe(true)
     const pe = await crearItem('alfa', 'personas', fd({ nombre: `Persona ${sufijo}`, correo: `p${sufijo}@alfa.local`, area: 'Ventas' }))
     expect(pe.ok).toBe(true)
@@ -143,6 +143,55 @@ describe.skipIf(!hayBaseDeDatos || !hayMigraciones)('acciones de pantalla (Alfa,
     const tec = (await listarRoles(ctx)).find((x) => x.nombre === 'Técnico')!
     expect((await cambiarRolDe('alfa', u.usuarioId, tec.id)).ok).toBe(true)
     expect((await suspenderA('alfa', u.usuarioId)).ok).toBe(true)
+  })
+
+  it('compras: la autoaprobación se rechaza, otra persona aprueba y la recepción crea los equipos', async () => {
+    const { crear } = await import('@/app/e/[empresa]/compras/acciones')
+    const { enviar, aprobar, rechazar, recibir } = await import('@/app/e/[empresa]/compras/[id]/acciones')
+    const { listarProveedores, listarUbicaciones } = await import('@/modulos/catalogos')
+    const { listarSkus } = await import('@/modulos/skus')
+    const { obtenerOrden } = await import('@/modulos/compras')
+    const { listarActivos } = await import('@/modulos/inventario')
+    const { obtenerContexto } = await import('@/nucleo/acceso')
+    await sesionDe('ceo@demo.local')
+    const ctx = await obtenerContexto('alfa')
+    const prov = (await listarProveedores(ctx)).find((p) => p.activo)!
+    const ubic = (await listarUbicaciones(ctx)).find((u) => u.activo)!
+    const lap = (await listarSkus(ctx, { texto: 'LAP-0001' }))[0]
+    const lineas = JSON.stringify([{ skuId: lap.id, cantidad: 2, precioUnitario: 3500 }])
+
+    const creada = await crear('alfa', fd({ proveedorId: prov.id, lineas }))
+    expect(creada.ok, JSON.stringify(creada)).toBe(true)
+    if (!creada.ok) return
+    const id = creada.datos.id
+    expect((await enviar('alfa', id)).ok).toBe(true)
+
+    const propia = await aprobar('alfa', id)
+    expect(propia.ok).toBe(false)
+    if (!propia.ok) expect(propia.error.codigo).toBe('SEPARACION_FUNCIONES')
+
+    await sesionDe('jefa@alfa.local')
+    const sinMotivo = await rechazar('alfa', id, fd({ motivo: '' }))
+    expect(sinMotivo.ok).toBe(false)
+    const ok = await aprobar('alfa', id)
+    expect(ok.ok, JSON.stringify(ok)).toBe(true)
+    // la Jefatura no recibe mercadería: el servidor lo rechaza
+    const noRecibe = await recibir('alfa', id, fd({ ubicacionId: ubic.id, lineaId: 'x' }))
+    expect(noRecibe.ok).toBe(false)
+
+    await sesionDe('tecnico@alfa.local')
+    const orden = await obtenerOrden(await obtenerContexto('alfa'), id)
+    const linea = orden.lineas[0]
+    const sinSeries = await recibir('alfa', id, fd({ ubicacionId: ubic.id, lineaId: linea.id, [`cantidad_${linea.id}`]: '2' }))
+    expect(sinSeries.ok).toBe(false)
+    const parcial = await recibir('alfa', id, fd({ ubicacionId: ubic.id, lineaId: linea.id, [`cantidad_${linea.id}`]: '1', [`series_${linea.id}`]: JSON.stringify([`OC1-${sufijo}`]) }))
+    expect(parcial.ok, JSON.stringify(parcial)).toBe(true)
+    const resto = await recibir('alfa', id, fd({ ubicacionId: ubic.id, lineaId: linea.id, [`cantidad_${linea.id}`]: '1', [`series_${linea.id}`]: JSON.stringify([`OC2-${sufijo}`]) }))
+    expect(resto.ok, JSON.stringify(resto)).toBe(true)
+    const final = await obtenerOrden(await obtenerContexto('alfa'), id)
+    expect(final.estado).toBe('recibida')
+    const nacidos = (await listarActivos(await obtenerContexto('alfa'), { texto: sufijo })).filter((a) => a.serie.startsWith('OC'))
+    expect(nacidos).toHaveLength(2)
   })
 
   it('un usuario de solo lectura es rechazado por el servidor (no solo oculto)', async () => {

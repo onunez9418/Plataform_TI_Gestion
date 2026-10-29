@@ -7,18 +7,19 @@ import { useErrorDeCampo } from './Formulario'
 import { Icono } from './Icono'
 import { analizarSeries } from './series'
 
-export function CapturaSeries({ nombre = 'series', prefijoId = 'series' }: { nombre?: string; prefijoId?: string }) {
+export function CapturaSeries({ nombre = 'series', prefijoId = 'series', esperadas, etiqueta = 'Series (una por línea)' }: { nombre?: string; prefijoId?: string; esperadas?: number; etiqueta?: string }) {
   const [texto, setTexto] = useState('')
   const filas = useMemo(() => analizarSeries(texto), [texto])
   const errores = filas.filter((f) => f.estado !== 'ok').length
   const validas = filas.length - errores
+  const distintaCantidad = esperadas !== undefined && errores === 0 && filas.length > 0 && validas !== esperadas
   const errorEnvio = useErrorDeCampo(`${nombre}_revisadas`)
   const errorServidor = useErrorDeCampo(nombre)
 
   return (
     <div className="captura" data-testid={`${prefijoId}-captura`}>
       <div className="campo">
-        <label htmlFor={`${prefijoId}-texto`}>Series (una por línea)</label>
+        <label htmlFor={`${prefijoId}-texto`}>{etiqueta}</label>
         <textarea
           id={`${prefijoId}-texto`}
           value={texto}
@@ -34,7 +35,13 @@ export function CapturaSeries({ nombre = 'series', prefijoId = 'series' }: { nom
       <div>
         <p id={`${prefijoId}-resumen`} role="status" className="contador-grande" data-testid={`${prefijoId}-resumen`}>
           {filas.length === 0 ? 'Aún no hay series' : `${validas} de ${filas.length} series correctas`}
+          {esperadas !== undefined ? ` · se esperan ${esperadas}` : ''}
         </p>
+        {distintaCantidad ? (
+          <p role="alert" style={{ color: 'var(--c-peligro)', fontWeight: 600 }} data-testid={`${prefijoId}-cantidad`}>
+            {validas < esperadas! ? `Faltan ${esperadas! - validas} series.` : `Sobran ${validas - esperadas!} series.`}
+          </p>
+        ) : null}
         {errorServidor ? (
           <p role="alert" style={{ color: 'var(--c-peligro)', fontWeight: 600 }} data-testid={`${prefijoId}-error-servidor`}>{errorServidor}</p>
         ) : null}
@@ -71,7 +78,7 @@ export function CapturaSeries({ nombre = 'series', prefijoId = 'series' }: { nom
       </div>
       {/* Lista final que viaja al servidor. El segundo dato oculto impide enviar con filas con problema. */}
       <input type="hidden" name={nombre} value={JSON.stringify(filas.filter((f) => f.estado === 'ok').map((f) => f.serie))} />
-      <input type="hidden" name={`${nombre}_revisadas`} data-requerido="1" value={filas.length > 0 && errores === 0 ? 'si' : ''} />
+      <input type="hidden" name={`${nombre}_revisadas`} data-requerido="1" value={filas.length > 0 && errores === 0 && (esperadas === undefined || validas === esperadas) ? 'si' : ''} />
     </div>
   )
 }

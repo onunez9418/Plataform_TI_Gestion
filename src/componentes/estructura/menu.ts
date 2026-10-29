@@ -5,8 +5,9 @@ import { P } from './permisos'
 
 export type EntradaMenu = { grupo: string; ruta: string; etiqueta: string; icono: NombreIcono; permisos: readonly string[] | null; testid: string }
 
-// Las compras son la segunda prioridad (S1): se encienden solo si la Jefatura las autoriza.
-export const COMPRAS_ACTIVAS = process.env.NEXT_PUBLIC_COMPRAS === '1' || process.env.COMPRAS === '1'
+// Las compras (S1) están autorizadas con condición: si no pasan el guion completo, la Jefatura las oculta
+// poniendo COMPRAS_OCULTAS=1 (el menú y las pantallas desaparecen juntos; es todo o nada, plan A.9).
+export const COMPRAS_ACTIVAS = process.env.COMPRAS_OCULTAS !== '1'
 
 export const ENTRADAS_MENU: readonly EntradaMenu[] = [
   { grupo: 'General', ruta: '', etiqueta: 'Panel', icono: 'inicio', permisos: null, testid: 'menu-panel' },

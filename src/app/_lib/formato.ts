@@ -20,3 +20,12 @@ export function fecha(iso: string | null | undefined): string {
 export function numero(n: number): string {
   return new Intl.NumberFormat('es-PE').format(n)
 }
+
+/** Dinero con su moneda (PEN, USD...). Si la moneda no se reconoce, se muestra el número con el código. */
+export function dinero(monto: number, moneda: string): string {
+  try {
+    return new Intl.NumberFormat('es-PE', { style: 'currency', currency: moneda }).format(monto)
+  } catch {
+    return `${moneda} ${new Intl.NumberFormat('es-PE', { minimumFractionDigits: 2 }).format(monto)}`
+  }
+}
