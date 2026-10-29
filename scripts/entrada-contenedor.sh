@@ -7,6 +7,9 @@ set -eu
 : "${MIGRATION_DATABASE_URL:?Falta MIGRATION_DATABASE_URL}"
 : "${DATABASE_URL:?Falta DATABASE_URL}"
 
+# Guarda de MODO_LOCAL antes de tocar nada: con una base externa, el contenedor no arranca.
+npx tsx scripts/verificar-arranque.ts
+
 echo "[arranque] Esperando a la base de datos..."
 node scripts/base.mjs esperar
 echo "[arranque] Base de datos lista."

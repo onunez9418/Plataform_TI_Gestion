@@ -106,6 +106,9 @@ process.env.DB_PUERTO_LOCAL = PUERTO;
 definirUrls({ host: 'localhost', puerto: PUERTO });
 Object.assign(process.env, { MODO_LOCAL: '1', ENTORNO: 'desarrollo', APP_URL: 'http://localhost:3000' });
 
+// Misma guarda de MODO_LOCAL que el contenedor.
+correr('npx', ['tsx', 'scripts/verificar-arranque.ts'], { shell: process.platform === 'win32' });
+
 if (existsSync('prisma/schema.prisma')) migrar();
 else console.warn('[local] AVISO: aún no hay prisma/schema.prisma; no se migra.');
 if (existsSync('prisma/semilla/index.ts')) {

@@ -3,7 +3,7 @@ FROM node:22-bookworm
 
 # Se usa la imagen completa (no "slim") a propósito: ya trae openssl y certificados, que Prisma necesita,
 # y así la construcción no depende de descargar paquetes del sistema (menos puntos de falla en la computadora del CEO).
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_TELEMETRY_DISABLED=1 NPM_CONFIG_UPDATE_NOTIFIER=false
 WORKDIR /app
 
 # Primero lo que cambia poco (dependencias), para aprovechar la memoria de Docker.
