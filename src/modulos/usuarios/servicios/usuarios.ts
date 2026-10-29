@@ -1,4 +1,4 @@
-import { crearEnlaceIngreso } from '../../../nucleo/acceso/emitir'
+import { crearEnlaceIngreso, enlaceSenuelo } from '../../../nucleo/acceso/emitir'
 import { conEmpresa } from '../../../nucleo/aislamiento'
 import { registrarAuditoria } from '../../../nucleo/auditoria'
 import {
@@ -50,8 +50,12 @@ export const invitarUsuario = definirServicio<EntradaInvitarUsuario, ResultadoIn
         throw duplicado('Ese correo ya pertenece a un usuario de esta empresa.', { correo: 'Ya existe en esta empresa.' })
       }
       await repo.crearMembresia(tx, ctx.empresaId, usuarioId, rolId)
-      // Las invitaciones no se atan a un navegador: quien invita no es quien entra.
-      const enlace = await crearEnlaceIngreso(tx, usuarioId, null)
+      // H-SEG-L03: si la persona ya existe (por otra empresa), solo se le da la membresía en ESTA empresa.
+      // Nunca se emite un enlace de ingreso a su nombre desde una invitación: entra por el flujo normal de
+      // «pedir enlace». A quien invita se le devuelve un enlace señuelo, con la misma forma que uno real,
+      // para que no pueda averiguar si el correo ya estaba en la plataforma.
+      // Las cuentas nuevas sí reciben su enlace; no se atan a un navegador porque quien invita no es quien entra.
+      const enlace = existente ? enlaceSenuelo() : await crearEnlaceIngreso(tx, usuarioId, null)
       await registrarAuditoria(tx, ctx, {
         accion: 'usuario.invitar',
         entidadTipo: 'usuario',

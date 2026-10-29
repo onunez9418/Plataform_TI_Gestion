@@ -16,8 +16,13 @@ const aUsuario = (f: Fila): Usuario => ({
   desde: new Date(f.creado_en).toISOString(),
 })
 
+// H-SEG-L03: el nombre vive en la cuenta global y no pertenece a una empresa. Si la persona está en más de
+// una empresa, mostrar ese nombre revelaría lo que escribió OTRA empresa; en ese caso se muestra solo el
+// correo (que esta empresa ya conoce porque lo invitó). Pendiente con Datos: un nombre por membresía.
 const SELECT_USUARIO = `
-  SELECT u.id AS usuario_id, u.correo, u.nombre, m.rol_id, r.nombre AS rol_nombre, m.estado, m.creado_en
+  SELECT u.id AS usuario_id, u.correo,
+         CASE WHEN (SELECT count(*) FROM mis_empresas(u.id)) > 1 THEN u.correo ELSE u.nombre END AS nombre,
+         m.rol_id, r.nombre AS rol_nombre, m.estado, m.creado_en
     FROM membresia m
     JOIN usuario u ON u.id = m.usuario_id
     JOIN rol r ON r.empresa_id = m.empresa_id AND r.id = m.rol_id`

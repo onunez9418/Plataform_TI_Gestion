@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { usarAlmacenDeCookies } from '../../../nucleo/acceso/cookies'
-import { canjearEnlace } from '../../../nucleo/acceso'
+import { canjearEnlace, solicitarEnlace } from '../../../nucleo/acceso'
 import { cerrarConexiones, conEmpresa, conGlobal } from '../../../nucleo/aislamiento'
 import { listarAuditoria } from '../../../nucleo/auditoria'
 import {
@@ -63,6 +63,52 @@ describe.skipIf(!hayBaseDeDatos)('usuarios (con base real)', () => {
     expect(r.usuarioId).toBe(existente.usuarioId)
     const n = await conGlobal((tx) => tx.consultar<{ n: number }>(`SELECT count(*)::int AS n FROM usuario WHERE correo_norm = lower($1)`, [existente.correo]))
     expect(n[0]!.n).toBe(1)
+  })
+
+  it('H-SEG-L03: invitar un correo que ya existe en otra empresa NO entrega un enlace para entrar como esa persona', async () => {
+    const gamma = await crearEmpresaDePrueba('Gamma')
+    const existente = gamma.usuarios.consulta!
+    const antes = await conGlobal((tx) => tx.consultar<{ n: number }>(`SELECT count(*)::int AS n FROM enlace_ingreso WHERE usuario_id = $1`, [existente.usuarioId]))
+    const r = await invitarUsuario(contextoDe(alfa, 'admin'), { correo: existente.correo, nombre: 'Otro Nombre', rolId: alfa.roles.consulta! })
+
+    // No se creó ningún enlace de ingreso para esa cuenta.
+    const despues = await conGlobal((tx) => tx.consultar<{ n: number }>(`SELECT count(*)::int AS n FROM enlace_ingreso WHERE usuario_id = $1`, [existente.usuarioId]))
+    expect(despues[0]!.n).toBe(antes[0]!.n)
+
+    // A quien invita se le muestra un enlace con la misma forma que el de una cuenta nueva (no revela que existía)...
+    expect(r.enlaceLocal).toMatch(/^\/entrar\/enlace\?t=[A-Za-z0-9_-]{43}$/)
+    // ...pero no sirve para entrar, ni desde otro navegador ni desde el mismo.
+    const token = new URL(r.enlaceLocal as string, 'http://x').searchParams.get('t') as string
+    jarra.clear()
+    await expect(canjearEnlace(token)).rejects.toMatchObject({ codigo: 'ENLACE_INVALIDO' })
+    expect(jarra.get('sid')).toBeUndefined()
+
+    // Solo se creó la membresía en la empresa que invita; la otra empresa no cambia.
+    const lista = await listarUsuarios(contextoDe(alfa, 'admin'))
+    expect(lista.find((u) => u.usuarioId === existente.usuarioId)).toMatchObject({ rolNombre: 'Consulta', estado: 'activo' })
+    expect((await listarUsuarios(contextoDe(gamma, 'admin'))).find((u) => u.usuarioId === existente.usuarioId)).toMatchObject({ rolNombre: 'Consulta' })
+  })
+
+  it('H-SEG-L03: la lista no muestra el nombre que guardó la otra empresa, solo el correo', async () => {
+    const gamma = await crearEmpresaDePrueba('Gamma')
+    const existente = gamma.usuarios.jefa!
+    await conGlobal((tx) => tx.consultar(`UPDATE usuario SET nombre = 'Nombre Guardado Por Gamma' WHERE id = $1`, [existente.usuarioId]))
+    // Mientras solo está en Gamma, Gamma ve su nombre.
+    expect((await listarUsuarios(contextoDe(gamma, 'admin'))).find((u) => u.usuarioId === existente.usuarioId)?.nombre).toBe('Nombre Guardado Por Gamma')
+    await invitarUsuario(contextoDe(alfa, 'admin'), { correo: existente.correo, nombre: 'Lo Que Escribió Alfa', rolId: alfa.roles.consulta! })
+    const enAlfa = (await listarUsuarios(contextoDe(alfa, 'admin'))).find((u) => u.usuarioId === existente.usuarioId)
+    expect(enAlfa?.nombre).toBe(existente.correo)
+    expect(JSON.stringify(enAlfa)).not.toContain('Nombre Guardado Por Gamma')
+  })
+
+  it('H-SEG-L03: la misma invitación a un correo nuevo sigue dando un enlace que sí entra, y la persona de otra empresa entra por el flujo normal de «pedir enlace»', async () => {
+    const gamma = await crearEmpresaDePrueba('Gamma')
+    const existente = gamma.usuarios.tecnico!
+    await invitarUsuario(contextoDe(alfa, 'admin'), { correo: existente.correo, nombre: 'Tercera Vez', rolId: alfa.roles.consulta! })
+    jarra.clear()
+    const { enlaceLocal } = await solicitarEnlace(existente.correo)
+    const { empresas } = await canjearEnlace(new URL(enlaceLocal as string, 'http://x').searchParams.get('t') as string)
+    expect(empresas.map((e) => e.slug).sort()).toEqual([alfa.slug, gamma.slug].sort())
   })
 
   it('no se puede invitar con un rol de otra empresa', async () => {
