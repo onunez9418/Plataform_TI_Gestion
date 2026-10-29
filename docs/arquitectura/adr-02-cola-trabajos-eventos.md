@@ -15,6 +15,10 @@ Criterios de elección: (a) encolar **dentro de la misma transacción** que el c
 ## Decisión
 **Cola.** Esquema propio `cola` (lo crea la librería); es una "infraestructura sin `empresa_id`" de categoría B (ADR-04). `app_empresa` la usa **solo mediante las funciones de la librería** (encolar, tomar, completar, fallar), sin DML libre sobre sus tablas; H7 comprueba que la librería elegida lo permite y, si necesita DML directo, se vuelve a mesa. **Regla:** la carga útil de todo trabajo contiene solo `empresa_id`, tipo e identificadores, validada con un esquema por tipo; nunca datos personales ni secretos ni **valores de entrada**: los correos de acceso, invitación y acceso de emergencia llevan solo el identificador de su fila y el valor nace en el trabajador al enviar (ADR-08, H-SEG-46). Los filtros de una exportación viven en `exportacion_solicitud` (ADR-19), no en la carga. Reintentos con espera creciente; tras N intentos pasa a "muerto" con alarma sin bloquear al resto (webhooks: tope de ~12 h de reintentos según RN-INT-027; correos de acceso: ninguno después de que el enlace venza).
 
+**Clasificación de cada tipo de trabajo (H-SEG-65).** El catálogo de tipos de trabajo (en código) declara de cada uno `borrado_por_plazo`, `vida_tecnica` u `otro`. La integración continua falla ante un tipo sin clasificar, y todo `borrado_por_plazo` debe consultar `congelacion_activa` (ADR-23). Así un trabajo de borrado nuevo no escapa de la congelación por olvido.
+
+**Encolar desde una función de plataforma (H-SEG-38).** `app_plataforma` no toca `cola`. Sus funciones DEFINER (ADR-23) encolan, en su propia transacción, mediante la función interna `encolar_trabajo(tipo, clave, carga)` de ADR-04, que valida el tipo y que la carga lleve solo identificadores. H7 comprueba con la librería elegida qué permisos mínimos necesita el dueño de esas funciones; si exigiera DML libre para `app_empresa` o `app_plataforma`, se vuelve a mesa.
+
 **Errores sin datos personales (H-SEG-44).** El texto de un error puede llevar datos: un error de clave duplicada de PostgreSQL trae el valor en su detalle (por ejemplo el correo duplicado), y las librerías candidatas guardan el error del trabajo fallido en su propia tabla (`last_error` en graphile-worker, `output` en pg-boss), que es global, sin seguridad por fila y viaja a los respaldos y al monitor. Un **envoltorio único** en `nucleo/cola` (y el mismo en `nucleo/observabilidad`, ADR-20) **normaliza todo error a tipo, código y mensaje fijo** y descarta `detail`, `where` y los parámetros antes de guardarlo, de escribirlo en `corrida_diaria.resultado` o de enviarlo al monitor.
 
 **Todo trabajo** se ejecuta con `ejecutarComoEmpresa(empresaId, fn)`: abre la transacción, fija la empresa (ADR-03), salta empresas suspendidas, calcula "hoy" con `hoyEnEmpresa()` y es **idempotente** (correrlo dos veces no duplica; se apoya en claves únicas de origen).
@@ -38,6 +42,7 @@ Criterios de elección: (a) encolar **dentro de la misma transacción** que el c
 - Prueba por módulo: ejecutar el proceso con dos empresas y comprobar que cada aviso, registro y destinatario queda en la suya; empresa suspendida se salta.
 - Prueba de arquitectura: ningún módulo importa la librería de cola; todos usan `nucleo/cola`.
 - Prueba de que producción no contiene `reloj_prueba` ni la ruta del disparador.
+- **Encolar desde plataforma (H-SEG-38):** una función de plataforma encola un correo dentro de su transacción sin que `app_plataforma` tenga permisos sobre `cola`; si la transacción se revierte no queda trabajo. Un tipo de trabajo sin clasificar rompe la integración continua.
 - **Error con dato personal (H-SEG-44):** se provoca una violación de clave única con un correo canario dentro de un trabajo y en una petición, y se busca en `cola.*`, en `corrida_diaria.resultado`, en el registro y en el monitor simulado: no aparece.
 
 ## Qué cambió tras la revisión (2026-10-29)
@@ -47,3 +52,10 @@ Criterios de elección: (a) encolar **dentro de la misma transacción** que el c
 | H-SEG-46 | Incorporado: la carga útil no admite valores de entrada; el valor nace en el trabajador. |
 | H-SEG-55 | Incorporado: los filtros de exportación no viajan en la carga. |
 | D04-1 | `cola` queda como categoría B (infraestructura) de ADR-04, no como "tabla global" número 18. |
+
+## Qué cambió tras la ronda 6 (2026-10-29)
+| Hallazgo | Qué se hizo |
+|---|---|
+| H-SEG-46 | La emisión del valor exige además la cuenta del trabajador y fallo definitivo anula la huella (ADR-08); la carga útil sigue sin admitir valores. |
+| H-SEG-65 (2) | Incorporado: clasificación obligatoria de tipos de trabajo, con CI. |
+| H-SEG-38 | `encolar_trabajo` interna para las funciones de plataforma; H7 la valida. |

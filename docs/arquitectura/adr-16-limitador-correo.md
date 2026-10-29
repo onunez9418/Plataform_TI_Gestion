@@ -22,7 +22,7 @@ Varios módulos piden topes (ingreso, API, correos, exportaciones, invitaciones)
 - Los rechazos generan evento de seguridad con tope de ritmo.
 
 ### Correo
-- Una sola capa `enviarCorreo(plantilla, destinatario, datos)`: encola el envío (ADR-02) con reintentos; nada de envíos desde la petición. **La carga útil lleva solo identificadores.** Los tres correos que deben contener un valor en claro que sirve para entrar (enlace de ingreso, invitación, acceso de emergencia) **no reciben el valor en `datos`**: llevan el identificador de su fila y el valor **nace en el trabajador al enviar** (ADR-08, H-SEG-46); la plantilla recibe un campo tipado `Secreto`. Sin reintentos después de que el enlace venza (15 minutos) y nunca queda en trabajos muertos.
+- Una sola capa `enviarCorreo(plantilla, destinatario, datos)`: encola el envío (ADR-02) con reintentos; nada de envíos desde la petición. **La carga útil lleva solo identificadores.** Los tres correos que deben contener un valor en claro que sirve para entrar (enlace de ingreso, invitación, acceso de emergencia) **no reciben el valor en `datos`**: llevan el identificador de su fila y el valor **nace en el trabajador al enviar** (ADR-08, H-SEG-46); la plantilla recibe un campo tipado `Secreto`. Sin reintentos después de que el enlace venza (15 minutos desde el pedido); **un fallo definitivo anula la huella del valor emitido** (`*_anular_emision`, ADR-08) y nunca queda en trabajos muertos.
 - Interfaz `ProveedorCorreo` con tres implementaciones: **captura** (desarrollo y pruebas: nunca sale a internet, legible por QA), **primario** y **secundario** (conmutación tras fallos repetidos). Producción se niega a arrancar en modo captura.
 - **Plantillas de texto fijo** con datos tipados (sin campos libres). A una Persona sin Usuario o dirección no verificada solo van tipo de aviso, código (`ACT-E-000123`), fecha y empresa (D-061.4). Los correos de la v1 son invitación, acceso y aprobación.
 - Cupo propio para obligatorios (acceso, invitación, aprobación) para que un exceso de avisos no los bloquee.
@@ -49,3 +49,8 @@ Varios módulos piden topes (ingreso, API, correos, exportaciones, invitaciones)
 | Observación de Seguridad (ADR-16) | Incorporado: falla cerrada del limitador para ingreso y exportación. |
 | D04-4 | Incorporado como medición (normal frente a `UNLOGGED`). |
 | ADR-21, ADR-22 | Nuevos topes en `TOPES`, a fijar con los módulos. |
+
+## Qué cambió tras la ronda 6 (2026-10-29)
+| Hallazgo | Qué se hizo |
+|---|---|
+| H-SEG-46 cond. 3 | Incorporado: el fallo definitivo del envío anula la huella; el limitador sigue cerrando ante fallo (también para `recuperacion_usar`, ADR-08, H-SEG-76). |
