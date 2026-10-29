@@ -238,6 +238,22 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
   })
 
   describe('permisos en el servidor (SIN_PERMISO)', () => {
+    it('quien puede preparar pero no ver: la orden se crea y la respuesta llega (no hay error tras guardar)', async () => {
+      const soloCrear = contextoDe(alfa, 'tecnico', ['ordenes_compra.crear_editar'])
+      const antes = (await listarOrdenes(tecnico())).length
+      const o = await crearOrden(soloCrear, { proveedorId: a.proveedor, lineas: [{ skuId: a.skuSerie, cantidad: 1, precioUnitario: 1 }] })
+      expect(o.estado).toBe('borrador')
+      expect((await listarOrdenes(tecnico())).length).toBe(antes + 1)
+      expect((await enviarAAprobacion(soloCrear, o.id)).estado).toBe('por_aprobar')
+      const soloAprobar = contextoDe(alfa, 'jefa', ['ordenes_compra.aprobar'])
+      expect((await aprobarOrden(soloAprobar, o.id)).estado).toBe('aprobada')
+      const o2 = await nuevaOrden()
+      await enviarAAprobacion(tecnico(), o2.id)
+      expect((await rechazarOrden(soloAprobar, { id: o2.id, motivo: 'No hace falta' })).estado).toBe('rechazada')
+      // Y sin el permiso de ver, leer sigue prohibido.
+      await expect(obtenerOrden(soloCrear, o.id)).rejects.toMatchObject({ codigo: 'SIN_PERMISO' })
+    })
+
     it('cada servicio rechaza a quien no tiene el permiso', async () => {
       const o = await nuevaOrden()
       const nada = contextoSinPermisos(alfa)

@@ -45,7 +45,11 @@ export type EntradaRegistrarActivos = {
 }
 
 /** `creados`: equipos creados (por serie) o unidades sumadas (por cantidad). */
-export type ResultadoRegistrarActivos = { creados: number }
+export type ResultadoRegistrarActivos = {
+  creados: number
+  /** Se registra igual, pero se avisa (RF-INV-003): por ejemplo, una serie que ya existe en otro SKU de la empresa. */
+  avisos?: string[]
+}
 
 export type EntradaAsignarActivo = { activoId: string; personaId: string }
 export type EntradaDevolverActivo = { activoId: string; ubicacionId: string }

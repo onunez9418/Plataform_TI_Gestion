@@ -100,6 +100,17 @@ export async function seriesExistentes(tx: Tx, empresaId: string, skuId: string,
   return f.map((x) => x.serie)
 }
 
+/** Series (ya normalizadas) que existen en OTRO SKU de la empresa: serie y código de ese SKU. */
+export async function seriesEnOtrosSkus(tx: Tx, empresaId: string, skuId: string, normalizadas: string[]): Promise<{ serie: string; sku_codigo: string }[]> {
+  return tx.consultar<{ serie: string; sku_codigo: string }>(
+    `SELECT a.serie, s.codigo AS sku_codigo
+       FROM activo a JOIN sku s ON s.empresa_id = a.empresa_id AND s.id = a.sku_id
+      WHERE a.empresa_id = $1 AND a.sku_id <> $2 AND a.anulado_en IS NULL AND a.serie_norm = ANY($3::text[])
+      ORDER BY a.serie_norm, s.codigo`,
+    [empresaId, skuId, normalizadas],
+  )
+}
+
 export async function insertarActivo(tx: Tx, empresaId: string, skuId: string, ubicacionId: string, serie: string): Promise<string> {
   const f = await tx.consultar<{ id: string }>(
     `INSERT INTO activo (empresa_id, sku_id, serie, ubicacion_id) VALUES ($1, $2, $3, $4) RETURNING id`,

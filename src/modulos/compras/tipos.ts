@@ -68,4 +68,4 @@ export type EntradaRecibirOrden = {
   lineas: { lineaId: string; cantidad: number; series?: string[] }[]
 }
 
-export type ResultadoRecepcion = { recepcionId: string; numero: string; activosCreados: number; estadoOrden: EstadoOrden }
+export type ResultadoRecepcion = { recepcionId: string; numero: string; activosCreados: number; estadoOrden: EstadoOrden; avisos?: string[] }

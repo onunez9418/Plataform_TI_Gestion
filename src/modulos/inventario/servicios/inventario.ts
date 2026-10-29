@@ -77,7 +77,8 @@ export const registrarActivos = definirServicio<EntradaRegistrarActivos, Resulta
       if (sku.control === 'cantidad') {
         return ingresarCantidad(tx, ctx, { sku, ubicacion, cantidad: entrada.cantidad, series, origen: undefined })
       }
-      return ingresarSeries(tx, ctx, { sku, ubicacion, series, hayCantidad, origen: undefined })
+      const { creados, avisos } = await ingresarSeries(tx, ctx, { sku, ubicacion, series, hayCantidad, origen: undefined })
+      return avisos.length > 0 ? { creados, avisos } : { creados }
     })
   },
 )

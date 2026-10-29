@@ -67,6 +67,17 @@ describe.skipIf(!hayBaseDeDatos)('inventario (con base real)', () => {
         .rejects.toMatchObject({ codigo: 'DUPLICADO', mensaje: expect.stringContaining('x - 1') })
     })
 
+    it('una serie que ya existe en OTRO SKU de la empresa se acepta con un aviso que dice dónde está', async () => {
+      const otroSku = await conEmpresa(alfa.id, async (tx) =>
+        ((await tx.consultar<{ id: string }>(`INSERT INTO sku (empresa_id, categoria_id, codigo, nombre, control)
+          SELECT $1, categoria_id, 'TAB-0001', 'Tablet de prueba', 'serie' FROM sku WHERE empresa_id = $1 LIMIT 1 RETURNING id`, [alfa.id]))[0] as { id: string }).id)
+      const primero = await registrarActivos(tecnico(), { skuId: a.skuSerie, ubicacionId: a.ubicA, series: ['COMPARTIDA-1'] })
+      expect(primero.avisos ?? []).toEqual([])
+      const segundo = await registrarActivos(tecnico(), { skuId: otroSku, ubicacionId: a.ubicA, series: ['compartida-1'] })
+      expect(segundo.creados).toBe(1)
+      expect(segundo.avisos).toEqual([expect.stringMatching(/COMPARTIDA-1.*LAP-0001/)])
+    })
+
     it('la misma serie vale en otro SKU y en otra empresa', async () => {
       await expect(registrarActivos(contextoDe(beta, 'tecnico'), { skuId: b.skuSerie, ubicacionId: b.ubicA, series: ['SN-001'] })).resolves.toEqual({ creados: 1 })
     })

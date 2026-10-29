@@ -55,7 +55,7 @@ export async function ingresarCantidad(
 export async function ingresarSeries(
   tx: Tx, ctx: Contexto,
   p: { sku: Sku; ubicacion: Ubicacion; series: string[] | undefined; hayCantidad: boolean; origen: Origen },
-): Promise<{ creados: number }> {
+): Promise<{ creados: number; avisos: string[] }> {
   const { sku, ubicacion, series } = p
   if (p.hayCantidad && !(series && series.length > 0)) {
     throw validacion(`«${sku.codigo}» se controla por serie: escriba las series, una por equipo.`, { series: 'Escriba al menos una serie.' })
@@ -89,6 +89,12 @@ export async function ingresarSeries(
     throw duplicado(m, { series: m })
   }
 
+  // Una serie que ya existe en OTRO SKU de la empresa se acepta, con un aviso que dice dónde está (RF-INV-003).
+  const avisos: string[] = []
+  for (const o of await repo.seriesEnOtrosSkus(tx, ctx.empresaId, sku.id, [...vistas])) {
+    avisos.push(`La serie ${o.serie} ya existe en el artículo ${o.sku_codigo}. Se registró igual; revise que no sea un error de digitación.`)
+  }
+
   const ids: string[] = []
   for (const serie of limpias) {
     try {
@@ -108,5 +114,5 @@ export async function ingresarSeries(
       cambios: { sku: sku.codigo, serie: limpias[i], ubicacionId: ubicacion.id, ...p.origen },
     })
   }
-  return { creados: ids.length }
+  return { creados: ids.length, avisos }
 }

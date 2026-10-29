@@ -43,21 +43,24 @@ export const listarOrdenes = definirServicio<void, OrdenResumen[]>(
   async (ctx) => conEmpresa(ctx.empresaId, (tx) => repo.listar(tx, ctx.empresaId)),
 )
 
+/** Arma la orden completa con la transacción que ya está abierta (sin volver a pedir permisos de lectura). */
+async function leerOrden(tx: Tx, ctx: Contexto, id: string): Promise<Orden> {
+  const r = await repo.obtenerResumen(tx, ctx.empresaId, id)
+  if (!r) throw noEncontrado('La orden de compra')
+  const { preparadaPorUsuarioId: _usuario, ...resumen } = r
+  return {
+    ...resumen,
+    lineas: await repo.lineas(tx, ctx.empresaId, id),
+    aprobaciones: await repo.aprobaciones(tx, ctx.empresaId, id),
+    recepciones: await repo.recepciones(tx, ctx.empresaId, id),
+  }
+}
+
 export const obtenerOrden = definirServicio<string, Orden>(
   'compras.obtener', { permiso: 'ordenes_compra.ver' },
   async (ctx, id) => {
     if (!esId(id)) throw noEncontrado('La orden de compra')
-    return conEmpresa(ctx.empresaId, async (tx) => {
-      const r = await repo.obtenerResumen(tx, ctx.empresaId, id)
-      if (!r) throw noEncontrado('La orden de compra')
-      const { preparadaPorUsuarioId: _usuario, ...resumen } = r
-      return {
-        ...resumen,
-        lineas: await repo.lineas(tx, ctx.empresaId, id),
-        aprobaciones: await repo.aprobaciones(tx, ctx.empresaId, id),
-        recepciones: await repo.recepciones(tx, ctx.empresaId, id),
-      }
-    })
+    return conEmpresa(ctx.empresaId, (tx) => leerOrden(tx, ctx, id))
   },
 )
 
@@ -83,7 +86,7 @@ export const crearOrden = definirServicio<EntradaCrearOrden, Orden>(
     }
     if (Object.keys(errores).length > 0) throw validacion('Revise los datos de la orden.', errores)
 
-    const id = await conEmpresa(ctx.empresaId, async (tx) => {
+    return conEmpresa(ctx.empresaId, async (tx) => {
       const prov = await repo.proveedor(tx, ctx.empresaId, entrada.proveedorId)
       if (!prov) throw noEncontrado('El proveedor')
       if (!prov.activo) throw validacion('El proveedor está desactivado.', { proveedorId: 'Elija un proveedor activo.' })
@@ -100,9 +103,8 @@ export const crearOrden = definirServicio<EntradaCrearOrden, Orden>(
         accion: 'orden_compra.crear', entidadTipo: 'orden_compra', entidadId: ordenId,
         cambios: { numero, proveedorId: prov.id, lineas: entrada.lineas.length },
       })
-      return ordenId
+      return leerOrden(tx, ctx, ordenId)
     })
-    return obtenerOrden(ctx, id)
   },
 )
 
@@ -110,15 +112,15 @@ export const enviarAAprobacion = definirServicio<string, Orden>(
   'compras.enviar_a_aprobacion', { permiso: 'ordenes_compra.crear_editar' },
   async (ctx, id) => {
     if (!esId(id)) throw noEncontrado('La orden de compra')
-    await conEmpresa(ctx.empresaId, async (tx) => {
+    return conEmpresa(ctx.empresaId, async (tx) => {
       const orden = await ordenBloqueada(tx, ctx, id)
       if (orden.estado !== 'borrador') throw conflicto(`La orden ${orden.numero} está ${ETIQUETA_ESTADO[orden.estado]}: solo se envía a aprobación una orden en borrador.`)
       await repo.cambiarEstado(tx, ctx.empresaId, id, 'por_aprobar', true)
       await registrarAuditoria(tx, ctx, {
         accion: 'orden_compra.enviar_a_aprobacion', entidadTipo: 'orden_compra', entidadId: id, cambios: { numero: orden.numero },
       })
+      return leerOrden(tx, ctx, id)
     })
-    return obtenerOrden(ctx, id)
   },
 )
 
@@ -126,7 +128,7 @@ export const aprobarOrden = definirServicio<string, Orden>(
   'compras.aprobar', { permiso: 'ordenes_compra.aprobar' },
   async (ctx, id) => {
     if (!esId(id)) throw noEncontrado('La orden de compra')
-    await conEmpresa(ctx.empresaId, async (tx) => {
+    return conEmpresa(ctx.empresaId, async (tx) => {
       const orden = await ordenBloqueada(tx, ctx, id)
       // Separación de funciones: quien prepara no aprueba (la base lo impide también).
       if (orden.preparadaPorUsuarioId === ctx.usuarioId) {
@@ -142,8 +144,8 @@ export const aprobarOrden = definirServicio<string, Orden>(
       await registrarAuditoria(tx, ctx, {
         accion: 'orden_compra.aprobar', entidadTipo: 'orden_compra', entidadId: id, cambios: { numero: orden.numero },
       })
+      return leerOrden(tx, ctx, id)
     })
-    return obtenerOrden(ctx, id)
   },
 )
 
@@ -154,7 +156,7 @@ export const rechazarOrden = definirServicio<EntradaRechazarOrden, Orden>(
     const motivo = typeof entrada.motivo === 'string' ? entrada.motivo.trim() : ''
     if (motivo === '') throw validacion('Escriba el motivo del rechazo.', { motivo: 'El motivo es obligatorio.' })
     if (motivo.length > MAX_MOTIVO) throw validacion(`El motivo admite hasta ${MAX_MOTIVO} caracteres.`, { motivo: 'El motivo es demasiado largo.' })
-    await conEmpresa(ctx.empresaId, async (tx) => {
+    return conEmpresa(ctx.empresaId, async (tx) => {
       const orden = await ordenBloqueada(tx, ctx, entrada.id)
       if (orden.estado !== 'por_aprobar') throw conflicto(`La orden ${orden.numero} está ${ETIQUETA_ESTADO[orden.estado]}: solo se rechaza una orden que está por aprobar.`)
       await repo.insertarAprobacion(tx, ctx.empresaId, entrada.id, ctx.membresiaId, 'rechazada', motivo)
@@ -162,8 +164,8 @@ export const rechazarOrden = definirServicio<EntradaRechazarOrden, Orden>(
       await registrarAuditoria(tx, ctx, {
         accion: 'orden_compra.rechazar', entidadTipo: 'orden_compra', entidadId: entrada.id, cambios: { numero: orden.numero }, motivo,
       })
+      return leerOrden(tx, ctx, entrada.id)
     })
-    return obtenerOrden(ctx, entrada.id)
   },
 )
 
@@ -219,13 +221,15 @@ export const recibirOrden = definirServicio<EntradaRecibirOrden, ResultadoRecepc
       const numero = formatearCorrelativo('RCP', await siguienteContador(tx, 'doc:RCP'), 6)
       const recepcionId = await repo.insertarRecepcion(tx, ctx.empresaId, numero, orden.id, ubicacion.id, ctx.membresiaId)
       let activosCreados = 0
+      const avisos: string[] = []
       for (const r of recibidas) {
         const linea = porId.get(r.lineaId.toLowerCase())!
         const sku = { id: linea.skuId, codigo: linea.skuCodigo }
         if (linea.control === 'serie') {
           // Las series se registran en el inventario (si alguna ya existe, se dice cuál y no se guarda nada).
-          const { creados } = await ingresarSeries(tx, ctx, { sku, ubicacion, series: r.series, hayCantidad: true, origen: { recepcion: numero, orden: orden.numero } })
+          const { creados, avisos: avisosSerie } = await ingresarSeries(tx, ctx, { sku, ubicacion, series: r.series, hayCantidad: true, origen: { recepcion: numero, orden: orden.numero } })
           activosCreados += creados
+          avisos.push(...avisosSerie)
         } else {
           const { creados } = await ingresarCantidad(tx, ctx, { sku, ubicacion, cantidad: r.cantidad, series: undefined, origen: { recepcion: numero, orden: orden.numero } })
           activosCreados += creados
@@ -249,7 +253,7 @@ export const recibirOrden = definirServicio<EntradaRecibirOrden, ResultadoRecepc
         accion: 'orden_compra.recibir', entidadTipo: 'orden_compra', entidadId: orden.id,
         cambios: { numero: orden.numero, recepcion: numero, ubicacionId: ubicacion.id, lineas: recibidas.length, estado: estadoOrden },
       })
-      return { recepcionId, numero, activosCreados, estadoOrden }
+      return { recepcionId, numero, activosCreados, estadoOrden, ...(avisos.length > 0 ? { avisos } : {}) }
     })
   },
 )
