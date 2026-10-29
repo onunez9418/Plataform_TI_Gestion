@@ -32,6 +32,18 @@ Todo queda registrado en `docs/equipo/mesa-de-trabajo.md` (fecha, tema, particip
 
 **Alcance honesto.** Los agentes solo pueden escribirse mientras estén activos en la sesión; la Jefatura de Proyecto es quien los pone a trabajar y sostiene las rondas. Lo que debe sobrevivir entre sesiones se guarda en archivos, no en la memoria de la conversación.
 
+## Qué modelo usa cada tarea (para cuidar el consumo)
+
+La Jefatura de Proyecto elige el modelo al convocar a cada rol, según la tarea. Por defecto cada rol usa el modelo `sonnet` (lo fija su archivo en `.claude/agents/`).
+
+| Tipo de tarea | Modelo | Ejemplos |
+|---|---|---|
+| Mecánica, sin juicio: regenerar tablas con un script, contar, buscar citas rotas, ordenar o copiar archivos, revisar formato, pasar la revisión automática | `haiku` (más barato) | Calidad regenerando `criterios-por-etapa.md`; DevOps corriendo `revisar_documentos.py` |
+| Trabajo normal de cada rol: redactar requisitos, módulos y criterios, diseñar pantallas, escribir ADR y el plan de pruebas | `sonnet` (por defecto) | Analista, Diseñador, Ingeniero de Datos, DevOps, QA, Arquitecto |
+| Puertas de decisión donde un error cuesta caro: revisión de aislamiento entre empresas, llaves y permisos; veredicto final de una etapa; desacuerdos que el Gerente de TI debe cerrar | modelo más potente, solo en esa tarea | Seguridad en la revisión final de una etapa; Auditor Técnico en el visto bueno de la etapa |
+
+Reglas: (1) un agente con un contexto enorme no se reanuda sin necesidad; se lanza uno nuevo con un encargo corto que cite solo los archivos necesarios; (2) no se lanzan más de cuatro agentes a la vez (los límites de uso de la sesión se agotan); (3) si una tarea mecánica con `haiku` produce algo dudoso, se repite con `sonnet`, no se acepta a medias.
+
 ## Fuente de verdad
 
 - `docs/documento-funcional.md` define **qué** hace la plataforma. Es el contrato con el CEO.
