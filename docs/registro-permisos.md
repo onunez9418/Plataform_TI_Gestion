@@ -439,7 +439,7 @@ Los nombres de **eventos** que aparecen en los módulos (por ejemplo `acceso.inv
 ## 16. Pendientes del registro
 
 - **Sin pendientes de clasificación (D-068, D-074).** Los 16 permisos de D-068 son sensibles (35 a 51); PS-234 `texto.redactar` (D-074.3) hace 52. PS-08 y PS-154 no son sensibles. PS-232 es el monto límite y la moneda base; PS-233 son los conteos de seguridad de plataforma; PS-106 `garantias.recibir_avisos` queda confirmado y los otros `recibir_avisos` (PS-81, PS-226, PS-229) siguen el mismo patrón (Administrador y Jefatura TI todo, Técnico propio).
-- **Ola G (D-081 a D-084, 2026-10-29):** PS-235 a PS-246 agregadas con los valores finales de D-084.6. Sensibles nuevos: PS-240 (n.º 53) y PS-242 (n.º 54), total **54**. PS-237 `asistente.ejecutar_acciones` queda **no sensible de forma provisional**; Seguridad lo confirma en el paso 4 de la sección 14. Siguiente número libre: PS-248 (PS-247 se agregó después, por D-094; ver la sección 17).
+- **Ola G (D-081 a D-084, 2026-10-29):** PS-235 a PS-246 agregadas con los valores finales de D-084.6. Sensibles nuevos: PS-240 (n.º 53) y PS-242 (n.º 54), total **54**. PS-237 `asistente.ejecutar_acciones` queda **no sensible de forma provisional**; Seguridad lo confirma en el paso 4 de la sección 14. Siguiente número libre: el que sigue a PS-247 (PS-247 se agregó después, por D-094; ver la sección 17).
 - **PS-23 y PS-230:** `precios.ver` es solo para todo y sensible; lo propio (Técnico y Solicitante) pasó a `precios.ver_propios` (PS-230), no sensible.
 - Los valores de las celdas de los módulos de Fase 2 y 3 son una propuesta mía (supuesto S-22 del documento funcional) hasta que cada escuadrón confirme las suyas; se resuelven en la revisión del Auditor Técnico (plan de correcciones, sección 4).
 - El nombre técnico definitivo de cada fila lo fija el Arquitecto en el catálogo del código; este registro fija el nombre funcional y el identificador PS-nn.
@@ -449,7 +449,7 @@ Los nombres de **eventos** que aparecen en los módulos (por ejemplo `acceso.inv
 
 | Fecha | Versión | Cambio | Decisión |
 |---|---|---|---|
-| 2026-10-29 | 1.3 | Agregada la fila PS-247 `empresa.autorizar_soporte` (sensible n.º 55, v1 E1). Conteo: 247 filas, 244 vigentes, 55 sensibles. Siguiente libre: PS-248. Pendientes de Jefatura TI a Empleado y del aviso al crear, para el Gerente de TI | D-094 |
+| 2026-10-29 | 1.3 | Agregada la fila PS-247 `empresa.autorizar_soporte` (sensible n.º 55, v1 E1). Conteo: 247 filas, 244 vigentes, 55 sensibles. Siguiente número libre: el que sigue a PS-247. Pendientes de Jefatura TI a Empleado y del aviso al crear, para el Gerente de TI | D-094 |
 | 2026-10-29 | 1.2 | Filas PS-235 a PS-246 (ola G, Asistente de IA y Microsoft); PS-240 y PS-242 sensibles (total 54) | D-081 a D-084 |
 
 Versiones anteriores: ver la cabecera y la sección 16.
