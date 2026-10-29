@@ -150,10 +150,34 @@ def leer_nucleo():
 
 
 # ---------- módulos ----------
+# Módulos nuevos en redacción (2026-10-29). Solo entran a las cifras cuando el archivo existe y está completo.
+MODULOS_NUEVOS = {'microsoft-entra-intune': 'MSF', 'asistente-ia': 'ASI'}
+
+
+def estado_modulo_nuevo(nombre):
+    """'no existe' | 'incompleto' | 'completo'. Completo = sigla declarada, al menos una fila RF o RNF, una regla RN,
+    la sección de criterios de aceptación y al menos un criterio CA con la sigla del módulo."""
+    ruta = ROOT + f'/docs/modulos/{nombre}.md'
+    try:
+        t = leer(ruta)
+    except OSError:
+        return 'no existe'
+    sg = MODULOS_NUEVOS[nombre]
+    txt = '\n'.join(t)
+    ok = (nombre_sigla(ruta) == sg
+          and re.search(r'^\| (RF|RNF)-%s-\d+ \|' % sg, txt, re.M)
+          and re.search(r'^\| RN-%s-\d+ \|' % sg, txt, re.M)
+          and re.search(r'^#+ .*Criterios de aceptaci', txt, re.M | re.I)
+          and re.search(r'CA-%s-\d{2}' % sg, txt))
+    return 'completo' if ok else 'incompleto'
+
+
 def leer_modulos():
     reqs, cas, rns = {}, {}, {}
     for f in sorted(glob.glob(ROOT + '/docs/modulos/*.md')):
         nombre = f.split('/')[-1][:-3]
+        if nombre in MODULOS_NUEVOS and estado_modulo_nuevo(nombre) != 'completo':
+            continue
         t = leer(f)
         sigla = re.search(r'sigla ([A-Z]{3})|Sigla:\*\* ([A-Z]{3})|sigla de requisitos:\*\* ([A-Z]{3})', '\n'.join(t[:8]), re.I)
         for i, l in enumerate(t, 1):
