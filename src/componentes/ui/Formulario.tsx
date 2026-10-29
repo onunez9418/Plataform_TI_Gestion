@@ -11,6 +11,11 @@ type Ctx = {
 }
 const ContextoErrores = createContext<Ctx>({ errores: {}, poner: () => {} })
 
+/** Para componentes propios (por ejemplo la captura de series) que muestran el error de su campo. */
+export function useErrorDeCampo(nombre: string): string | undefined {
+  return useContext(ContextoErrores).errores[nombre]
+}
+
 type Props = {
   accion: (datos: FormData) => Promise<ResultadoAccion<unknown>>
   children: ReactNode
