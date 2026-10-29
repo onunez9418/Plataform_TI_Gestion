@@ -401,26 +401,28 @@ El tope **de usuario** no genera correo: se informa en el panel (CA-ASI-19).
 | Onboarding | Lectura de las tareas propias | Sin altas ni bajas |
 | Plataforma (PS-240) | Interruptor y topes globales | No ve datos del negocio |
 
-### 9.1 Qué cambia en el núcleo (lista; este documento no edita el núcleo)
+### 9.1 Qué cambia en el núcleo (estado al 29/10/2026)
+
+D-081.4 aprobó **solo cinco preparaciones**, que ya están en `docs/documento-funcional.md` (RF-AUD-020, RF-CAT-030, RF-DAT-018, RN-025 y la nota de RS-42). Lo demás de esta lista entra **con su módulo**, en la ola G; no se edita antes. Se marca el estado de cada punto.
 
 **`docs/documento-funcional.md`**
-1. §2, "No incluye en la v1": agregar "asistente de inteligencia artificial".
-2. §2.2 (tabla maestra) y §27 (módulos adicionales): filas "ASI-A, ASI-B, ASI-C" con "Fase 3, ola G (propuesta)". §26.1: fila de trazabilidad. §26.2: código de módulo `ASI`, pantallas `PAN-ASI-nn`, escalados `E-ASI-nn`, supuestos `S-ASI-nn`; no hay prefijo de documento nuevo.
-3. D-056.3 (tabla de fases y olas): agregar la ola G y su dependencia, por decisión del Gerente de TI.
-4. §16: RF-AUD-003 y RF-AUD-013 agregan la **marca de origen** "vía asistente" sin crear un cuarto tipo de autor; RF-AUD-005 aclara que las filas leídas por el asistente suman a la lectura masiva.
-5. §17: nuevos RS (a partir de RS-52) para: nada sensible llega a un asistente; texto de datos como contenido no confiable; salida sin enlaces ni imágenes automáticas; conexión controlada y clave del proveedor (análogo de RS-46 y RS-48); sin entrenar con datos.
-6. §17 RS-45 y D-054: filas nuevas en el cuadro único de topes (consultas por usuario, consumo por empresa).
-7. §18.1: las filas de la sección 6 de este módulo; §18.1 declaración de texto libre: agregar "preguntas al asistente"; RF-DAT-014 (aviso de privacidad): mencionar el proveedor de IA y el no entrenamiento.
-8. §19.1: RNF-004 se aplica expresamente al botón flotante; RNF-019 incluye los procesos del asistente.
-9. §20: nuevo requisito RF-UX para el botón flotante global; RF-UX-001 (el módulo apagado no aparece) y **RF-UX-004 / D-053 DS-01 ("Pedir ayuda", botón único)**: aclarar que sigue siendo el único botón para crear casos y que el asistente es otro control con otro nombre e icono.
-10. §21: el asistente no tiene regla de excepción propia (D-031.6); RN-002 y RN-011 se citan como base.
-11. §23 (pendientes): P-017 (tope mensual y global, dinero), P-018 (proveedor y modelo), P-019 (opinión legal sobre IA). §25: nuevo **D8** (dinero), nuevas preguntas **L-17 a L-19** (legal) y nuevo **I-05** (irreversible: lo enviado al proveedor no se puede retirar).
-12. D-037 filas 11 y 12 (plantilla Empleado y módulos activables): agregar PS-235/236 y el módulo `asistente-ia`.
-13. Si existe, la lista de tablas globales sin empresa (RN-001): agregar el estado global del asistente (Arquitecto y Seguridad).
+1. §2, "No incluye en la v1": agregar "asistente de inteligencia artificial". *Con el módulo (ola G).*
+2. §2.2 (tabla maestra) y §27 (módulos adicionales): filas "ASI-A, ASI-B, ASI-C" con "Fase 3, ola G". §26.1: fila de trazabilidad. §26.2: código de módulo `ASI`, pantallas `PAN-ASI-nn`, escalados `E-ASI-nn`, supuestos `S-ASI-nn`; no hay prefijo de documento nuevo. *Hecho: tabla maestra, §27 y §26.2.*
+3. D-056.3 (tabla de fases y olas): la ola G y su orden (D-081). *Hecho en `decisiones.md` y en la tabla maestra.*
+4. §16: la **marca de origen** "vía asistente" sin crear un cuarto tipo de autor (RF-AUD-020; RF-AUD-013 no cambia); RF-AUD-005 aclararía que las filas leídas por el asistente suman a la lectura masiva. *Marca: hecho (preparación a). Lectura masiva: con el módulo.*
+5. §17: **RS-52** (hecho: define los requisitos de seguridad de los servicios externos que reciben datos de la empresa: nada sensible llega a un asistente; texto de datos como contenido no confiable; salida sin enlaces ni imágenes automáticas; conexión controlada y clave del proveedor, análogo de RS-46 y RS-48; sin entrenar con datos).
+6. §17 RS-45 y D-054: filas nuevas en el cuadro único de topes (consultas por usuario, consumo por empresa). *Con el módulo.*
+7. §18.1: las filas de la sección 6 de este módulo; §18.1 declaración de texto libre: agregar "preguntas al asistente"; RF-DAT-014 (aviso de privacidad): mencionar el proveedor de IA y el no entrenamiento. *Con el módulo; Cumplimiento valida el aviso de transparencia y la declaración de texto libre.*
+8. §19.1: RNF-004 se aplica expresamente al botón flotante; RNF-019 incluye los procesos del asistente. *Con el módulo.*
+9. §20: nuevo requisito RF-UX para el botón flotante global; RF-UX-001 (el módulo apagado no aparece) y **RF-UX-004 / D-053 DS-01 ("Pedir ayuda", botón único)**: se aclara que sigue siendo el único camino para crear casos y que el asistente es otro control con otro nombre e icono (D-082). *Hecho: nota en RF-UX-004 y en el glosario «Solicitud».*
+10. §21: el asistente no tiene regla de excepción propia (D-031.6); RN-002 y RN-011 se citan como base. *Con el módulo.*
+11. §23 (pendientes): **P-020** (tope mensual global y por empresa, dinero), **P-021** (proveedor y modelo), **P-022** (opinión legal sobre IA); P-017 a P-019 siguen siendo los de congelación, informe de compra y borrador de recepción (D-084.2). §25: **D8** (dinero), **L-17 a L-19** (legal) e **I-05** (irreversible: lo enviado al proveedor no se puede retirar). *Hecho.*
+12. D-037 filas 11 y 12 (plantilla Empleado y módulos activables): PS-235/236 y el módulo `asistente-ia` (D-083). *Hecho en `decisiones.md`; el registro tiene las filas.*
+13. Si existe, la lista de tablas globales sin empresa (RN-001): agregar el estado global del asistente (Arquitecto y Seguridad). *Con el módulo.*
 
 **Otros archivos**
-- `docs/registro-permisos.md`: nueva sección "Asistente de IA" con PS-235 a PS-240 y su columna Emp; resumen por rol (sección 13); equivalencias (sección 15); recuento de sensibles (PS-240 sería el 53.º si se aprueba); una **lista única** de "acciones que nunca hace un programa o un asistente" que `integraciones-api` y este módulo citen en lugar de repetir.
-- `docs/equipo/decisiones.md`: decisión nueva (D-081 sugerida) que registre el cambio de alcance pedido por el CEO, la fase propuesta, los topes y el tratamiento de la pregunta de DS-01.
+- `docs/registro-permisos.md`: **hecho.** Secciones 12A (PS-235 a PS-239), 3 (PS-240) y 12C (**lista única** de acciones que nunca hace un programa o un asistente, que `integraciones-api` y este módulo citan en lugar de repetir); resumen por rol, equivalencias y recuento de sensibles (54).
+- `docs/equipo/decisiones.md`: D-081 a D-086 ya registradas.
 - `docs/equipo/riesgos.md`: riesgos nuevos (instrucciones ocultas, fuga al proveedor, costo sin control, respuestas inventadas, dependencia de un proveedor, confusión entre dos botones de ayuda).
 - `docs/arquitectura/`: ADR nuevo (capa de acceso al proveedor de IA y elección), y notas en ADR-11 (marca de origen), ADR-16 (filas del limitador), ADR-19 (el asistente no exporta), ADR-20 (sin textos en registros técnicos) y ADR-07 (clave del proveedor).
 - `docs/trazabilidad.md` y `docs/calidad/` (QA): filas de RF, RN y CA de este módulo y los casos IO como suite fija; `docs/prototipo/` (Diseñador): muestras de PAN-ASI-01 a 06.
