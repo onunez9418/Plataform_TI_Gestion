@@ -16,6 +16,7 @@ const REGLAS = [
   { nombre: 'Token de Slack', re: /\bxox[baprs]-[A-Za-z0-9-]{10,}\b/ },
   {
     nombre: 'Dirección de base de datos con contraseña real',
+    soloFueraDePruebas: true, // los archivos de prueba usan direcciones inventadas a propósito (casos de la guarda de MODO_LOCAL)
     re: /\bpostgres(?:ql)?:\/\/[^:\s/@'"`]+:([^@\s'"`]{6,})@/,
     valor: 1,
   },
@@ -67,6 +68,7 @@ for (const ruta of archivos()) {
   }
   texto.split('\n').forEach((linea, i) => {
     for (const regla of REGLAS) {
+      if (regla.soloFueraDePruebas && /(^|\/)pruebas\/|\.test\.tsx?$/.test(ruta)) continue;
       const m = regla.re.exec(linea);
       if (!m) continue;
       const valor = regla.valor ? m[regla.valor] : m[0];
