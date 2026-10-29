@@ -8,7 +8,7 @@ import { SelectorEmpresa } from './SelectorEmpresa'
 type Empresa = { slug: string; nombre: string }
 
 /** Barra superior. Con `empresaActiva` muestra el selector de empresa y el menú móvil. */
-export function Barra({ empresas, empresaActiva, conMenu }: { empresas: Empresa[]; empresaActiva?: string; conMenu?: boolean }) {
+export function Barra({ empresas, empresaActiva, conMenu, usuarioNombre }: { empresas: Empresa[]; empresaActiva?: string; conMenu?: boolean; usuarioNombre?: string }) {
   return (
     <header className="barra" data-testid="barra-superior">
       {conMenu ? <BotonMenuMovil /> : null}
@@ -18,6 +18,7 @@ export function Barra({ empresas, empresaActiva, conMenu }: { empresas: Empresa[
       </Link>
       {empresaActiva ? <SelectorEmpresa empresas={empresas} activa={empresaActiva} /> : null}
       <div className="barra-fin">
+        {usuarioNombre ? <span className="chica" data-testid="usuario-actual">{usuarioNombre}</span> : null}
         <CambiarTema />
         <form action={salir}>
           <button type="submit" className="btn-barra" data-testid="cerrar-sesion">

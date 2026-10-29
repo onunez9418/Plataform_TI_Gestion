@@ -60,7 +60,7 @@ export function CabeceraPantalla({ titulo, descripcion, acciones }: { titulo: st
 export function Crear({ titulo, children, testid, abierto }: { titulo: string; children: ReactNode; testid?: string; abierto?: boolean }) {
   return (
     <details className="crear" open={abierto} data-testid={testid}>
-      <summary>{titulo}</summary>
+      <summary data-testid={testid ? `${testid}-abrir` : undefined}>{titulo}</summary>
       <div className="cuerpo-crear">{children}</div>
     </details>
   )

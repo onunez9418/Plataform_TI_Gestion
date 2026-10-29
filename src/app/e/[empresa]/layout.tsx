@@ -43,7 +43,7 @@ export default async function LayoutEmpresa({ children, params }: { children: Re
 
   return (
     <>
-      <Barra empresas={empresas} empresaActiva={empresa} conMenu />
+      <Barra empresas={empresas} empresaActiva={empresa} conMenu usuarioNombre={cargado.ctx.usuarioNombre} />
       <div className="cuerpo">
         <Menu empresa={empresa} permisos={Array.from(cargado.ctx.permisos)} />
         <main id="contenido" className="principal" tabIndex={-1}>

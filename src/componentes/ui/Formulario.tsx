@@ -136,12 +136,13 @@ type CampoProps = {
 export function Campo({ nombre, etiqueta, tipo = 'text', requerido, ayuda, opciones, vacio, valorInicial, testid, placeholder, filas, paso, alCambiar }: CampoProps) {
   const { errores, poner } = useContext(ContextoErrores)
   const error = errores[nombre]
-  const id = `campo-${nombre}`
+  // El identificador sale del testid cuando lo hay, para que dos formularios en la misma pantalla no repitan ids.
+  const id = testid ?? `campo-${nombre}`
   const idError = `${id}-error`
   const comunes = {
     id,
     name: nombre,
-    'data-testid': testid ?? id,
+    'data-testid': id,
     'data-requerido': requerido ? '1' : undefined,
     'aria-invalid': error ? true : undefined,
     'aria-describedby': error ? idError : undefined,
@@ -197,7 +198,7 @@ export function Campo({ nombre, etiqueta, tipo = 'text', requerido, ayuda, opcio
       {control}
       {ayuda ? <div className="ayuda">{ayuda}</div> : null}
       {error ? (
-        <div className="error" id={idError} role="alert" data-testid={`${testid ?? id}-error`}>
+        <div className="error" id={idError} role="alert" data-testid={`${id}-error`}>
           {error}
         </div>
       ) : null}
