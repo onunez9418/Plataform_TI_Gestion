@@ -1,11 +1,12 @@
 # Hoja para el CEO
 
-**Fecha:** 2026-10-29 (suma sus dos módulos nuevos) · **De:** Gerente de TI, por medio de la Jefatura de Proyecto
+**Fecha:** 2026-10-29 (suma sus dos módulos nuevos y el servicio extra del panel de administración) · **De:** Gerente de TI, por medio de la Jefatura de Proyecto
 El equipo decidió lo técnico y lo de producto. A usted solo le llegan cuatro cosas: dinero, temas legales, decisiones que no se pueden deshacer y datos que solo usted tiene. **Sus dos módulos nuevos** (asistente de IA con botón flotante y conexión con Microsoft Entra ID e Intune) quedan para después de la versión 1, en una ola nueva (G); nada de lo de abajo sobre ellos hay que resolverlo hoy.
 
 ## A. Dinero que debe aprobar
 - **Servicio de envío de correos.** La gente entra con un enlace al correo; sin este servicio nadie entra. Gasto mensual bajo. **Aprobar.**
 - **Servidores, base de datos y copias.** Al principio, planes gratuitos o muy baratos (solo datos inventados). Antes de datos reales, planes de pago con copias. **Aprobar el arranque ya; el plan de uso real cuando se acerque, con precios comprobados.**
+  - **Nuevo (2026-10-29): un servicio más para el panel de quienes administran la plataforma.** Lo ponemos aparte, con su propia dirección, para que un fallo en la parte que usan las empresas no alcance sus accesos de administración. **Puede sumar un gasto mensual pequeño**; no damos cifra hasta comprobar precios. Lo recomendamos igual por seguridad. No es una pregunta aparte: va incluido en la aprobación de los servidores. Los archivos que exportan las empresas se guardan unas horas dentro de la misma base de datos, así que **no suman gasto** (los archivos adjuntos siguen para el cierre de la Etapa 4).
 - **Pequeños gastos de seguridad:** copia en otro proveedor, vigilancia de errores, gestor de claves y llaves físicas para dos o tres administradores. **Aprobar.**
 - **Dominio:** usar un subdominio de uno que ya tenga; comprar otro solo si no existe.
 - **Abogado de protección de datos** (sección B). **Contratar** antes de datos reales; debe poder atender una consulta urgente el mismo día.

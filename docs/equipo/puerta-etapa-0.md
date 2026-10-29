@@ -1,11 +1,32 @@
 # Puerta de salida de la Etapa 0: estado real
 
-**Autor:** Gerente de TI · **Fecha:** 2026-10-26, después de la ronda 4 de revisión (reemplaza el estado del 2026-10-25)
-**Base:** las 13 condiciones de D-064; `docs/revision-cruzada/ronda4-auditor-cumplimiento.md` y `ronda4-especialista-seguridad.md`; las decisiones D-065 a D-080 de `docs/equipo/decisiones.md`. No existe todavía ronda 4 de QA ni del Auditor Técnico.
+**Autor:** Gerente de TI · **Fecha:** 2026-10-29 (actualiza la edición del 2026-10-26, que sigue abajo como detalle de cada condición)
+**Base:** las 13 condiciones de D-064; `docs/revision-cruzada/ronda4-*.md` y `ronda5-seguridad-adr.md`; `docs/arquitectura/revision-datos.md`; las decisiones D-065 a D-101 de `docs/equipo/decisiones.md`; `docs/calidad/criterios-por-etapa.md`.
 **Regla:** no se escribe código de funcionalidades hasta que se cumplan las 13 condiciones. La opinión legal **no** es parte de la puerta (se exige antes de cargar datos reales).
-**Cómo se midió:** cada estado tiene una prueba que se puede abrir (archivo, informe, configuración) o dice qué falta. Lo que otros roles están escribiendo hoy se marca **en curso** y se verificó al final de esta edición. Estados: **cumplida / parcial / pendiente / depende del CEO**.
+**Cómo se midió:** cada estado tiene una prueba que se puede abrir o dice qué falta. Estados: **cumplida / parcial / pendiente / depende del CEO**.
 
-## 1. Resumen
+## 0. Estado de hoy (2026-10-29)
+
+**Aún no hay código y no se autoriza.** Las 13 condiciones siguen **0 cumplidas del todo**; el estado detallado de la edición anterior (secciones 1 a 6) sigue vigente salvo lo que cambia aquí.
+
+| Qué | Estado hoy | Prueba | Qué falta por condición |
+|---|---|---|---|
+| **Criterios de aceptación** (condición 12) | **603 criterios**: 145 del núcleo y 458 de 19 módulos (eran 451 el 2026-10-26). Se ejecutan por etapa: 1 en la Etapa 0, 54 empiezan en la Etapa 1, 58 en la 2 | `docs/calidad/criterios-por-etapa.md` (resumen, checkpoint 627d5ac) | QA debe sumar las pruebas nuevas de los ADR y recalcular la matriz con **55 sensibles** (PS-247, D-094); sigue faltando el entorno de pruebas de DevOps |
+| **Decisiones técnicas T-1 a T-14** (condición 4) | **ADR 01 a 20 redactados y revisados** por Seguridad (30 hallazgos: 4 altos, 21 medios, 5 bajos, 0 críticos; ningún ADR rechazado) y por Datos (8 bloqueantes, ninguno rechazado). Se sumaron ADR-21 (Microsoft), 22 (asistente) y 23 (acciones de plataforma y congelación). El Arquitecto incorporó ambas revisiones | `docs/arquitectura/README.md`; `ronda5-seguridad-adr.md`; `revision-datos.md` | Todos siguen **«Propuesto»**. Las 15 propuestas pendientes quedaron **ratificadas** en D-087 a D-101. Para pasar a «Aceptado»: (1) **Seguridad** confirma la variante de D-091 (valor del correo en el trabajador, hallazgo Alto), la precisión de D-088 y que sus condiciones quedaron escritas (A2-01, A2-02); (2) **Datos** confirma lo mismo (A2-03); (3) **Cumplimiento** confirma D-092 y la lectura de D-022 en D-098 (A2-18); (4) **Seguridad y QA** revisan los controles de ADR-22 antes de aceptar ese ADR |
+| **Prototipo técnico** (condición 4) | Alcance ampliado a **4 días y 1 de reserva** (D-099); criterios de éxito y fracaso escritos | `docs/arquitectura/prototipo-tecnico.md` | Sin candidato nombrado por DevOps no puede empezar (A2-05); el informe `prototipo-resultados.md` aún no existe |
+| **Módulos ASI y MSF** (ola G) | **v0.2**, ya ajustados a D-081 a D-086 (el CEO los pidió el 2026-10-29; los Analistas los entregaron como v0.1). Alcance aceptado; **visto bueno técnico del texto en revisión**: Seguridad, Cumplimiento, QA, Auditor Técnico, Diseñador. ADR-21 y ADR-22 ratificados como diseño (D-100, D-101) | `docs/modulos/asistente-ia.md`, `docs/modulos/microsoft-entra-intune.md` | Ajustes del Analista (A2-12, A2-13). **No frenan la puerta ni la v1**: se construyen después de la Etapa 7 (D-081) |
+| **Documento funcional** (condición 1) | Sigue en v0.3; **no pasa a v1.0** hasta aplicar el Plan de aplicación 2 (RF-AUD-013, RF-AUD-016, RF-ACC, RF-PLA-001, RF-PLA-005, PS-247) | `docs/equipo/plan-aplicacion.md`, «Plan de aplicación 2» | A2-06 a A2-10; luego Auditor Técnico y QA verifican y yo apruebo (AN-16) |
+| **Entornos y costos** (condiciones 5, 6, 10, 11) | Sin cambio: plan de DevOps v3 sin precios verificados; ramas protegidas y ensayos pendientes | ver secciones 2 y 6 | DevOps: A2-05 y A2-17. **Dinero nuevo posible:** tercer servicio para la consola (D-089), ya en `hoja-ceo.md` |
+
+**Mi visto bueno técnico (2026-10-29):** sigue **condicionado**. Doy visto bueno a las 15 decisiones D-087 a D-101 como decisiones técnicas, con las condiciones escritas en cada una. **No autorizo código.** Sin cambios sobre lo que sigue autorizado: prototipo técnico en planes gratuitos con datos inventados, revisión automática, ramas protegidas y ediciones de documentos.
+
+## Pendiente del CEO (hoy; detalle en `docs/equipo/hoja-ceo.md`)
+
+Solo dinero, legal, irreversible o lo que solo él tiene: (1) **aprobar el arranque de costo mínimo** y el servicio de correo (más el posible costo del tercer servicio de la consola), cuando DevOps traiga precios con fecha y enlace; (2) **contratar al abogado** (25 preguntas; 8 antes de datos reales); (3) **documentos reales** (orden de compra, orden de servicio, Excel) con nombres reemplazados: condición 8, sigue sin llegar (riesgo #6); (4) **cuentas a nombre de la empresa, persona con suplente, dos administradores de plataforma, dos custodios de llaves** y un representante por empresa; (5) país, impuestos y cifra de uso; (6) la demo del prototipo de pantallas. **Para después de la v1:** topes y proveedor del asistente, licencias de Microsoft. No hay nada nuevo de producto ni de ingeniería para el CEO.
+
+---
+
+## 1. Resumen (edición del 2026-10-26, detalle vigente)
 
 De las 13 condiciones: **0 cumplidas del todo**, **7 parciales** (1, 2, 3, 7, 10, 12, 13), **4 pendientes** (4, 5, 6, 11) y **2 que dependen del CEO** (8, 9). Desde ayer avanzaron mucho la 13 (el procedimiento de incidente existe y tiene mi visto bueno como borrador), la 7 (prototipo publicado), la 10 (revisión automática de documentos escrita, estrategia de llaves aprobada) y la 2 (17 módulos en v0.3). **Nada de lo pendiente es un defecto de diseño**: son verificaciones, pruebas, la ejecución de ensayos y decisiones de contratación.
 

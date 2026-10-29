@@ -551,6 +551,8 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Recomendó:** Arquitecto (H-ARQ-02, 13), Ingeniero de Datos (H-DAT-01), Seguridad (H-SEG-02, 09, 17), QA (criterios del prototipo). Unanimidad.
 - **Qué cambia:** Reemplaza D-025. Documento: RS-10 y RN-001 (las tablas globales como excepción listada). Un ADR de aislamiento en `docs/arquitectura/`.
 
+> **Nota (2026-10-29):** D-039.3 se enmienda por D-087 (sexto rol `app_soporte`; seis roles de base) y D-039.4 por D-093 (lista cerrada de 18 tablas globales; `invitacion` y `clave_api` pasan a empresa).
+
 ### D-040 · Un dueño por concepto: ubicación, centro de costo, área, proveedor y código externo
 - **Pregunta:** El mismo concepto se define dos veces con reglas distintas (ubicación, centro de costo, área, proveedor, código externo). ¿Quién es el dueño?
 - **Decisión:**
@@ -574,6 +576,8 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Motivo:** Si el autor fuera la cuenta global, los registros de una empresa apuntarían a una fila sin empresa, quedarían fuera de las reglas por fila y no se podría anonimizar sin afectar a otras empresas.
 - **Recomendó:** Ingeniero de Datos (H-DAT-03), Arquitecto (H-ARQ-03, tabla aparte compatible con D-030), Seguridad (RS-06, RS-08), Auditor Técnico, QA (H-QA-06 sobre autor "sistema").
 - **Qué cambia:** núcleo §5, §8, RF-AUD-013 (S-28 **cambiado**, ver D-057), RF-PER; todos los módulos que dicen "Usuario" como responsable (PRV, GAR, ONB) pasan a "Persona con vínculo opcional a membresía".
+
+> **Nota (2026-10-29):** D-041 se enmienda por D-094 (cuarto tipo de autor `plataforma`, solo lecturas de soporte; la marca de origen `asistente` no es un tipo de autor).
 
 ### D-042 · Número de línea: campo de la unidad hasta que exista el módulo de líneas
 - **Pregunta:** El núcleo da "número de línea" como campo del celular; el módulo de líneas dice que la línea es una entidad. ¿Quién manda?
@@ -669,6 +673,8 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Recomendó:** Seguridad (H-SEG-01, 03, 06), Arquitecto (H-ARQ-05), Cumplimiento (H-CUM-16), DevOps (plan, 5 y 6.4), Ingeniero de Datos (H-DAT-05).
 - **Qué cambia:** núcleo RF-ACC-013/019, RF-ROL-002/008, RF-PLA-001 a 005; nueva sección "Gestión de secretos". **Costo menor:** llaves físicas y gestor de secretos (ver D2).
 
+> **Nota (2026-10-29):** D-048.2 se enmienda por D-088 (la verificación reciente solo se renueva con autenticador o llave); D-048.5 se complementa con D-089 (consola en un tercer servicio).
+
 ### D-049 · Prefijos de identificadores, vocabulario y estados
 - **Pregunta:** Los prefijos chocan (`D-` decisión y devolución; `P-` pendiente, pantalla y Persona; `E-` escalado y acta; `REC-` reclamo y recepción) y "baja", "anular", "cancelar" significan cosas distintas en cada módulo.
 - **Decisión:**
@@ -722,6 +728,8 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Recomendó:** DevOps (plan, 4), Arquitecto (H-ARQ-03, 25), Seguridad (H-SEG-22), Cumplimiento (H-CUM-04), Ingeniero de Datos (H-DAT-02).
 - **Qué cambia:** núcleo RF-DAT-005, RNF-014, CA-053; D-029. **Costo:** almacenamiento externo con bloqueo (ver D2).
 
+> **Nota (2026-10-29):** D-052.2 se enmienda por D-092 (la copia externa no lleva IP ni motivo; resumen con llave). D-052 se apoya en D-095 para la congelación.
+
 ### D-053 · Diseño: un botón "Pedir ayuda" y las 12 decisiones DS-01 a DS-12
 - **Pregunta:** El Diseñador pidió confirmar S-31 y 12 decisiones de sistema de diseño (DS-01 a DS-12).
 - **Decisión:**
@@ -760,6 +768,8 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Recomendó:** Seguridad (H-SEG-11, 14, 15, 20, 24; tabla de topes de su sección 5), QA (H-QA-06, 14), Arquitecto (H-ARQ-20, 21).
 - **Qué cambia:** núcleo RF-ACC-006/017, RF-AUD-005/010, CA-002/006; `notificaciones` RN-NOT-008 a 011; `portal-autoservicio` RN-POR-016, S-POR-06.
 
+> **Nota (2026-10-29):** D-054 se enmienda por D-096 (el correo del intento fallido se guarda como huella).
+
 ### D-055 · Las 14 decisiones técnicas T-1 a T-14 y el prototipo ampliado a 3 o 4 días
 - **Pregunta:** El Arquitecto pide aprobar T-1 a T-14 antes de la Etapa 1.
 - **Decisión:**
@@ -785,6 +795,8 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Motivo:** Son las piezas comunes que evitan 17 diseños distintos (veredicto del Arquitecto).
 - **Recomendó:** Arquitecto (T-1 a T-14, H-ARQ-13), QA (criterios del prototipo), Ingeniero de Datos (H-DAT-14, 18, 19, 22, 23), DevOps (elección de proveedor antes del prototipo).
 - **Qué cambia:** ADR en `docs/arquitectura/` (uno por T); riesgo #18 (3 a 4 días).
+
+> **Nota (2026-10-29):** D-055 se enmienda por D-097 (PostgreSQL 15 o superior, T-4) y D-099 (prototipo de 4 días y 1 de reserva).
 
 ### D-056 · Orden de construcción y fase de cada módulo
 - **Pregunta:** ¿Cuándo se construye cada módulo y qué se prepara en el núcleo?
@@ -929,6 +941,8 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Recomendó:** Auditor de Cumplimiento (H-CUM-05 a 19), Seguridad (H-SEG-10, 16), QA (H-QA-13), Ingeniero de Datos (H-DAT-12, 24).
 - **Qué cambia:** núcleo §16, §18, §19, RF-ACC-021, RF-PER; `personas-ubicaciones`, `entregas-devoluciones`, `onboarding-offboarding`, `notificaciones`, `mesa-de-ayuda`, `portal-autoservicio`, `reportes-tableros`.
 
+> **Nota (2026-10-29):** D-061.1 se precisa por D-098 (descarga única atada al solicitante) y D-061.4 por D-091 (el valor de los correos de acceso nace en el trabajador).
+
 ### D-062 · CMDB delgada, vigencias calculadas y calendario de empresa compartido
 - **Pregunta:** La CMDB copia todo el inventario (más de 100.000 filas); los estados "Vencido" los cambia un proceso nocturno; hay tres calendarios y dos tablas de avisos.
 - **Decisión:**
@@ -1002,6 +1016,8 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Motivo:** Son correcciones que piden los revisores y no cambian dinero, plazos legales ni alcance. S-35 evita dos fechas de garantía distintas en el núcleo y el módulo.
 - **Recomendó:** Auditor de Cumplimiento (R-05), Seguridad (H-SEG-26 a 28), QA (H-QA-25), Auditor Técnico (N-AUD-02, 05), Analista.
 - **Qué cambia:** núcleo §21 (tabla de actos sin la marca de supuesto), §23 (S-32 a S-37 como "Confirmado"), RF-PLA-001/009/011/012/013, RF-INV-008, RS-51; registro PS-05, PS-51, PS-68, PS-231; `garantias-mantenimiento.md` (RN-GAR-003).
+
+> **Nota (2026-10-29):** D-065 S-34(e) se enmienda por D-090 (huella en dos niveles).
 
 ### D-066 · Mapa de casillas del interruptor único de excepciones (completa D-043)
 - **Pregunta:** Las ocho casillas de D-043 no nombran dominios, líneas, certificados ni garantías; el escuadrón B propuso «contratos».
@@ -1102,6 +1118,8 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Motivo:** Con una sola persona el "control dual" depende de un contacto que ella misma registró.
 - **Recomendó:** Seguridad (H-SEG-26, 27, 31, 32 c).
 - **Qué cambia:** núcleo RF-PLA-001/009/013, CA-068; registro (PS-233); D-039 (punto 10).
+
+> **Nota (2026-10-29):** D-073.4 se precisa por D-091; la lectura de soporte (D-073) usa `app_soporte` (D-087) y el permiso PS-247 `empresa.autorizar_soporte` (D-094).
 
 ### D-074 · Permisos pendientes del registro: PS-106, PS-232, PS-233 y PS-234
 - **Pregunta:** ¿Qué permisos faltan o están pendientes en el registro?
@@ -1403,7 +1421,7 @@ Todo lo anterior está decidido por el Gerente de TI. Solo esto llega al CEO, y 
 
 ### Dinero (le pedimos que apruebe o rechace)
 1. **Servicio de envío de correos** (invitaciones, enlaces de acceso, avisos de aprobación). Indispensable porque el acceso es por correo. Gasto mensual bajo y recurrente. **Recomendación: aprobar** un plan dimensionado para las Etapas 1 a 5, con tope por empresa y alerta al 80 % (RN-NOT-012); revisarlo al activar el portal y la mesa de ayuda. Más un segundo proveedor configurado de reserva (puede ser gratuito).
-2. **Alojamiento, base de datos y respaldos (D2).** Dos fases: **A** (Etapas 0 a 3, datos inventados) con planes gratuitos o los más baratos, sin datos reales; **B** (antes de cualquier uso con datos reales) con base de datos de pago con respaldos, alojamiento de pago y almacenamiento externo con bloqueo. **Cambio por D-038:** el alojamiento debe ser de ejecución continua (un servicio de contenedores) para correr también el proceso de trabajos en segundo plano; DevOps trae la comparación con precios verificados antes del prototipo. Orden de magnitud **sin verificar** para producción: 50 a 150 USD al mes en total para una o pocas empresas.
+2. **Alojamiento, base de datos y respaldos (D2).** Dos fases: **A** (Etapas 0 a 3, datos inventados) con planes gratuitos o los más baratos, sin datos reales; **B** (antes de cualquier uso con datos reales) con base de datos de pago con respaldos, alojamiento de pago y almacenamiento externo con bloqueo. **Cambio por D-038:** el alojamiento debe ser de ejecución continua (un servicio de contenedores) para correr también el proceso de trabajos en segundo plano; DevOps trae la comparación con precios verificados antes del prototipo. Orden de magnitud **sin verificar** para producción: 50 a 150 USD al mes en total para una o pocas empresas. **Se suma (D-089):** la consola de la plataforma en un tercer servicio puede añadir un gasto mensual pequeño, sin cifra hasta que DevOps verifique precios.
 3. **Copia externa inmutable de la auditoría, respaldos en otro proveedor y vigilancia** (D-052, plan de DevOps): almacenamiento externo de bajo costo y un servicio de vigilancia de errores y disponibilidad (gratuito al principio).
 4. **Gestor de secretos y llaves de seguridad físicas** para las pocas cuentas de la plataforma (D-048): costo muy bajo, único o mensual según el gestor elegido.
 5. **Dominio:** usar un subdominio de uno que la empresa ya tenga; si no existe, comprar uno (gasto anual).

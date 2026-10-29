@@ -68,3 +68,56 @@
 2. **Después de AN-08:** QA recalcula la matriz; Auditor Técnico re-corre guiones.
 3. **Cuando DevOps nombre candidato:** Arquitecto y Datos inician el prototipo técnico (planes gratuitos, datos inventados).
 4. **Cierre:** AN-16 (v1.0), cuatro vistos buenos escritos, demo del prototipo de pantallas al CEO y actualización de `puerta-etapa-0.md`.
+
+---
+
+# Plan de aplicación 2: decisiones D-087 a D-101 (revisión de los ADR)
+
+**Autor:** Gerente de TI · **Fecha:** 2026-10-29
+**Origen:** las 15 decisiones técnicas de `decisiones.md` (D-087 a D-101) y la sección «Decisiones D-0xx por registrar» de `docs/arquitectura/README.md`. **No se edita el núcleo ni los módulos desde aquí**: cada fila la hace su responsable y la verifica otro rol (regla: nadie cierra su propio trabajo).
+**Prioridad:** **P1** = antes de abrir la Etapa 1 o de que el prototipo técnico dé resultados válidos; **P2** = antes de la etapa que lo usa; **P3** = antes de la ola G.
+**Orden:** las olas se despachan en el orden numerado; lo de una misma ola va en paralelo (máximo cuatro agentes a la vez).
+
+## Ola 1: confirmaciones que desbloquean (P1, hoy)
+
+| # | Responsable | Qué hace | Decisión | Verifica |
+|---|---|---|---|---|
+| A2-01 | **Seguridad** | Confirma por escrito los cinco puntos de D-091 (quién puede ejecutar `enlace_ingreso_emitir`; reintento con solo el último correo; falla tras emitir; prueba RS-51 con cola y registro de envíos; invitación y acceso de emergencia desde la consola) | D-091 | Gerente de TI |
+| A2-02 | **Seguridad** | Confirma que sus condiciones de la ronda 5 quedaron incorporadas en los ADR 01 a 20 y 23 (segunda lectura corta; en especial H-SEG-33, 38 a 44, 54 a 62), la lista cerrada de 18 tablas globales (D-093) y la precisión sobre códigos de recuperación (D-088) | D-087 a D-090, D-093, D-095 | Gerente de TI |
+| A2-03 | **Datos** | Confirma que sus condiciones (D03-1 a D18-10) quedaron incorporadas, en especial las ocho bloqueantes; prepara macros y migraciones de ejemplo para el prototipo (clave `(empresa_id, id)`, funciones de normalización) | D-093, D-097 | Arquitecto |
+| A2-04 | **Seguridad y DevOps** | Cierran el procedimiento de alta de nuevas personas de plataforma y sus llaves físicas (dos custodios; H-SEG-51) y eligen las librerías de segundo factor y de llave física (Etapa 1) | D-088, D-089 | Gerente de TI |
+| A2-05 | **DevOps** | Nombra el **proveedor candidato** (con precios con fecha y enlace): debe ofrecer PostgreSQL 15 o superior, tres servicios de ejecución continua más dos tareas programadas (o procesos de corta vida), agrupador de conexiones en modo transacción y conexión directa. Informa el **costo del tercer servicio** de la consola (D-089) para la hoja del CEO | D-089, D-097, D-099 | Gerente de TI |
+
+## Ola 2: documentos que dependen de las decisiones (P1 a P2)
+
+| # | Responsable | Qué edita | Decisión | Prio. | Verifica |
+|---|---|---|---|---|---|
+| A2-06 | **Analista** | `documento-funcional.md` RF-AUD-013: cuatro tipos de autor (los que fija ADR-11, el cuarto es `plataforma`) y marca de origen `asistente` que no es autor | D-094, D-101 | P1 | Auditor Técnico |
+| A2-07 | **Analista** | RF-AUD-016: «omite a las empresas» pasa a «pospone la purga de la partición mientras haya una congelación vigente» | D-095 | P1 | Cumplimiento |
+| A2-08 | **Analista** | RF-ACC (verificación reciente solo con segundo factor, 10 minutos; el enlace no la renueva) y texto de D-048.2 | D-088 | P1 | Seguridad |
+| A2-09 | **Analista** | RF-PLA-001: ingreso de la consola solo con llave física, segunda llave de respaldo, vencimientos de 15 minutos y 4 horas; RF-PLA-005 y los RS nuevos (cabeceras, cookies `__Host-`, asistente) | D-089, D-094 | P1 | Seguridad |
+| A2-10 | **Analista** | `registro-permisos.md`: fila **PS-247 `empresa.autorizar_soporte`** (sensible n.º 55; 2F, verificación reciente y registrar al revocar; Adm = T; Plat = «-»; Cuándo = Etapa 1; siguiente libre PS-248). Cita en RF-EMP/RF-PLA de la lectura de soporte | D-094 | P1 | Seguridad, QA |
+| A2-11 | **Analista** | §18.1 y aviso de privacidad (con Cumplimiento): respaldos que conservan la exportación cifrada, motivo por valor, datos de Microsoft, envío al proveedor de IA y «lo que la persona teclee puede llevar nombres» (D-101) | D-098, D-100, D-101 | P2 | Cumplimiento |
+| A2-12 | **Analista (MSF)** | `microsoft-entra-intune.md`: PS-236/PS-239 sueltos pasan a PS-242/PS-245; RF-MSF-004 (el vencimiento del secreto lo escribe quien conecta); sección 6 (tabla global `directorio_microsoft` con huella nivel A); RN-MSF-022 (el Arquitecto señala nivel B: **verificar contra ADR-09**, que usa nivel A para el directorio, y que Seguridad confirme si un identificador de cuenta tiene entropía suficiente); RN-MSF-042 (barrera de la mitad); periodicidades iniciales (equipos 6 h, cuentas 24 h) | D-100 | P3 | Auditor Técnico, Seguridad |
+| A2-13 | **Analista (ASI)** | `asistente-ia.md`: RN-ASI-013 (el estado de la conversación lo guarda el navegador), 9.1 punto 13 (sin tabla global nueva, se usa `limite_plataforma`), RF-AUD-013 (columna `origen`), D-086.3 con la precisión de D-101, D-086.4 (la casilla de texto libre la levanta el Administrador de plataforma con PS-240) | D-101 | P3 | Auditor Técnico, Cumplimiento |
+| A2-14 | **Analista** | Preguntas abiertas de Datos: decimales de cantidades (D06-7) y unicidad del IMEI entre categorías (D17); `personas-ubicaciones.md` e `indices-claves-naturales.md`: gancho «al anonimizar» y mapa de columnas personales | D-097 | P2 | Ingeniero de Datos |
+| A2-15 | **Escuadrón F** | `integraciones-api.md` y `presupuesto-costos.md`: texto de D-077 (pendiente desde el 2026-10-26; es condición 2 de la puerta) | D-077 | P1 | Auditor Técnico |
+| A2-16 | **Diseñador** | Aviso de «código del autenticador cada 10 minutos» en acciones delicadas; pantalla de ingreso a la consola con llave física; caso de lectura de soporte en el prototipo | D-088, D-089, D-094 | P2 | Gerente de TI |
+
+## Ola 3: DevOps, Cumplimiento, QA y Arquitecto
+
+| # | Responsable | Qué hace | Decisión | Prio. | Verifica |
+|---|---|---|---|---|---|
+| A2-17 | **DevOps** | `plan-entornos-y-costos.md`: escenario A de 6.7 reescrito (códigos de recuperación y claves de API no dependen de la maestra); variables por proceso (tabla de ADR-01) y su prueba de arranque; tareas programadas de purga y de copia externa; versión de PostgreSQL; permiso `pg_read_all_stats` (lo pide el Arquitecto; DevOps confirma si hace falta); cabeceras de seguridad en el despliegue y su prueba en integración continua; límites de conexión por rol (seis roles); archivo de versiones de llave retiradas hasta que expire el último respaldo (H-SEG-47); anotar el riesgo residual de los registros de acceso del alojamiento (H-SEG-49) | D-087, D-089, D-090, D-097 | P1 | QA, Seguridad |
+| A2-18 | **Cumplimiento** | Aviso de privacidad y §18.1 (con A2-11); copia externa sin IP ni motivo (confirma D-092); canal de entrega de derechos de datos (H-SEG-57: propuesta de partida del Arquitecto, el paso no se construye); quién ejerce los papeles de la congelación; procedimiento de incidente: una filtración de la maestra deja expuestos los respaldos cifrados con ella hasta que expiren; confirma que la exportación en la base no es «almacén de archivos» de D-022 | D-092, D-095, D-098 | P1 | Gerente de TI |
+| A2-19 | **QA** | Actualiza `criterios-por-etapa.md` (hoy 603; subirá) y el plan con: los cinco casos de H-SEG-41; los 13 de H2; H12; RS-51 ampliada (cola con fallidos, varias representaciones, registro de envíos); cookies y cabeceras por ruta; el enlace no renueva la verificación; descarga única; congelación; correo fallido solo como huella; prueba del catálogo (todo permiso con control `R` es sensible); recalcula la matriz con **55 sensibles**; casos de D-100 (permiso de escritura detectado, barrera de la mitad) y de D-101 (proveedor malicioso IO-01 a IO-14, diez conversaciones contra el tope) | D-087 a D-101 | P1 (núcleo) / P3 (ola G) | Auditor Técnico |
+| A2-20 | **Arquitecto** | Con las confirmaciones A2-01 a A2-03, pasa cada ADR a «Aceptado» (registro de «Cambios» con fecha y decisión, no en silencio); ajusta «cinco roles» a «seis» donde quede; escribe el **informe del prototipo** (`prototipo-resultados.md`) y marca como «futuro» las citas que aún no existen | D-087 a D-101 | P1 | Gerente de TI |
+| A2-21 | **Auditor Técnico** | Corre sus guiones tras A2-06 a A2-15 (citas, permisos, 55 sensibles, PS-247 sin choques) y comprueba que ningún ADR contradiga una decisión vigente | D-094 | P1 | Gerente de TI |
+
+## Orden de despacho
+
+1. **Hoy, en paralelo (máximo cuatro):** Seguridad (A2-01, A2-02), DevOps (A2-05, luego A2-17), Analista (A2-06 a A2-10), Datos (A2-03).
+2. **Después de A2-10:** QA recalcula la matriz (A2-19); Auditor Técnico corre guiones (A2-21).
+3. **Cuando DevOps nombre candidato (A2-05) y Seguridad confirme A2-01:** el Arquitecto y Datos inician el prototipo de 4 días y 1 de reserva (D-099).
+4. **En paralelo con lo anterior:** Cumplimiento (A2-18) y Escuadrón F (A2-15).
+5. **Después, sin urgencia:** A2-11 a A2-14 y A2-16; A2-12 y A2-13 (módulos de la ola G) solo antes de las revisiones de esos módulos.
