@@ -162,6 +162,31 @@ Se despacha en el orden numerado; lo de una misma fila va en paralelo (máximo c
 **Fecha:** 2026-10-29 · **Origen:** pedido del CEO y `docs/operaciones/piloto-gratuito.md` (ratificado con correcciones en D-115). Máximo cuatro agentes a la vez. **Regla que manda sobre todo lo de abajo:** solo datos de ejemplo; D-064 no se debilita.
 **Hoy no hay código.** Lo que se puede hacer ahora es A2-30 a A2-33 y los documentos. Render, Resend y las pruebas con clientes esperan a que exista una aplicación mínima con ingreso (Etapa 1) y a la demo aprobada por el CEO.
 
+### Estado de la Ola 5 tras D-117 (2026-10-29): sin oferta, demo ni acceso de clientes hasta el hito «100 %»
+
+**Por decisión del CEO** («aún no vamos a ofrecer nada hasta tener todo al 100 %») el piloto pasa a **entorno interno** (equipo y CEO, datos de ejemplo). Lo que solo servía para ofrecer queda **en pausa** y se retoma en «antes de ofrecer» (D-117.7); nada se borra. Orden de construcción en `hoja-de-ruta.md`.
+
+| # | Estado | Qué queda y qué se pausa |
+|---|---|---|
+| A2-30 DevOps (verificar cifras y términos) | **Continúa**, alcance reducido | Cifras, planes y límites para uso interno. La cláusula de «uso comercial con clientes» se anota pero **ya no bloquea** (antes de ofrecer) |
+| A2-31 Jefatura (correo de la empresa, suplente y dominio) | **Continúa** | Correo con suplente: ahora (condición 9). **Dominio: pausa**, salvo lo que pida la condición 6 de la puerta (prueba de entrega de correo) |
+| A2-32 Primera prueba en Neon | **Continúa** | Es parte del prototipo técnico (condición 4) |
+| A2-33 Seguridad (variables y guardas del modo piloto) | **Continúa** | El entorno interno usa el modo piloto |
+| A2-34 Render y A2-35 GitHub Actions | **Continúan** (en la Etapa 1) | Entorno interno; consola aparte si las horas lo permiten, si no se avisa al CEO (dinero) |
+| A2-36 Resend | **Parcial** | Modo captura y la matriz de entrega de la condición 6: siguen. **Envío a clientes con dominio: pausa** |
+| A2-37 Reconstrucción y medición | **Parcial** | Reconstrucción cronometrada con el generador: sigue (vuelve la regla de D-115.6iii). **Medición de una semana para varias demos: pausa** |
+| A2-38 Arquitecto (sección «Modo piloto» en ADR-01 y ADR-02) | **Continúa** | Sin cambio |
+| A2-39 Analista (RF «Modo piloto») | **Continúa** | Franja y aceptación se reutilizan en la demostración. Sin cambio de reglas de negocio |
+| A2-40 Diseñador | **Parcial** | Franja y aviso «solo datos de ejemplo»: siguen. **Pantalla «despertando»: pausa** (nadie de fuera espera) |
+| A2-41 QA (criterios del modo piloto) | **Continúa** | Sin cambio |
+| A2-42 Cumplimiento (acuerdo de prueba para el abogado) | **Pausa** | Se retoma en «antes de ofrecer», junto con las preguntas del abogado sobre el plazo de guarda. El borrador puede quedar escrito, sin gastar honorarios |
+| Pedidos de D-116: Analista (RF/RN/CA de demostración) | **Parcial** | Lo mínimo de la Etapa 1 (tipo de empresa, límites, vigencia, bloqueo, franja) entra ya en el documento; el paquete queda como «Fase 3, tramo de cierre» |
+| Pedidos de D-116: Arquitecto (enmienda de ADR-01) y Diseñador (franja y pantalla de vencimiento) | **Continúan** | Son de la Etapa 1 |
+| Pedidos de D-116: Seguridad, QA, Cumplimiento, DevOps y Backend (límites contra abuso, topes de filas, aviso a invitados, consumo gratuito con varias demos) | **Pausa** | Tramo de cierre; el máximo de demostraciones a la vez se mide antes de ofrecer |
+| ADR-25 (instalaciones dedicadas y SQL Server) | **Pausa comercial; revisión en P3** | Sigue «Propuesto». Su revisión por Seguridad, DevOps, Datos y Cumplimiento va antes del tramo de cierre. Que entre o no al 100 % lo decide el CEO |
+
+Pendiente fuera de `docs/equipo/`: DevOps añade a `docs/operaciones/piloto-gratuito.md` la nota «uso interno hasta el 100 %, ver D-117»; el Arquitecto marca ADR-25 como «en pausa comercial (D-117)».
+
 ### Qué debe hacer DevOps: condiciones, orden y criterio de éxito
 
 **Condiciones (todas, antes de crear nada):** (1) cada cifra y cada cláusula de uso comercial verificadas en la página oficial (lista en la sección 6 de `piloto-gratuito.md`), con fecha y enlace; si un servicio prohíbe probar con clientes de otra empresa, ese servicio se reemplaza por el plan B o C antes de usarlo con clientes (puede seguir en uso interno); (2) cuentas con el correo de la empresa, suplente y segundo factor, nunca personales (D-064.9); (3) **si un servicio pide tarjeta o cobra por exceso en vez de detenerse, se para y se avisa a la Jefatura de Proyecto** (dinero del CEO); (4) secretos solo en las variables secretas de Render y de GitHub, nunca en el repositorio, con la lista de variables del modo piloto aprobada por Seguridad (D-064.10); (5) el piloto es un entorno aparte que no se reutiliza como producción; (6) se registra la región elegida de cada servicio.
@@ -193,4 +218,4 @@ Se despacha en el orden numerado; lo de una misma fila va en paralelo (máximo c
 | A2-41 | **QA** | Criterios del modo piloto (guarda en producción, franja y aceptación, chat apagado, ruta de latido sin reloj, reconstrucción) y el criterio de la primera prueba | D-115 | P2 | Auditor Técnico |
 | A2-42 | **Cumplimiento** | Borrador de una página del acuerdo de prueba para el abogado (prototipo, datos de ejemplo, sin garantía, nombre y correo del que prueba con su permiso, reconstrucción y borrado, proveedores en otros países); revisa la franja | D-115 | P1 | Gerente de TI |
 
-**Qué pasa si el CEO no entrega algo:** sin correo de la empresa no se crean cuentas (A2-31 bloquea A2-32 y siguientes salvo la verificación); sin dominio, el piloto es solo interno; sin acuerdo de prueba revisado por abogado, no hay prueba con clientes externos; sin crédito, el chat sigue apagado y el formulario de «Pedir ayuda» funciona normal.
+**Qué pasa si el CEO no entrega algo (actualizado por D-117):** sin correo de la empresa no se crean cuentas (A2-31 bloquea A2-32 y siguientes salvo la verificación); el entorno es **siempre interno** hasta el 100 %, con o sin dominio; el acuerdo de prueba y el crédito del chat ya no frenan nada hasta «antes de ofrecer» (el chat sigue apagado y «Pedir ayuda» funciona normal).

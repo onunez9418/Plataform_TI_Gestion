@@ -5,3 +5,4 @@
 # Este archivo lo revisa su dueño en .github/CODEOWNERS; no es un lugar para esconder errores.
 .github/workflows/nocturna.yml   # DevOps, al empezar la Etapa 4 (plan de operaciones 3.9)
 docs/arquitectura/prototipo-resultados.md   # Arquitecto, al terminar el prototipo técnico
+docs/operaciones/piloto-verificacion.md
