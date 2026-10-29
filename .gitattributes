@@ -1,0 +1,12 @@
+# Finales de línea fijos: Windows no debe cambiar los archivos que se ejecutan dentro de Linux (Docker).
+* text=auto eol=lf
+*.sh text eol=lf
+*.mjs text eol=lf
+*.sql text eol=lf
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.jpg binary
+*.ico binary
