@@ -219,3 +219,20 @@ Pendiente fuera de `docs/equipo/`: DevOps añade a `docs/operaciones/piloto-grat
 | A2-42 | **Cumplimiento** | Borrador de una página del acuerdo de prueba para el abogado (prototipo, datos de ejemplo, sin garantía, nombre y correo del que prueba con su permiso, reconstrucción y borrado, proveedores en otros países); revisa la franja | D-115 | P1 | Gerente de TI |
 
 **Qué pasa si el CEO no entrega algo (actualizado por D-117):** sin correo de la empresa no se crean cuentas (A2-31 bloquea A2-32 y siguientes salvo la verificación); el entorno es **siempre interno** hasta el 100 %, con o sin dominio; el acuerdo de prueba y el crédito del chat ya no frenan nada hasta «antes de ofrecer» (el chat sigue apagado y «Pedir ayuda» funciona normal).
+
+## Ola 6: construir la plataforma sin abogado y Versión local 0.1 (D-118 y D-119)
+
+**Estado (2026-10-29):** decisiones registradas; plan escrito en `plan-etapa-1.md`. Lo legal (L-01 a L-19, L-MSF) **queda diferido** («antes de datos reales / antes de ofrecer»); no se pierde.
+
+| # | Responsable | Qué hace | Decisión | Prio. | Verifica | Estado |
+|---|---|---|---|---|---|---|
+| A3-01 | **Ingeniero de Datos** | Paquete DAT-1: migraciones, seguridad por fila forzada, `conEmpresa`, `siguiente`, semilla de dos empresas | D-119 | P0 (hoy) | QA, Seguridad | Por lanzar |
+| A3-02 | **Backend A y B** | Paquetes BAK-1 a BAK-3: acceso, permisos, auditoría, catálogos, categorías, SKU, inventario, (compras si alcanza) | D-119 | P0 (hoy) | QA, Auditor Técnico | Por lanzar |
+| A3-03 | **Frontend** | Paquetes FRO-1 y FRO-2: pantallas del guion de la demo | D-119 | P0 (hoy) | QA | Por lanzar |
+| A3-04 | **DevOps** | Paquete DEV-1: `docker-compose`, `iniciar.bat`, guía `LEEME-PROBAR.md`, arranque desde cero | D-119 | P0 (hoy) | QA | Por lanzar |
+| A3-05 | **QA** | Pruebas de aislamiento, de permisos, de interruptores `legal.*` apagados, de la guarda del modo local y el guion de la demo | D-118, D-119 | P0 (hoy) | Gerente de TI | Por lanzar |
+| A3-06 | **Seguridad** (modelo potente) | Revisión de aislamiento, modo local, sesión y secretos | D-119 | P0 (hoy) | Gerente de TI | Por lanzar |
+| A3-07 | **Auditor Técnico y de Cumplimiento** | Revisión corta: trazabilidad; interruptores legales apagados y sin datos reales | D-118, D-119 | P0 (hoy) | Gerente de TI | Por lanzar |
+| A3-08 | **Arquitecto** | Marcar los ADR usados como «Aceptado para el corte local»; nota de `prisma/` en ADR-14 | D-119 | P1 | Gerente de TI | Por pedir |
+| A3-09 | **Analista** | Interruptores `legal.*` y los dos hitos en el documento funcional | D-118 | P2 | Auditor Técnico | Por pedir |
+| A3-10 | **Arquitecto e Ingeniero de Datos, mide QA** | Prototipo técnico de ADR completo (H1 a H12, local con agrupador de conexiones), justo después de la demo | D-119.4 | P0 (mañana) | Seguridad | Pendiente |
