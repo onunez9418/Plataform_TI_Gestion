@@ -36,10 +36,9 @@ export type ErrorNegocio = {
 /** Lo que devuelven las acciones del Frontend. */
 export type Resultado<T> = { ok: true; datos: T } | { ok: false; error: ErrorNegocio }
 
-/**
- * Puerta mínima a la base dentro de una transacción. La implementa `nucleo/aislamiento`
- * (Ingeniero de Datos). SQL siempre con marcadores $1, $2...; nunca concatenado.
- */
-export interface Tx {
-  consultar<T = Record<string, unknown>>(sql: string, valores?: readonly unknown[]): Promise<T[]>
-}
+/** Transacción abierta por `conEmpresa` / `conGlobal` (la define nucleo/aislamiento, del Ingeniero de Datos). */
+export type { Tx } from './aislamiento'
+
+const FORMATO_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+/** ¿Tiene forma de identificador (uuid)? Se comprueba antes de enviarlo a la base. */
+export const esId = (valor: unknown): valor is string => typeof valor === 'string' && FORMATO_ID.test(valor)

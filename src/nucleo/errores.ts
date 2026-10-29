@@ -58,3 +58,13 @@ export async function comoResultado<T>(fn: () => Promise<T>): Promise<Resultado<
     }
   }
 }
+
+/** ¿Es el error de «valor repetido» de la base (23505)? Opcionalmente, ¿de un índice cuyo nombre contiene `parteDelNombre`? */
+export function esViolacionUnica(e: unknown, parteDelNombre?: string): boolean {
+  if (typeof e !== 'object' || e === null) return false
+  const { codigo, code, restriccion, constraint } = e as Record<string, unknown>
+  if ((codigo ?? code) !== '23505') return false
+  if (!parteDelNombre) return true
+  const nombre = String(restriccion ?? constraint ?? '')
+  return nombre === '' || nombre.includes(parteDelNombre)
+}
