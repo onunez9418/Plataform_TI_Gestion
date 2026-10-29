@@ -93,7 +93,7 @@ describe('correlativo del código automático', () => {
     const propios = [3, 4, 5, 6].map((n) => crearSku(admin, { categoriaId: cat.id, nombre: `Propio ${n}`, control: 'serie', codigo: `MEZ-000${n}`, valores: {} }))
     const autos = Array.from({ length: 12 }, (_, i) => crearSku(contextoDe(A, 'tecnico'), { categoriaId: cat.id, nombre: `Auto ${i}`, control: 'serie', valores: {} }))
     const resultados = await Promise.allSettled([...propios, ...autos])
-    const fallos = resultados.filter((r) => r.status === 'rechazada' || r.status === 'rejected')
+    const fallos = resultados.filter((r) => r.status === 'rejected')
     expect(fallos.map((f) => (f as PromiseRejectedResult).reason?.mensaje)).toEqual([])
     const codigos = resultados.map((r) => (r as PromiseFulfilledResult<{ codigo: string }>).value.codigo)
     expect(new Set(codigos).size).toBe(codigos.length)
