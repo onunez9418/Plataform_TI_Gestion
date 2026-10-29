@@ -11,7 +11,7 @@ export function SelectorEmpresa({ empresas, activa }: { empresas: Empresa[]; act
     if (nuevo === activa) return
     // Se conserva la sección: /e/alfa/inventario -> /e/beta/inventario (los detalles por id no existen en la otra empresa).
     const partes = ruta.split('/')
-    const seccion = partes[3] && !partes[4] ? `/${partes[3]}` : ''
+    const seccion = partes[3] === 'catalogos' && partes[4] ? `/catalogos/${partes[4]}` : partes[3] && !partes[4] ? `/${partes[3]}` : ''
     router.push(`/e/${nuevo}${seccion}`)
   }
   return (
