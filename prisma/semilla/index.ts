@@ -156,7 +156,7 @@ async function sembrarEmpresa(d: DatosEmpresa): Promise<void> {
       [empresa.id, activos[0], personas[0], tecnico, 'Entrega inicial de ejemplo'],
     )
     await tx.ejecutar("UPDATE activo SET estado = 'asignado' WHERE empresa_id = $1 AND id = $2", [empresa.id, activos[0]])
-    await auditar(tx, tecnico, 'activo.asignar', 'activo', activos[0]!, { persona: d.personas[0]!.nombre, serie: d.series[0] })
+    await auditar(tx, tecnico, 'activo.asignar', 'activo', activos[0]!, { sku: codigoLap, serie: d.series[0], personaId: personas[0] })
 
     registro(`${empresa.nombre}: roles, usuarios, catálogos, categorías, SKU (${codigoLap}, ${codigoMon}), inventario y auditoría cargados.`)
   })
