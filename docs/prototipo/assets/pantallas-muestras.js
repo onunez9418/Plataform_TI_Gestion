@@ -8,19 +8,21 @@ const muestra = (fase) => aviso('info', `Muestra de un módulo de la ${fase}`, '
 
 /* ---------- PR-37 Mesa de ayuda ---------- */
 const CASOS = [
-  { n: 'AYU-000118', asunto: 'Mi laptop no enciende', quien: 'PRS-0009', prio: 'P2 Alta', est: 'En atención', resp: 'Marta Quispe', sla1: ['Cumplido', 'exito'], sla2: ['En riesgo: faltan 40 min', 'atencion'] },
+  { n: 'AYU-000118', equipo: 'A3', asunto: 'Mi laptop no enciende', quien: 'PRS-0009', prio: 'P2 Alta', est: 'En atención', resp: 'Marta Quispe', sla1: ['Cumplido', 'exito'], sla2: ['En riesgo: faltan 40 min', 'atencion'] },
   { n: 'AYU-000121', asunto: 'Instalar Office en un equipo nuevo', quien: 'PRS-0005', prio: 'P3 Media', est: 'Nuevo', resp: '', sla1: ['En plazo', 'exito'], sla2: ['En plazo', 'exito'] },
-  { n: 'AYU-000104', asunto: 'Mi laptop se pone lenta', quien: 'PRS-0007', prio: 'P3 Media', est: 'En atención', resp: 'Rosa Medina', sla1: ['Cumplido', 'exito'], sla2: ['En plazo', 'exito'] },
+  { n: 'AYU-000104', equipo: 'A1', asunto: 'Mi laptop se pone lenta', quien: 'PRS-0007', prio: 'P3 Media', est: 'En atención', resp: 'Rosa Medina', sla1: ['Cumplido', 'exito'], sla2: ['En plazo', 'exito'] },
   { n: 'AYU-000098', asunto: 'Sin acceso al correo', quien: 'PRS-0011', prio: 'P1 Crítica', est: 'Resuelto', resp: 'Marta Quispe', sla1: ['Cumplido', 'exito'], sla2: ['Cumplido', 'exito'] },
   { n: 'AYU-000091', asunto: 'Solicitud de un mouse', quien: 'PRS-0007', prio: 'P4 Baja', est: 'Cerrado', resp: 'Julián Rojas', sla1: ['Cumplido', 'exito'], sla2: ['Cumplido', 'exito'] }
 ];
 ruta('casos', { id: 'PR-37', prio: 'B', fase: 'Fase 2', titulo: 'Mesa de ayuda', acceso: 'ayuda.caso_ver', render(q) {
   const propio = valor('ayuda.caso_ver') === 'P';
-  const datos = CASOS.filter((c) => !propio || c.quien === R().ref);
+  const soloAsi = q.origen === 'asistente';
+  const datos = CASOS.filter((c) => (!propio || c.quien === R().ref) && (!c.emp || c.emp === APP.empresa) && (!soloAsi || c.origen === 'asistente'));
   const sel = CASOS.find((c) => c.n === (q.id || 'AYU-000118'));
   const interno = puede('ayuda.caso_ver_interno');
   return `${cabeceraPantalla('Mesa de ayuda', btnAcc({ texto: 'Pedir ayuda', href: '#/pedir-ayuda', clase: 'primario', icono: 'ayuda', perm: 'ayuda.caso_crear' }) + '<span class="id-pantalla">PR-37 · muestra</span>')}${muestra('Fase 2')}
-  ${tabla({ filas: datos, vacio: { titulo: 'No tiene casos', texto: 'Use «Pedir ayuda».', icono: 'ayuda' }, cols: [{ t: 'Caso', k: (c) => `<a class="cod" href="#/casos?id=${c.n}">${c.n}</a>` }, { t: 'Asunto', k: (c) => esc(c.asunto) }, { t: 'Persona atendida', k: (c) => nombrePersona(c.quien) }, { t: 'Prioridad', k: (c) => c.prio }, { t: 'Estado', k: (c) => chip(c.est) }, { t: 'Primera respuesta', k: (c) => chipCalc(c.sla1[0], c.sla1[1]) }, { t: 'Resolución', k: (c) => chipCalc(c.sla2[0], c.sla2[1]) }] })}
+  <div class="barra-herr"><div class="conmutador" role="group" aria-label="Filtrar por origen"><a class="btn" style="border:0;border-radius:0" href="#/casos" ${soloAsi ? '' : 'aria-current="true"'}>Todos</a><a class="btn" style="border:0;border-radius:0" href="#/casos?origen=asistente" ${soloAsi ? 'aria-current="true"' : ''}>Armados con el asistente</a></div></div>
+  ${tabla({ filas: datos, vacio: { titulo: 'No hay casos con este filtro', texto: 'Cambie el filtro o use «Pedir ayuda».', icono: 'ayuda' }, cols: [{ t: 'Caso', k: (c) => `<a class="cod" href="${c.origen === 'asistente' ? '#/caso-asistente?id=' : '#/casos?id='}${c.n}">${c.n}</a>` }, { t: 'Asunto', k: (c) => esc(c.asunto) }, { t: 'Origen', k: (c) => c.origen === 'asistente' ? chipEtq('Armado con el asistente') : '<span class="suave">Formulario normal</span>' }, { t: 'Persona atendida', k: (c) => nombrePersona(c.quien) }, { t: 'Prioridad', k: (c) => c.prio }, { t: 'Estado', k: (c) => chip(c.est) }, { t: 'Primera respuesta', k: (c) => chipCalc(c.sla1[0], c.sla1[1]) }, { t: 'Resolución', k: (c) => chipCalc(c.sla2[0], c.sla2[1]) }] })}
   ${sel && (!propio || sel.quien === R().ref) ? `<section class="tarjeta" style="margin-top:16px"><h2>${sel.n} · ${esc(sel.asunto)}</h2><div class="fila">${chip(sel.est)} ${chipCalc(sel.sla1[0], sel.sla1[1])} ${chipCalc(sel.sla2[0], sel.sla2[1])}</div>
     <ol class="linea" style="margin-top:12px"><li><strong>Caso creado</strong><div class="cuando">25/10/2026 08:20 · ${nombrePersona(sel.quien)}</div></li><li><strong>Respuesta del equipo (visible para la persona)</strong><div class="cuando">25/10/2026 08:45 · Marta Quispe · «Estamos revisando su equipo.»</div></li>${interno ? '<li><strong>Nota interna (solo el equipo de TI)</strong><div class="cuando">25/10/2026 09:02 · Marta Quispe · «Posible falla de la fuente; probar con otro cargador.»</div></li>' : ''}</ol>
     ${interno ? '' : '<p class="suave chica">Las notas internas del equipo de TI no se muestran a su rol.</p>'}<p class="suave chica">El reloj de los plazos corre solo en horario de atención y se detiene mientras se espera a la persona.</p></section>` : ''}`;

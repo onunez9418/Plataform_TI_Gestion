@@ -1,8 +1,8 @@
 # Registro único de permisos
 
-**Versión:** 1.3 (parte de la v0.3 del documento funcional; incorpora D-065 a D-076, las filas PS-235 a PS-246 de D-081 a D-084 y la fila PS-247 de D-094) · **Fecha:** 2026-10-29 · **Autor:** Analista de Negocio
-**Base:** D-004 (reescrita), D-035, D-036, D-037, D-043, D-048, D-049, D-058, D-060, D-061, D-065, D-066, D-068, D-073, D-074, D-081, D-083, D-084, D-086, D-094. Sustituye a la matriz de la sección 7.3 de la v0.2.
-**Conteo (2026-10-29):** 247 filas PS (3 retiradas: PS-84, PS-85 y PS-196; **244 permisos vigentes**), de ellas **55 sensibles** (54 anteriores más PS-247, que es el 55.º; PS-240 y PS-242 son el 53.º y el 54.º). Las 12 filas de ola G (PS-235 a PS-246) son de Fase 3 y no cambian la matriz de la v1 (71 filas de empresa por 7 plantillas más 7 de plataforma). PS-247 sí es de la v1 (E1): cambia la matriz de empresa a 72 filas y QA recalcula sus celdas (D-094).
+**Versión:** 1.4 (parte de la v0.3 del documento funcional; incorpora D-065 a D-076, las filas PS-235 a PS-246 de D-081 a D-084, la fila PS-247 de D-094 con sus valores finales de D-113 y el cambio de PS-240 a «dos personas» de D-111) · **Fecha:** 2026-10-29 · **Autor:** Analista de Negocio
+**Base:** D-004 (reescrita), D-035, D-036, D-037, D-043, D-048, D-049, D-058, D-060, D-061, D-065, D-066, D-068, D-073, D-074, D-081, D-083, D-084, D-086, D-094, D-111, D-113. Sustituye a la matriz de la sección 7.3 de la v0.2.
+**Conteo (2026-10-29):** 247 filas PS (3 retiradas: PS-84, PS-85 y PS-196; **244 permisos vigentes**), de ellas **55 sensibles** (54 anteriores más PS-247, que es el 55.º; PS-240 y PS-242 son el 53.º y el 54.º). Las 12 filas de ola G (PS-235 a PS-246) son de Fase 3 y no cambian la matriz de la v1 (71 filas de empresa por 7 plantillas más 7 de plataforma). PS-247 sí es de la v1 (E1): cambia la matriz de empresa a **72 filas por 7 plantillas más 7 de plataforma = 511 celdas, todas definidas y ninguna pendiente** (D-113.4). Las 6 celdas de PS-247 de Jefatura TI a Empleado valen «-» y se prueban como «rechazado»; la columna de plataforma de la sección 4 vale «-» en todas sus filas.
 **Quién aprueba cambios:** el Gerente de TI. Los módulos **no inventan permisos**: piden una fila nueva (D-036.1). Fuera de este registro no hay permiso.
 
 ## 1. Cómo se lee
@@ -10,7 +10,7 @@
 - **PS-nn:** identificador funcional fijo. No se reutiliza ni se renumera.
 - **Nombre técnico:** `modulo.accion`, minúsculas, un solo punto, guion bajo dentro de cada parte (D-036.2). Ejemplos: `ordenes_compra.aprobar`, `datos_personales.ver`. No existen variantes como `datos-personales.ver`, `personas.ver_datos`, `exportar.personas` ni `ayuda.caso.crear` (con dos puntos). El catálogo vive en el código y alimenta la pantalla de roles.
 - **Sensible (S):** el permiso exige **segunda verificación obligatoria** a quien lo tenga (D-048.1), sin importar el nombre del rol. Los sensibles se otorgan por separado.
-- **Controles** (D-036.5): **R** reautenticación reciente (10 minutos) · **2F** segundo factor · **A** cada uso queda en la auditoría · **T** tope por hora · **No** nunca sobre lo propio (separación de funciones: lo aplica el servicio único de doble control, D-043).
+- **Controles** (D-036.5): **R** reautenticación reciente (10 minutos) · **2F** segundo factor · **A** cada uso queda en la auditoría · **T** tope por hora · **No** nunca sobre lo propio (separación de funciones: lo aplica el servicio único de doble control, D-043) · **Dos personas** (solo PS-240, D-111.2): el acto lo piden y confirman dos personas de plataforma distintas, con aviso previo, espera de 24 horas y veto.
 - **Motivo:** en los permisos marcados "(motivo)" el sistema pide siempre un motivo escrito (RN-008).
 - **Cuándo:** `v1 E<n>` = núcleo, Etapa n · `Fase 2` / `Fase 3` = después de la Etapa 7, según D-056.
 - **Valores por defecto por rol:** **T** = todo · **P** = solo lo propio · **-** = no puede. Siete plantillas de rol más el Administrador de plataforma.
@@ -64,33 +64,35 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-05 | `plataforma.acceso_emergencia` | Emitir un acceso excepcional de un solo uso si el correo falla, tras verificar la identidad por otro medio; exige a una segunda persona de plataforma o al contacto autorizado confirmado de la empresa; avisa a todos los administradores de la empresa; un uso por empresa y por semana (D-065 S-34, D-073.1) | S | todo | 2F R A No | v1 E1 | T |
 | PS-06 | `plataforma.correo_administrar` | Ver y cambiar el estado global del correo y del proveedor de envío | S | todo | 2F A | v1 E1 | T |
 | PS-233 | `plataforma.ver_conteos_seguridad` | Ver **solo conteos por empresa** de los eventos de seguridad, sin correos ni direcciones IP (D-073.3). No es sensible | | todo | A | v1 E1 | T |
-| PS-240 | `plataforma.asistente_gestionar` | Asistente de IA (D-084): encender o apagar el **interruptor general** para todas las empresas, fijar los **topes globales**, ver **conteos de uso por empresa sin contenido** (nunca conversaciones ni datos del negocio) y **levantar el bloqueo del texto libre de casos por empresa** (con motivo, empresa por empresa, solo después de que el Cliente (CEO) informe que L-19 fue contestada, D-086.4). Es el sensible n.º 53 | S | todo | 2F R A | Fase 3 | T |
+| PS-240 | `plataforma.asistente_gestionar` | Asistente de IA (D-084): encender o apagar el **interruptor general** para todas las empresas, fijar los **topes globales**, ver **conteos de uso por empresa sin contenido** (nunca conversaciones ni datos del negocio) y **levantar el bloqueo del texto libre de casos por empresa**. Levantarlo exige **dos personas de plataforma distintas** (D-111.2): con motivo, empresa por empresa, **aviso previo a todos los administradores de la empresa, espera de 24 horas y veto de cualquiera de ellos**, y solo después de que la Jefatura de Proyecto registre por escrito que L-19 fue contestada (D-086.4, D-111.2b); con menos de dos personas de plataforma activas el levantamiento no está disponible; **apagarlo (o apagar el interruptor general) lo puede hacer una sola persona**. Los topes globales no pueden subirse desde ninguna función por encima de un techo fuera de la base de datos, que aprueba el CEO. Es el sensible n.º 53 | S | todo | 2F R A, dos personas (levantar) | Fase 3 | T |
 
 ## 4. Empresa, accesos, auditoría y datos (todas las empresas)
 
-| PS | Nombre técnico | Qué permite | S | Alcance | Controles | Cuándo | Adm | Jef | Téc | Alm | Sol | SL | Emp |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| PS-07 | `empresa.ver_configuracion` | Ver la configuración (moneda base, zona horaria, monto límite, calendario) | | todo | | v1 E1 | T | T | - | - | - | - | - |
-| PS-08 | `empresa.configurar` | Cambiar la configuración general de la empresa (nombre, calendario, zona horaria, avisos). **No** incluye el monto límite, la moneda base ni la aprobación: eso es PS-232 | | todo | A | v1 E1 | T | - | - | - | - | - | - |
-| PS-09 | `empresa.configurar_modulos` | Activar o desactivar módulos (desactivar oculta, no borra) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - |
-| PS-10 | `empresa.excepciones_funciones` | Cambiar el interruptor único de "Excepciones de separación de funciones" (motivo; confirma un segundo administrador si hay dos o más) | S | todo | 2F R A | v1 E5 | T | - | - | - | - | - | - |
-| PS-11 | `usuarios.ver` | Ver los usuarios de la empresa | | todo | | v1 E1 | T | T | - | - | - | - | - |
-| PS-12 | `usuarios.invitar` | Invitar usuarios (texto fijo, 7 días, no más permisos que los propios) | S | todo | 2F R A T | v1 E1 | T | - | - | - | - | - | - |
-| PS-13 | `usuarios.cambiar_rol` | Cambiar el rol de un usuario | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - |
-| PS-14 | `usuarios.suspender` | Suspender o reactivar a un usuario y cerrar sus sesiones | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - |
-| PS-15 | `usuarios.dar_baja` | Dar de baja a un usuario (siempre permitido; corta sus sesiones al instante) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - |
-| PS-16 | `roles.ver` | Ver los roles y sus permisos | | todo | | v1 E1 | T | T | - | - | - | - | - |
-| PS-17 | `roles.administrar` | Crear y editar roles (no puede darse permisos a sí mismo) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - |
-| PS-18 | `auditoria.ver` | Ver la auditoría de la empresa (el visor oculta lo que el lector no puede ver en su origen) | S | todo | 2F A | v1 E1 | T | T | - | - | - | - | - |
-| PS-19 | `auditoria.ver_seguridad` | Ver los eventos de seguridad de la empresa (accesos fallidos, intentos rechazados, soporte) | S | todo | 2F A | v1 E1 | T | - | - | - | - | - | - |
-| PS-20 | `datos.exportar` | Exportar listas a Excel por la puerta única (motivo, tope, hoja "Aviso") | S | todo | 2F R A T | v1 E2 | T | - | - | - | - | - | - |
-| PS-21 | `datos.importar` | Importar datos por el asistente único (todo o nada) | S | todo | 2F R A | v1 E4 | T | - | - | - | - | - | - |
-| PS-22 | `datos_personales.ver` | Ver nombre, correo y datos de contacto de las Personas; sin él se ve la referencia (`PRS-0042`) | S | todo | 2F A | v1 E2 | T | T | T | - | - | - | - |
-| PS-23 | `precios.ver` | Ver precios, totales y costos de toda la empresa | S | todo | 2F | v1 E5 | T | T | - | - | - | - | - |
-| PS-232 | `empresa.configurar_aprobacion` | Cambiar el monto límite de aprobación, la moneda base y activar o desactivar la aprobación. **Cada cambio avisa por correo a todos los administradores** (D-068) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - |
-| PS-234 | `texto.redactar` | Redactar por seguridad un texto libre de cualquier registro del núcleo (motivo, nota, observación), con el mismo mecanismo `[REDACTADO]` que PS-153, 221 y 222; motivo obligatorio (D-074.3) | S | todo | 2F A | v1 E4 | T | - | - | - | - | - | - |
-| PS-230 | `precios.ver_propios` | Ver precios y totales **solo** de las órdenes que la persona creó o editó (Técnico y Solicitante). No es sensible: no exige segunda verificación (D-037 fila 10) | | propio | | v1 E5 | - | - | P | - | P | - | - |
-| PS-247 | `empresa.autorizar_soporte` | Crear y revocar la autorización de soporte de la empresa para una persona de la plataforma (motivo). Avisa por correo a los administradores al usarse por primera vez y al revocarse; [PENDIENTE: si el aviso también sale al crear, lo decide el Gerente de TI, porque ADR-03 lo dice y D-094 no]. El Administrador de plataforma no lo tiene (D-094) | S | todo | 2F R A | v1 E1 | T | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] | [PENDIENTE: Gerente de TI] |
+| PS | Nombre técnico | Qué permite | S | Alcance | Controles | Cuándo | Adm | Jef | Téc | Alm | Sol | SL | Emp | Plat |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| PS-07 | `empresa.ver_configuracion` | Ver la configuración (moneda base, zona horaria, monto límite, calendario) | | todo | | v1 E1 | T | T | - | - | - | - | - | - |
+| PS-08 | `empresa.configurar` | Cambiar la configuración general de la empresa (nombre, calendario, zona horaria, avisos). **No** incluye el monto límite, la moneda base ni la aprobación: eso es PS-232 | | todo | A | v1 E1 | T | - | - | - | - | - | - | - |
+| PS-09 | `empresa.configurar_modulos` | Activar o desactivar módulos (desactivar oculta, no borra) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - | - |
+| PS-10 | `empresa.excepciones_funciones` | Cambiar el interruptor único de "Excepciones de separación de funciones" (motivo; confirma un segundo administrador si hay dos o más) | S | todo | 2F R A | v1 E5 | T | - | - | - | - | - | - | - |
+| PS-11 | `usuarios.ver` | Ver los usuarios de la empresa | | todo | | v1 E1 | T | T | - | - | - | - | - | - |
+| PS-12 | `usuarios.invitar` | Invitar usuarios (texto fijo, 7 días, no más permisos que los propios) | S | todo | 2F R A T | v1 E1 | T | - | - | - | - | - | - | - |
+| PS-13 | `usuarios.cambiar_rol` | Cambiar el rol de un usuario | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - | - |
+| PS-14 | `usuarios.suspender` | Suspender o reactivar a un usuario y cerrar sus sesiones | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - | - |
+| PS-15 | `usuarios.dar_baja` | Dar de baja a un usuario (siempre permitido; corta sus sesiones al instante) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - | - |
+| PS-16 | `roles.ver` | Ver los roles y sus permisos | | todo | | v1 E1 | T | T | - | - | - | - | - | - |
+| PS-17 | `roles.administrar` | Crear y editar roles (no puede darse permisos a sí mismo) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - | - |
+| PS-18 | `auditoria.ver` | Ver la auditoría de la empresa (el visor oculta lo que el lector no puede ver en su origen) | S | todo | 2F A | v1 E1 | T | T | - | - | - | - | - | - |
+| PS-19 | `auditoria.ver_seguridad` | Ver los eventos de seguridad de la empresa (accesos fallidos, intentos rechazados, soporte) | S | todo | 2F A | v1 E1 | T | - | - | - | - | - | - | - |
+| PS-20 | `datos.exportar` | Exportar listas a Excel por la puerta única (motivo, tope, hoja "Aviso") | S | todo | 2F R A T | v1 E2 | T | - | - | - | - | - | - | - |
+| PS-21 | `datos.importar` | Importar datos por el asistente único (todo o nada) | S | todo | 2F R A | v1 E4 | T | - | - | - | - | - | - | - |
+| PS-22 | `datos_personales.ver` | Ver nombre, correo y datos de contacto de las Personas; sin él se ve la referencia (`PRS-0042`) | S | todo | 2F A | v1 E2 | T | T | T | - | - | - | - | - |
+| PS-23 | `precios.ver` | Ver precios, totales y costos de toda la empresa | S | todo | 2F | v1 E5 | T | T | - | - | - | - | - | - |
+| PS-232 | `empresa.configurar_aprobacion` | Cambiar el monto límite de aprobación, la moneda base y activar o desactivar la aprobación. **Cada cambio avisa por correo a todos los administradores** (D-068) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - | - |
+| PS-234 | `texto.redactar` | Redactar por seguridad un texto libre de cualquier registro del núcleo (motivo, nota, observación), con el mismo mecanismo `[REDACTADO]` que PS-153, 221 y 222; motivo obligatorio (D-074.3) | S | todo | 2F A | v1 E4 | T | - | - | - | - | - | - | - |
+| PS-230 | `precios.ver_propios` | Ver precios y totales **solo** de las órdenes que la persona creó o editó (Técnico y Solicitante). No es sensible: no exige segunda verificación (D-037 fila 10) | | propio | | v1 E5 | - | - | P | - | P | - | - | - |
+| PS-247 | `empresa.autorizar_soporte` | Crear y revocar la autorización de soporte de la empresa para una persona de la plataforma (motivo). **Avisa por correo a todos los administradores de la empresa al crearla, al usarse por primera vez y al revocarse** (D-094, D-113.5; coincide con ADR-03); el correo no lleva datos personales (empresa, quién autorizó, motivo y vencimiento). El Administrador de plataforma no lo tiene (D-094). Abrir los datos de la empresa a la plataforma lo decide quien responde por ella: solo el Administrador lo tiene por defecto y cada empresa puede otorgarlo a otro rol, por separado, como cualquier permiso sensible (con segunda verificación) (D-113.4) | S | todo | 2F R A | v1 E1 | T | - | - | - | - | - | - | - |
+
+La columna **Plat** de esta sección vale «-» en todas las filas: el Administrador de plataforma solo tiene los permisos de la sección 3 y no ve datos del negocio (D-094, D-113.4).
 
 ## 5. Personas, estructura y proveedores (núcleo)
 
@@ -352,7 +354,7 @@ Filas PS-235 a PS-239 de D-084 (la fila de plataforma PS-240 está en la secció
 | PS-235 | `asistente.usar` | Usar el Asistente de IA: conversar, hacer preguntas de ayuda y de lectura sobre lo que la persona ya puede ver, y valorar respuestas. Compuerta: no da acceso a ningún dato | | todo | A T | Fase 3 (ASI-A) | T | T | T | T | T | T | T |
 | PS-236 | `asistente.preparar_borradores` | Pedir al asistente que deje precargado un borrador (caso de ayuda o solicitud) que la persona revisa y envía con el botón normal; exige además el permiso del acto (por ejemplo PS-138). El Empleado solo prepara un caso de ayuda. Compuerta | | todo | A | Fase 3 (ASI-A y ASI-C) | T | T | T | T | T | - | T |
 | PS-237 | `asistente.ejecutar_acciones` | Pedir al asistente una acción del catálogo cerrado, que se ejecuta solo tras confirmar en la tarjeta; exige además el permiso de cada acción. Compuerta. **No sensible de forma provisional**: Seguridad lo confirma en el paso 4 de la sección 14 | | todo | A T | Fase 3 (ASI-D) | T | T | T | - | - | - | - |
-| PS-238 | `asistente.configurar` | Configurar el asistente en la empresa: entregas y acciones habilitadas, roles que lo usan, topes por usuario y por empresa dentro del tope global, y la casilla de texto libre de casos (queda desactivada con la razón escrita hasta que PS-240 la levante, D-086.4) | | todo | R A | Fase 3 (ASI-A) | T | - | - | - | - | - | - |
+| PS-238 | `asistente.configurar` | Configurar el asistente en la empresa: entregas y acciones habilitadas, roles que lo usan, topes por usuario y por empresa dentro del tope global, y la casilla de texto libre de casos (queda desactivada con la razón escrita hasta que PS-240 la levante con dos personas de plataforma, D-086.4, D-111.2) | | todo | R A | Fase 3 (ASI-A) | T | - | - | - | - | - | - |
 | PS-239 | `asistente.ver_uso` | Ver el consumo, los topes y los conteos de uso del asistente; nunca conversaciones | | todo | A | Fase 3 (ASI-A) | T | T | - | - | - | - | - |
 
 ## 12B. Microsoft Entra ID e Intune (MSF, Fase 3, ola G)
@@ -440,6 +442,7 @@ Los nombres de **eventos** que aparecen en los módulos (por ejemplo `acceso.inv
 
 - **Sin pendientes de clasificación (D-068, D-074).** Los 16 permisos de D-068 son sensibles (35 a 51); PS-234 `texto.redactar` (D-074.3) hace 52. PS-08 y PS-154 no son sensibles. PS-232 es el monto límite y la moneda base; PS-233 son los conteos de seguridad de plataforma; PS-106 `garantias.recibir_avisos` queda confirmado y los otros `recibir_avisos` (PS-81, PS-226, PS-229) siguen el mismo patrón (Administrador y Jefatura TI todo, Técnico propio).
 - **Ola G (D-081 a D-084, 2026-10-29):** PS-235 a PS-246 agregadas con los valores finales de D-084.6. Sensibles nuevos: PS-240 (n.º 53) y PS-242 (n.º 54), total **54**. PS-237 `asistente.ejecutar_acciones` queda **no sensible de forma provisional**; Seguridad lo confirma en el paso 4 de la sección 14. Siguiente número libre: el que sigue a PS-247 (PS-247 se agregó después, por D-094; ver la sección 17).
+- **PS-247 (cerrado, D-113.4 y D-113.5):** sin celdas pendientes; las seis celdas de los demás roles valen «-» y el aviso por correo sale al crear, al usarse por primera vez y al revocarse.
 - **PS-23 y PS-230:** `precios.ver` es solo para todo y sensible; lo propio (Técnico y Solicitante) pasó a `precios.ver_propios` (PS-230), no sensible.
 - Los valores de las celdas de los módulos de Fase 2 y 3 son una propuesta mía (supuesto S-22 del documento funcional) hasta que cada escuadrón confirme las suyas; se resuelven en la revisión del Auditor Técnico (plan de correcciones, sección 4).
 - El nombre técnico definitivo de cada fila lo fija el Arquitecto en el catálogo del código; este registro fija el nombre funcional y el identificador PS-nn.
@@ -449,6 +452,7 @@ Los nombres de **eventos** que aparecen en los módulos (por ejemplo `acceso.inv
 
 | Fecha | Versión | Cambio | Decisión |
 |---|---|---|---|
+| 2026-10-29 | 1.4 | PS-247: las seis celdas de Jefatura TI, Técnico, Almacén, Solicitante, Solo lectura y Empleado quedan en «-»; se agrega la columna **Plat** («-») a la sección 4; el aviso por correo sale también al crear la autorización; se quitan las marcas de pendiente. Matriz de la v1: 511 celdas definidas, 0 pendientes. PS-240: el levantamiento del texto libre exige dos personas de plataforma, aviso previo, espera de 24 horas y veto (nuevo control «Dos personas» en la leyenda); apagar lo hace una sola persona | D-113, D-111 |
 | 2026-10-29 | 1.3 | Agregada la fila PS-247 `empresa.autorizar_soporte` (sensible n.º 55, v1 E1). Conteo: 247 filas, 244 vigentes, 55 sensibles. Siguiente número libre: el que sigue a PS-247. Pendientes de Jefatura TI a Empleado y del aviso al crear, para el Gerente de TI | D-094 |
 | 2026-10-29 | 1.2 | Filas PS-235 a PS-246 (ola G, Asistente de IA y Microsoft); PS-240 y PS-242 sensibles (total 54) | D-081 a D-084 |
 

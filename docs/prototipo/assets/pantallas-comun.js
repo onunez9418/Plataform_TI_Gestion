@@ -51,7 +51,9 @@ const LISTA_PANTALLAS = [
   ['PR-40', 'Muestra: licencias, cumplimiento y revelar clave', 'B', '#/licencias', 'Administrador'],
   ['PR-41', 'Muestra: presupuesto y ejecución', 'B', '#/presupuesto', 'Jefatura TI'],
   ['PR-42', 'Muestra: mapa de servicios, vista de impacto', 'B', '#/mapa-servicios', 'Técnico'],
-  ['PR-43', 'Muestra: cambios, decisión de aprobación', 'B', '#/cambios', 'Jefatura TI']
+  ['PR-43', 'Muestra: cambios, decisión de aprobación', 'B', '#/cambios', 'Jefatura TI'],
+  ['PR-46', 'Muestra: Asistente de IA, chat para armar un caso (botón flotante, tres casos tipo y derivaciones)', 'B', '#/asistente', 'Empleado del portal'],
+  ['PR-47', 'Muestra: cómo ve el técnico un caso armado con el asistente', 'B', '#/casos?origen=asistente', 'Técnico']
 ];
 /* Otras pantallas del prototipo (apoyo): bandejas, permisos, soporte, etc. */
 const LISTA_APOYO = [
@@ -316,15 +318,16 @@ ACC['cerrar-todas'] = () => dialogoMotivo({ titulo: 'Cerrar sesión en todos los
 /* ---------- Pedir ayuda ---------- */
 ruta('pedir-ayuda', { id: 'PR-33', prio: 'B', titulo: 'Pedir ayuda', acceso: () => APP.rol === 'emp' || puedePedirAyuda(), render() {
   const f2 = APP.tmp.ayudaFase2;
+  const pre = APP.tmp.ayudaPrecarga;
   const ver = APP.rol === 'emp' ? D().activos.filter((a) => a.resp === R().ref) : (valor('activos.ver') === 'T' ? D().activos.slice(0, 12) : D().activos.filter((a) => a.resp === R().ref));
   return `${cabeceraPantalla('Pedir ayuda', '<span class="id-pantalla">Un solo botón para todos</span>')}
   <div class="fila" style="margin-bottom:16px"><span>Mostrar cómo funciona:</span><div class="conmutador" role="group" aria-label="Versión"><button type="button" data-acc="ayuda-fase" data-f="1" aria-pressed="${!f2}">Versión 1 (ahora)</button><button type="button" data-acc="ayuda-fase" data-f="2" aria-pressed="${!!f2}">Fase 2 (mesa de ayuda)</button></div></div>
   ${f2 ? `${aviso('info', 'Así será en la Fase 2', 'El botón abre el catálogo de la mesa de ayuda. La orden de servicio la crea después el técnico desde el caso.')}
     <div class="rejilla">${[['Reportar un problema', 'Algo dejó de funcionar', 'ayuda'], ['Solicitar un equipo', 'Pedir una laptop, un mouse…', 'caja'], ['Reportar extravío o robo', 'Perdí un equipo', 'alerta'], ['Pedir mis datos personales', 'Ver, corregir o eliminar mis datos', 'candado']].map((s) => `<button type="button" class="tarjeta" style="text-align:left;cursor:pointer;color:inherit" data-acc="caso-demo"><span style="color:var(--c-primario)">${icono(s[2])}</span><h3>${s[0]}</h3><p class="suave sin-margen">${s[1]}</p></button>`).join('')}</div>`
-  : `<form data-form="pedir-ayuda" novalidate class="tarjeta" style="max-width:640px"><h2>Cuéntenos qué necesita</h2>
+  : `${pre ? aviso('info', 'Lo que ya contó al asistente está aquí', 'El asistente dejó el formulario con lo reunido. Revíselo, complételo y pulse «Enviar pedido»: nada se envió todavía.') : ''}<form data-form="pedir-ayuda" novalidate class="tarjeta" style="max-width:640px"><h2>Cuéntenos qué necesita</h2>
     <div class="campo"><label for="pa-tipo">Qué tipo de ayuda <span class="obligatorio">(obligatorio)</span></label><select id="pa-tipo"><option value="">Elija…</option><option>Reparación</option><option>Instalación</option><option>Servicio externo</option></select></div>
     <div class="campo"><label for="pa-eq">Equipo relacionado <span class="obligatorio">(opcional)</span></label><select id="pa-eq"><option value="">Ninguno</option>${ver.map((a) => `<option>${esc(a.serie)} · ${esc(a.sku)}</option>`).join('')}</select></div>
-    <div class="campo"><label for="pa-desc">Describa el problema o lo que necesita <span class="obligatorio">(obligatorio, hasta 500 caracteres)</span></label><textarea id="pa-desc" maxlength="500" style="font-family:inherit"></textarea><div class="ayuda">Por favor no escriba contraseñas ni claves. Todavía no se pueden adjuntar archivos.</div><div class="error" id="pa-e" hidden>${icono('alerta')}<span>Elija el tipo de ayuda y escriba una descripción.</span></div></div>
+    <div class="campo"><label for="pa-desc">Describa el problema o lo que necesita <span class="obligatorio">(obligatorio, hasta 500 caracteres)</span></label><textarea id="pa-desc" maxlength="500" style="font-family:inherit">${pre ? esc(pre.desc) : ''}</textarea><div class="ayuda">Por favor no escriba contraseñas ni claves. Todavía no se pueden adjuntar archivos.</div><div class="error" id="pa-e" hidden>${icono('alerta')}<span>Elija el tipo de ayuda y escriba una descripción.</span></div></div>
     <button class="btn primario" type="submit">Enviar pedido</button></form>`}`;
 } });
 ACC['ayuda-fase'] = (el) => { APP.tmp.ayudaFase2 = el.dataset.f === '2'; render(true); };
@@ -334,6 +337,7 @@ ACC['form-pedir-ayuda'] = () => {
   if (!ok) return;
   const n = 'OS-0000' + (44 + (D().ordenesServicio.length - 5));
   D().ordenesServicio.push({ num: n, tipo: document.getElementById('pa-tipo').value, est: 'Creada', activo: '', pidio: R().persona, asigna: '', fecha: '25/10/2026', costo: 0, desc: document.getElementById('pa-desc').value.trim() });
+  delete APP.tmp.ayudaPrecarga;
   toast(`Listo: se creó la orden de servicio <strong>${n}</strong> en estado Creada. TI la asignará.`);
   location.hash = APP.rol === 'emp' ? '#/portal' : '#/ordenes-servicio';
 };
@@ -343,16 +347,17 @@ ACC['caso-demo'] = () => toast('Muestra: aquí se abriría el formulario de ese 
 function portalPantalla(tab) {
   const mios = D().activos.filter((a) => a.resp === R().ref);
   const casos = [['AYU-000104', 'Mi laptop se pone lenta', 'En atención', 'Pronto un técnico se comunicará con usted.'], ['AYU-000091', 'Solicitud de un mouse', 'Cerrado', 'Se le entregó el mouse el 12/09/2026.']];
+  if (typeof CASOS !== 'undefined') CASOS.filter((c) => c.origen === 'asistente' && c.quien === R().ref && c.emp === APP.empresa).reverse().forEach((c) => casos.unshift([c.n, c.asunto, c.est, 'TI revisará su caso. Se armó con el asistente y usted lo confirmó.', true]));
   let c = '';
   if (tab === 'inicio') {
     c = `<p style="font-size:1.1rem">Hola, <strong>${esc(R().persona.split(' ')[0])}</strong>. Aquí ve lo que tiene a su cargo y puede pedir ayuda a TI.</p>
-    <div class="rejilla">${[['Mis equipos', '#/portal?tab=equipos', 'caja', mios.length + ' equipo'], ['Pedir ayuda', '#/pedir-ayuda', 'ayuda', 'Un problema o un pedido'], ['Mis casos', '#/portal?tab=casos', 'doc', casos.length + ' casos'], ['Mis datos', '#/portal?tab=datos', 'usuario', 'Ver y pedir cambios']].map((x) => `<a class="tarjeta" style="text-decoration:none;color:inherit;min-height:120px" href="${x[1]}"><span style="color:var(--c-primario)">${icono(x[2])}</span><h2>${x[0]}</h2><p class="suave sin-margen">${x[3]}</p></a>`).join('')}</div>
+    <div class="rejilla">${[['Mis equipos', '#/portal?tab=equipos', 'caja', mios.length + (mios.length === 1 ? ' equipo' : ' equipos')], ['Pedir ayuda', '#/pedir-ayuda', 'ayuda', 'Un problema o un pedido'], ['Mis casos', '#/portal?tab=casos', 'doc', casos.length + ' casos'], ['Mis datos', '#/portal?tab=datos', 'usuario', 'Ver y pedir cambios']].map((x) => `<a class="tarjeta" style="text-decoration:none;color:inherit;min-height:120px" href="${x[1]}"><span style="color:var(--c-primario)">${icono(x[2])}</span><h2>${x[0]}</h2><p class="suave sin-margen">${x[3]}</p></a>`).join('')}</div>
     ${aviso('atencion', 'Tiene una confirmación pendiente', 'Confirme que recibió su laptop «5CG3410R7M». <button class="btn chico" type="button" data-acc="confirmar-recepcion">Lo recibí</button>')}`;
   } else if (tab === 'equipos') {
     c = `<h2>Mis equipos</h2>${mios.length ? mios.map((a) => { const s = D().skus.find((x) => x.cod === a.sku); return `<section class="tarjeta" style="margin-bottom:12px"><h3>${esc(s.nombre)}</h3><dl class="lista-datos"><dt>Serie</dt><dd class="cod">${esc(a.serie)}</dd><dt>Estado</dt><dd>${chip(a.estado)}</dd><dt>Ubicación</dt><dd>${esc(a.ubic)}</dd><dt>Garantía</dt><dd>${chipGarantia(a.garantia)}</dd></dl><div class="fila" style="margin-top:12px"><a class="btn chico" href="#/pedir-ayuda">Reportar un problema</a><button class="btn chico" type="button" data-acc="acta-demo">Ver mi acta</button></div></section>`; }).join('') : vacio({ titulo: 'No tiene equipos a su cargo', texto: 'Cuando TI le entregue uno aparecerá aquí.' })}
     <p class="suave chica">Por su seguridad no mostramos precios, proveedores, claves ni datos de otras personas.</p>`;
   } else if (tab === 'casos') {
-    c = `<h2>Mis casos</h2>${casos.map((x) => `<section class="tarjeta" style="margin-bottom:12px"><div class="fila entre"><strong><span class="cod">${x[0]}</span> ${x[1]}</strong>${chip(x[2])}</div><p class="suave sin-margen">${x[3]}</p></section>`).join('')}<p class="suave chica">Solo ve los comentarios dirigidos a usted. Las notas internas del equipo de TI no se muestran.</p>`;
+    c = `<h2>Mis casos</h2>${casos.map((x) => `<section class="tarjeta" style="margin-bottom:12px"><div class="fila entre"><strong><span class="cod">${x[0]}</span> ${x[1]}</strong><span class="fila">${x[4] ? chipEtq('Armado con el asistente') : ''}${chip(x[2])}</span></div><p class="suave sin-margen">${x[3]}</p></section>`).join('')}<p class="suave chica">Solo ve los comentarios dirigidos a usted. Las notas internas del equipo de TI no se muestran.</p>`;
   } else {
     const p = personaDe(R().ref);
     c = `<h2>Mis datos</h2><section class="tarjeta"><dl class="lista-datos"><dt>Nombre</dt><dd>${esc(p.nombre)}</dd><dt>Correo</dt><dd>${esc(p.correo)}</dd><dt>Área</dt><dd>${esc(p.area)}</dd><dt>Puesto</dt><dd>${esc(p.puesto)}</dd></dl></section>

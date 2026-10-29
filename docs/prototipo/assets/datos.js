@@ -110,6 +110,7 @@ function _crear() {
   mk('CEL-0001', 'R58W1A2B3C7', 'En stock', ub[0], null, '11/06/2025', '10/06/2027', null, 720, { imei: '' });
   mk('CEL-0001', 'R58W1A2B3C8', 'Extraviado o robado', ub[2], null, '11/06/2025', '10/06/2027', null, 720, { imei: '356938035643841' });
   mk('LIC-0001', 'M365-2026-A', 'Asignado', ub[1], 'PRS-0002', '01/12/2025', '30/11/2026', null, 3400, { clave: '••••••••-AB12' });
+  mk('CEL-0001', 'R58W1A2B3D9', 'Asignado', ub[2], 'PRS-0007', '10/08/2026', '09/08/2028', null, 720, { imei: '356938035643890' });
   e1.activos = act;
   e1.proveedores = [
     { n: 'Tecnosur Perú S.A.C.', ruc: '20100000011', tipo: 'Bienes y servicios', estado: 'Activo' },

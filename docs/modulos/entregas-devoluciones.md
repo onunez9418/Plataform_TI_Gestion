@@ -1,6 +1,6 @@
 # Módulo: Entregas y devoluciones de activos (ENT)
 
-**Versión:** 0.3 (aplicación de D-065 a D-076; Oleada D, Escuadrón D)
+**Versión:** 0.4 (aplicación de D-065 a D-076; Oleada D, Escuadrón D; más D-113.1 sobre renovar préstamos)
 **Sigla de requisitos:** ENT
 **Fuente de verdad:** `docs/documento-funcional.md` y `docs/equipo/decisiones.md`. Aplican D-006 (Persona), D-012 (estados y constancia), D-033 y D-051 (nombre en el acta), D-034 (cese), D-037 (permisos), D-043 (autoentrega), D-060 (estado y asignación), D-061.4 (correos), D-063.1 (PDF).
 **Marcas:** **[SUPUESTO]** = propuesta mía que confirma el Gerente de TI. **[ESCALAR AL CEO]** = solo dinero, tema legal o algo irreversible. "Cuándo": `v1, Etapa N`, `Fase 2` o `Fase 3` (D-056).
@@ -84,7 +84,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen.
 | RF-ENT-013 | Historial por activo: pestaña "Entregas y actas" de su ficha (Persona, desde, hasta, condición al entregar y devolver, resultado). | ENT-A, v1, Etapa 4 | CA-ENT-01 |
 | RF-ENT-014 | Lista de actas con buscador y filtros (tipo, Persona, activo, fecha, estado, "préstamo vencido" calculado al leer, "pendiente de devolución") y exportación por la puerta única (D-061.1). | ENT-A, v1, Etapa 4 | CA-ENT-07 |
 | RF-ENT-015 | Pestaña "Entregas" dentro de **"Mi trabajo"** del Técnico: actas sin firma, préstamos por vencer y vencidos, equipos pendientes de devolución. | ENT-B, Fase 2 | CA-ENT-15 |
-| RF-ENT-016 | Renovar un préstamo: nueva fecha prevista con motivo y auditoría. | ENT-A, v1, Etapa 4 | CA-ENT-17 |
+| RF-ENT-016 | Renovar un préstamo: nueva fecha prevista con motivo y auditoría (fecha anterior y nueva); lo hace quien tiene `entregas.crear` (PS-55), avisa a la persona que tiene el equipo y no pasa de entrega + 365 días (RN-ENT-017, S-ENT-12). | ENT-A, v1, Etapa 4 | CA-ENT-17 |
 | RF-ENT-017 | Avisos de ENT-B: entrega registrada, acta sin firma, préstamo por vencer y vencido (ver sección 8). | ENT-B, Fase 2 | CA-ENT-15 |
 
 ### 4.2 Reglas de negocio
@@ -107,7 +107,7 @@ Los RN y RNF rigen desde el "Cuándo" del requisito que protegen.
 | RN-ENT-014 | Un accesorio por cantidad genera una salida de stock al entregar y un ingreso al devolver, ligados al acta. Sin stock suficiente, la entrega se rechaza completa (D-010.1). Un accesorio de texto libre no mueve stock. |
 | RN-ENT-015 | Un accesorio no devuelto queda "Faltante" en el acta. No genera cobro ni descuento en la plataforma. |
 | RN-ENT-016 | Extravío o robo se registra solo por decisión explícita con motivo. **"Pendiente de devolución" no es extravío**: no aparece en reportes de pérdidas ni en la depreciación como tal (D-034.2). El tipo "No devuelto tras el cese" ya no existe. El reporte hecho desde el portal es un caso y no cambia el estado hasta que TI lo confirma. |
-| RN-ENT-017 | Un préstamo exige fecha prevista de hoy o futura, máximo 365 días. "Vencido" se **calcula al leer** con la zona de la empresa (D-062.2); ningún proceso lo guarda. |
+| RN-ENT-017 | Un préstamo exige fecha prevista de hoy o futura, máximo 365 días **contados desde la fecha de la entrega** (una renovación no reinicia el conteo; D-113.1). "Vencido" se **calcula al leer** con la zona de la empresa (D-062.2); ningún proceso lo guarda. |
 | RN-ENT-018 | El traspaso es atómico: o se registran la devolución y la entrega, o ninguna. La Persona destino debe estar Activa y ser distinta del origen. |
 | RN-ENT-019 | Anular un acta solo si el activo no tuvo asignación posterior, reparación, traslado ni baja; "posterior" se mide con la **secuencia creciente** por empresa, no con la hora (D-060.5). Con motivo; genera el movimiento contrario; el acta queda "Anulada". |
 | RN-ENT-020 | Confirmar es todo o nada y no se repite con doble clic (misma clave de idempotencia). |
@@ -260,6 +260,8 @@ Se reutilizan el **asistente "Entregar"** y el **diálogo "Cambiar estado"** (D-
   - **Renovar.** Cuando el técnico lo renueva al 31/12/2026 con el motivo «Proyecto se extiende», entonces la fecha prevista pasa a 31/12/2026, el historial conserva la fecha anterior (30/11/2026) y la nueva, y la auditoría guarda el motivo, sin nombre ni correo.
   - **Vencido se calcula al leer.** Cuando el reloj pasa al 05/12/2026, entonces el préstamo no figura como «Vencido» (su fecha prevista es 31/12/2026); sin renovar, habría figurado así desde el 01/12/2026.
   - **Rechazos.** Una renovación sin motivo se rechaza; una con fecha anterior a hoy (01/11/2026) se rechaza; la pide un usuario Solo lectura o Almacén, por pantalla o por petición directa, y se rechaza sin cambiar nada.
+  - **Tope de 365 días desde la entrega (D-113.1).** Cuando el préstamo se entregó el 02/11/2026 y, ya renovado una vez, el técnico intenta renovar al 03/11/2027 (entrega + 365 días + 1), entonces se rechaza con el mensaje «Pasó el máximo de un año; devuélvalo y regístrelo como asignación, o regístrelo como asignación nueva» y la fecha prevista no cambia; una renovación al 02/11/2027 (entrega + 365 días) sí se acepta: el conteo no se reinicia con cada renovación.
+  - **Permiso y aviso (D-113.1).** La renovación la hace quien tiene `entregas.crear` (PS-55), sin permiso nuevo; la auditoría guarda la fecha anterior y la nueva con el motivo, y la persona que tiene el equipo recibe el aviso.
   - **Entrega definitiva.** Una entrega Definitiva no tiene fecha prevista: «Renovar» no se ofrece y, por petición directa, se rechaza.
 
 ## 11. Casos límite
@@ -294,7 +296,7 @@ Se reutilizan el **asistente "Entregar"** y el **diálogo "Cambiar estado"** (D-
 | S-ENT-09 | Aceptado **sin excepción** (D-058 #8, D-043.2) | Autoentrega prohibida a todos. |
 | S-ENT-10 | **Cambiado** (D-049.2) | Numeración `ACT-E-` y `ACT-D-` con 6 dígitos. |
 | S-ENT-11 | [SUPUESTO] | "Pendiente de devolución" es una marca calculada (asignación abierta de una Persona Cesada), no un estado ni un campo. |
-| S-ENT-12 | [SUPUESTO] | Renovar un préstamo (RF-ENT-016) usa el permiso `entregas.crear` (PS-55): no se crea un permiso nuevo. Lo confirma el Gerente de TI. El tope de 365 días de RN-ENT-017 se cuenta **desde la fecha de la entrega** (no desde la renovación); también lo confirma el Gerente de TI. |
+| S-ENT-12 | Aceptado (D-113) | Renovar un préstamo (RF-ENT-016) usa el permiso `entregas.crear` (PS-55): no se crea un permiso nuevo. El tope de 365 días de RN-ENT-017 se cuenta **desde la fecha de la entrega**, no desde la renovación: una renovación que pasaría de entrega + 365 días se rechaza con un mensaje claro («Pasó el máximo de un año; devuélvalo y regístrelo como asignación, o regístrelo como asignación nueva»). Cada renovación queda en la auditoría con la fecha anterior y la nueva, y avisa a la persona que tiene el equipo. Motivo: contar desde la renovación permitiría un préstamo eterno sin acta de asignación; el tope existe para obligar a una decisión. |
 | E-ENT-01 | [ESCALAR AL CEO] | **Legal.** Validez del acta firmada en papel archivada por TI sin copia, y de la aceptación en pantalla; si el acta puede usarse para descontar o cobrar un equipo perdido. Hasta la opinión legal el acta dice "constancia de entrega" y no menciona cobros. Si legal exige anonimizar el nombre del acta antes de `retener_hasta` (L-05, L-12), se aplica sobre lo existente y es irreversible. |
 | E-ENT-02 | [ESCALAR AL CEO] | **Dinero.** Habilitar el adjunto del acta firmada implica almacenamiento mensual (D-022). Se consulta al cierre de la Etapa 4. |
 | E-ENT-03 | [ESCALAR AL CEO] | **Legal.** El texto del aviso de privacidad al pie del acta lo entrega la empresa y lo revisa legal (D-061.8). |
@@ -334,3 +336,4 @@ Se reutilizan el **asistente "Entregar"** y el **diálogo "Cambiar estado"** (D-
 | Datos personales del módulo declarados; aviso de privacidad configurable por empresa | D-061.3, D-061.8, H-CUM-09, H-CUM-12 |
 | v0.3: `entregas.imprimir_acta` con "-" para Empleado (portal) y Solicitante (sus actas, por PS-205); RN-ENT-021 confirmada con S-36 (cierre de la asignación + 5 años, provisional) | D-065, D-075, plan de aplicación |
 | RN-ENT-021 y fila de datos personales: el plazo de 5 años corre desde el cierre de la asignación, no "mientras exista el activo"; `retener_hasta` vacía mientras la asignación está abierta | D-033, D-051, S-36 del núcleo (RF-DAT-006), ronda 3 del Auditor Técnico |
+| v0.4 (2026-10-29): S-ENT-12 pasa a Aceptado: renovar usa `entregas.crear`, los 365 días corren desde la fecha de la entrega y no se reinician con cada renovación; mensaje de rechazo, auditoría con fecha anterior y nueva, aviso a quien tiene el equipo; RF-ENT-016, RN-ENT-017 y CA-ENT-17 lo recogen | D-113.1 |

@@ -506,3 +506,113 @@ dl { margin: 0; }
   body { background: #fff; }
   .acta { border: 0; }
 }
+
+/* ---------- 10. Asistente de IA (botón flotante, panel de chat y caso armado) ---------- */
+.asi-fab {
+  position: fixed; right: 20px; bottom: 20px; z-index: 120; min-height: 52px; padding: 0 var(--e5) 0 var(--e4);
+  display: inline-flex; align-items: center; gap: var(--e2); border-radius: var(--radio-pildora);
+  background: var(--c-primario); color: var(--c-primario-texto); border: 2px solid var(--c-superficie);
+  font: inherit; font-weight: 700; cursor: pointer; box-shadow: var(--c-sombra-alta);
+}
+.asi-fab:hover { background: var(--c-primario-hover); }
+.asi-fab svg { width: 22px; height: 22px; }
+body.con-asistente .toasts { bottom: 84px; }
+.asi-panel {
+  position: fixed; right: 16px; bottom: 16px; z-index: 150; width: 400px; max-width: calc(100vw - 32px);
+  height: min(700px, calc(100vh - 124px)); display: flex; flex-direction: column;
+  background: var(--c-superficie); color: var(--c-texto); border: 2px solid var(--c-borde-control); border-radius: 14px;
+  box-shadow: var(--c-sombra-alta); overflow: hidden;
+}
+.asi-panel.ancho { width: 760px; }
+.asi-panel:focus { outline: none; }
+.asi-cab { display: flex; align-items: center; gap: var(--e3); padding: var(--e3) var(--e4); background: var(--c-barra); color: var(--c-barra-texto); }
+.asi-cab h2 { margin: 0; font-size: 1.05rem; color: inherit; }
+.asi-cab p { margin: 0; font-size: var(--f-mini); opacity: .92; }
+.asi-cab .icono-cab svg { width: 26px; height: 26px; }
+.asi-cab .titulos { flex: 1; min-width: 0; }
+.asi-cab button { color: var(--c-barra-texto); background: transparent; border: 1px solid rgba(255,255,255,.45); border-radius: var(--radio); min-height: 36px; min-width: 36px; padding: 0 var(--e2); font: inherit; font-size: var(--f-chica); cursor: pointer; display: inline-flex; align-items: center; gap: var(--e1); }
+.asi-cab button:hover { background: rgba(255,255,255,.16); }
+.asi-cab button svg { width: 18px; height: 18px; }
+.asi-nota-sim { margin: 0; padding: var(--e1) var(--e4); background: var(--c-demo-fondo); color: var(--c-demo-texto); font-size: var(--f-mini); border-bottom: 1px solid var(--c-borde); }
+.asi-fijos { display: flex; flex-wrap: wrap; gap: var(--e1) var(--e4); align-items: center; padding: var(--e2) var(--e4); border-bottom: 1px solid var(--c-borde); font-size: var(--f-chica); background: var(--c-superficie-2); }
+.asi-fijos a, .asi-fijos .urg { display: inline-flex; align-items: center; gap: var(--e1); font-weight: 650; }
+.asi-fijos .urg { color: var(--c-texto); }
+.asi-fijos svg { width: 16px; height: 16px; }
+.asi-sim { border-bottom: 1px solid var(--c-borde); font-size: var(--f-chica); }
+.asi-sim summary { cursor: pointer; padding: var(--e2) var(--e4); font-weight: 650; min-height: 36px; display: flex; align-items: center; }
+.asi-sim .sim-cuerpo { padding: 0 var(--e4) var(--e3); display: flex; flex-direction: column; gap: var(--e2); }
+.asi-sim .sim-grupo { display: flex; flex-wrap: wrap; gap: var(--e2); }
+.asi-sim h3 { font-size: var(--f-chica); margin: var(--e1) 0 0; color: var(--c-texto-suave); }
+.asi-cuerpo { flex: 1; min-height: 0; overflow-y: auto; padding: var(--e4); display: flex; flex-direction: column; gap: var(--e3); background: var(--c-fondo); }
+.asi-msg { display: flex; flex-direction: column; gap: 2px; max-width: 94%; }
+.asi-msg.ia, .asi-msg.fijo { align-self: flex-start; }
+.asi-msg.yo { align-self: flex-end; align-items: flex-end; }
+.asi-msg.fijo { max-width: 100%; width: 100%; }
+.asi-quien { font-size: var(--f-mini); color: var(--c-texto-suave); font-weight: 650; display: inline-flex; align-items: center; gap: var(--e1); }
+.asi-quien svg { width: 14px; height: 14px; }
+.asi-burbuja { padding: var(--e2) var(--e3); border-radius: 12px; border: 1px solid var(--c-borde); background: var(--c-superficie); overflow-wrap: anywhere; }
+.asi-msg.yo .asi-burbuja { background: var(--c-primario); color: var(--c-primario-texto); border-color: var(--c-primario); border-bottom-right-radius: 4px; }
+.asi-msg.ia .asi-burbuja { border-bottom-left-radius: 4px; }
+.asi-msg .aviso { margin: 0; }
+.asi-msg .aviso .chip { margin-top: var(--e2); }
+.asi-msg .acciones-msg { display: flex; flex-wrap: wrap; gap: var(--e2); margin-top: var(--e3); }
+.asi-escribiendo { align-self: flex-start; font-size: var(--f-chica); color: var(--c-texto-suave); display: inline-flex; align-items: center; gap: var(--e2); padding: var(--e2) var(--e3); border: 1px dashed var(--c-borde-control); border-radius: 12px; background: var(--c-superficie); }
+.asi-escribiendo .puntos span { display: inline-block; width: 6px; height: 6px; margin-right: 3px; border-radius: 50%; background: var(--c-texto-suave); animation: asi-salto 1s infinite; }
+.asi-escribiendo .puntos span:nth-child(2) { animation-delay: .15s; } .asi-escribiendo .puntos span:nth-child(3) { animation-delay: .3s; }
+@keyframes asi-salto { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+.asi-opciones { display: flex; flex-wrap: wrap; gap: var(--e2); align-self: flex-start; max-width: 100%; }
+.asi-chip { min-height: var(--toque); padding: 0 var(--e4); border-radius: var(--radio-pildora); border: 2px solid var(--c-primario); background: var(--c-superficie); color: var(--c-enlace); font: inherit; font-weight: 650; cursor: pointer; text-align: left; }
+.asi-chip:hover { background: var(--c-menu-activo-fondo); }
+.asi-tarjetas { display: grid; gap: var(--e2); grid-template-columns: 1fr; width: 100%; }
+.asi-tarjeta { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: var(--toque); padding: var(--e3); text-align: left; border-radius: var(--radio); border: 2px solid var(--c-primario); background: var(--c-superficie); color: var(--c-texto); font: inherit; cursor: pointer; }
+.asi-tarjeta:hover { background: var(--c-menu-activo-fondo); }
+.asi-tarjeta strong { display: flex; align-items: center; gap: var(--e2); }
+.asi-tarjeta .detalle { font-size: var(--f-chica); color: var(--c-texto-suave); }
+.asi-tarjeta.neutra { border-style: dashed; border-color: var(--c-borde-control); }
+.asi-enlace { background: none; border: 0; padding: 0; font: inherit; color: var(--c-enlace); text-decoration: underline; cursor: pointer; text-align: left; min-height: 32px; }
+.asi-lista-art { margin: var(--e2) 0 0; padding-left: var(--e5); }
+.asi-pie { border-top: 1px solid var(--c-borde); padding: var(--e2) var(--e4) var(--e3); background: var(--c-superficie); }
+.asi-avance { display: flex; align-items: center; gap: var(--e3); font-size: var(--f-mini); color: var(--c-texto-suave); margin-bottom: var(--e2); }
+.asi-avance .barra-avance { flex: 1; height: 8px; }
+.asi-compositor { display: flex; gap: var(--e2); }
+.asi-compositor input { flex: 1; min-width: 0; }
+.asi-compositor input:disabled { background: var(--c-superficie-2); border-style: dashed; }
+.asi-pie .nota { margin: var(--e2) 0 0; font-size: var(--f-mini); color: var(--c-texto-suave); }
+.asi-pie .fila-pie { display: flex; flex-wrap: wrap; gap: var(--e2); align-items: center; justify-content: space-between; margin-top: var(--e1); }
+.asi-acciones { display: flex; flex-wrap: wrap; gap: var(--e2); justify-content: flex-end; }
+.asi-acciones .btn { flex: 1 1 auto; }
+.asi-acciones .btn.primario { flex: 2 1 160px; }
+.asi-form h3 { margin-top: var(--e3); }
+.asi-form .campo { margin-bottom: var(--e3); }
+.asi-form textarea { font-family: inherit; min-height: 72px; font-size: var(--f-base); }
+.asi-form .fila-form { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.asi-form details { margin-bottom: var(--e3); border: 1px solid var(--c-borde); border-radius: var(--radio); padding: 0 var(--e3); background: var(--c-superficie); }
+.asi-form details summary { cursor: pointer; min-height: var(--toque); display: flex; align-items: center; font-weight: 650; }
+.asi-ti { border: 2px dashed var(--c-borde-control); border-radius: var(--radio); padding: var(--e3) var(--e4); background: var(--c-superficie); margin-bottom: var(--e3); }
+.asi-ti h3 { margin: 0 0 var(--e1); }
+.asi-ti .lista-datos { grid-template-columns: minmax(120px, 190px) 1fr; gap: var(--e1) var(--e3); font-size: var(--f-chica); }
+.asi-ti ul { margin: 0; padding-left: var(--e4); }
+.asi-exito { text-align: center; padding: var(--e4) var(--e2); }
+.asi-exito .numero { font-family: var(--f-mono); font-size: 1.6rem; font-weight: 700; display: block; margin: var(--e2) 0; }
+.texto-pegado { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--c-superficie-2); border: 1px dashed var(--c-borde-control); border-radius: var(--radio); padding: var(--e3); font-family: var(--f-mono); font-size: var(--f-chica); margin: var(--e2) 0 0; }
+.rotulo-origen { font-size: var(--f-mini); color: var(--c-texto-suave); font-weight: 650; display: block; margin-bottom: var(--e1); }
+.bloque-caso { margin-bottom: var(--e4); }
+.bloque-caso > h2 { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2); }
+.bloque-ti { border-left: 6px solid var(--c-borde-control); }
+@media (max-width: 900px) {
+  .asi-fab { bottom: 80px; right: 12px; }
+  body.con-asistente .toasts { bottom: 144px; }
+  .asi-panel, .asi-panel.ancho { inset: 0; width: auto; max-width: none; height: auto; border-radius: 0; border: 0; z-index: 150; }
+  .asi-ti .lista-datos { grid-template-columns: 1fr; }
+}
+@media print { .asi-fab, .asi-panel { display: none !important; } }
+.asi-exito > svg { width: 48px; height: 48px; color: var(--s-exito-t); }
+.asi-urgente { display: flex; align-items: center; gap: var(--e2); padding: var(--e2) var(--e4); background: var(--s-alerta-f); color: var(--s-alerta-t); border-bottom: 3px solid var(--s-alerta-b); font-weight: 600; }
+.asi-urgente svg { width: 20px; height: 20px; flex: none; }
+.asi-sim summary::before, .asi-form details summary::before { content: "+"; display: inline-block; width: 1.2em; font-weight: 700; flex: none; }
+.asi-sim[open] summary::before, .asi-form details[open] summary::before { content: "\2212"; }
+.asi-sim summary::-webkit-details-marker, .asi-form details summary::-webkit-details-marker { display: none; }
+.asi-msg .aviso .chip { white-space: normal; height: auto; padding-top: 2px; padding-bottom: 2px; }
+.asi-msg .btn { white-space: normal; text-align: left; justify-content: flex-start; height: auto; padding-top: var(--e2); padding-bottom: var(--e2); }
+.asi-msg .acciones-msg { flex-direction: column; align-items: stretch; }
+@media (max-width: 640px) { .asi-cab button span { display: none; } }

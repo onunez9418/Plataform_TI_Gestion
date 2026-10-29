@@ -11,7 +11,7 @@ const APP = {
   empresa: 'e1',
   tema: 'claro',
   datos: JSON.parse(JSON.stringify(DATOS_BASE)),
-  modulos: { casos: true, vencimientos: true, licencias: true, presupuesto: true, mapa: true, cambios: true, avisos: true },
+  modulos: { casos: true, vencimientos: true, licencias: true, presupuesto: true, mapa: true, cambios: true, avisos: true, asistente: true },
   tmp: {}
 };
 const RUTAS = {};
@@ -421,6 +421,7 @@ function render(conservarFoco) {
   }
   raiz.innerHTML = shell(layoutPara(def), def, r, q, contenido);
   ajustarAltoDemo();
+  if (typeof asistenteRefrescar === 'function') asistenteRefrescar(layoutPara(def));
   document.title = `${def.titulo || 'Plataforma'} · ${APP.rol === 'plat' ? 'Consola de plataforma' : E().corto} · Prototipo`;
   APP.actual = { r, q, def };
   if (def.despues && accesoOk(def.acceso)) { try { def.despues(q); } catch (err) { console.error('Error al activar', r, err); } }
