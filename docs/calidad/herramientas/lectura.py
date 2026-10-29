@@ -155,13 +155,17 @@ MODULOS_NUEVOS = {'microsoft-entra-intune': 'MSF', 'asistente-ia': 'ASI'}
 
 
 def estado_modulo_nuevo(nombre):
-    """'no existe' | 'incompleto' | 'completo'. Completo = sigla declarada, al menos una fila RF o RNF, una regla RN,
+    """'no existe' | 'en redacción (sin commit)' | 'incompleto' | 'completo'. Completo = guardado en un commit sin cambios, sigla declarada, al menos una fila RF o RNF, una regla RN,
     la sección de criterios de aceptación y al menos un criterio CA con la sigla del módulo."""
     ruta = ROOT + f'/docs/modulos/{nombre}.md'
     try:
         t = leer(ruta)
     except OSError:
         return 'no existe'
+    # un borrador que sigue cambiando (sin commit o con cambios sin guardar) no tiene cifras reproducibles
+    st = subprocess.run(['git', 'status', '--short', '--', ruta], capture_output=True, text=True).stdout.strip()
+    if st:
+        return 'en redacción (sin commit)'
     sg = MODULOS_NUEVOS[nombre]
     txt = '\n'.join(t)
     ok = (nombre_sigla(ruta) == sg
