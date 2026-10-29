@@ -121,3 +121,38 @@
 3. **Cuando DevOps nombre candidato (A2-05) y Seguridad confirme A2-01:** el Arquitecto y Datos inician el prototipo de 4 días y 1 de reserva (D-099).
 4. **En paralelo con lo anterior:** Cumplimiento (A2-18) y Escuadrón F (A2-15).
 5. **Después, sin urgencia:** A2-11 a A2-14 y A2-16; A2-12 y A2-13 (módulos de la ola G) solo antes de las revisiones de esos módulos.
+
+## Estado del Plan de aplicación 2 al 2026-10-29 (cierre de la ronda 6)
+
+Solo se marca como **hecho** lo que se comprobó en un archivo o en un commit; lo demás queda como «por verificar» o «pendiente». Regla de siempre: quien lo hizo no lo cierra.
+
+| # | Estado | Evidencia o lo que falta |
+|---|---|---|
+| A2-01 | **Hecho** (lo de Seguridad) | Ronda 6: H-SEG-46 avalada con cuatro condiciones de texto (`ronda6-seguridad-adr.md`). Las cierra la prueba P1 a P8 del prototipo (D-111.1) |
+| A2-02 | **Hecho** | Ronda 6: 27 de 30 hallazgos cerrados, 2 parciales (38, 46) y 1 abierto por diseño (57, de Cumplimiento) |
+| A2-03 | Por verificar | Datos aún no confirmó por escrito sus ocho bloqueantes |
+| A2-04, A2-05 | Pendiente | Seguridad y DevOps: alta de personas de plataforma y llaves físicas; proveedor candidato con precios con fecha y enlace |
+| A2-06 | **Hecho** | RF-AUD-013 con cuatro autores y marca `asistente`; verifica el Auditor Técnico |
+| A2-07 | **Hecho** | RF-AUD-016 pospone la purga con congelación; lo verifica Cumplimiento; falta mencionar los eventos de seguridad (D-113.2) |
+| A2-08, A2-09 | Por verificar | Los pasajes existen en parte (RF-ACC-013 con 55 sensibles, RF-PLA-001 con llave física); lo confirma el Auditor Técnico en A2-21 |
+| A2-10 | **Hecho, con cabos** | Fila PS-247 y 55 sensibles en el registro v1.3; faltan las seis celdas y la columna de plataforma (D-113.4) |
+| A2-11 a A2-16 | Pendiente | Sin cambios; A2-12 y A2-13 solo antes de las revisiones de la ola G |
+| A2-17, A2-18 | Pendiente | DevOps (plan 6.7 y demás) y Cumplimiento (H-SEG-43, 56, 57) |
+| A2-19 | **Parcial** | QA: 612 criterios y plan de pruebas v2.2 (commit 9404e3c); faltan los casos de la ronda 6 (abajo) |
+| A2-20 | **Parcial** | El Arquitecto incorporó la ronda 6 y escribió ADR-24; ningún ADR pasa a «Aceptado» todavía (faltan A2-03, A2-18 y las ratificaciones de D-111) |
+| A2-21 | Pendiente | Corre después de A2-06 a A2-15 y de la Ola 4 |
+
+## Ola 4: lo que queda de la ronda 6 (D-111 a D-114), por rol
+
+Se despacha en el orden numerado; lo de una misma fila va en paralelo (máximo cuatro agentes a la vez). Prioridad: **P1** = antes del día 3 del prototipo o de pasar el ADR a «Aceptado»; **P2** = antes de la etapa que lo usa; **P3** = antes de la ola G.
+
+| # | Responsable | Qué hace | Decisión | Prio. | Verifica |
+|---|---|---|---|---|---|
+| A2-22 | **Arquitecto** | Quita «propuesta, a ratificar» de ADR-04, 08, 01, 22 y 23 y de la tabla del README, con las correcciones de D-111; ADR-23: sin dos personas de plataforma no hay levantamiento y la provisional no se vuelve a declarar sin confirmar; ADR-24 §5: «no viajan» (D-112) con la ficha «elegido / ninguno / pendiente»; completa con el punto 6 de H-SEG-78 lo que quede; pasa a «Aceptado» solo los que ya tengan sus confirmaciones, con registro de cambios | D-111, D-112 | P1 | Seguridad |
+| A2-23 | **Analista** | Aplica los valores de D-113: S-ENT-12 «Aceptado (D-113)» y RN-ENT-017; RF-AUD-016 con los eventos de seguridad; **PS-247** (seis celdas «-», columna de plataforma, sin [PENDIENTE], aviso al crear; versión 1.4) y la matriz; PS-240 y RF-PLA-011 con «dos personas»; D-086.4; `asistente-ia.md` donde el modelo vea el modelo o la categoría del equipo (D-112) | D-111, D-112, D-113 | P1 | Auditor Técnico, Seguridad |
+| A2-24 | **QA** | Plan de pruebas: matriz de 511 celdas sin pendientes (PS-247 en «rechazado» para 6 plantillas); P1 como puerta; levantamiento del texto libre con una sola persona de plataforma, sin L-19 registrada, con veto y sin él; nueva declaración de congelación tras vencer; criterio de la purga de eventos de seguridad con congelación; canario en el nombre del equipo (0 apariciones hacia el proveedor); renovación de préstamo al pasar los 365 días | D-111, D-112, D-113 | P1 | Auditor Técnico |
+| A2-25 | **DevOps** | Verifica y registra por escrito el **tope duro en la cuenta del proveedor de IA** (cuenta de pruebas con tope bajo, a nombre del CEO) antes de cualquier uso del chat; dos cuentas de base con claves separadas y la tabla de variables por proceso; lista de salidas de red del trabajador | D-111, D-114 | P1 (cuentas) / P3 (tope) | Seguridad |
+| A2-26 | **Cumplimiento** | Decide el consentimiento expreso de la empresa para el texto libre (L-19) y confirma o ajusta las 72 horas de la congelación provisional; confirma H-SEG-77 (copia con llave de la fila completa, sin resúmenes de IP y motivo); frase de H-SEG-72 («el asistente no recibe datos de la tabla de Personas; puede recibir texto que alguien escribió en otros campos») e información comercial en el aviso | D-111, D-112 | P1 | Gerente de TI |
+| A2-27 | **Seguridad** | Firma la lista de permisos de Graph cuando pueda verificarla; confirma las correcciones de D-111; revisa la suite IO-15 en adelante y la lista fija de expresiones de emergencia | D-111 | P2 / P3 | Gerente de TI |
+| A2-28 | **Diseñador** | Tarjetas de equipo sin enviar nada al modelo (el chat «pide la tarjeta»); aviso de la pantalla de conexión con Microsoft sobre el daño máximo de una filtración (H-SEG-71) | D-112 | P2 | Gerente de TI |
+| A2-29 | **Jefatura de Proyecto** | Registra por escrito cuando L-19 sea contestada (condición para levantar el texto libre); transmite al CEO la hoja corregida (D-114); no hay preguntas nuevas para el CEO | D-111, D-114 | P3 | - |
