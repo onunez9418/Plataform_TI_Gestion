@@ -142,7 +142,7 @@
       titulo: 'No prende la laptop', inicio: 'No prende mi laptop', servicio: 'Reportar un problema', tipo: 'Incidente', sv: 'problema',
       pasos: [
         pasoConfirma('Entiendo: su laptop no enciende.', 'Reportar un problema'),
-        pasoEquipo('¿Cuál es el equipo afectado? Elija una tarjeta. Por su seguridad no muestro números de serie.'),
+        pasoEquipo('¿Cuál es el equipo afectado? Elija una tarjeta. Las tarjetas las muestra la plataforma: yo no veo el nombre de sus equipos ni sus números de serie.'),
         pasoDesde(),
         { id: 'luz', tipo: 'botones', campo: 'luz', aclara: '¿Se enciende alguna luz al conectar el cargador?', p: () => 'Una duda más: al conectar el cargador, ¿se enciende alguna luz?', opciones: [{ v: 'no', t: 'No, ninguna luz' }, { v: 'si', t: 'Sí, se enciende una luz' }, { v: 'nose', t: 'No sé' }], ejemplo: { v: 'no', t: 'No, ninguna luz' } },
         { id: 'antes', tipo: 'botones', campo: 'antes', opcional: true, p: () => '¿Pasó algo antes de que dejara de encender? (Esta pregunta es opcional.)', opciones: ['Un golpe o caída', 'Un derrame', 'Una actualización', 'Nada que recuerde', 'Prefiero no responder'].map((t) => ({ v: t, t })), ejemplo: { v: 'Nada que recuerde', t: 'Nada que recuerde' } },
@@ -157,9 +157,9 @@
         const luzRes = { no: 'al conectar el cargador no se enciende ninguna luz', si: 'al conectar el cargador se enciende una luz, pero el equipo no arranca', nose: 'no sabe si se enciende alguna luz al conectar el cargador' }[r.luz] || '';
         const ocurre = { 'Desde hoy': 'ocurre desde hoy', 'Desde ayer': 'ocurre desde ayer', 'Hace varios días': 'ocurre hace varios días', 'No sé': 'no sabe desde cuándo ocurre' }[r.desde] || '';
         return {
-          asunto: 'Laptop no enciende' + (eq ? ' (' + eq.modelo + ')' : ''),
+          asunto: 'Laptop no enciende',
           desc: punto(cap(r.relato)) + ' ' + luzUsr,
-          resumen: `La persona informa que su laptop${eq ? ' (' + eq.modelo + ')' : ''} no enciende; ${ocurre}. En concreto, ${luzRes}. Ya probó: ${bajo(punto(r.probo || 'nada todavía'))} ${cap(IMPACTOS.find((x) => x.v === r.impacto).frase)} y ${URGENCIAS.find((x) => x.v === r.urgencia).frase}.`,
+          resumen: `La persona informa que su laptop no enciende; ${ocurre}. En concreto, ${luzRes}. Ya probó: ${bajo(punto(r.probo || 'nada todavía'))} ${cap(IMPACTOS.find((x) => x.v === r.impacto).frase)} y ${URGENCIAS.find((x) => x.v === r.urgencia).frase}.`,
           aclar: [{ p: '¿Se enciende alguna luz al conectar el cargador?', r: r.luz_t }],
           valores: { desde: r.desde, antes: r.antes && r.antes !== 'Prefiero no responder' ? r.antes : '', ubicar: r.ubicar || '' }
         };
@@ -170,7 +170,7 @@
       pasos: [
         pasoConfirma('Entiendo: no puede entrar a su correo.', 'Reportar un problema'),
         { id: 'sospecha', tipo: 'botones', campo: 'sospecha', aclara: '¿Sospecha que alguien más entró a su cuenta o que entregó su clave por error?', p: () => 'Una pregunta importante para su seguridad: ¿sospecha que alguien más entró a su cuenta, o que entregó su clave por error?', opciones: [{ v: 'no', t: 'No, solo no me deja entrar' }, { v: 'si', t: 'Sí, creo que me robaron la cuenta' }], ejemplo: { v: 'no', t: 'No, solo no me deja entrar' } },
-        pasoEquipo('¿Desde cuál de sus equipos intenta entrar? Si no es desde un equipo de la empresa, elija «Ninguno».', 'El equipo'),
+        pasoEquipo('¿Desde cuál de sus equipos intenta entrar? Elija una tarjeta (las muestra la plataforma; yo no veo el nombre de sus equipos). Si no es desde un equipo de la empresa, elija «Ninguno».', 'El equipo'),
         pasoDesde(),
         { id: 'error', tipo: 'texto', campo: 'error', opcional: true, corregible: 'El mensaje de error', p: () => '¿Aparece algún mensaje de error? Si puede, cópielo y péguelo aquí: seleccione el texto, pulse Ctrl+C y luego Ctrl+V en el cuadro de abajo. No escriba su contraseña.', opciones: [{ v: '', t: 'No aparece ningún mensaje' }], ejemplo: { v: 'Su cuenta está bloqueada. Intente de nuevo en 30 minutos o contacte a su administrador. (código 50053)', t: 'Su cuenta está bloqueada. Intente de nuevo en 30 minutos o contacte a su administrador. (código 50053)' } },
         { id: 'trabajo', tipo: 'botones', campo: 'trabajo', aclara: '¿Le pasa solo con el correo del trabajo?', p: () => 'Una duda más: ¿le pasa solo con el correo del trabajo?', opciones: [{ v: 'solo', t: 'Solo con el del trabajo' }, { v: 'otras', t: 'También con otras cuentas' }, { v: 'nose', t: 'No sé' }], ejemplo: { v: 'solo', t: 'Solo con el del trabajo' } },
@@ -185,7 +185,7 @@
         return {
           asunto: 'No puede entrar al correo del trabajo',
           desc: punto(cap(r.relato)) + (hay ? ' Me aparece un mensaje de error (está copiado más abajo).' : ' No me aparece ningún mensaje.'),
-          resumen: `La persona no puede entrar a su correo del trabajo, ${ocurre}${eq ? ', desde su ' + eq.modelo : ''}. ${hay ? 'Aparece un mensaje de error (ver texto pegado). ' : 'No aparece ningún mensaje. '}Indicó que no sospecha que alguien más haya entrado a su cuenta. Ya probó: ${bajo(punto(r.probo || 'nada todavía'))} ${cap(IMPACTOS.find((x) => x.v === r.impacto).frase)} y ${URGENCIAS.find((x) => x.v === r.urgencia).frase}.`,
+          resumen: `La persona no puede entrar a su correo del trabajo, ${ocurre}. ${hay ? 'Aparece un mensaje de error (ver texto pegado). ' : 'No aparece ningún mensaje. '}Indicó que no sospecha que alguien más haya entrado a su cuenta. Ya probó: ${bajo(punto(r.probo || 'nada todavía'))} ${cap(IMPACTOS.find((x) => x.v === r.impacto).frase)} y ${URGENCIAS.find((x) => x.v === r.urgencia).frase}.`,
           aclar: [{ p: '¿Sospecha que alguien más entró a su cuenta o que entregó su clave por error?', r: r.sospecha_t }, { p: '¿Le pasa solo con el correo del trabajo?', r: r.trabajo_t }],
           valores: { desde: r.desde, error: hay ? r.error.trim() : '' }
         };
@@ -389,7 +389,7 @@
       s.fase = 'fin';
       ia('Me alegra que se haya resuelto. No se creó ningún caso y no se guardó esta conversación. Si el problema vuelve, aquí estaré.'); return;
     }
-    if (p.id === 'equipo' && v !== 'ninguno') { const e = eqsActuales().find((x) => x.id === v); s.ack = e ? `Anotado: ${e.modelo}.` : ''; }
+    if (p.id === 'equipo') s.ack = v === 'ninguno' ? 'Anotado: no es de un equipo.' : 'Anotado: equipo elegido.';   // D-112: el asistente no ve el nombre del equipo
     else if (p.id === 'impacto' || p.id === 'urgencia' || p.id === 'servicio') s.ack = '';
     else if (p.opcional && !txt) s.ack = 'Sin problema, la dejamos en blanco.';
     else s.ack = 'Anotado.';

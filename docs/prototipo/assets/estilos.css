@@ -616,3 +616,4 @@ body.con-asistente .toasts { bottom: 84px; }
 .asi-msg .btn { white-space: normal; text-align: left; justify-content: flex-start; height: auto; padding-top: var(--e2); padding-bottom: var(--e2); }
 .asi-msg .acciones-msg { flex-direction: column; align-items: stretch; }
 @media (max-width: 640px) { .asi-cab button span { display: none; } }
+.conmutador a[aria-current="true"] { background: var(--c-primario); color: var(--c-primario-texto); font-weight: 650; }

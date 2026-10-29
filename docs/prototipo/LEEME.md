@@ -51,10 +51,29 @@ Para cada una, diga **«sí»**, **«no»** o **«cambiar»** (y qué).
 10. **La empresa activa, la segunda verificación y el celular.**
     La empresa siempre se ve arriba. Quien aprueba dinero tiene un aviso de **segunda verificación** (rol Jefatura TI → «Por aprobar»; pruebe «Mi cuenta y seguridad»). En «Lista de pantallas» también están el **ingreso con código corto** (cuando se abre el correo en otro dispositivo) y **«Primeros pasos»** de una empresa nueva (rol Administrador, empresa «Clínica Santa Aurora»). ¿Está bien el nivel de seguridad? ¿Se usa bien en el celular?
 
+## Nuevo: el «Asistente de IA» (chat para armar un buen caso de ayuda)
+
+Es un botón azul **abajo a la derecha** («Asistente de IA»), que se ve con los roles **Empleado del portal** y **Técnico**. «Pedir ayuda» no cambia: sigue siendo la puerta normal (en la barra de arriba para el Técnico; en el menú y la barra inferior para el Empleado). **Es una simulación con guion fijo: no hay inteligencia artificial real**, y lo dice en el propio panel.
+
+**Cómo verlo (5 minutos)**
+
+1. Entre como **Empleado del portal** y pulse el botón. Elija uno de los tres ejemplos (o escriba con sus palabras): «No prende mi laptop», «No puedo entrar a mi correo» o «Necesito un mouse nuevo». El asistente pregunta **una cosa por vez**, y le muestra **tarjetas con sus equipos** para elegir (sin número de serie). Si no quiere contestar, el botón «Responder con el ejemplo» avanza solo.
+2. Al final aparece **su caso armado** (el mismo formulario de «Pedir ayuda», ya lleno), con «Esto verá TI». **El caso no existe hasta que pulse «Enviar a TI»**; también puede «Corregir» (vuelve al chat) o «Descartar». Pruebe dejar el asunto vacío para ver la validación.
+3. Dentro del panel, «Probar otras situaciones» muestra: **cuenta robada** (aviso fijo rojo «Llame ahora a TI»; también sale si en el correo responde «Sí, creo que me robaron la cuenta»), **proveedor de IA caído** (le lleva al formulario normal con lo que ya contó), límite de mensajes, tope de gasto, tema fuera de TI y datos de otra persona.
+4. Cambie a rol **Técnico** → «Mesa de ayuda» → filtro «Armados con el asistente». Abra un caso: verá la marca «Armado con el asistente», el resumen, lo que la persona ya probó, el texto del error pegado y el contexto que agrega la plataforma, más un clic de valoración. También está la lista en «Lista de pantallas» (PR-46 y PR-47) y «Configuración → Módulos activos» para apagar el asistente.
+
+**Tres preguntas para el CEO sobre el chat**
+
+1. ¿Las preguntas de una en una, con botones, le parecen el ritmo correcto, o hay demasiadas (el caso de la laptop hace unas 10)?
+2. ¿Prefiere que el caso armado se revise en el mismo panel (que se agranda, como ahora) o en una pantalla completa aparte?
+3. Al técnico le llega el caso con la marca «Armado con el asistente» y los bloques separados («lo dijo la persona», «lo redactó el asistente», «lo agregó la plataforma»). ¿Le queda claro quién dijo qué, o falta algo?
+
+Notas del diseño: el asistente **no ve el nombre de sus equipos** (las tarjetas las muestra la plataforma, D-112); la prioridad la calcula la plataforma, no el asistente; la conversación no se guarda: en el caso queda solo lo que la persona confirmó. Los teléfonos y textos legales son inventados o provisionales. Capturas 11 a 23 en `capturas/`.
+
 ## Qué es de la versión 1 y qué es solo una muestra
 
 - **Versión 1 (lo que se construirá primero):** acceso, empresas, usuarios y permisos, personas, catálogos, artículos, inventario, importación del Excel, órdenes de compra y recepción, órdenes de servicio y auditoría.
-- **Muestras (marcadas «Fase 2» o «Fase 3» en el menú):** mesa de ayuda, vencimientos, licencias, presupuesto, mapa de servicios, cambios, portal del empleado y avisos. Se incluyen solo para que vea cómo serán; **no** se construyen en la primera versión.
+- **Muestras (marcadas «Fase 2» o «Fase 3» en el menú):** mesa de ayuda, asistente de IA, vencimientos, licencias, presupuesto, mapa de servicios, cambios, portal del empleado y avisos. Se incluyen solo para que vea cómo serán; **no** se construyen en la primera versión.
 
 ## Lo que este prototipo no hace
 
@@ -66,4 +85,4 @@ Para cada una, diga **«sí»**, **«no»** o **«cambiar»** (y qué).
 
 - Todo el estilo (colores de los dos modos, tipografía, espaciado, componentes) está en **`assets/estilos.css`**, listo para reutilizar. Los siete grupos de color de estado y su contraste están en la «Guía visual».
 - La matriz de permisos sale del **registro único de permisos** (`assets/permisos.js`, generado). `assets/permisos-ajustes.js` aplica la decisión D-068 (16 permisos más sensibles, PS-232 y PS-233) mientras el registro no se actualice.
-- Las capturas de ejemplo están en `capturas/`.
+- Las capturas de ejemplo están en `capturas/`. El asistente vive en `assets/pantallas-asistente.js` (guiones, panel y vista del técnico) y sus estilos están al final de `estilos.css` (sección 10). Prueba automática de comprobación: se corre con Playwright (sin dependencias nuevas en el proyecto).
