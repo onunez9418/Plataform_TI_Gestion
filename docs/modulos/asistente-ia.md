@@ -2,7 +2,7 @@
 
 **Versión:** 0.2 (ajustada a D-081 a D-086) · **Fecha:** 29/10/2026 · **Autor:** Analista de Negocio
 **Base:** pedido del CEO (sección 1), `docs/documento-funcional.md` (en especial §16, §17, §18, §19, §20, §21 y §25), decisiones D-001, D-030, D-048, D-056, D-065 a D-080 y **D-081 a D-086** (`docs/equipo/decisiones.md`), `docs/registro-permisos.md` y los módulos `mesa-de-ayuda`, `portal-autoservicio`, `integraciones-api` y `notificaciones`.
-**Estado:** alcance aceptado por el Gerente de TI; el **visto bueno técnico del texto** sigue pendiente de las revisiones de Seguridad, Cumplimiento, QA, Auditor Técnico, Arquitecto (ADR-21) y Diseñador. **Cuándo:** **Fase 3, ola G (D-081)**, en tres entregas: ASI-A (paso G-1), ASI-B (paso G-4) y ASI-C (paso G-5).
+**Estado:** alcance aceptado por el Gerente de TI; el **visto bueno técnico del texto** sigue pendiente de las revisiones de Seguridad, Cumplimiento, QA, Auditor Técnico, Arquitecto (ADR-22) y Diseñador. **Cuándo:** **Fase 3, ola G (D-081)**, en tres entregas: ASI-A (paso G-1), ASI-B (paso G-4) y ASI-C (paso G-5).
 **Convenciones:** [SUPUESTO] = propuesta de este módulo con su resultado en la sección 12. [PENDIENTE] = valor o dato que nadie ha definido; no se inventa y se pregunta. [ESCALAR AL CEO] = dinero, tema legal o algo irreversible. [LEGAL] = depende de la opinión de un abogado. Los permisos son los del registro único `docs/registro-permisos.md`: **PS-235 a PS-239 están en su sección 12A y PS-240 en su sección 3** (D-084); el Analista ya los asignó y el módulo no inventa otros.
 **Palabras:** en este módulo **"entrega"** (A, B, C) es cada parte que se construye y se demuestra al CEO, igual que ENT-A y ENT-B. La palabra **"Etapa"** queda para las Etapas 0 a 7 del núcleo (D-056.3).
 

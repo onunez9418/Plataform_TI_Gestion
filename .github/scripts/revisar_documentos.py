@@ -30,7 +30,7 @@ import sys
 
 # Códigos de módulo cerrados (documento funcional 26.2).
 CODIGOS_NUCLEO = "ACC PLA EMP USR ROL PER CAT SKU INV OC OS IMP EXP AUD DAT UX".split()
-CODIGOS_MODULOS = "PRS ENT PRV GAR NOT LIC LIN DOM AYU ONB POR CMD CAM PRB PRE REP INT".split()
+CODIGOS_MODULOS = "PRS ENT PRV GAR NOT LIC LIN DOM AYU ONB POR CMD CAM PRB PRE REP INT ASI MSF".split()
 CODIGOS = set(CODIGOS_NUCLEO + CODIGOS_MODULOS)
 
 # Documentos vigentes: aquí las citas deben existir.
