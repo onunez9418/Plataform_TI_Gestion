@@ -30,6 +30,11 @@ BEGIN
     RAISE EXCEPTION 'Esta migración debe aplicarse con el rol "migraciones" (se aplicó con "%").', current_user;
   END IF;
 
+  -- Los normalizadores (tildes, mayúsculas) suponen UTF-8: con otra codificación dos nombres iguales no chocarían.
+  IF current_setting('server_encoding') <> 'UTF8' THEN
+    RAISE EXCEPTION 'La base debe estar en UTF-8 (está en %). Créela con ENCODING UTF8.', current_setting('server_encoding');
+  END IF;
+
   FOREACH r IN ARRAY ARRAY['migraciones', 'app_empresa', 'app_plataforma', 'lector_auditoria'] LOOP
     SELECT * INTO fila FROM pg_roles WHERE rolname = r;
     IF NOT FOUND THEN
