@@ -32,7 +32,7 @@ Pruebas en cada cambio y en cada entorno: (1) las de aislamiento corren como `ap
 ### Lista cerrada de objetos que pueden existir sin `empresa_id` (D04-1)
 La prueba de CI conoce **tres categorías**:
 
-**A. Tablas globales de negocio de plataforma: 17.** La mantiene el Arquitecto y la firma Seguridad.
+**A. Tablas globales de negocio de plataforma: 18.** La mantiene el Arquitecto y la firma Seguridad.
 
 | # | Tabla | Quién entra | Nota |
 |---|---|---|---|
@@ -44,7 +44,7 @@ La prueba de CI conoce **tres categorías**:
 | 6 | `moneda` | lectura directa | ISO 4217 con decimales |
 | 7 | `pais` | lectura directa | |
 | 8 | `administrador_plataforma` | `app_plataforma` (lectura) | |
-| 9 | `limite_plataforma` | `app_plataforma` (lectura) y función de ajuste | |
+| 9 | `limite_plataforma` | `app_plataforma` (lectura) y funciones de ajuste | topes y ajustes de plataforma por clave; también guarda el interruptor general y el tope global del asistente (`asistente.interruptor_general`, `asistente.tope_global`, ADR-22), sin tabla nueva |
 | 10 | `resumen_no_leidas` | funciones | por usuario, nunca recorriendo empresas |
 | 11 | `evento_seguridad_ingreso` | función | accesos fallidos sin empresa; 12 meses; el correo escrito se guarda **como huella** (tipo `correo_intento`, ADR-09), no en claro (D04-5) |
 | 12 | `autorizacion_soporte` | `app_plataforma` y `app_soporte` (lectura) + funciones | ADR-03; sin escritura directa |
@@ -53,14 +53,15 @@ La prueba de CI conoce **tres categorías**:
 | 15 | `purga_acta` | funciones | **solo agregar**; la constancia se copia también al almacén externo (ADR-12, D04-3) |
 | 16 | `accion_plataforma` | funciones | estado de las acciones con dos personas (ADR-23): nuevo |
 | 17 | `congelacion_incidente` | funciones | congelación por incidente (ADR-23): nuevo |
+| 18 | `directorio_microsoft` | funciones `directorio_microsoft_reservar/liberar` | un directorio de Microsoft se conecta a una sola empresa (ADR-21): huella del directorio y empresa; nuevo |
 
-`invitacion` y `clave_api` **dejan de ser globales** (D04-2, alternativa preferida de Datos): pertenecen a una empresa, se administran (listar, crear, cancelar, reenviar, rotar, revocar) con la seguridad por fila normal, son `sin_soporte`, y solo la búsqueda por huella antes de conocer la empresa (`invitacion_leer`, `clave_api_validar`) usa una función apoyada en la política `TO migraciones` de ADR-03. Se evita un conjunto de ocho funciones y la lista global baja en dos tablas (las dos tablas nuevas de plataforma, 16 y 17, la devuelven a 17). Ambas llevan `UNIQUE (empresa_id, huella)` y un índice **no único** `(huella)` para la búsqueda (colisión de huellas de 128 bits o más: despreciable; no hay valor elegido por el usuario que pueda sondear).
+`invitacion` y `clave_api` **dejan de ser globales** (D04-2, alternativa preferida de Datos): pertenecen a una empresa, se administran (listar, crear, cancelar, reenviar, rotar, revocar) con la seguridad por fila normal, son `sin_soporte`, y solo la búsqueda por huella antes de conocer la empresa (`invitacion_leer`, `clave_api_validar`) usa una función apoyada en la política `TO migraciones` de ADR-03. Se evita un conjunto de ocho funciones y la lista global baja en dos tablas (las filas 16, 17 y 18 son nuevas). Ambas llevan `UNIQUE (empresa_id, huella)` y un índice **no único** `(huella)` para la búsqueda (colisión de huellas de 128 bits o más: despreciable; no hay valor elegido por el usuario que pueda sondear).
 
 **B. Esquemas de infraestructura (sin `empresa_id`):** `cola` (tablas de la librería, con su propio dueño; la aplicación entra solo por las funciones de la librería, H-SEG-44; carga útil solo con identificadores, errores normalizados, ADR-02), `catalogo_aislamiento` (registro de la macro, solo `SELECT` para `app_empresa`) y `_prisma_migrations` (esquema `sistema`, sin acceso de la aplicación).
 
 **C. Particiones** (`auditoria_2026_10`, ...): no son tablas nuevas; la prueba las resuelve con `pg_inherits` hacia su padre, que debe estar en A o tener la macro. Ningún rol de aplicación tiene permisos sobre ellas.
 
-De las 13 tablas de D-039.4 se conservan 11 y 2 pasan a empresa; las filas 12 a 15 ya se habían agregado antes y las filas 16 y 17 son nuevas: **D-039.4 queda enmendada**. Se resuelven las preguntas de DevOps: **la cola es global y el registro de plataforma es global**; el "registro de empresa", lo que vio soporte, no es global: es la auditoría de la propia empresa.
+De las 13 tablas de D-039.4 se conservan 11 y 2 pasan a empresa; las filas 12 a 15 ya se habían agregado antes y las filas 16, 17 y 18 son nuevas: **D-039.4 queda enmendada**. Se resuelven las preguntas de DevOps: **la cola es global y el registro de plataforma es global**; el "registro de empresa", lo que vio soporte, no es global: es la auditoría de la propia empresa.
 
 **Aclaraciones:**
 - `empresa` y `membresia` **no** son globales: tienen seguridad por fila. Se llega a ellas con `resolver_empresa` y `mis_empresas`.
@@ -74,10 +75,10 @@ Lo único que cada rol puede ejecutar sobre lo global. **Regla común (H-SEG-34)
 |---|---|
 | `app_empresa` — acceso | `sesion_crear`, `sesion_validar`, `sesion_revocar` (una sesión, o todas las de una cuenta), `abrir_contexto` (sesión + empresa + membresía + versión del rol), `enlace_ingreso_crear`, `enlace_ingreso_emitir` (el trabajador fija la huella del valor nacido en él, ADR-08), `enlace_ingreso_consumir`, `codigo_corto_consumir`, `segundo_factor_*` |
 | `app_empresa` — contexto | `resolver_empresa`, `mis_empresas`, `empresas_activas`, `miembros_listar` (el correo vive en `cuenta_usuario`, global), `invitacion_leer(huella)`, `invitacion_aceptar`, `clave_api_validar(huella)`, `congelacion_activa(empresa_id)` (solo lectura, la consultan `anonimizar` y los borrados por plazo, ADR-23) |
-| `app_empresa` — servicios | `resumen_no_leidas_*`, `limite_consumir`, `evento_seguridad_ingreso_registrar`, `estado_correo_registrar`, `autorizacion_soporte_crear`, `autorizacion_soporte_revocar`, `autorizacion_soporte_listar` (la empresa sale del contexto, nunca de un parámetro) |
+| `app_empresa` — servicios | `resumen_no_leidas_*`, `limite_consumir`, `evento_seguridad_ingreso_registrar`, `estado_correo_registrar`, `autorizacion_soporte_crear`, `autorizacion_soporte_revocar`, `autorizacion_soporte_listar`, `directorio_microsoft_reservar/liberar` (ADR-21), `asistente_global_leer` (solo lectura del interruptor y el tope global, ADR-22); la empresa sale del contexto, nunca de un parámetro |
 | `app_empresa` — funciones comunes, no DEFINER | `siguiente(empresa_id, clave, n)` (SECURITY **INVOKER**: fija la empresa y reserva en una llamada, ADR-15), `anonimizar` (INVOKER, consulta `congelacion_activa`) |
 | `app_soporte` | `soporte_usar`, `soporte_abrir_lectura`, `soporte_auditar` (ADR-03) |
-| `app_plataforma` | `empresa_crear`, `empresa_suspender`, `empresa_reactivar` (PS-01), `rescate_solicitar/aprobar/ejecutar`, `acceso_emergencia_solicitar/aprobar/emitir` (PS-02 y PS-05, con las dos personas comprobadas **dentro** de la base), `limite_plataforma_ajustar` (PS-04), `correo_global_cambiar` (PS-06), `sesiones_revocar_alcance` (una persona, una empresa o todas; también enlaces), `clave_api_suspender`, `suspension_reaplicar`, `purga_acta_aprobar`, `congelacion_declarar/confirmar/levantar`, `crear_particion_auditoria(mes)`, `webauthn_*` (ADR-08). Detalle y controles en ADR-23 |
+| `app_plataforma` | `empresa_crear`, `empresa_suspender`, `empresa_reactivar` (PS-01), `rescate_solicitar/aprobar/ejecutar`, `acceso_emergencia_solicitar/aprobar/emitir` (PS-02 y PS-05, con las dos personas comprobadas **dentro** de la base), `limite_plataforma_ajustar` (PS-04), `correo_global_cambiar` (PS-06), `sesiones_revocar_alcance` (una persona, una empresa o todas; también enlaces), `clave_api_suspender`, `suspension_reaplicar`, `purga_acta_aprobar`, `congelacion_declarar/confirmar/levantar`, `asistente_interruptor_cambiar` (PS del asistente para la plataforma, ADR-22), `crear_particion_auditoria(mes)`, `webauthn_*` (ADR-08). Detalle y controles en ADR-23 |
 | `mantenimiento` | `purgar_particion_auditoria`, `purgar_particion_evento_seguridad`, `contador_reparar` |
 | `lector_auditoria` | `transaccion_mas_antigua()` (solo lectura, para la marca de agua de la copia, ADR-11) |
 
@@ -108,7 +109,8 @@ Pruebas (1) a (5) de arriba, la de lista global (categorías A, B, C), la de fun
 | H-SEG-42 | La separación de credenciales por proceso vive en ADR-01; aquí se fija qué rol existe en qué proceso. |
 | H-SEG-43 | Corregida la frase "la copia externa no contiene valores personales". |
 | H-SEG-44 | `cola` es categoría B y solo se entra por las funciones de la librería (con error normalizado, ADR-02). |
-| D04-1 | Incorporado: tres categorías. El README pasa de "13 a 18" a "17 tablas más infraestructura". |
+| ADR-21 y ADR-22 | Fila 18 (`directorio_microsoft`) y funciones asociadas; el estado global del asistente reutiliza `limite_plataforma` en lugar de crear otra tabla. |
+| D04-1 | Incorporado: tres categorías. El README pasa de "13 a 18" a "18 tablas más infraestructura" (17 de plataforma más `directorio_microsoft` de ADR-21). |
 | D04-2 | Incorporado (alternativa preferida): `invitacion` y `clave_api` son tablas de empresa. |
 | D04-3 | Incorporado en ADR-12 y ADR-23 (constancia externa y congelación). |
 | D04-4 | Incorporado como medición (H5/H10) en ADR-16. |

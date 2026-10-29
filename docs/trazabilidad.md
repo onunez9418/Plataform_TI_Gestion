@@ -1,6 +1,6 @@
 # Trazabilidad: requisito, etapa, criterio de aceptación
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `820c6b6` (más cambios sin guardar en: modificado: docs/equipo/decisiones.md) · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los 19 módulos de `docs/modulos/` que ya están completos (incluidos los dos nuevos, `microsoft-entra-intune` y `asistente-ia`, en su versión 0.1). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del 2026-10-26.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `627d5ac` · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los 19 módulos de `docs/modulos/` que ya están completos (incluidos los dos nuevos, `microsoft-entra-intune` y `asistente-ia`, en su versión 0.1). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del 2026-10-26.
 
 **Cómo se hizo.** Un script lee las tablas de requisitos (columnas Cuándo y CA), la tabla de reglas RN con su columna CA, la sección 22 con su tabla 22.1 "Se ejecuta en" y los criterios de los módulos. Después QA leyó el texto de los requisitos y criterios dudosos. Estados:
 
@@ -15,7 +15,7 @@ El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): 
 
 ## Resumen de huecos
 
-| Medida | Antes (2026-10-26, commit 5ed0dcb) | Hoy (2026-10-29, commit 820c6b6) |
+| Medida | Antes (2026-10-26, commit 5ed0dcb) | Hoy (2026-10-29, commit 627d5ac) |
 |---|---|---|
 | Filas RF y RNF del núcleo (con las retiradas) | 316 | 317 |
 | Retiradas (RF-USR-004, RF-IMP-012, RF-OS-007) | 3 | 3 |
@@ -42,7 +42,7 @@ Lectura: las 24 reglas del núcleo tienen criterio (RN-024, la congelación, ent
 
 ## Lo que falta, exacto, y de quién
 
-Lista cerrada al 2026-10-29 (commit 820c6b6). Cada fila dice qué falta, el texto que QA propone y quién lo cierra. El texto de QA es una **propuesta**: lo decide y lo redacta el Analista (o el escuadrón). Estas filas se recalculan al regenerar: cuando el Analista las resuelva, desaparecen solas de la primera tabla.
+Lista cerrada al 2026-10-29 (commit 627d5ac). Cada fila dice qué falta, el texto que QA propone y quién lo cierra. El texto de QA es una **propuesta**: lo decide y lo redacta el Analista (o el escuadrón). Estas filas se recalculan al regenerar: cuando el Analista las resuelva, desaparecen solas de la primera tabla.
 
 **1. «Sin hacer» del Analista (se detectan leyendo el texto actual)**
 

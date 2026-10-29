@@ -1,6 +1,6 @@
 # Criterios de aceptación por etapa
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `820c6b6` (más cambios sin guardar en: modificado: docs/equipo/decisiones.md) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los 19 módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `627d5ac` (árbol de documentos fuente limpio al generar) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los 19 módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
 
 **Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del 2026-10-26 (451 criterios, commit `5ed0dcb`). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).
 
@@ -12,7 +12,7 @@
 - **Bloqueante:** sí = si falla, la etapa no se aprueba. "No (bloquea su módulo)" = es de Fase 2 o 3 y bloquea la entrega de ese módulo, no la v1 (D-056).
 - **Etapa heredada:** el criterio solo cita reglas RN y no hay fila RF que lo cite; tomó la etapa más frecuente de su módulo. Debe confirmarlo el escuadrón.
 
-## Resumen (checkpoint 820c6b6, 2026-10-29)
+## Resumen (checkpoint 627d5ac, 2026-10-29)
 
 **603 criterios:** 145 del núcleo (identificadores con letra, que son 105 números, CA-001 a CA-105) y 458 de los 19 módulos completos. El 2026-10-26 eran 451 (116 y 335): +152. Qué cambió: **11 criterios dejaron de existir como uno solo** porque se partieron (CA-038, CA-094, CA-GAR-01, CA-GAR-04, CA-PRS-01, CA-PRS-03, CA-PRS-08, CA-PRS-12, CA-PRS-14, CA-PRV-02, CA-PRV-04) y **67 criterios nuevos** los reemplazan o se suman: en el núcleo 31 (CA-015g, h e i de lectura de soporte; CA-038a a d; CA-094a a c; CA-095a a j de congelación por incidente, D-080; CA-096 a CA-105, con CA-104 en a y b) y en los módulos PRS 21, GAR 9 y PRV 6.
 
