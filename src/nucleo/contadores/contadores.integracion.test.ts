@@ -62,3 +62,23 @@ describe.skipIf(!hayBase)('contadores (base real)', () => {
     await expect(reservarContador(alfa, CLAVE, 0)).rejects.toThrow()
   })
 })
+
+describe.skipIf(!hayBase)('siguiente() no deja la empresa fijada (DEF-AIS-01)', () => {
+  let beta = ''
+  beforeAll(async () => {
+    const f = await conGlobal((tx) => tx.consultar<{ id: string }>("SELECT id FROM empresa WHERE slug = 'beta'"))
+    beta = f[0]!.id
+  })
+  afterAll(() => cerrarConexiones())
+
+  it('tras reservar sin empresa, la misma transacción sigue viendo cero filas de negocio', async () => {
+    const r = await conGlobal(async (tx) => {
+      await tx.consultar('SELECT public.siguiente($1::uuid, $2::text, 1)', [beta, 'sku:QAX'])
+      const [{ v }] = await tx.consultar<{ v: string | null }>("SELECT current_setting('app.empresa_id', true) AS v")
+      const [{ n }] = await tx.consultar<{ n: number }>('SELECT count(*)::int AS n FROM sku')
+      return { v, n }
+    })
+    expect(r.v === '' || r.v === null).toBe(true)
+    expect(r.n).toBe(0)
+  })
+})

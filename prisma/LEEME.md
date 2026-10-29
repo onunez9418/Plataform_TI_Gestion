@@ -14,6 +14,7 @@ Todo lo que toca la base vive aquí y en `src/nucleo/aislamiento` y `src/nucleo/
 | `0002_catalogos_sku` | `ubicacion`, `proveedor`, `persona`, `categoria`, `campo_definicion`, `contador` + `siguiente()`, `sku` |
 | `0003_inventario` | `activo`, `existencia`, `asignacion`, `valor_campo`, transiciones de estado |
 | `0004_compras` | `orden_compra`, `orden_linea`, `orden_aprobacion`, `recepcion`, `recepcion_linea` |
+| `0005_siguiente_sin_residuo` | corrige `siguiente()`: no deja la empresa fijada (DEF-AIS-01 de QA) |
 
 ## Reglas de oro
 - Toda tabla de empresa se crea con `SELECT aplicar_aislamiento('tabla')`: `empresa_id`, FORCE RLS, política única, permisos mínimos. Sin la empresa fijada: **cero filas, sin error**.
@@ -23,4 +24,4 @@ Todo lo que toca la base vive aquí y en `src/nucleo/aislamiento` y `src/nucleo/
 
 ## Cómo probar el aislamiento
 - Guion SQL (entra como `app_empresa`): `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f prisma/verificar-aislamiento.sql` (14 líneas `PASA`).
-- Pruebas con base real (200 y tantas peticiones intercaladas, conexión cortada, contadores, reglas): `PRUEBAS_BD=1 DATABASE_URL=... PLATFORM_DATABASE_URL=... npx vitest run --config vitest.config.mts src/nucleo/aislamiento src/nucleo/contadores`.
+- Pruebas con base real (200 y tantas peticiones intercaladas, conexión cortada, contadores, reglas): `PRUEBAS_BD=1 DATABASE_URL=... PLATFORM_DATABASE_URL=... npx vitest run --config vitest.base.config.mts src/nucleo`.

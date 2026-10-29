@@ -25,6 +25,13 @@ describe('validarSql (la empresa solo la fija conEmpresa)', () => {
     'SELECT pg_advisory_lock(1)',
     'SELECT 1; SELECT 2',
     '   ',
+    "/**/ SET app.empresa_id = 'x'",
+    '/**/ COMMIT',
+    '/* a */ RESET ALL',
+    "-- x\nSET app.empresa_id = 'x'",
+    'SELECT 1 -- comentario',
+    'PREPARE p AS SELECT 1',
+    'DISCARD ALL',
   ])('rechaza %s', (sql) => {
     expect(() => validarSql(sql)).toThrow(ErrorUsoAislamiento)
   })
