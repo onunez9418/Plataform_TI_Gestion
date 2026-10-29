@@ -12,7 +12,7 @@ NOMBRES = {'ACC': 'Acceso', 'AYU': 'Mesa de ayuda', 'CAM': 'Gestión de cambios'
            'ENT': 'Entregas y devoluciones', 'GAR': 'Garantías y mantenimiento', 'INT': 'Integraciones y API', 'LIC': 'Licencias de software',
            'LIN': 'Líneas móviles', 'NOT': 'Notificaciones', 'ONB': 'Onboarding y offboarding', 'POR': 'Portal de autoservicio',
            'PRB': 'Gestión de problemas', 'PRE': 'Presupuesto y costos', 'PRS': 'Personas y ubicaciones', 'PRV': 'Proveedores y contratos',
-           'REP': 'Reportes y tableros', 'MSF': 'Microsoft Entra e Intune (en redacción)', 'ASI': 'Asistente de IA (en redacción)'}
+           'REP': 'Reportes y tableros', 'MSF': 'Microsoft Entra ID e Intune', 'ASI': 'Asistente de IA'}
 
 # Lo que valía el 2026-10-26 (451 criterios): dónde empezaban y dónde terminaban
 ANT_EMPIEZAN = {0: 0, 1: 52, 2: 37, 3: 4, 4: 44, 5: 24, 6: 2, 7: 3, L.FASE2: 134, L.FASE3: 151}
@@ -179,13 +179,21 @@ def generar_criterios(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio
         filas.append([c, E(et), E(doc) + ('' if doc == et else ' (DIFIERE)'), porque])
     o.append(tabla(['Criterio', 'Etapa según QA', 'Documento', 'Por qué'], filas) + '\n')
     # módulos nuevos
-    o.append('### Módulos nuevos en redacción\n')
+    o.append('### Módulos nuevos (microsoft-entra-intune y asistente-ia)\n')
+    o.append("Regla de QA: un módulo nuevo entra a las cifras cuando su archivo existe, está guardado en un commit sin cambios pendientes y tiene sigla, requisitos, reglas RN, sección de criterios y al menos un criterio con su sigla. Si no, queda listado como pendiente.\n")
     filas = []
     for nombre, sg in L.MODULOS_NUEVOS.items():
         est = L.estado_modulo_nuevo(nombre)
-        filas.append([f'`docs/modulos/{nombre}.md`', sg, NOMBRES.get(sg, sg), est, 'incluido en las cifras' if est == 'completo' else 'NO incluido: pendiente. Se incorpora al regenerar cuando el archivo exista con sigla, requisitos, reglas RN, sección de criterios y al menos un criterio `CA-' + sg + '-NN`.'])
-    o.append(tabla(['Archivo', 'Sigla', 'Módulo', 'Estado al ' + HOY, 'Qué hace QA'], filas) + '\n')
-    o.append('Tampoco hay mención de estos módulos en el documento funcional (sección 26.2 de prefijos), en el registro de permisos ni en las decisiones; QA no puede suponer su alcance. Cuando lleguen: criterios por etapa, trazabilidad, aislamiento por empresa de cada tabla nueva y permisos denegados por petición directa, como en todo módulo.\n')
+        if est == 'completo':
+            cs = [c for c, v in mcas.items() if v['modulo'] == nombre]
+            nrf = sum(1 for r in mreqs.values() if r['modulo'] == nombre)
+            nrn = sum(1 for r in mrns.values() if r['modulo'] == nombre)
+            hered = sum(1 for c in cs if todos[c]['heredada'])
+            filas.append([f'`docs/modulos/{nombre}.md`', sg, est + ' (v0.1, primera redacción)', f'{len(cs)} criterios, {nrf} RF y RNF, {nrn} RN; todos en Fase 3 (no bloquean la v1; se cierran al activar el módulo, D-076.4); {hered} con etapa heredada del módulo'])
+        else:
+            filas.append([f'`docs/modulos/{nombre}.md`', sg, est, 'NO incluido: pendiente. Se incorpora al regenerar cuando cumpla la regla.'])
+    o.append(tabla(['Archivo', 'Sigla', 'Estado al ' + HOY, 'Qué hace QA'], filas) + '\n')
+    o.append('Ninguno de los dos aparece todavía en el registro de prefijos del documento funcional (sección 26.2) ni en el registro de permisos: QA los lee como propuestas del Analista pendientes de verificación del Auditor Técnico, QA, Seguridad y Cumplimiento. Pruebas que pide QA al activarlos: aislamiento por empresa de cada tabla nueva, permiso denegado por petición directa de cada acción, y las pruebas propias de cada uno (asistente: aislamiento con 100 intentos por herramienta de lectura, instrucciones ocultas y datos enviados al proveedor; Microsoft: simulador de Microsoft, credencial como secreto y solo lectura).\n')
     # detalle
     o.append('---\n')
     o.append('## Detalle por módulo\n')
@@ -217,7 +225,7 @@ def main():
     escribir = '--escribir' in sys.argv
     commit = git('rev-parse', '--short', 'HEAD')
     estado = git('status', '--short', 'docs/documento-funcional.md', 'docs/modulos', 'docs/registro-permisos.md', 'docs/equipo/decisiones.md')
-    sucio = ', '.join(('sin commit: ' if l.startswith('??') else 'modificado: ') + l[3:].strip() for l in estado.split('\n') if l.strip())
+    sucio = ', '.join(('sin commit: ' if l.strip().startswith('??') else 'modificado: ') + l.strip().split(None, 1)[1] for l in estado.split('\n') if l.strip())
     datos = cargar()
     nreqs, nrns, ncas, mreqs, mrns, mcas, todos = datos
     por, comp = cifras(todos)
@@ -229,12 +237,10 @@ def main():
     print('criterios nuevos con juicio de etapa:', len(J.ETAPA_NUEVOS), '| no existen:', falta, '| etapa de QA distinta de la del documento:', [(c, E(a), E(b)) for c, a, b in dif])
     crit = generar_criterios(*datos, commit, sucio)
     if escribir:
+        import traza
+        tz = traza.generar(*datos, commit, sucio)   # se genera todo antes de tocar los archivos
         open('docs/calidad/criterios-por-etapa.md', 'w', encoding='utf8').write(crit)
-        try:
-            import traza
-            open('docs/trazabilidad.md', 'w', encoding='utf8').write(traza.generar(*datos, commit, sucio))
-        except ImportError:
-            pass
+        open('docs/trazabilidad.md', 'w', encoding='utf8').write(tz)
     else:
         print(len(crit.split('\n')), 'líneas de criterios')
 

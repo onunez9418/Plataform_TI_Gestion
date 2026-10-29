@@ -39,6 +39,14 @@ CITA_MAL = {
 }
 ACEPTABLES = {'RF-OC-027'}   # cita mal apuntada que QA da por buena
 
+# Requisitos que citan el criterio correcto, pero cuya cabecera no los nombra: QA leyó el texto y sí los prueba.
+LEIDOS_OK = {
+    'RF-USR-006': 'Leído por QA: CA-045 prueba que dar de baja no borra el historial y CA-054a que anonimizar exige el plazo y la confirmación de legal. La cabecera de esos criterios no nombra a RF-USR-006.',
+    'RF-PER-010': 'Leído por QA: CA-PRS-01d prueba el alta manual con homónimo y aviso, y CA-PRS-11 la importación de Personas (Etapa 4). La cabecera de esos criterios no nombra a RF-PER-010.',
+    'RF-OC-041': 'Leído por QA: CA-045 nombra la recepción entre lo que nunca se borra. La cabecera de CA-045 no nombra a RF-OC-041.',
+    'RF-UX-008': 'Leído por QA: CA-011b prueba la referencia y la columna omitida, y CA-042 el secreto enmascarado. La cabecera de esos criterios no nombra a RF-UX-008.',
+}
+
 # ---------------------------------------------------------------------------
 # 3. Reglas RN con criterio citado en su columna que no las prueba del todo (lectura al 2026-10-29).
 # Salieron: RN-009 (CA-096 prueba lista, bandeja y exportación sin total entre monedas) y RN-018 (CA-GAR-04a prueba
@@ -217,6 +225,7 @@ D076 = [
     (1, 'CA-070 (segundo administrador y resumen mensual)', 'CA-070', 'HECHO en el texto. Corre en Etapa 5 según 22.1.', 'Analista (hecho)'),
     (1, 'RN-008', 'CA-085', 'HECHO. Recorre las acciones con motivo, incluye el tope de 500 caracteres.', 'Analista (hecho)'),
     (1, 'RF-PLA-013 (lectura de soporte)', 'CA-015g, CA-015h, CA-015i', 'HECHO (2026-10-29). 015g prueba autorización vencida (10:01 contra 10:00), ajena y ya usada, con cero filas y escritura que falla, y el borde de las 09:59, que todavía lee; 015i la válida; 015h (sin secretos ni derechos) corre en Etapa 2.', 'Analista (hecho)'),
+    (1, 'CA-NOT-10 y CA-NOT-13', 'CA-NOT-10, CA-NOT-13', 'PENDIENTE. Corren en Etapa 1 y cubren requisitos de Fase 2 (rebotes, bandeja, campana). Corren en la Etapa 1; hay que cerrarlos antes de abrirla. No es un «Sin hacer» nuevo: es de la lectura anterior.', 'Analista (escuadrón C)'),
     (1, 'RF-IMP-017 y RF-DAT-010', 'CA-105', 'BLOQUEADO (P-002). El texto está (verificación documental); no se puede ejecutar hasta que el Cliente (CEO) entregue el Excel, la orden de compra y la orden de servicio reales con nombres reemplazados.', 'Cliente (CEO) entrega; QA verifica el archivo recibido'),
     (2, 'RN-015', 'CA-086', 'HECHO (ya redactado).', 'Analista (hecho)'),
     (2, 'RN-016', 'CA-087', 'HECHO (ya redactado).', 'Analista (hecho)'),
@@ -232,8 +241,7 @@ D076 = [
     (4, 'RF-GAR-003 y RF-GAR-006', 'CA-GAR-04c, CA-GAR-04d, CA-GAR-04e', 'HECHO. La mitad de RF-GAR-006 «una ampliación es una garantía nueva» queda en CA-GAR-04f (Fase 2).', 'Analista (hecho)'),
     (4, 'RF-ENT-002 y RF-ENT-016', 'CA-ENT-01', 'PENDIENTE. «Sin hacer» del Analista al 2026-10-29: CA-ENT-01 no prueba el borrador ni renovar un préstamo. QA propone el texto (ver «Lo que falta»).', 'Analista (escuadrón D)'),
     (4, 'CA-ENT-08 y CA-ENT-10', 'CA-ENT-08, CA-ENT-10', 'PENDIENTE. «Sin hacer»: «falla la entrega de uno» y «cuando pasa el tiempo» siguen sin datos.', 'Analista (escuadrón D)'),
-    (4, 'RF-INV-033 y CA-024 (RF-OC-028 en la cabecera)', 'CA-024', 'PENDIENTE. «Sin hacer»: CA-024 sigue cubriendo RF-OC-028 (Etapa 7) y corre en Etapa 4.', 'Analista'),
-    (4, 'CA-NOT-10 y CA-NOT-13', 'CA-NOT-10, CA-NOT-13', 'PENDIENTE. Corren en Etapa 1 y cubren requisitos de Fase 2 (rebotes, bandeja, campana). No es un «Sin hacer» nuevo: es de la lectura anterior.', 'Analista (escuadrón C)'),
+    (4, 'CA-024 (RF-OC-028 en la cabecera)', 'CA-024', 'PENDIENTE. «Sin hacer»: CA-024 sigue cubriendo RF-OC-028 (Etapa 7) y corre en Etapa 4.', 'Analista'),
     (5, 'RF-OC-048', 'CA-055, CA-102', 'PARCIAL. El aviso «compra fraccionada» tiene criterio (CA-102). El informe mensual espera a P-018 y los bordes de CA-102 no están fijados.', 'Gerente de TI responde P-018; Analista'),
     (5, 'RF-OC-049 y RF-OC-050', 'CA-061, CA-103', 'HECHO. CA-103 prueba el borde de los 7 días (10:00:00 acepta, 10:00:01 rechaza). P-019 (con cambios) sigue abierto.', 'Analista (hecho); Gerente de TI responde P-019'),
     (5, 'RF-OC-026 (mapa acto-casilla), RF-OC-051', 'CA-097, CA-098, CA-104a, CA-104b', 'HECHO (2026-10-29).', 'Analista (hecho)'),

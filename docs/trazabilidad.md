@@ -1,6 +1,6 @@
 # Trazabilidad: requisito, etapa, criterio de aceptación
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `f3c76eb` · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los 18 módulos de `docs/modulos/` que ya están completos (los dos módulos nuevos en redacción, `microsoft-entra-intune` y `asistente-ia`, figuran en `docs/calidad/criterios-por-etapa.md`). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del 2026-10-26.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `820c6b6` (más cambios sin guardar en: modificado: docs/equipo/decisiones.md) · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los 19 módulos de `docs/modulos/` que ya están completos (incluidos los dos nuevos, `microsoft-entra-intune` y `asistente-ia`, en su versión 0.1). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del 2026-10-26.
 
 **Cómo se hizo.** Un script lee las tablas de requisitos (columnas Cuándo y CA), la tabla de reglas RN con su columna CA, la sección 22 con su tabla 22.1 "Se ejecuta en" y los criterios de los módulos. Después QA leyó el texto de los requisitos y criterios dudosos. Estados:
 
@@ -15,7 +15,7 @@ El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): 
 
 ## Resumen de huecos
 
-| Medida | Antes (2026-10-26, commit 5ed0dcb) | Hoy (2026-10-29, commit f3c76eb) |
+| Medida | Antes (2026-10-26, commit 5ed0dcb) | Hoy (2026-10-29, commit 820c6b6) |
 |---|---|---|
 | Filas RF y RNF del núcleo (con las retiradas) | 316 | 317 |
 | Retiradas (RF-USR-004, RF-IMP-012, RF-OS-007) | 3 | 3 |
@@ -23,17 +23,17 @@ El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): 
 | Citas rotas en la columna CA de un requisito o regla (criterio inexistente o «padre» que ya se partió) | 0 | 0 |
 | Citas sueltas en el texto a un criterio inexistente (más alusiones históricas a criterios ya partidos) | - | 1 (más 3) |
 | Cabeceras de criterio que nombran un RF, RNF o RN que no existe | - | 0 |
-| Cubiertos: el criterio los lista | 295 | 307 |
+| Cubiertos: el criterio los lista | 295 | 311 |
 | No probados de verdad (núcleo) | 14 | 2 |
 | No probados de verdad (módulos con parte en la v1) | 5 | 2 |
 | Citas mal apuntadas o incompletas (núcleo) | 4 | 1 |
-| Para verificar leyendo el texto (sin juicio de QA todavía) | 0 | 4 |
+| Para verificar leyendo el texto (sin juicio de QA todavía) | 0 | 0 |
 | Reglas RN con un criterio en su columna CA | 23 de 23 | 24 de 24 |
 | Reglas RN que el propio criterio también cita (cita de vuelta) | 10 de 23 | 13 de 24 |
 | Reglas RN que ninguna cabecera de criterio nombra (solo están en la columna CA de la regla) | 13 de 23 | 9 de 24 |
 | Reglas RN cuyo criterio no las prueba del todo | 4 (RN-009, RN-018, RN-021, RN-023) | 3 (RN-021, RN-023, RN-024) |
-| Criterios sin ningún requisito ni regla que los cite o liste | - | 2 (CA-AYU-26, CA-PRE-12) |
-| Criterios citados solo por reglas RN o RS (sin fila RF) | 59 | 103 |
+| Criterios sin ningún requisito ni regla que los cite o liste | - | 3 (CA-AYU-26, CA-MSF-38, CA-PRE-12) |
+| Criterios citados solo por reglas RN o RS (sin fila RF) | 57 | 105 |
 | Reglas RN de módulos sin criterio (de ellas, en módulos con parte en la v1) | - | 179 (90) |
 | RF y RNF de módulos sin criterio (de ellos, en módulos con parte en la v1) | - | 61 (39) |
 | «Sin hacer» del Analista que siguen abiertos | - | 6 |
@@ -42,7 +42,7 @@ Lectura: las 24 reglas del núcleo tienen criterio (RN-024, la congelación, ent
 
 ## Lo que falta, exacto, y de quién
 
-Lista cerrada al 2026-10-29 (commit f3c76eb). Cada fila dice qué falta, el texto que QA propone y quién lo cierra. El texto de QA es una **propuesta**: lo decide y lo redacta el Analista (o el escuadrón). Estas filas se recalculan al regenerar: cuando el Analista las resuelva, desaparecen solas de la primera tabla.
+Lista cerrada al 2026-10-29 (commit 820c6b6). Cada fila dice qué falta, el texto que QA propone y quién lo cierra. El texto de QA es una **propuesta**: lo decide y lo redacta el Analista (o el escuadrón). Estas filas se recalculan al regenerar: cuando el Analista las resuelva, desaparecen solas de la primera tabla.
 
 **1. «Sin hacer» del Analista (se detectan leyendo el texto actual)**
 
@@ -67,6 +67,7 @@ Lista cerrada al 2026-10-29 (commit f3c76eb). Cada fila dice qué falta, el text
 | CA-017 y RF-CAT-008 | CA-017 no nombra el prefijo reservado `ACTV` (D-079); RF-CAT-008 no cita CA-094a. | Agregar `ACTV` al ejemplo de CA-017 («un prefijo reservado como `OC` o `ACTV` se rechaza») y citar CA-094a en RF-CAT-008. | Analista | Etapa 2 |
 | RF-GAR-006 | La mitad «una ampliación es una garantía nueva» la prueba CA-GAR-04f (Fase 2). | Citar CA-GAR-04f o decir que esa mitad es de Fase 2. | Analista (escuadrón A) | Etapa 4 |
 | Documento funcional, línea 1233 (sección 26.1) | Dice «CA-095 … son nuevos»: CA-095 ya no existe como uno solo (partido en 095a a 095j). La línea del módulo DAT (1230) dice «CA-095a a i» y deja fuera CA-095j. | Decir «CA-095a a j». | Analista | Auditoría de citas |
+| RF-USR-006, RF-PER-010, RF-OC-041, RF-UX-008 | Citan el criterio correcto, pero la cabecera de ese criterio no nombra al requisito (QA leyó los textos y sí lo prueban). | Agregar el requisito a la cabecera de CA-045 y CA-054a, CA-016a y CA-PRS-01d, y CA-011b y CA-042. | Analista | Auditoría de citas |
 | CA-NOT-10, CA-NOT-13 | Corren en Etapa 1 y cubren requisitos de Fase 2. | El escuadrón C dice qué parte corre en Etapa 1 (ver criterios-por-etapa.md). | Analista (escuadrón C) | Etapa 1 |
 | CA-PRS-16 | Cita RN-PRS-004 cuando prueba el alcance «propio» sin Persona vinculada. | Cambiar la cita. | Analista (escuadrón B) | Etapa 2 |
 | CA-GAR-04a | Dice «a las 23:59» sin zona horaria. | Zona de la empresa; agregar una empresa de otra zona. | Analista (escuadrón A) | Etapa 4 |
@@ -76,7 +77,8 @@ Lista cerrada al 2026-10-29 (commit f3c76eb). Cada fila dice qué falta, el text
 | 90 reglas RN de los módulos con parte en la v1 | Sin criterio que las cite o las liste. | Cada escuadrón cita el criterio de cada regla antes de la etapa del módulo (D-076.4). | Analista (escuadrones A, B, C, D) | Etapas 2, 4 y 5 |
 | CA-AYU-26, CA-PRE-12 | Ningún requisito ni regla los cita ni los lista. | Fase 2 y Fase 3: el escuadrón los vincula al activar el módulo. | Analista (escuadrones de mesa de ayuda y presupuesto) | Fase 2 y 3 |
 | CA-105 (Etapa 0) | El texto está; no se puede ejecutar hasta recibir el Excel, la orden de compra y la orden de servicio reales con nombres reemplazados (P-002). | QA revisa el archivo cuando llegue. | Cliente (CEO) entrega; Jefatura de Proyecto lo pide | Etapa 0 (cierre) y Etapa 4 |
-| Módulo MSF (Microsoft Entra e Intune) | El archivo no existe todavía. | QA lo lee, regenera cifras y agrega su aislamiento y permisos a este plan cuando llegue. | Analista | Fase posterior |
+| Módulo MSF v0.1 | 3 criterios con etapa heredada porque la columna «Cuándo» de sus requisitos no dice «Fase 3»; criterio sin requisito: CA-MSF-38. | El Analista completa las citas antes de activar el módulo (D-076.4); no frena la v1. | Analista | Fase 3 |
+| Módulo ASI v0.1 | 4 RNF sin criterio (RNF-ASI-003, RNF-ASI-007, RNF-ASI-008, RNF-ASI-011); 45 criterios con etapa heredada porque la columna «Cuándo» de sus requisitos no dice «Fase 3». | El Analista completa las citas antes de activar el módulo (D-076.4); no frena la v1. | Analista | Fase 3 |
 
 **3. Preguntas que esperan respuesta y frenan una prueba**
 
@@ -110,6 +112,7 @@ Regla (D-076): un requisito necesita un criterio que lo pruebe **antes de que se
 | CA-070 (segundo administrador y resumen mensual) | CA-070 | HECHO en el texto. Corre en Etapa 5 según 22.1. | Analista (hecho) |
 | RN-008 | CA-085 | HECHO. Recorre las acciones con motivo, incluye el tope de 500 caracteres. | Analista (hecho) |
 | RF-PLA-013 (lectura de soporte) | CA-015g, CA-015h, CA-015i | HECHO (2026-10-29). 015g prueba autorización vencida (10:01 contra 10:00), ajena y ya usada, con cero filas y escritura que falla, y el borde de las 09:59, que todavía lee; 015i la válida; 015h (sin secretos ni derechos) corre en Etapa 2. | Analista (hecho) |
+| CA-NOT-10 y CA-NOT-13 | CA-NOT-10, CA-NOT-13 | PENDIENTE. Corren en Etapa 1 y cubren requisitos de Fase 2 (rebotes, bandeja, campana). Corren en la Etapa 1; hay que cerrarlos antes de abrirla. No es un «Sin hacer» nuevo: es de la lectura anterior. | Analista (escuadrón C) |
 | RF-IMP-017 y RF-DAT-010 | CA-105 | BLOQUEADO (P-002). El texto está (verificación documental); no se puede ejecutar hasta que el Cliente (CEO) entregue el Excel, la orden de compra y la orden de servicio reales con nombres reemplazados. | Cliente (CEO) entrega; QA verifica el archivo recibido |
 
 **Antes de la Etapa 2**
@@ -135,8 +138,7 @@ Regla (D-076): un requisito necesita un criterio que lo pruebe **antes de que se
 | RF-GAR-003 y RF-GAR-006 | CA-GAR-04c, CA-GAR-04d, CA-GAR-04e | HECHO. La mitad de RF-GAR-006 «una ampliación es una garantía nueva» queda en CA-GAR-04f (Fase 2). | Analista (hecho) |
 | RF-ENT-002 y RF-ENT-016 | CA-ENT-01 | PENDIENTE. «Sin hacer» del Analista al 2026-10-29: CA-ENT-01 no prueba el borrador ni renovar un préstamo. QA propone el texto (ver «Lo que falta»). | Analista (escuadrón D) |
 | CA-ENT-08 y CA-ENT-10 | CA-ENT-08, CA-ENT-10 | PENDIENTE. «Sin hacer»: «falla la entrega de uno» y «cuando pasa el tiempo» siguen sin datos. | Analista (escuadrón D) |
-| RF-INV-033 y CA-024 (RF-OC-028 en la cabecera) | CA-024 | PENDIENTE. «Sin hacer»: CA-024 sigue cubriendo RF-OC-028 (Etapa 7) y corre en Etapa 4. | Analista |
-| CA-NOT-10 y CA-NOT-13 | CA-NOT-10, CA-NOT-13 | PENDIENTE. Corren en Etapa 1 y cubren requisitos de Fase 2 (rebotes, bandeja, campana). No es un «Sin hacer» nuevo: es de la lectura anterior. | Analista (escuadrón C) |
+| CA-024 (RF-OC-028 en la cabecera) | CA-024 | PENDIENTE. «Sin hacer»: CA-024 sigue cubriendo RF-OC-028 (Etapa 7) y corre en Etapa 4. | Analista |
 
 **Antes de la Etapa 5**
 
@@ -155,7 +157,7 @@ Regla (D-076): un requisito necesita un criterio que lo pruebe **antes de que se
 | RF-DAT-017 (auditoría vencida y restauración) | CA-095h, CA-095i | HECHO (2026-10-29). Corren en la Etapa 7. | Analista (hecho) |
 | RF-OC-028 | CA-024 | PENDIENTE. La decisión P-009 de la Etapa 7 no tiene criterio propio; hoy solo la baja con motivo (CA-024, Etapa 4). | Analista; Gerente de TI responde P-009 |
 
-Resultado: 26 de los 37 puntos listados están hechos en el texto; 11 siguen abiertos (pendientes, parciales o bloqueados por una respuesta o un archivo). **Abiertos por etapa:** Etapa 1: 1, Etapa 2: 3, Etapa 4: 4, Etapa 5: 1, Etapa 7: 2. **Antes de la Etapa 1 solo queda abierto** RF-IMP-017 y RF-DAT-010 (bloqueado).
+Resultado: 26 de los 37 puntos listados están hechos en el texto; 11 siguen abiertos (pendientes, parciales o bloqueados por una respuesta o un archivo). **Abiertos por etapa:** Etapa 1: 2, Etapa 2: 3, Etapa 4: 3, Etapa 5: 1, Etapa 7: 2. **Antes de la Etapa 1 solo queda abierto** CA-NOT-10 y CA-NOT-13 (pendiente); RF-IMP-017 y RF-DAT-010 (bloqueado).
 
 ## Reglas de negocio (RN) y el criterio que las prueba
 
@@ -192,7 +194,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 
 | Módulo | Reglas RN | Con criterio en su fila | Citadas por un criterio | Sin criterio |
 |---|---|---|---|---|
-| ASI · Asistente de IA (en redacción) | 40 | 0 | 40 | 0 |
+| ASI · Asistente de IA | 40 | 0 | 40 | 0 |
 | CMD · CMDB ligera | 30 | 29 | 0 | 1 |
 | DOM · Dominios y certificados | 26 | 0 | 8 | 18 |
 | ENT · Entregas y devoluciones | 29 | 0 | 16 | 13 |
@@ -203,6 +205,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 | LIC · Licencias de software | 29 | 0 | 15 | 14 |
 | LIN · Líneas móviles | 28 | 0 | 13 | 15 |
 | AYU · Mesa de ayuda | 34 | 0 | 28 | 6 |
+| MSF · Microsoft Entra ID e Intune | 65 | 65 | 0 | 0 |
 | NOT · Notificaciones | 28 | 0 | 17 | 11 |
 | ONB · Onboarding y offboarding | 23 | 0 | 11 | 12 |
 | PRS · Personas y ubicaciones | 34 | 0 | 19 | 15 |
@@ -242,7 +245,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 
 | Módulo | RF y RNF | Cubiertos | Cubiertos por cabecera | No probados de verdad | Verificar | Sin criterio |
 |---|---|---|---|---|---|---|
-| ASI · Asistente de IA (en redacción) | 60 | 49 | 7 | 0 | 0 | 4 |
+| ASI · Asistente de IA | 60 | 49 | 7 | 0 | 0 | 4 |
 | CMD · CMDB ligera | 29 | 26 | 0 | 0 | 0 | 3 |
 | DOM · Dominios y certificados | 26 | 25 | 0 | 0 | 1 | 0 |
 | ENT · Entregas y devoluciones | 26 | 15 | 2 | 2 | 0 | 7 |
@@ -253,6 +256,7 @@ La tabla de reglas del documento ya tiene la columna CA. "Cita de vuelta" = el c
 | LIC · Licencias de software | 28 | 26 | 0 | 0 | 2 | 0 |
 | LIN · Líneas móviles | 30 | 29 | 0 | 0 | 1 | 0 |
 | AYU · Mesa de ayuda | 57 | 48 | 4 | 0 | 0 | 5 |
+| MSF · Microsoft Entra ID e Intune | 52 | 52 | 0 | 0 | 0 | 0 |
 | NOT · Notificaciones | 44 | 34 | 2 | 0 | 0 | 8 |
 | ONB · Onboarding y offboarding | 23 | 16 | 2 | 0 | 0 | 5 |
 | PRS · Personas y ubicaciones | 26 | 17 | 1 | 0 | 0 | 8 |
@@ -320,7 +324,7 @@ Etapas: E0 a E7 son las de la v1; F2 y F3 son fases posteriores. "Criterio (corr
 | RF-USR-003 | Suspender corta el acceso al instante y se puede revertir. Dar de baja a un usuario siempre se… | E1 | CA-052c (E2) | cubierto | el criterio corre en Etapa 2, después de la etapa del requisito |
 | RF-USR-004 | Retirado (2026-10-25). Estaba duplicado con RF-PER-006; el bloqueo ya no es de la baja del usu… | - | - | retirado |  |
 | RF-USR-005 | Las órdenes abiertas de un usuario dado de baja se reasignan o se cancelan con motivo. | E5 | CA-052d (E5) | cubierto |  |
-| RF-USR-006 | Dar de baja no borra el historial. Los datos personales se anonimizan pasado el plazo de la se… | E1 | CA-045 (E1, completa E5), CA-054a (E2) | verificar | el criterio citado no lista este requisito en su cabecera |
+| RF-USR-006 | Dar de baja no borra el historial. Los datos personales se anonimizan pasado el plazo de la se… | E1 | CA-045 (E1, completa E5), CA-054a (E2) | cubierto (lectura de QA) | Leído por QA: CA-045 prueba que dar de baja no borra el historial y CA-054a que anonimizar exige el plazo y la confirmación de legal. La cabecera de esos criterios no nombra a RF-USR-006. |
 | RF-USR-007 | Cada alta, suspensión, baja y cambio de rol queda en la auditoría. | E1 | CA-041 (E1, completa E4) | cubierto |  |
 | RF-USR-008 | Un usuario puede estar vinculado a una Persona (1 a 1, opcional). | E2 | CA-052c (E2) | cubierto |  |
 | RF-ROL-001 | Cada usuario tiene un solo rol en cada empresa. El rol vive en la membresía: la misma persona… | E1 | CA-047 (E1) | cubierto |  |
@@ -347,7 +351,7 @@ Etapas: E0 a E7 son las de la v1; F2 y F3 son fases posteriores. "Criterio (corr
 | RF-PER-007 | Las órdenes abiertas de una Persona cesada se reasignan o se cancelan con motivo. | E5 | CA-052d (E5) | cubierto |  |
 | RF-PER-008 | Las Personas son de cada empresa. El mismo nombre en dos empresas son dos registros independie… | E2 | CA-001 (E1, completa E2) | cubierto |  |
 | RF-PER-009 | Ver una Persona y sus asignaciones con nombre es el permiso datos_personales.ver; sin él se ve… | E2 | CA-011b (E1, completa E4) | cubierto |  |
-| RF-PER-010 | Las Personas se crean a mano (el alta manual puede crear homónimos, con aviso) desde la Etapa… | E2 a E4 | CA-016a (E2), CA-PRS-01d (E2), CA-PRS-11 (E4) | verificar | el criterio citado no lista este requisito en su cabecera |
+| RF-PER-010 | Las Personas se crean a mano (el alta manual puede crear homónimos, con aviso) desde la Etapa… | E2 a E4 | CA-016a (E2), CA-PRS-01d (E2), CA-PRS-11 (E4) | cubierto (lectura de QA) | Leído por QA: CA-PRS-01d prueba el alta manual con homónimo y aviso, y CA-PRS-11 la importación de Personas (Etapa 4). La cabecera de esos criterios no nombra a RF-PER-010. |
 | RF-PER-011 | Motivo de cese: lista corta sin texto libre (salida, fin de contrato, traslado, otro). | E2 | CA-052a1 (E2) | cubierto |  |
 | RF-PER-012 | Registro de solicitudes de derechos sobre datos personales (fecha, quién la presenta, tipo, qu… | E2 | CA-076 (E2, completa F2), CA-093 (E2) | cubierto |  |
 | RF-PER-013 | Anonimización manual solo para pedidos de derechos documentados, con dos personas (una propone… | E2 | CA-052b1 (E2), CA-054a (E2) | cubierto |  |
@@ -479,7 +483,7 @@ Etapas: E0 a E7 son las de la v1; F2 y F3 son fases posteriores. "Criterio (corr
 | RF-OC-038 | La validación es inmediata y con texto claro: "repetida en la fila 12", "ya existe en el SKU X… | E5 | CA-034 (E5) | cubierto |  |
 | RF-OC-039 | Los campos "a cada unidad" (IMEI) se piden en la misma tabla, pero se pueden completar después. | E5 | CA-020 (E3, completa E5) | cubierto |  |
 | RF-OC-040 | Antes de confirmar hay un resumen ("Se crearán 38 activos de LAP-0001 en Bodega Central. Falta… | E5 | CA-033 (E5) | cubierto |  |
-| RF-OC-041 | Nunca se borra una recepción ni un activo. | E5 | CA-045 (E1, completa E5) | verificar | el criterio citado no lista este requisito en su cabecera |
+| RF-OC-041 | Nunca se borra una recepción ni un activo. | E5 | CA-045 (E1, completa E5) | cubierto (lectura de QA) | Leído por QA: CA-045 nombra la recepción entre lo que nunca se borra. La cabecera de CA-045 no nombra a RF-OC-041. |
 | RF-OC-049 | El borrador de recepción no reserva la cantidad, vale 7 días, lo retoma cualquiera con permiso… | E5 | CA-061 (E5), CA-103 (E5) | cubierto | CA-103 prueba el borrador sin cambios posteriores. El caso con cambios (¿7 días desde la creación o desde el último cambio?) espera a P-019. |
 | RF-OC-050 | Se puede recibir contra una orden ya emitida aunque el SKU o el proveedor se desactive después… | E5 | CA-061 (E5) | cubierto |  |
 | RF-OS-001 | Una solicitud de trabajo es una orden de servicio en estado Creada. | E6 | CA-044 (E6, completa F2) | cubierto |  |
@@ -583,7 +587,7 @@ Etapas: E0 a E7 son las de la v1; F2 y F3 son fases posteriores. "Criterio (corr
 | RF-UX-005 | Pantallas sin dueño en el diseño: Primeros pasos, Módulos activos, Mi cuenta y seguridad, Auto… | E1 | CA-050b (E1, completa E5) | cubierto |  |
 | RF-UX-006 | La ficha del activo tiene cabecera fija y siete pestañas condicionales (los nombres exactos lo… | E4 | CA-050b (E1, completa E5) | cubierto |  |
 | RF-UX-007 | Catálogo de tres mensajes y tres bloqueos: mensajes "No encontrado", "No tiene permiso", "No s… | E1 | CA-048 (E1, completa E4) | cubierto |  |
-| RF-UX-008 | Tres formas de dato oculto: la referencia (PRS-0042), el secreto enmascarado y la columna omit… | E1 | CA-011b (E1, completa E4), CA-042 (E2, completa E4) | verificar | el criterio citado no lista este requisito en su cabecera |
+| RF-UX-008 | Tres formas de dato oculto: la referencia (PRS-0042), el secreto enmascarado y la columna omit… | E1 | CA-011b (E1, completa E4), CA-042 (E2, completa E4) | cubierto (lectura de QA) | Leído por QA: CA-011b prueba la referencia y la columna omitida, y CA-042 el secreto enmascarado. La cabecera de esos criterios no nombra a RF-UX-008. |
 | RF-UX-009 | Un diálogo de motivo único para todas las acciones con motivo obligatorio. | E4 | CA-024 (E4) | cubierto |  |
 | RF-UX-010 | Siete familias de color, cada una con texto e icono (no solo color), definidas en la guía visu… | E1 | CA-050a (E1, completa E4) | cubierto |  |
 | RF-UX-011 | Una sola pantalla de Vencimientos, una de "Importar datos", un solo "Mi espacio", y la configu… | E4 | CA-050b (E1, completa E5) | cubierto |  |

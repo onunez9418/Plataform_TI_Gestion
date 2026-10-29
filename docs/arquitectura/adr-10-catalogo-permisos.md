@@ -1,6 +1,6 @@
 # ADR-10 · El registro de permisos es un catálogo del código (T-7)
 
-**Estado:** Propuesto · **Decide:** Gerente de TI · **Base:** D-036, D-004 (reescrita), D-048.1, D-068, `docs/registro-permisos.md` v1.1
+**Estado:** Propuesto (revisado 2026-10-29 tras Seguridad ronda 5) · **Decide:** Gerente de TI · **Base:** D-036, D-004 (reescrita), D-048.1, D-068, `docs/registro-permisos.md` v1.1; H-SEG-37 b, 52
 
 ## Contexto
 Los módulos mencionaban 252 identificadores de permiso con variantes (`datos_personales.ver`, `datos-personales.ver`, `personas.ver_datos`). `docs/registro-permisos.md` define cada permiso (PS-nn, nombre `modulo.accion`, sensible S, alcance todo/propio, controles R/2F/A/T/No, "Cuándo", valor por plantilla de rol). Falta que el **código** lo obedezca y que la comprobación en el servidor sea una sola.
@@ -20,6 +20,9 @@ Los módulos mencionaban 252 identificadores de permiso con variantes (`datos_pe
 - **Módulo activado** en una empresa existente: sus permisos se ofrecen al administrador como plantilla sugerida; los roles personalizados no cambian solos (D-036.8). Rol nuevo = sin permisos; nadie se asigna permisos a sí mismo ni a un rol con más de los suyos (RF-ROL-006/007).
 - La lista de sensibles alimenta la regla de segunda verificación obligatoria (ADR-08): "Administrador activo" = quien tiene `roles.administrar` y `usuarios.cambiar_rol`; el último no se quita.
 - QA genera la matriz con `permisos:matriz` (una petición directa por celda).
+- **Permiso que falta (H-SEG-37 b):** el registro tiene PS-03 (`plataforma.soporte_leer`, lado plataforma) pero **ningún permiso para que el administrador de la empresa autorice o revoque el soporte** (ADR-03), y usar un permiso inexistente no compila. Se pide al Analista, vía la Jefatura, el permiso **`empresa.autorizar_soporte`**: sensible, 2F, verificación reciente con autenticador, auditado, para autorizar y revocar; avisa por correo a los administradores al crearse, al usarse por primera vez y al revocarse. Hasta que exista en el registro, la función `autorizacion_soporte_crear` no se puede construir.
+- **Regla de coherencia con ADR-08 (H-SEG-52):** todo permiso con control de verificación reciente (`R`) debe ser sensible (por lo tanto su titular tiene segundo factor); una prueba del catálogo lo comprueba, porque la verificación reciente solo la renueva el segundo factor.
+- Los módulos de ADR-21 (integración con Microsoft) y ADR-22 (asistente) necesitan permisos nuevos (conectar y desconectar la integración, usar el asistente, activarlo para la empresa); sus nombres los fija el Analista al redactar el módulo.
 
 ## Consecuencias
 - Agregar un permiso toca tres cosas: catálogo, registro y plantilla de roles; es intencional (D-036.1: los módulos no inventan permisos).
@@ -30,3 +33,10 @@ Los módulos mencionaban 252 identificadores de permiso con variantes (`datos_pe
 - Prueba de coincidencia código-markdown; prueba de nombres en base; prueba de arquitectura de servicios.
 - Matriz completa por petición directa (QA): cada celda, incluidos los 51 sensibles.
 - Casos: rol con "propio" y sin Persona vinculada ve lista vacía; módulo apagado responde "no encontrado"; clave de API con alcance fuera del catálogo no se puede crear.
+
+## Qué cambió tras la revisión (2026-10-29)
+| Hallazgo | Qué se hizo |
+|---|---|
+| H-SEG-37 b | Incorporado como pedido al Analista: permiso `empresa.autorizar_soporte`. |
+| H-SEG-52 | Prueba de coherencia entre permisos sensibles y control `R`. |
+| ADR-21 y ADR-22 | Nota de permisos pendientes (a contrastar con los módulos). |

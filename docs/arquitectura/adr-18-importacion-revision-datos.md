@@ -1,6 +1,6 @@
 # ADR-18 (texto de reemplazo propuesto por Datos) · Importación: huella de archivo, filas en preparación y deshacer
 
-**Estado:** Propuesta del Ingeniero de Datos para **reemplazar la sección "Decisión"** de `adr-18-importacion.md` (el Arquitecto lo incorpora o lo discute en la mesa; este archivo no edita el suyo) · **Decide:** Gerente de TI · **Fecha:** 2026-10-26
+**Estado:** **INCORPORADO el 2026-10-29 en `adr-18-importacion.md`** (que es el texto vigente; este archivo se conserva como registro de la propuesta de Datos). Propuesta original del Ingeniero de Datos para **reemplazar la sección "Decisión"** de `adr-18-importacion.md` · **Decide:** Gerente de TI · **Fecha:** 2026-10-26
 **Base:** D-050, D-070.6, D-072, D-022, D-054.2, D-039.7, D-077, D-080; ADR-03, 06, 09, 11, 12, 15; `docs/arquitectura/revision-datos.md` (D18-1 a D18-10); `docs/arquitectura/indices-claves-naturales.md`.
 **Qué se conserva del ADR original, sin cambio:** la lectura segura (punto 1: solo `.xlsx` y `.csv`, sin fórmulas, límites, macros, 5.000 filas y 10 MB, celdas de texto con `=`, `+`, `-`, `@`); que el archivo no se guarda; "todo o nada" y "solo crea"; valores desconocidos y SKU que no se crean solos; fechas `dd/mm/aaaa` o serie de Excel; series dañadas por Excel rechazadas; una entrada de auditoría de lote más su detalle; los topes (5.000 filas, 10 MB, 10 por día por empresa, ADR-16); la plantilla declarativa por módulo. Todo lo demás se reemplaza por lo que sigue.
 

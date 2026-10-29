@@ -168,8 +168,7 @@ def estado_modulo_nuevo(nombre):
         return 'en redacción (sin commit)'
     sg = MODULOS_NUEVOS[nombre]
     txt = '\n'.join(t)
-    ok = (nombre_sigla(ruta) == sg
-          and re.search(r'^\| (RF|RNF)-%s-\d+ \|' % sg, txt, re.M)
+    ok = (re.search(r'^\| (RF|RNF)-%s-\d+ \|' % sg, txt, re.M)
           and re.search(r'^\| RN-%s-\d+ \|' % sg, txt, re.M)
           and re.search(r'^#+ .*Criterios de aceptaci', txt, re.M | re.I)
           and re.search(r'CA-%s-\d{2}' % sg, txt))
@@ -221,7 +220,7 @@ def leer_modulos():
 
 def nombre_sigla(f):
     cab = '\n'.join(leer(f)[:8])
-    m = re.search(r'sigla[^A-Z`]{0,25}`?([A-Z]{3})\b', cab, re.I) or re.search(r'Sigla:\*\* ([A-Z]{3})', cab)
+    m = re.search(r'sigla[^A-Z`]{0,25}`?([A-Z]{3})\b', cab, re.I) or re.search(r'Sigla:\*\* ([A-Z]{3})', cab) or re.search(r'^# .*\(([A-Z]{3})\)\s*$', cab, re.M)
     return m.group(1) if m else ''
 
 

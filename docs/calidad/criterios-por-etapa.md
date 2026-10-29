@@ -1,6 +1,6 @@
 # Criterios de aceptación por etapa
 
-**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `f3c76eb` (árbol de documentos fuente limpio al generar) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los 18 módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
+**Autor:** QA (qa-tester) · **Fecha:** 2026-10-29 · **Checkpoint:** commit `820c6b6` (más cambios sin guardar en: modificado: docs/equipo/decisiones.md) · **Fuente:** `docs/documento-funcional.md` v0.3 (secciones 21, 22 y 22.1; AN-01 a AN-15; D-065 a D-080), `docs/registro-permisos.md` v1.1 y los 19 módulos de `docs/modulos/` que ya están completos. Generado con `docs/calidad/herramientas/generar.py` (lectura de solo lectura; no se editó ningún documento fuente). Todas las cifras de este archivo valen para ese commit; si el documento cambia, se vuelve a generar.
 
 **Para qué sirve.** Lista única de todos los criterios CA, con el módulo, los requisitos que cubre, la etapa en que se ejecutan, el tipo de prueba y si bloquean. Reemplaza a la versión del 2026-10-26 (451 criterios, commit `5ed0dcb`). Para el núcleo, la etapa sale **de la tabla 22.1 del documento funcional** (la fijó el Analista, D-075); para los módulos, de los requisitos que cada criterio cubre, salvo donde el módulo trae su propia tabla (notificaciones) o donde QA leyó el texto (anotado en la columna Nota).
 
@@ -12,9 +12,9 @@
 - **Bloqueante:** sí = si falla, la etapa no se aprueba. "No (bloquea su módulo)" = es de Fase 2 o 3 y bloquea la entrega de ese módulo, no la v1 (D-056).
 - **Etapa heredada:** el criterio solo cita reglas RN y no hay fila RF que lo cite; tomó la etapa más frecuente de su módulo. Debe confirmarlo el escuadrón.
 
-## Resumen (checkpoint f3c76eb, 2026-10-29)
+## Resumen (checkpoint 820c6b6, 2026-10-29)
 
-**559 criterios:** 145 del núcleo (identificadores con letra, que son 105 números, CA-001 a CA-105) y 414 de los 18 módulos completos. El 2026-10-26 eran 451 (116 y 335): +108. Qué cambió: **11 criterios dejaron de existir como uno solo** porque se partieron (CA-038, CA-094, CA-GAR-01, CA-GAR-04, CA-PRS-01, CA-PRS-03, CA-PRS-08, CA-PRS-12, CA-PRS-14, CA-PRV-02, CA-PRV-04) y **67 criterios nuevos** los reemplazan o se suman: en el núcleo 31 (CA-015g, h e i de lectura de soporte; CA-038a a d; CA-094a a c; CA-095a a j de congelación por incidente, D-080; CA-096 a CA-105, con CA-104 en a y b) y en los módulos PRS 21, GAR 9 y PRV 6.
+**603 criterios:** 145 del núcleo (identificadores con letra, que son 105 números, CA-001 a CA-105) y 458 de los 19 módulos completos. El 2026-10-26 eran 451 (116 y 335): +152. Qué cambió: **11 criterios dejaron de existir como uno solo** porque se partieron (CA-038, CA-094, CA-GAR-01, CA-GAR-04, CA-PRS-01, CA-PRS-03, CA-PRS-08, CA-PRS-12, CA-PRS-14, CA-PRV-02, CA-PRV-04) y **67 criterios nuevos** los reemplazan o se suman: en el núcleo 31 (CA-015g, h e i de lectura de soporte; CA-038a a d; CA-094a a c; CA-095a a j de congelación por incidente, D-080; CA-096 a CA-105, con CA-104 en a y b) y en los módulos PRS 21, GAR 9 y PRV 6.
 
 | Se ejecuta en | Criterios que empiezan aquí | Criterios que se completan aquí (empezaron antes) |
 |---|---|---|
@@ -27,10 +27,10 @@
 | Etapa 6 | 2 | 2 |
 | Etapa 7 | 5 | 0 |
 | Fase 2 | 138 | 5 |
-| Fase 3 | 203 | 0 |
-| **Total** | 559 | 21 |
+| Fase 3 | 247 | 0 |
+| **Total** | 603 | 21 |
 
-**Criterios de la v1 (Etapas 0 a 7): 218.** De fases posteriores: 341. Antes (2026-10-26): 166 y 285.
+**Criterios de la v1 (Etapas 0 a 7): 218.** De fases posteriores: 385. Antes (2026-10-26): 166 y 285.
 
 Comparación con la versión anterior (2026-10-26). Las dos medidas son las mismas que entonces: dónde **empieza** cada criterio y dónde **termina**.
 
@@ -45,7 +45,7 @@ Comparación con la versión anterior (2026-10-26). Las dos medidas son las mism
 | Etapa 6 | 2 | 2 | 3 | 3 |
 | Etapa 7 | 3 | 5 | 3 | 5 |
 | Fase 2 | 134 | 138 | 139 | 143 |
-| Fase 3 | 151 | 203 | 151 | 203 |
+| Fase 3 | 151 | 247 | 151 | 247 |
 
 Qué explica la diferencia: la mayor parte son criterios partidos y nuevos de la Etapa 2 (congelación por incidente CA-095a a g, PRS y PRV), de la Etapa 4 (importación en cuatro, código del activo, tope y lote de importación, estados, garantía, PRS) y de la Etapa 5 (CA-096 a CA-104b, recepción de garantía). La Etapa 0 gana CA-105 (verificación documental). Ningún criterio que ya existía cambió de etapa.
 
@@ -62,21 +62,21 @@ Por la etapa más temprana de su requisito:
 | Etapa 6 | 2 |
 | Etapa 7 | 4 |
 | Fase 2 | 118 |
-| Fase 3 | 125 |
-| sin requisito RF (heredada) | 105 |
+| Fase 3 | 166 |
+| sin requisito RF (heredada) | 108 |
 
 | Tipo de prueba | Criterios |
 |---|---|
-| integración | 304 |
-| integración + navegador | 112 |
-| unitaria | 79 |
-| navegador | 53 |
-| manual (con apoyo de integración) | 10 |
+| integración | 321 |
+| integración + navegador | 120 |
+| unitaria | 85 |
+| navegador | 64 |
+| manual (con apoyo de integración) | 12 |
 | manual (verificación documental) | 1 |
 
 | Módulo | Criterios |
 |---|---|
-| Asistente de IA (en redacción) (ASI) | 52 |
+| Asistente de IA (ASI) | 52 |
 | Mesa de ayuda (AYU) | 27 |
 | Gestión de cambios (CAM) | 20 |
 | CMDB ligera (CMD) | 21 |
@@ -86,6 +86,7 @@ Por la etapa más temprana de su requisito:
 | Integraciones y API (INT) | 26 |
 | Licencias de software (LIC) | 20 |
 | Líneas móviles (LIN) | 16 |
+| Microsoft Entra ID e Intune (MSF) | 44 |
 | Notificaciones (NOT) | 22 |
 | Onboarding y offboarding (ONB) | 15 |
 | Portal de autoservicio (POR) | 16 |
@@ -102,10 +103,10 @@ Bloqueantes de una etapa = los criterios que **empiezan** en ella más los que *
 
 | Etapa | Empiezan | Se completan | Bloqueantes en total | Puntos de D-076 aún pendientes antes de abrirla |
 |---|---|---|---|---|
-| Etapa 1 | 54 | 0 | 54 | 1 |
+| Etapa 1 | 54 | 0 | 54 | 2 |
 | Etapa 2 | 58 | 2 | 60 | 3 |
 | Etapa 3 | 4 | 1 | 5 | 0 |
-| Etapa 4 | 61 | 6 | 67 | 4 |
+| Etapa 4 | 61 | 6 | 67 | 3 |
 | Etapa 5 | 33 | 5 | 38 | 1 |
 | Etapa 6 | 2 | 2 | 4 | 0 |
 | Etapa 7 | 5 | 0 | 5 | 2 |
@@ -201,11 +202,11 @@ Cubren requisitos de etapas distintas y el módulo no trae partición. Corren en
 | CA-NOT-08 | Etapa 1 | Fase 2 | tabla del módulo o lectura de QA |
 | CA-NOT-09 | Etapa 1 | Fase 2 | tabla del módulo o lectura de QA |
 
-### Criterios sin requisito RF que los cite (105)
+### Criterios sin requisito RF que los cite (108)
 
 Citan solo reglas RN, seguridad (RS) o secciones. Los del núcleo (CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j) los cita una regla RN o RS y son válidos. Los de módulos heredan la etapa del módulo; confirmar con cada escuadrón.
 
-CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j, CA-ASI-03, CA-ASI-04, CA-ASI-05, CA-ASI-06, CA-ASI-07, CA-ASI-08, CA-ASI-09, CA-ASI-10, CA-ASI-11, CA-ASI-12, CA-ASI-13, CA-ASI-14, CA-ASI-15, CA-ASI-16, CA-ASI-17, CA-ASI-18, CA-ASI-19, CA-ASI-20, CA-ASI-21, CA-ASI-22, CA-ASI-23, CA-ASI-24, CA-ASI-25, CA-ASI-26, CA-ASI-27, CA-ASI-28, CA-ASI-29, CA-ASI-30, CA-ASI-31, CA-ASI-32, CA-ASI-33, CA-ASI-37, CA-ASI-38, CA-ASI-39, CA-ASI-40, CA-ASI-41, CA-ASI-42, CA-ASI-43, CA-ASI-44, CA-ASI-45, CA-ASI-47, CA-ASI-49, CA-ASI-50, CA-ASI-51, CA-ASI-52, CA-AYU-26, CA-CAM-07, CA-CMD-15, CA-CMD-16, CA-CMD-17, CA-CMD-19, CA-CMD-20, CA-DOM-08, CA-DOM-14, CA-ENT-05, CA-ENT-09, CA-ENT-14, CA-GAR-14, CA-GAR-18, CA-INT-04, CA-INT-10, CA-INT-21, CA-INT-22, CA-INT-23, CA-LIC-18, CA-LIC-19, CA-LIC-20, CA-LIN-15, CA-LIN-16, CA-NOT-19, CA-ONB-06, CA-ONB-08, CA-ONB-09, CA-ONB-11, CA-ONB-14, CA-POR-02, CA-POR-03, CA-POR-09, CA-POR-13, CA-PRB-13, CA-PRB-15, CA-PRE-11, CA-PRE-12, CA-PRE-13, CA-PRE-16, CA-PRE-20, CA-PRE-23, CA-PRE-24, CA-PRE-25, CA-PRE-26, CA-PRV-04b, CA-PRV-14, CA-REP-07, CA-REP-18, CA-REP-19, CA-REP-20, CA-REP-21
+CA-003, CA-051, CA-083, CA-085, CA-086, CA-088, CA-094c, CA-095j, CA-ASI-03, CA-ASI-04, CA-ASI-05, CA-ASI-06, CA-ASI-07, CA-ASI-08, CA-ASI-09, CA-ASI-10, CA-ASI-11, CA-ASI-12, CA-ASI-13, CA-ASI-14, CA-ASI-15, CA-ASI-16, CA-ASI-17, CA-ASI-18, CA-ASI-19, CA-ASI-20, CA-ASI-21, CA-ASI-22, CA-ASI-23, CA-ASI-24, CA-ASI-25, CA-ASI-26, CA-ASI-27, CA-ASI-28, CA-ASI-29, CA-ASI-30, CA-ASI-31, CA-ASI-32, CA-ASI-33, CA-ASI-37, CA-ASI-38, CA-ASI-39, CA-ASI-40, CA-ASI-41, CA-ASI-42, CA-ASI-43, CA-ASI-44, CA-ASI-45, CA-ASI-47, CA-ASI-49, CA-ASI-50, CA-ASI-51, CA-ASI-52, CA-AYU-26, CA-CAM-07, CA-CMD-15, CA-CMD-16, CA-CMD-17, CA-CMD-19, CA-CMD-20, CA-DOM-08, CA-DOM-14, CA-ENT-05, CA-ENT-09, CA-ENT-14, CA-GAR-14, CA-GAR-18, CA-INT-04, CA-INT-10, CA-INT-21, CA-INT-22, CA-INT-23, CA-LIC-18, CA-LIC-19, CA-LIC-20, CA-LIN-15, CA-LIN-16, CA-MSF-38, CA-MSF-40, CA-MSF-41, CA-NOT-19, CA-ONB-06, CA-ONB-08, CA-ONB-09, CA-ONB-11, CA-ONB-14, CA-POR-02, CA-POR-03, CA-POR-09, CA-POR-13, CA-PRB-13, CA-PRB-15, CA-PRE-11, CA-PRE-12, CA-PRE-13, CA-PRE-16, CA-PRE-20, CA-PRE-23, CA-PRE-24, CA-PRE-25, CA-PRE-26, CA-PRV-04b, CA-PRV-14, CA-REP-07, CA-REP-18, CA-REP-19, CA-REP-20, CA-REP-21
 
 ### Criterios ambiguos o por partir (H-QA-31, D-076.3)
 
@@ -300,14 +301,16 @@ QA leyó cada criterio nuevo o partido desde la versión del 2026-10-26 y decidi
 | CA-PRV-04b | Fase 2 | Fase 2 | Necesita un contrato Vigente (PRV-B, Fase 2). |
 | CA-PRV-04c | Etapa 2 | Etapa 2 | Reactivar un proveedor con motivo (RF-PRV-003). |
 
-### Módulos nuevos en redacción
+### Módulos nuevos (microsoft-entra-intune y asistente-ia)
 
-| Archivo | Sigla | Módulo | Estado al 2026-10-29 | Qué hace QA |
-|---|---|---|---|---|
-| `docs/modulos/microsoft-entra-intune.md` | MSF | Microsoft Entra e Intune (en redacción) | incompleto | NO incluido: pendiente. Se incorpora al regenerar cuando el archivo exista con sigla, requisitos, reglas RN, sección de criterios y al menos un criterio `CA-MSF-NN`. |
-| `docs/modulos/asistente-ia.md` | ASI | Asistente de IA (en redacción) | completo | incluido en las cifras |
+Regla de QA: un módulo nuevo entra a las cifras cuando su archivo existe, está guardado en un commit sin cambios pendientes y tiene sigla, requisitos, reglas RN, sección de criterios y al menos un criterio con su sigla. Si no, queda listado como pendiente.
 
-Tampoco hay mención de estos módulos en el documento funcional (sección 26.2 de prefijos), en el registro de permisos ni en las decisiones; QA no puede suponer su alcance. Cuando lleguen: criterios por etapa, trazabilidad, aislamiento por empresa de cada tabla nueva y permisos denegados por petición directa, como en todo módulo.
+| Archivo | Sigla | Estado al 2026-10-29 | Qué hace QA |
+|---|---|---|---|
+| `docs/modulos/microsoft-entra-intune.md` | MSF | completo (v0.1, primera redacción) | 44 criterios, 52 RF y RNF, 65 RN; todos en Fase 3 (no bloquean la v1; se cierran al activar el módulo, D-076.4); 3 con etapa heredada del módulo |
+| `docs/modulos/asistente-ia.md` | ASI | completo (v0.1, primera redacción) | 52 criterios, 60 RF y RNF, 40 RN; todos en Fase 3 (no bloquean la v1; se cierran al activar el módulo, D-076.4); 45 con etapa heredada del módulo |
+
+Ninguno de los dos aparece todavía en el registro de prefijos del documento funcional (sección 26.2) ni en el registro de permisos: QA los lee como propuestas del Analista pendientes de verificación del Auditor Técnico, QA, Seguridad y Cumplimiento. Pruebas que pide QA al activarlos: aislamiento por empresa de cada tabla nueva, permiso denegado por petición directa de cada acción, y las pruebas propias de cada uno (asistente: aislamiento con 100 intentos por herramienta de lectura, instrucciones ocultas y datos enviados al proveedor; Microsoft: simulador de Microsoft, credencial como secreto y solo lectura).
 
 ---
 
@@ -463,7 +466,7 @@ Tampoco hay mención de estos módulos en el documento funcional (sección 26.2 
 | CA-104b | RF-OC-051; Etapa 5 | Etapa 5 | Etapa 5 | - | integración + navegador | sí | Tipo ajustado por QA: Necesita un módulo de prueba que declare información y justificación; se ve en la pantalla. | documento-funcional.md:1097 |
 | CA-105 | RF-IMP-017, RF-DAT-010; Etapa 0 | Etapa 0 | Etapa 0 | - | manual (verificación documental) | sí | Tipo ajustado por QA: El propio criterio dice que es una verificación de documentos y no una prueba automática. | documento-funcional.md:1098 |
 
-### ASI · Asistente de IA (en redacción) (52)
+### ASI · Asistente de IA (52)
 
 | CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
 |---|---|---|---|---|---|---|---|---|
@@ -750,6 +753,55 @@ Tampoco hay mención de estos módulos en el documento funcional (sección 26.2 
 | CA-LIN-14 | migración; RF-LIN-021, RN-LIN-024, 025 | Fase 2 | Fase 2 | - | integración + navegador | no (bloquea su módulo) |  | modulos/lineas-moviles.md:259 |
 | CA-LIN-15 | aislamiento; RN-LIN-001 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/lineas-moviles.md:260 |
 | CA-LIN-16 | escritura con referencias cruzadas; RN-LIN-001 | - | Fase 2 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/lineas-moviles.md:261 |
+
+### MSF · Microsoft Entra ID e Intune (44)
+
+| CA | Cubre | Etapa del requisito | Se ejecuta en | Se completa en | Tipo | Bloqueante | Nota | Fuente |
+|---|---|---|---|---|---|---|---|---|
+| CA-MSF-01 | Conectar y confirmar el directorio.** *Cubre RF-MSF-001, RN-MSF-004, 005, 006 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:506 |
+| CA-MSF-02 | Solo lectura y conexión por partes.** *Cubre RF-MSF-001, 003, RN-MSF-007, 065 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:507 |
+| CA-MSF-03 | La credencial es un secreto.** *Cubre RF-MSF-002, RN-MSF-002, 003, RNF-MSF-004 | Fase 3 | Fase 3 | - | manual (con apoyo de integración) | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:508 |
+| CA-MSF-04 | Estado, vencimiento y pérdida de acceso.** *Cubre RF-MSF-004, RN-MSF-056, RNF-MSF-009 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:509 |
+| CA-MSF-05 | Reemplazar la credencial.** *Cubre RF-MSF-005 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:510 |
+| CA-MSF-06 | Pausar y reanudar.** *Cubre RF-MSF-006 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:511 |
+| CA-MSF-07 | Desconectar.** *Cubre RF-MSF-007, RN-MSF-013, 060 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:512 |
+| CA-MSF-08 | Sincronizar ahora y límites de Microsoft.** *Cubre RF-MSF-008, RN-MSF-051 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:513 |
+| CA-MSF-09 | Historial de lecturas y procesos con dos empresas.** *Cubre RF-MSF-009, RN-MSF-050, RNF-MSF-003, 005 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:514 |
+| CA-MSF-10 | Vista previa y filtros.** *Cubre RF-MSF-010, 011 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:515 |
+| CA-MSF-11 | Coincidencia y vínculo.** *Cubre RF-MSF-012, RN-MSF-014, 015, 016 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:516 |
+| CA-MSF-12 | Propuestas de alta y cambio.** *Cubre RF-MSF-013, RN-MSF-017, 018, 023, 025 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:517 |
+| CA-MSF-13 | Revisar y aplicar con permisos de Personas.** *Cubre RF-MSF-014, RN-MSF-019, 020 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:518 |
+| CA-MSF-14 | Aplicar en bloque.** *Cubre RF-MSF-015, RN-MSF-026 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:519 |
+| CA-MSF-15 | Una baja en Microsoft no es un cese.** *Cubre RF-MSF-016, RN-MSF-012, 021 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:520 |
+| CA-MSF-16 | Áreas desconocidas.** *Cubre RF-MSF-017, RN-MSF-024 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:521 |
+| CA-MSF-17 | Desvincular una cuenta.** *Cubre RF-MSF-018 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:522 |
+| CA-MSF-18 | Anonimización.** *Cubre RF-MSF-019, RN-MSF-022, 059 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:523 |
+| CA-MSF-19 | Marca de categoría y «Pendiente de enrolar».** *Cubre RF-MSF-020, 021, RN-MSF-027, 028, 029 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:524 |
+| CA-MSF-20 | De la orden de compra a Intune, de punta a punta.** *Cubre RF-MSF-022, 025, 032 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:525 |
+| CA-MSF-21 | Solo equipos corporativos y datos mínimos.** *Cubre RF-MSF-023, RN-MSF-008, 009, 010 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:526 |
+| CA-MSF-22 | Vínculo automático por serie o IMEI.** *Cubre RF-MSF-024, RN-MSF-030, 031, 032, 033, 036 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:527 |
+| CA-MSF-23 | Coincidencia dudosa y desvinculación.** *Cubre RF-MSF-029, RN-MSF-033, 034, 035 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:528 |
+| CA-MSF-24 | Bloque «Intune» y datos personales.** *Cubre RF-MSF-026, RN-MSF-037, 038, 039, 040, 054, RNF-MSF-007 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:529 |
+| CA-MSF-25 | Historial de cumplimiento.** *Cubre RF-MSF-027 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:530 |
+| CA-MSF-26 | Lista, filtros y exportación.** *Cubre RF-MSF-028, RN-MSF-053, 054 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:531 |
+| CA-MSF-27 | Panel de conciliación calculado.** *Cubre RF-MSF-030, 032, RN-MSF-042, 043 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:532 |
+| CA-MSF-28 | En Intune y no en el inventario.** *Cubre RF-MSF-031, 036, RN-MSF-011, 048, 049 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:533 |
+| CA-MSF-29 | Diferencia de asignado a.** *Cubre RF-MSF-033, RN-MSF-046, 047 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:534 |
+| CA-MSF-30 | Extraviado que se comunica y baja que sigue.** *Cubre RF-MSF-034, RN-MSF-044, 045 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:535 |
+| CA-MSF-31 | Duplicados en Intune.** *Cubre RF-MSF-035, RN-MSF-032 | Fase 3 | Fase 3 | - | unitaria | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:536 |
+| CA-MSF-32 | Línea informativa en el cese.** *Cubre RF-MSF-037 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:537 |
+| CA-MSF-33 | Sin acciones remotas.** *Cubre RF-MSF-038, RN-MSF-061 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:538 |
+| CA-MSF-34 | Avisos con contenido mínimo.** *Cubre RF-MSF-039, RN-MSF-055 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:539 |
+| CA-MSF-35 | Dato con fecha y lectura fallida.** *Cubre RF-MSF-040, RN-MSF-041, 042 | Fase 3 | Fase 3 | - | navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:540 |
+| CA-MSF-36 | Suspensión, módulo apagado y restauración.** *Cubre RF-MSF-041, RN-MSF-058, 064 | Fase 3 | Fase 3 | - | manual (con apoyo de integración) | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:541 |
+| CA-MSF-37 | Aislamiento entre empresas.** *Cubre RN-MSF-001, 002, RNF-MSF-005, 010 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:542 |
+| CA-MSF-38 | Permiso denegado.** *Cubre la sección 3 | - | Fase 3 | - | integración + navegador | no (bloquea su módulo) | Etapa heredada del módulo | modulos/microsoft-entra-intune.md:543 |
+| CA-MSF-39 | Auditoría sin valores personales.** *Cubre RN-MSF-052, 053, RNF-MSF-008 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:544 |
+| CA-MSF-40 | Texto libre.** *Cubre RN-MSF-057 | - | Fase 3 | - | unitaria | no (bloquea su módulo) | Etapa heredada del módulo | modulos/microsoft-entra-intune.md:545 |
+| CA-MSF-41 | Independencia y sin API.** *Cubre RN-MSF-062, 063 | - | Fase 3 | - | integración | no (bloquea su módulo) | Etapa heredada del módulo | modulos/microsoft-entra-intune.md:546 |
+| CA-MSF-42 | Rendimiento y segundo plano.** *Cubre RNF-MSF-001, 002 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:547 |
+| CA-MSF-43 | Indicadores para reportes.** *Cubre RF-MSF-042 | Fase 3 | Fase 3 | - | integración + navegador | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:548 |
+| CA-MSF-44 | Sin datos reales en las pruebas.** *Cubre RNF-MSF-006 | Fase 3 | Fase 3 | - | integración | no (bloquea su módulo) |  | modulos/microsoft-entra-intune.md:549 |
 
 ### NOT · Notificaciones (22)
 

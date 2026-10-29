@@ -517,6 +517,7 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Controles por permiso sensible:** la lista consolidada de Seguridad (sección 4 de su revisión) pasa al registro como columna de controles: reautenticación reciente para ver clave, exportar, importar, administrar roles y usuarios, activar excepciones, cambiar titular de dominio y crear claves de API; auditoría de cada uso; tope por hora donde corresponda.
 - **Recomendó:** Auditor Técnico (tabla de conflictos), QA (H-QA-08), Seguridad (H-SEG-08), Cumplimiento (H-CUM-05), Diseñador (DS-02, DS-10), Arquitecto (H-ARQ-09). **Discrepancias resueltas:** Almacén entrega (Auditor Técnico y módulo ENT) frente a Almacén no (Cumplimiento, Seguridad): gana "no" por defecto; cese (QA: Jefatura; núcleo: Técnico): gana Jefatura.
 - **Qué cambia:** núcleo §7.3 y registro PS-nn; `personas-ubicaciones`, `entregas-devoluciones`, `licencias-software`, `lineas-moviles`, `dominios-certificados`, `proveedores-contratos` reescriben sus tablas.
+- **Nota (2026-10-29):** la lista cerrada de la fila 11 suma PS-235 y PS-236 (asistente), apagados por defecto (**D-083**); la fila 12 gana los módulos activables `asistente-ia` y `microsoft-entra-intune`.
 
 ### D-038 · Trabajos en segundo plano, eventos y ejecución continua (reemplaza el "sin colas" de D-025)
 - **Pregunta:** Catorce módulos necesitan avisos diarios, reintentos, renovaciones, importaciones y exportaciones grandes. ¿Cómo se ejecutan?
@@ -744,6 +745,7 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Motivo:** Las decisiones dejan de ser 17 diseños distintos y el CEO puede aprobar el aspecto una sola vez.
 - **Recomendó:** Diseñador (H-UX-01 a 25), con ajustes de Seguridad (mensajes) y de este Gerente (DS-10).
 - **Qué cambia:** núcleo (glosario, RNF-004/007/008, nueva sección de pantallas), prototipo de la Etapa 0, y el glosario de mesa de ayuda y portal ("Pedir ayuda").
+- **Nota (2026-10-29):** DS-01 se **aclara** en **D-082**: «Pedir ayuda» sigue siendo el único camino para crear un caso; el «Asistente de IA» es otro control (botón flotante) con otro nombre e icono.
 
 ### D-054 · Eventos de seguridad, topes de abuso y endurecimiento del acceso
 - **Pregunta:** Los topes están repartidos y no coinciden; los intentos rechazados no dicen en qué auditoría van; el enlace de ingreso se gasta si un filtro de correo lo abre.
@@ -806,6 +808,7 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Motivo:** Es el orden por dependencias que propone el Arquitecto; así CMD, CAM y PRB no salen "vacíos" (sin licencias, líneas ni dominios) y la v1 no se retrasa.
 - **Recomendó:** Arquitecto (orden de construcción y preparaciones), Auditor Técnico (H-AUD-08), QA (H-QA-10), Diseñador (mapa de navegación). **Discrepancia:** el Diseñador marcaba algunas fases distintas (dominios y reportes en Fase 3); manda la dependencia técnica.
 - **Qué cambia:** núcleo §2 y §27 (tabla maestra con "Cuándo"); el campo "Fase" de cada módulo (ver `plan-correcciones.md`).
+- **Nota (2026-10-29):** la tabla del punto 3 gana la **ola G** (Fase 3, después de la F) con ASI y MSF, en el orden de **D-081**.
 
 ### D-057 · Los 31 supuestos del núcleo (S-01 a S-31), uno por uno
 - **Pregunta:** El Analista pide confirmar, cambiar o rechazar S-01 a S-31.
@@ -1195,6 +1198,108 @@ Nota: la solicitud llegó citando H-CUM-01, H-CUM-02 y H-CUM-04 en `docs/revisio
 - **Motivo:** Un G2 sin descartar durante dos días ya merece que el CEO lo sepa; congelar lo irreversible mientras se investiga no cuesta nada.
 - **Qué cambia:** `procedimiento-incidente-datos.md` 6.1 deja de decir "lo confirma el Gerente de TI" (lo edita Cumplimiento).
 
+## Decisiones de los dos módulos nuevos del CEO (2026-10-29)
+
+**Origen.** El CEO pidió dos módulos: un asistente de inteligencia artificial en un botón flotante (`docs/modulos/asistente-ia.md`, sigla ASI) y la conexión con Microsoft Entra ID e Intune (`docs/modulos/microsoft-entra-intune.md`, sigla MSF). Los Analistas los redactaron en v0.1. **Estado:** el alcance de ambos queda aceptado; el **visto bueno técnico del texto** sigue pendiente de las revisiones listadas en `mesa-de-trabajo.md` (Seguridad, Cumplimiento, QA, Auditor Técnico y los ADR-21 y ADR-22 del Arquitecto). Nada de esto se construye antes de aprobar la Etapa 7.
+
+### D-081 · Ola G de la Fase 3: dónde entran ASI y MSF y en qué orden (completa D-056.3)
+- **Pregunta:** ¿Cuándo se construyen los dos módulos y qué se prepara antes en el núcleo?
+- **Decisión:**
+  1. **Ambos son Fase 3, ola G (nueva)**, después de la ola F. Cada paso termina con una demo que el CEO aprueba antes del siguiente (`CLAUDE.md`). Prefijos `ASI` y `MSF`.
+
+| Paso | Entrega | Depende de | Por qué en este lugar |
+|---|---|---|---|
+| G-1 | **ASI-A** (responde y lee lo que la persona ya ve) | Núcleo aprobado, NOT-completo (ola A), manual de usuario; AYU (ola C) si está activa | Es lo que pidió el CEO y la que menos depende; conviene medir sus defensas y su costo antes de darle más poder |
+| G-2 | **MSF-1** (conexión y Personas) | Etapas 1 y 2, secretos, cola, NOT-completo | Independiente de ASI; no escribe en Microsoft |
+| G-3 | **MSF-2** (equipos y conciliación) | MSF-1, Etapas 4 y 5 | Necesita inventario y recepción |
+| G-4 | **ASI-B** (borradores que la persona envía) | ASI-A aprobada, AYU, POR (ola D) | Solo después de medir ASI-A en uso: instrucciones ocultas y consumo |
+| G-5 | **ASI-C** (acciones con confirmación) | ASI-B, doble control (Etapa 5); cada acción del catálogo aprobada una por una | Es lo que más riesgo tiene; va al final |
+
+  2. **Sin adelantos.** MSF-1 podría pasar a después de la ola D solo por decisión escrita del Gerente de TI al cerrar la Etapa 7 (D-056.2); nunca antes.
+  3. **Datos reales.** Ambos módulos se construyen y demuestran con datos inventados. Usar datos reales exige las respuestas legales de cada uno (L-17 a L-19 para ASI; L-MSF-01 a L-MSF-06 para MSF) y, para ASI, que el CEO apruebe proveedor, contrato y tope (D-084 punto 4). Esto **no frena** la salida de la v1.
+  4. **Preparaciones del núcleo aprobadas (D-056.5), las únicas que se hacen antes:** (a) marca de origen «vía asistente» en la auditoría, sin cuarto tipo de autor (Etapa 1); (b) campo «se gestiona en MDM» en la categoría, apagado por defecto (Etapa 2); (c) gancho síncrono de limpieza al anonimizar una Persona (Etapa 2); (d) una **lista única** de «acciones que nunca hace un programa o un asistente» en el registro de permisos, que citan INT y ASI en lugar de repetirla (documento, ya); (e) nota de diseño: el validador común de textos sirve también para texto de salida. Las filas de topes, los RS nuevos y las tablas entran con su módulo; ninguna pantalla ni lógica de ASI o MSF antes de su ola (riesgo #7).
+- **Motivo:** Orden por dependencias y por riesgo, como D-056. Las preparaciones elegidas son las que obligarían a migrar datos reales si se hicieran tarde; todo lo demás se difiere.
+- **Recomendó:** Analistas (S-MSF-01, ASI-S01); decide el Gerente de TI.
+- **Qué cambia:** **Analista:** fila «G» en la tabla de D-056.3 y en documento funcional §2.2 y §27 (`Fase 3, ola G`), prefijos en §26. Nota al pie en D-056 (hecha). **Arquitecto:** las preparaciones (a) a (c) entran en los ADR-11 y ADR-14.
+
+### D-082 · «Pedir ayuda» y el «Asistente de IA» conviven (aclara DS-01 de D-053)
+- **Pregunta:** ASI propone un segundo control abajo a la derecha; DS-01 dice que «Pedir ayuda» es un solo botón. ¿Cómo conviven?
+- **Decisión:**
+  1. **DS-01 se aclara, no se cambia.** «Pedir ayuda» sigue siendo el **único camino para crear un caso o una solicitud de trabajo**: una puerta, un formulario. Sigue en la barra superior (diseño aprobado, D-053).
+  2. **El Asistente de IA es otro control, con otro nombre y otro icono:** botón flotante abajo a la derecha, nombre «Asistente de IA» (nunca «agente», que en la mesa de ayuda es una persona de TI), visible solo si el módulo está activo en la empresa y la persona tiene PS-235. Sin el módulo, la pantalla queda exactamente como hoy.
+  3. **Una puerta, tres entradas.** Dentro del panel del asistente hay siempre un acceso fijo «Pedir ayuda» (al pie y en el modo sin IA) que abre **el mismo** formulario. El asistente solo puede precargarlo (ASI-B); lo envía la persona con el botón normal.
+  4. **Celular:** el botón flotante queda sobre la barra inferior y no tapa «Guardar» ni «Confirmar» (RF-ASI-004).
+  5. **Plan B ya decidido:** si en la prueba de uso de la ola G la gente confunde los dos controles, se pasa a **un único botón flotante «Ayuda» con dos pestañas** («Asistente de IA» y «Pedir ayuda») cuando el módulo esté activo. Lo decide el Gerente de TI; no requiere al CEO. El Diseñador muestra ambas variantes en las muestras de la Fase 3.
+- **Motivo:** Cambiar la barra superior haría depender la mesa de ayuda de un módulo posterior y reabriría un diseño aprobado; el CEO pidió el ícono abajo a la derecha. La confusión se reduce con nombre, icono y la entrada fija dentro del panel, y queda un plan B barato.
+- **Recomendó:** Analista (ASI-S03); decide el Gerente de TI.
+- **Qué cambia:** **Analista:** nota en RF-UX-004 y en el glosario «Solicitud» del documento funcional; las líneas de AYU y POR de ASI §9.2. **Diseñador:** PAN-ASI-01 y la variante B en las muestras. Nota al pie en D-053 (hecha).
+
+### D-083 · El Empleado (portal) y el asistente (completa D-037 fila 11)
+- **Pregunta:** ¿Se suman PS-235 y PS-236 a la lista cerrada de la plantilla «Empleado (portal)»?
+- **Decisión:**
+  1. **Sí, solo esos dos**: `asistente.usar` y `asistente.preparar_borradores`. Nunca PS-237 (acciones) ni PS-238 a PS-240.
+  2. **Apagado por defecto para el Empleado:** el Administrador debe incluir al rol en «roles que lo usan» (PS-238). Mientras no lo haga, el asistente no aparece en el portal.
+  3. El Empleado solo recibe lo de la tabla 4.4 del portal; la prueba de campos de RNF-POR-008 se extiende a las respuestas del asistente. Como borrador, solo prepara un **caso de ayuda**, no compras ni solicitudes de trabajo.
+  4. Aviso de transparencia propio para empleados (que hablan con una IA, qué se envía); su texto depende de L-18.
+- **Motivo:** El empleado es quien más se beneficia (por ejemplo, «perdí mi celular»), y el riesgo lo acota el servidor, que filtra igual que en el portal; el apagado por defecto evita decidirlo por la empresa.
+- **Recomendó:** Analista (ASI-S15); decide el Gerente de TI. Seguridad y Cumplimiento confirman en su revisión.
+- **Qué cambia:** `portal-autoservicio.md` línea 47 y los ajustes de ASI §9.2. Nota al pie en D-037 fila 11 (hecha); la fila 12 gana el módulo activable `asistente-ia` (y `microsoft-entra-intune`).
+
+### D-084 · Permisos y pendientes sin choques: rangos, filas finales y nombres
+- **Pregunta:** Ambos módulos proponen PS-235 a PS-240; además ASI propone P-017 a P-019, que ya existen.
+- **Decisión:**
+  1. **ASI conserva PS-235 a PS-240** (va primero en la ola G). **MSF pasa a PS-241 a PS-246**, en el mismo orden de su tabla (ver filas abajo).
+  2. **Pendientes del núcleo:** los de ASI pasan a **P-020** (tope mensual global y por empresa: dinero), **P-021** (proveedor y modelo) y **P-022** (opinión legal sobre IA). P-017 a P-019 siguen siendo los de congelación, informe de compra y borrador de recepción.
+  3. **Códigos de escalado en §25:** ASI usa **D8** (tope del asistente), **I-05** (lo enviado al proveedor no se retira) y **L-17** (proveedor externo, país y contratos), **L-18** (aviso de privacidad y de transparencia; qué es dato personal en lo enviado), **L-19** (texto libre de casos, retención máxima en el proveedor y conversación sin historial). MSF usa **D9** (licencias de Microsoft de cada empresa y costos de Graph), **I-06** (acciones remotas: no se construyen) y conserva **L-MSF-01 a L-MSF-06**.
+  4. **Alcance de PS-235, PS-236 y PS-237 = «todo» (valor T), no «propio».** Son compuertas: no dan datos; el alcance de los datos lo fija el permiso de cada acto. Con «propio», un Administrador sin Persona vinculada perdería el asistente (registro §2.2), y la regla 1 del registro solo admite «todo» o «propio» con un recurso definido.
+  5. **Nombres validados** contra §1 del registro (`modulo.accion`, minúsculas, un solo punto, guion bajo dentro de cada parte): los 12 cumplen. No hay sinónimos: PS-137 `integraciones.configurar_metodos_ingreso` es el ingreso de usuarios con Microsoft; `microsoft.*` es la lectura del directorio y de Intune (la descripción de PS-241 lo aclara). **Sensibles:** PS-240 y PS-242 → 53.º y 54.º (el Analista recalcula). PS-237 queda no sensible de forma provisional; Seguridad lo confirma (registro §14, paso 4).
+  6. **Filas finales** (el registro **no** se edita hasta pasar las revisiones; Cuándo = `Fase 3`; Adm / Jef / Téc / Alm / Sol / SL / Emp):
+
+| PS | Nombre técnico | S | Controles | Adm | Jef | Téc | Alm | Sol | SL | Emp | Plat |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| PS-235 | `asistente.usar` | | A T | T | T | T | T | T | T | T | - |
+| PS-236 | `asistente.preparar_borradores` | | A | T | T | T | T | T | - | T | - |
+| PS-237 | `asistente.ejecutar_acciones` | | A T | T | T | T | - | - | - | - | - |
+| PS-238 | `asistente.configurar` | | R A | T | - | - | - | - | - | - | - |
+| PS-239 | `asistente.ver_uso` | | A | T | T | - | - | - | - | - | - |
+| PS-240 | `plataforma.asistente_gestionar` | S | 2F R A | - | - | - | - | - | - | - | T |
+| PS-241 | `microsoft.ver` | | | T | T | T | - | - | T | - | - |
+| PS-242 | `microsoft.conectar` | S | 2F R A | T | - | - | - | - | - | - | - |
+| PS-243 | `microsoft.configurar` | | A | T | - | - | - | - | - | - | - |
+| PS-244 | `microsoft.sincronizar_ahora` | | A T | T | T | T | - | - | - | - | - |
+| PS-245 | `microsoft.revisar_personas` | | A | T | T | T | - | - | - | - | - |
+| PS-246 | `microsoft.conciliar` | | A | T | T | T | - | - | - | - | - |
+
+  7. **Cómo se renumera MSF sin errores:** sustituir de mayor a menor (PS-240 a PS-246, luego 239 a 245, y así hasta 235 a 241) y comprobar al final que `microsoft-entra-intune.md` no contiene ningún PS-235 a PS-240 que no sea un permiso de otro módulo. Lo mismo para P-017 a P-019 dentro de `asistente-ia.md`.
+- **Motivo:** Fuera del registro no hay permiso (registro §2.6); dos números iguales harían que una prueba automática pasara con el permiso equivocado.
+- **Recomendó:** Auditor Técnico (verificación de choques) y Gerente de TI.
+- **Qué cambia:** **Analistas:** ajustar ambos módulos como en el punto 7 y los puntos 2 y 3; **PS-240** gana en su descripción «levantar el bloqueo del texto libre de casos por empresa» (D-086.4). Registro y documento funcional se editan al pasar las revisiones.
+
+### D-085 · MSF: los cuatro supuestos que pedían confirmación y las cuatro preguntas de negocio
+- **Pregunta:** El Analista pide confirmar S-MSF-08, S-MSF-09, S-MSF-12 y RN-MSF-007, y deja cuatro preguntas (P-MSF-01 a 04).
+- **Decisión:**
+  1. **S-MSF-08, un directorio de Microsoft para una sola empresa: confirmado.** El rechazo no revela a qué empresa pertenece (D-041.5). Si dos empresas del grupo comparten un directorio, solo una lo conecta y la otra espera; dividir un directorio por grupos sería un módulo aparte.
+  2. **S-MSF-09, equipos personales (BYOD) descartados: confirmado.** Se guarda solo el conteo. En la excepción de la serie coincidente se guarda el hallazgo «propiedad distinta» **sin usuario principal ni nombre del equipo**.
+  3. **S-MSF-12, aplicar propuestas en bloque no es «todo o nada»: confirmado como excepción a D-050.** Condiciones: vista previa obligatoria; cada propuesta se valida sola y las rechazadas se listan con su motivo; un lote con una sola entrada de auditoría; anulable como pide D-072; mismos límites de tamaño de D-050; la pantalla lo dice. Es el mismo criterio de D-053 DS-08 (invitaciones por persona).
+  4. **RN-MSF-007, no activar la conexión si la credencial trae permisos de escritura: confirmado y reforzado.** Se comprueba al conectar **y en cada lectura**; si aparece un permiso de escritura o de operaciones, la conexión pasa a «Pendiente de consentimiento», avisa a los titulares de PS-242 y no lee. La plataforma nunca los usa aunque existan. Si el mecanismo elegido no permite comprobarlo, el Arquitecto vuelve a mesa antes de seguir (ADR-22).
+  5. **Los demás [SUPUESTO] de MSF** (S-MSF-10, 11 y 13 a 23) quedan propuestos hasta las revisiones de Seguridad, Cumplimiento y QA.
+  6. **P-MSF-01 (directorios):** cada empresa con el suyo, como en el punto 1. **P-MSF-03 (categorías):** se sugiere laptop, celular, tableta y PDA; la empresa decide las suyas con PS-34 y nunca se marca sola. **P-MSF-04 (quién es el administrador de Microsoft):** no es una pregunta para el CEO; se pide a cada empresa al activar el módulo (RN-MSF-006) y no antes. **P-MSF-02 (otro sistema de administración de equipos)** depende del cliente real y **sigue con el CEO** (hoja, sección D); recomendación: todo en Intune.
+- **Motivo:** Son decisiones de producto y de seguridad que no cuestan dinero ni son irreversibles; dejarlas abiertas frenaría a Cumplimiento y a QA.
+- **Recomendó:** Analista (sección 12 de MSF); Gerente de TI.
+- **Qué cambia:** `microsoft-entra-intune.md`: S-MSF-08, 09 y 12 y RN-MSF-007 pasan a «Confirmado (D-085)», con las condiciones de los puntos 2, 3 y 4 en sus reglas y casos de aceptación (CA-MSF-02); las respuestas de los puntos 6 pasan a la sección 12.2.
+
+### D-086 · ASI: nombre, historial, personas y texto libre
+- **Pregunta:** ASI-S02, ASI-S04, ASI-S05 y ASI-S07 se dejaron como supuestos.
+- **Decisión:**
+  1. **ASI-S02, el nombre es «Asistente de IA»: confirmado.** Nunca «agente». El Diseñador solo lo afina en el prototipo.
+  2. **ASI-S04, sin historial de conversación: confirmado como regla inicial.** La conversación vive en la sesión y se pierde al cerrar; se guardan solo conteos y la valoración «me sirvió / no me sirvió» sin texto. Tener historial sería decisión nueva, con opinión legal y su plazo de retención.
+  3. **ASI-S05, personas siempre por referencia (`PRS-0042`): confirmado.** El modelo nunca recibe nombres; el nombre se ve al abrir la ficha, con PS-22. También lo que la persona escriba en su pregunta pasa por el validador común antes de salir al proveedor.
+  4. **ASI-S07, texto libre de los casos apagado por defecto: confirmado.** La casilla aparece **desactivada con la razón escrita**; la levanta el Administrador de plataforma (PS-240, 2F, con motivo) empresa por empresa, solo después de que el CEO informe que L-19 fue contestada. Los comentarios internos y los casos restringidos quedan fuera de todas las entregas (RN-AYU-009 y RN-AYU-027).
+  5. **Los demás supuestos de ASI** (S06, S08 a S14 y S16) siguen propuestos hasta las revisiones de Seguridad y Cumplimiento. **ASI-S12** (valores de los topes) es dinero: va al CEO (hoja, sección A).
+- **Motivo:** Los cuatro valores son los más protectores y se pueden aflojar después sin rehacer nada; lo contrario no.
+- **Recomendó:** Analista (sección 12.2 de ASI); decide el Gerente de TI.
+- **Qué cambia:** `asistente-ia.md`: esos cuatro pasan a «Confirmado (D-086)». Cumplimiento valida el aviso de transparencia y la declaración de texto libre (§18.1).
+
 ---
 
 ## Escalado al CEO
@@ -1208,10 +1313,12 @@ Todo lo anterior está decidido por el Gerente de TI. Solo esto llega al CEO, y 
 4. **Gestor de secretos y llaves de seguridad físicas** para las pocas cuentas de la plataforma (D-048): costo muy bajo, único o mensual según el gestor elegido.
 5. **Dominio:** usar un subdominio de uno que la empresa ya tenga; si no existe, comprar uno (gasto anual).
 6. **Honorarios de un abogado de protección de datos** (nuevo): para contestar el paquete de preguntas legales de abajo.
-7. **Archivos adjuntos** (D-022): no ahora; se consulta al cierre de la Etapa 4. **SAP:** si la empresa usa SAP y quiere conexión directa, puede requerir licencias o consultor (S-INT-08); no se cotiza. **Impuestos, depreciación y consolidado de monedas** (S-PRE-02 a 04): consulta a contabilidad antes de PRE-B.
+7. **Asistente de IA (D8, D-081 y D-084):** el proveedor cobra por cantidad de texto procesado, no hay tarifa fija. Antes de activarlo con datos reales el CEO fija un **tope mensual global y uno por empresa** y decide si el costo lo asume él o se traslada a las empresas. **Recomendación: tope global y un tope igual por empresa, alerta al 80 % y pausa al 100 %, tope por usuario además, y el módulo apagado hasta entonces.** Sin cifras hasta que el Arquitecto y DevOps midan con el proveedor candidato.
+8. **Microsoft (D9):** cada empresa debe **tener ya** sus licencias de Microsoft Intune (y de Entra si usa funciones avanzadas); la plataforma no las compra ni las cotiza. No se espera cargo de Microsoft Graph por las lecturas del módulo **[a verificar]**; si Microsoft cobrara, se consulta antes de seguir.
+9. **Archivos adjuntos** (D-022): no ahora; se consulta al cierre de la Etapa 4. **SAP:** si la empresa usa SAP y quiere conexión directa, puede requerir licencias o consultor (S-INT-08); no se cotiza. **Impuestos, depreciación y consolidado de monedas** (S-PRE-02 a 04): consulta a contabilidad antes de PRE-B.
 
 ### Legal (le pedimos que consiga una opinión legal; el equipo no la da)
-Son 16 preguntas consolidadas por el Auditor de Cumplimiento (L-01 a L-16, en `docs/revision-cruzada/auditor-cumplimiento.md`, sección 6). Siete son previas a cargar datos reales (prioridad A). Las cinco más importantes:
+Son 16 preguntas consolidadas por el Auditor de Cumplimiento (L-01 a L-16, en `docs/revision-cruzada/auditor-cumplimiento.md`, sección 6). Siete son previas a cargar datos reales (prioridad A). **Se suman 9 de los módulos nuevos (D-084):** L-17 a L-19 (asistente de IA: proveedor externo, avisos y texto libre de casos) y L-MSF-01 a L-MSF-06 (datos de Microsoft); solo se necesitan **antes de activar esos módulos con datos reales**, no frenan la v1. Las cinco más importantes:
 1. **L-01 y L-02:** qué ley de protección de datos aplica según el país de cada empresa, quién es responsable de qué (la empresa, la plataforma, el proveedor de alojamiento) y si hay que registrar los bancos de datos ante la autoridad.
 2. **L-04:** confirmar los plazos propuestos: auditoría 5 años (D-024), anonimización a los 2 años, archivos de importación sin guardarse (D-050), respaldos 30 días y 12 meses (D-032), eventos de seguridad 12 meses, casos de ayuda 5 años.
 3. **L-16:** la obligación y los plazos de avisar una fuga de datos a la autoridad y a los afectados (D-059).
@@ -1223,7 +1330,9 @@ Además: **si la plataforma se usará con empresas que no son del CEO** (cambia 
 1. **Anonimizar o borrar datos personales** (D-024, D-033, D-051). La automática queda **apagada** hasta la opinión legal; la manual solo para pedidos de derechos documentados y con dos personas.
 2. **Purgar la auditoría a los 5 años y rotar respaldos** (D-030.5, D-032): lo purgado no se recupera. No se activa antes de confirmar los plazos.
 3. **Pasar a producción con datos reales** (Etapa 7): lo aprueba el CEO tras la demo, con respaldo restaurado y anonimizaciones reaplicadas, aviso de privacidad aceptable, contratos con proveedores firmados, preguntas legales de prioridad A contestadas y procedimiento de incidente escrito.
-4. **Datos exportados fuera de la plataforma:** una vez descargado un archivo, la plataforma ya no lo controla; por eso solo el Administrador exporta y con registro (solo informar).
+4. **Datos enviados a un proveedor externo de IA (I-05, D-086):** lo enviado no se puede retirar del sistema del proveedor. Por eso el asistente nace apagado, sin historial, con personas por referencia y sin texto libre de casos; no se usa con datos reales hasta contestar L-17 a L-19 y aprobar el CEO proveedor y contrato.
+5. **Acciones remotas sobre equipos (I-06, S-MSF-03):** bloquear, borrar o retirar un equipo desde la plataforma **no se construye**; si el CEO lo pidiera, requiere su decisión escrita, opinión legal, doble control y permiso sensible por acción. Solo informar.
+6. **Datos exportados fuera de la plataforma:** una vez descargado un archivo, la plataforma ya no lo controla; por eso solo el Administrador exporta y con registro (solo informar).
 
 ### Insumos que solo el CEO tiene (no son decisiones de producto)
 1. Una **orden de compra real**, una **orden de servicio real** y el **Excel de inventario actual**, con los nombres de personas reemplazados (D-028). Sin ellos la Etapa 0 no se cierra y se trabaja con datos de ejemplo declarados.
@@ -1232,6 +1341,7 @@ Además: **si la plataforma se usará con empresas que no son del CEO** (cambia 
 4. **A nombre de quién** quedan las cuentas (alojamiento, base de datos, correo, dominio, copias), qué **dominio** de la empresa existe, y **qué persona con suplente** recibe las alertas.
 5. **Dos personas del equipo** (no más de tres) para administrar la plataforma antes de cargar datos reales (D-073.1).
 6. Si la empresa **usa SAP** (solo antes de INT-2).
+7. Qué **licencias de Microsoft** tiene cada empresa y si algún tipo de equipo lo administra **otro sistema distinto de Intune** (P-MSF-02); solo antes de la ola G.
 
 ### Lo que el CEO sigue haciendo
 Aprobar la demo al final de cada etapa antes de empezar la siguiente, tal como dice `CLAUDE.md`.

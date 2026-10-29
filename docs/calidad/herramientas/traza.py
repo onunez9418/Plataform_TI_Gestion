@@ -34,6 +34,7 @@ def estado(r, todos):
         return ('cubierto por cabecera' if via else 'sin criterio'), (', '.join(sorted(via)[:3]) if via else '')
     lista = [c for c in ca if r['id'] in todos[c]['cubre']]
     obs = ''
+    if not lista and r['id'] in J.LEIDOS_OK: return 'cubierto (lectura de QA)', J.LEIDOS_OK[r['id']]
     if not lista: return 'verificar', 'el criterio citado no lista este requisito en su cabecera'
     mx = r['max']
     tardes = [c for c in ca if mx is not None and todos[c]['etapa'] > mx]
@@ -64,7 +65,7 @@ def generar(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio):
     rotas = [(r['id'], c) for r in list(nreqs.values()) + list(mreqs.values()) for c in r['ca'] if c not in todos]
     o.append('# Trazabilidad: requisito, etapa, criterio de aceptación\n')
     nmod = len({r['modulo'] for r in mreqs.values()})
-    o.append(f"**Autor:** QA (qa-tester) · **Fecha:** {HOY} · **Checkpoint:** commit `{commit}`{(' (más cambios sin guardar en: ' + sucio + ')') if sucio else ''} · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los {nmod} módulos de `docs/modulos/` que ya están completos (los dos módulos nuevos en redacción, `microsoft-entra-intune` y `asistente-ia`, figuran en `docs/calidad/criterios-por-etapa.md`). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del {ANTERIOR}.\n")
+    o.append(f"**Autor:** QA (qa-tester) · **Fecha:** {HOY} · **Checkpoint:** commit `{commit}`{(' (más cambios sin guardar en: ' + sucio + ')') if sucio else ''} · **Cubre:** el núcleo del documento funcional v0.3 (secciones 5 a 21, con D-077 a D-080) y los {nmod} módulos de `docs/modulos/` que ya están completos (incluidos los dos nuevos, `microsoft-entra-intune` y `asistente-ia`, en su versión 0.1). Generado con `docs/calidad/herramientas/generar.py`; los juicios de lectura están en `docs/calidad/herramientas/juicios.py` y la revisión de citas y huecos en `docs/calidad/herramientas/huecos.py`. Reemplaza la versión del {ANTERIOR}.\n")
     o.append("**Cómo se hizo.** Un script lee las tablas de requisitos (columnas Cuándo y CA), la tabla de reglas RN con su columna CA, la sección 22 con su tabla 22.1 \"Se ejecuta en\" y los criterios de los módulos. Después QA leyó el texto de los requisitos y criterios dudosos. Estados:\n")
     o.append("- **cubierto:** el criterio citado existe y lista este requisito en su cabecera.\n- **no probado de verdad:** el criterio existe, pero leído su texto no prueba lo que dice el requisito (con la razón).\n- **cita mal apuntada o incompleta:** el criterio citado no es el que prueba el requisito, o falta citar el que lo prueba.\n- **verificar:** el criterio existe pero no nombra al requisito; hay que leerlo.\n- **cubierto por cabecera:** el requisito no cita criterio en su fila, pero un criterio lo lista (módulos).\n- **sin criterio:** ningún criterio lo cita ni lo lista.\n")
     o.append("El Auditor Técnico revisa esta matriz al cerrar cada etapa (D-026.4, D-076.5): un requisito sin prueba y una prueba sin requisito son hallazgos. **QA no ejecutó el guion de citas del Auditor Técnico;** lo de este archivo es lectura de QA, no la verificación del Auditor.\n")
@@ -99,7 +100,7 @@ def generar(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio):
         ['Reglas RN que ninguna cabecera de criterio nombra (solo están en la columna CA de la regla)', '13 de 23', f'{len(nrns) - rn_cit} de {len(nrns)}'],
         ['Reglas RN cuyo criterio no las prueba del todo', '4 (RN-009, RN-018, RN-021, RN-023)', f'{len(J.RN_PARCIAL)} ({", ".join(sorted(J.RN_PARCIAL))})'],
         ['Criterios sin ningún requisito ni regla que los cite o liste', '-', f"{len(hz['ca_sin_nada'])} ({', '.join(hz['ca_sin_nada'])})"],
-        ['Criterios citados solo por reglas RN o RS (sin fila RF)', 59, len(hz['ca_solo_rn'])],
+        ['Criterios citados solo por reglas RN o RS (sin fila RF)', 57, len(hz['ca_solo_rn'])],
         ['Reglas RN de módulos sin criterio (de ellas, en módulos con parte en la v1)', '-', f'{len(rn_mod)} ({len(rn_mod_v1)})'],
         ['RF y RNF de módulos sin criterio (de ellos, en módulos con parte en la v1)', '-', f'{len(rf_mod)} ({len(rnf_v1)})'],
         ['«Sin hacer» del Analista que siguen abiertos', '-', len(hz['sin_hacer'])],
@@ -121,6 +122,7 @@ def generar(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio):
         ['CA-017 y RF-CAT-008', 'CA-017 no nombra el prefijo reservado `ACTV` (D-079); RF-CAT-008 no cita CA-094a.', 'Agregar `ACTV` al ejemplo de CA-017 («un prefijo reservado como `OC` o `ACTV` se rechaza») y citar CA-094a en RF-CAT-008.', 'Analista', 'Etapa 2'],
         ['RF-GAR-006', 'La mitad «una ampliación es una garantía nueva» la prueba CA-GAR-04f (Fase 2).', 'Citar CA-GAR-04f o decir que esa mitad es de Fase 2.', 'Analista (escuadrón A)', 'Etapa 4'],
         ['Documento funcional, línea 1233 (sección 26.1)', 'Dice «CA-095 … son nuevos»: CA-095 ya no existe como uno solo (partido en 095a a 095j). La línea del módulo DAT (1230) dice «CA-095a a i» y deja fuera CA-095j.', 'Decir «CA-095a a j».', 'Analista', 'Auditoría de citas'],
+        ['RF-USR-006, RF-PER-010, RF-OC-041, RF-UX-008', 'Citan el criterio correcto, pero la cabecera de ese criterio no nombra al requisito (QA leyó los textos y sí lo prueban).', 'Agregar el requisito a la cabecera de CA-045 y CA-054a, CA-016a y CA-PRS-01d, y CA-011b y CA-042.', 'Analista', 'Auditoría de citas'],
         ['CA-NOT-10, CA-NOT-13', 'Corren en Etapa 1 y cubren requisitos de Fase 2.', 'El escuadrón C dice qué parte corre en Etapa 1 (ver criterios-por-etapa.md).', 'Analista (escuadrón C)', 'Etapa 1'],
         ['CA-PRS-16', 'Cita RN-PRS-004 cuando prueba el alcance «propio» sin Persona vinculada.', 'Cambiar la cita.', 'Analista (escuadrón B)', 'Etapa 2'],
         ['CA-GAR-04a', 'Dice «a las 23:59» sin zona horaria.', 'Zona de la empresa; agregar una empresa de otra zona.', 'Analista (escuadrón A)', 'Etapa 4'],
@@ -130,8 +132,24 @@ def generar(nreqs, nrns, ncas, mreqs, mrns, mcas, todos, commit, sucio):
         [f"{len(rn_mod_v1)} reglas RN de los módulos con parte en la v1", 'Sin criterio que las cite o las liste.', 'Cada escuadrón cita el criterio de cada regla antes de la etapa del módulo (D-076.4).', 'Analista (escuadrones A, B, C, D)', 'Etapas 2, 4 y 5'],
         ['CA-AYU-26, CA-PRE-12', 'Ningún requisito ni regla los cita ni los lista.', 'Fase 2 y Fase 3: el escuadrón los vincula al activar el módulo.', 'Analista (escuadrones de mesa de ayuda y presupuesto)', 'Fase 2 y 3'],
         ['CA-105 (Etapa 0)', 'El texto está; no se puede ejecutar hasta recibir el Excel, la orden de compra y la orden de servicio reales con nombres reemplazados (P-002).', 'QA revisa el archivo cuando llegue.', 'Cliente (CEO) entrega; Jefatura de Proyecto lo pide', 'Etapa 0 (cierre) y Etapa 4'],
-        ['Módulo MSF (Microsoft Entra e Intune)', 'El archivo no existe todavía.', 'QA lo lee, regenera cifras y agrega su aislamiento y permisos a este plan cuando llegue.', 'Analista', 'Fase posterior'],
     ]
+    for nombre, sg in L.MODULOS_NUEVOS.items():
+        est_mod = L.estado_modulo_nuevo(nombre)
+        if est_mod != 'completo':
+            filas.append([f'Módulo {sg} ({nombre})', f'El archivo está «{est_mod}».', 'QA lo lee, regenera las cifras y agrega su aislamiento y permisos al plan cuando esté completo y guardado.', 'Analista', 'Fase posterior'])
+    for nombre, sg in L.MODULOS_NUEVOS.items():
+        if L.estado_modulo_nuevo(nombre) != 'completo': continue
+        cs = [c for c, v in mcas.items() if v['modulo'] == nombre]
+        hered = [c for c in cs if todos[c]['heredada']]
+        sinrf = [c for k, c in [(c, c) for c in hz['ca_sin_nada']] if c in cs]
+        rnf_sc = [k for k in hz['rf_sin_criterio'] if k in mreqs and mreqs[k]['modulo'] == nombre]
+        if hered or sinrf or rnf_sc:
+            partes = []
+            if rnf_sc: partes.append(f"{len(rnf_sc)} RNF sin criterio ({', '.join(rnf_sc)})")
+            if hered: partes.append(f"{len(hered)} criterios con etapa heredada porque la columna «Cuándo» de sus requisitos no dice «Fase 3»")
+            if sinrf: partes.append(f"criterio sin requisito: {', '.join(sinrf)}")
+            filas.append([f'Módulo {sg} v0.1', '; '.join(partes) + '.', 'El Analista completa las citas antes de activar el módulo (D-076.4); no frena la v1.', 'Analista', 'Fase 3'])
+
     o.append(tabla(['Pendiente', 'Qué falta', 'Propuesta de QA', 'Quién', 'Bloquea'], filas) + '\n')
     o.append('**3. Preguntas que esperan respuesta y frenan una prueba**\n')
     o.append(tabla(['Pregunta', 'Qué prueba frena', 'Quién responde'], [
