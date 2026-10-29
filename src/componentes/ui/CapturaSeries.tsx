@@ -31,6 +31,7 @@ export function CapturaSeries({ nombre = 'series', prefijoId = 'series' }: { nom
   const errores = filas.filter((f) => f.estado !== 'ok').length
   const validas = filas.length - errores
   const errorEnvio = useErrorDeCampo(`${nombre}_revisadas`)
+  const errorServidor = useErrorDeCampo(nombre)
 
   return (
     <div className="captura" data-testid={`${prefijoId}-captura`}>
@@ -52,6 +53,9 @@ export function CapturaSeries({ nombre = 'series', prefijoId = 'series' }: { nom
         <p id={`${prefijoId}-resumen`} role="status" className="contador-grande" data-testid={`${prefijoId}-resumen`}>
           {filas.length === 0 ? 'Aún no hay series' : `${validas} de ${filas.length} series correctas`}
         </p>
+        {errorServidor ? (
+          <p role="alert" style={{ color: 'var(--c-peligro)', fontWeight: 600 }} data-testid={`${prefijoId}-error-servidor`}>{errorServidor}</p>
+        ) : null}
         {errorEnvio && errores === 0 ? (
           <p role="alert" style={{ color: 'var(--c-peligro)', fontWeight: 600 }} data-testid={`${prefijoId}-sin-series`}>Pegue al menos una serie para registrar.</p>
         ) : null}
