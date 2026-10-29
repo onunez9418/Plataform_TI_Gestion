@@ -1,7 +1,8 @@
 # Registro único de permisos
 
-**Versión:** 1.1 (parte de la v0.3 del documento funcional; incorpora D-065 a D-076) · **Fecha:** 2026-10-25 · **Autor:** Analista de Negocio
-**Base:** D-004 (reescrita), D-035, D-036, D-037, D-043, D-048, D-049, D-058, D-060, D-061, D-065, D-066, D-068, D-073, D-074. Sustituye a la matriz de la sección 7.3 de la v0.2.
+**Versión:** 1.2 (parte de la v0.3 del documento funcional; incorpora D-065 a D-076 y las filas PS-235 a PS-246 de D-081 a D-084) · **Fecha:** 2026-10-29 · **Autor:** Analista de Negocio
+**Base:** D-004 (reescrita), D-035, D-036, D-037, D-043, D-048, D-049, D-058, D-060, D-061, D-065, D-066, D-068, D-073, D-074, D-081, D-083, D-084, D-086. Sustituye a la matriz de la sección 7.3 de la v0.2.
+**Conteo (2026-10-29):** 246 filas PS (3 retiradas: PS-84, PS-85 y PS-196; **243 permisos vigentes**), de ellas **54 sensibles** (52 anteriores más PS-240 y PS-242, que son el 53.º y el 54.º). Las 12 filas nuevas (PS-235 a PS-246) son de Fase 3, ola G, y no cambian la matriz de la v1 (71 filas de empresa por 7 plantillas más 7 de plataforma).
 **Quién aprueba cambios:** el Gerente de TI. Los módulos **no inventan permisos**: piden una fila nueva (D-036.1). Fuera de este registro no hay permiso.
 
 ## 1. Cómo se lee
@@ -63,6 +64,7 @@ Solo el Administrador de plataforma. La base de datos lo impone con el rol `app_
 | PS-05 | `plataforma.acceso_emergencia` | Emitir un acceso excepcional de un solo uso si el correo falla, tras verificar la identidad por otro medio; exige a una segunda persona de plataforma o al contacto autorizado confirmado de la empresa; avisa a todos los administradores de la empresa; un uso por empresa y por semana (D-065 S-34, D-073.1) | S | todo | 2F R A No | v1 E1 | T |
 | PS-06 | `plataforma.correo_administrar` | Ver y cambiar el estado global del correo y del proveedor de envío | S | todo | 2F A | v1 E1 | T |
 | PS-233 | `plataforma.ver_conteos_seguridad` | Ver **solo conteos por empresa** de los eventos de seguridad, sin correos ni direcciones IP (D-073.3). No es sensible | | todo | A | v1 E1 | T |
+| PS-240 | `plataforma.asistente_gestionar` | Asistente de IA (D-084): encender o apagar el **interruptor general** para todas las empresas, fijar los **topes globales**, ver **conteos de uso por empresa sin contenido** (nunca conversaciones ni datos del negocio) y **levantar el bloqueo del texto libre de casos por empresa** (con motivo, empresa por empresa, solo después de que el Cliente (CEO) informe que L-19 fue contestada, D-086.4). Es el sensible n.º 53 | S | todo | 2F R A | Fase 3 | T |
 
 ## 4. Empresa, accesos, auditoría y datos (todas las empresas)
 
@@ -340,6 +342,52 @@ El correo de la v1 (invitación, acceso, aprobación; NOT-base) no necesita perm
 | PS-218 | `notificaciones.registro_ver` | Consultar el registro de envíos (correo enmascarado pasado el plazo; la consulta se audita) | S | todo | 2F A | T | - | - | - | - | - | - |
 | PS-219 | `notificaciones.registro_reenviar` | Reenviar un aviso del registro | | todo | A | T | - | - | - | - | - | - |
 
+## 12A. Asistente de IA (ASI, Fase 3, ola G)
+
+Filas PS-235 a PS-239 de D-084 (la fila de plataforma PS-240 está en la sección 3). Módulo: `docs/modulos/asistente-ia.md`. **PS-235, PS-236 y PS-237 son compuertas:** habilitan usar cada entrega del asistente, pero no dan acceso a ningún dato ni acción; cada lectura y cada acto exigen además el permiso que ya exigiría la pantalla, comprobado en el servidor. Por eso su alcance es «todo» y no «propio» (D-084.4): con «propio», un Administrador sin Persona vinculada perdería el asistente. **Empleado (portal):** solo PS-235 y PS-236, y **apagados por defecto** hasta que el Administrador incluya al rol en «roles que lo usan» (PS-238, D-083). Nunca PS-237 ni PS-238 a PS-240 para el Empleado.
+
+| PS | Nombre técnico | Qué permite | S | Alcance | Controles | Cuándo | Adm | Jef | Téc | Alm | Sol | SL | Emp |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| PS-235 | `asistente.usar` | Usar el Asistente de IA: conversar, hacer preguntas de ayuda y de lectura sobre lo que la persona ya puede ver, y valorar respuestas. Compuerta: no da acceso a ningún dato | | todo | A T | Fase 3 (ASI-A) | T | T | T | T | T | T | T |
+| PS-236 | `asistente.preparar_borradores` | Pedir al asistente que deje precargado un borrador (caso de ayuda o solicitud) que la persona revisa y envía con el botón normal; exige además el permiso del acto (por ejemplo PS-138). El Empleado solo prepara un caso de ayuda. Compuerta | | todo | A | Fase 3 (ASI-B) | T | T | T | T | T | - | T |
+| PS-237 | `asistente.ejecutar_acciones` | Pedir al asistente una acción del catálogo cerrado, que se ejecuta solo tras confirmar en la tarjeta; exige además el permiso de cada acción. Compuerta. **No sensible de forma provisional**: Seguridad lo confirma en el paso 4 de la sección 14 | | todo | A T | Fase 3 (ASI-C) | T | T | T | - | - | - | - |
+| PS-238 | `asistente.configurar` | Configurar el asistente en la empresa: entregas y acciones habilitadas, roles que lo usan, topes por usuario y por empresa dentro del tope global, y la casilla de texto libre de casos (queda desactivada con la razón escrita hasta que PS-240 la levante, D-086.4) | | todo | R A | Fase 3 (ASI-A) | T | - | - | - | - | - | - |
+| PS-239 | `asistente.ver_uso` | Ver el consumo, los topes y los conteos de uso del asistente; nunca conversaciones | | todo | A | Fase 3 (ASI-A) | T | T | - | - | - | - | - |
+
+## 12B. Microsoft Entra ID e Intune (MSF, Fase 3, ola G)
+
+Filas PS-241 a PS-246 de D-084. Módulo: `docs/modulos/microsoft-entra-intune.md`. Alcance siempre «todo». **Empleado (portal): no aplica.** `microsoft.*` es la lectura del directorio y de Intune; el **ingreso de usuarios con Microsoft** es otro permiso, `integraciones.configurar_metodos_ingreso` (PS-137). El módulo no tiene ningún permiso para acciones remotas ni de escritura en Microsoft.
+
+| PS | Nombre técnico | Qué permite | S | Alcance | Controles | Cuándo | Adm | Jef | Téc | Alm | Sol | SL | Emp |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| PS-241 | `microsoft.ver` | Ver la conexión con Microsoft, las lecturas, la lista de equipos de Intune y el bloque «Intune» de un activo, sin datos personales (usuario principal, IMEI y nombre del equipo exigen además PS-22). No es el ingreso con Microsoft de PS-137 | | todo | | Fase 3 (MSF-1) | T | T | T | - | - | T | - |
+| PS-242 | `microsoft.conectar` | Conectar la empresa con su Entra ID e Intune, reemplazar la credencial, pausar, reanudar y desconectar. Solo lectura. Nadie conecta por la empresa: ni el Administrador de plataforma ni el soporte. Es el sensible n.º 54 | S | todo | 2F R A | Fase 3 (MSF-1) | T | - | - | - | - | - | - |
+| PS-243 | `microsoft.configurar` | Configurar qué se lee: filtros de cuentas, exclusiones con motivo, equivalencias de área y umbrales de días | | todo | A | Fase 3 (MSF-1) | T | - | - | - | - | - | - |
+| PS-244 | `microsoft.sincronizar_ahora` | Pedir una lectura manual («Sincronizar ahora»), con tope por empresa en el cuadro único de topes | | todo | A T | Fase 3 (MSF-1) | T | T | T | - | - | - | - |
+| PS-245 | `microsoft.revisar_personas` | Revisar las propuestas sobre Personas, descartarlas con motivo y desvincular una cuenta. Revisar no es aplicar: aplicar exige además el permiso de Personas que corresponda (PS-25, PS-26 y, si hay membresía, PS-14; área nueva, PS-33) | | todo | A | Fase 3 (MSF-1) | T | T | T | - | - | - | - |
+| PS-246 | `microsoft.conciliar` | Conciliar equipos: vincular, desvincular, resolver coincidencias dudosas e ignorar hallazgos con motivo. Registrar en el inventario un equipo hallado en Intune exige además PS-44 | | todo | A | Fase 3 (MSF-2) | T | T | T | - | - | - | - |
+
+## 12C. Lista única de acciones que nunca hace un programa o un asistente (D-081.4)
+
+Esta es **la única lista**; `integraciones-api.md` y `asistente-ia.md` la citan y no la repiten. Vale para una clave de API, para un webhook y para el Asistente de IA, igual en todas las empresas y sin configuración que la cambie. Se hace respetar en el servidor, también ante llamadas directas.
+
+1. Aprobar, rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar, desactivar o anonimizar.
+2. Crear o cambiar proveedores.
+3. Ver claves de licencia o secretos.
+4. Ver o exportar la auditoría.
+5. Exportar o importar datos.
+6. Administrar usuarios, roles, permisos o invitaciones.
+7. Activar o usar las casillas del interruptor único de excepciones.
+8. Configurar la empresa, el portal o el propio asistente.
+9. Entregar equipos o firmar actas.
+10. Ajustar stock o costos.
+11. Redactar por seguridad.
+12. Borrar.
+13. Pedir o atender derechos de datos personales.
+14. Crear claves de API o webhooks.
+
+Agregar una acción permitida exige una decisión del Gerente de TI; sacar una de esta lista, una decisión nueva. Las acciones remotas sobre equipos o cuentas de Microsoft no están en esta lista porque la plataforma no las ofrece a nadie (RF-MSF-038, I-06 del documento funcional).
+
 ## 13. Resumen por rol (qué puede hacer cada plantilla)
 
 | Rol | En resumen |
@@ -352,6 +400,8 @@ El correo de la v1 (invitación, acceso, aprobación; NOT-base) no necesita perm
 | Solo lectura | Consulta sin modificar; sin precios ni datos personales (ve referencias) |
 | Empleado (portal) | Solo lo propio, a través del portal (Fase 3) |
 | Administrador de plataforma | Solo la zona de plataforma; no ve datos del negocio |
+
+**Fase 3, ola G (D-084).** Asistente de IA: todas las plantillas con empresa pueden usarlo (PS-235), salvo Solo lectura que no prepara borradores; Solicitante y Almacén no ejecutan acciones; solo el Administrador lo configura y Administrador y Jefatura TI ven su consumo; el Empleado tiene PS-235 y PS-236 **apagados por defecto**; el Administrador de plataforma tiene solo el interruptor general (PS-240). Microsoft: Administrador, Jefatura TI, Técnico y Solo lectura ven (PS-241); Administrador, Jefatura TI y Técnico piden lecturas, revisan Personas y concilian; solo el Administrador conecta y configura.
 
 ## 14. Cómo pedir un permiso nuevo
 
@@ -380,6 +430,7 @@ Para que cada escuadrón migre su sección 3. "Se retira" = el permiso ya existe
 **CMDB (CMD):** `cmdb.ver` a `cmdb.reconciliar` → PS-190 a PS-196 (`cmdb.retirar` se llama ahora `cmdb.dar_de_baja`; `cmdb.reconciliar` se retira si CMD no lo usa) · `cmdb.importar` → PS-21 · `cmdb.exportar` → PS-20 · `datos_personales.ver` → PS-22.
 **Onboarding (ONB):** `onboarding.ver` a `onboarding.plantillas` → PS-197 a PS-203 · `personas.cesar` → PS-26 · `datos_personales.ver` → PS-22.
 **Portal (POR):** `portal.acceder`, `ver_propio`, `solicitar`, `pedir_datos`, `confirmar_recepcion` → PS-204 a PS-208 · `portal.invitar` → PS-209 · `portal.configurar` → PS-210.
+**Asistente de IA (ASI) y Microsoft (MSF), Fase 3, ola G:** sin nombres antiguos; los módulos solo usan los de las secciones 3, 12A y 12B (`asistente.usar` a `asistente.ver_uso` → PS-235 a PS-239; `plataforma.asistente_gestionar` → PS-240; `microsoft.ver` a `microsoft.conciliar` → PS-241 a PS-246). El ingreso con Microsoft es `integraciones.configurar_metodos_ingreso` → PS-137, no `microsoft.*`.
 **Notificaciones (NOT):** `notificaciones.bandeja.usar` → PS-211 · `preferencias.editar_propias` → PS-212 · `preferencias_empresa.editar` → PS-213 · `plantilla.ver` → PS-214 · `plantilla.editar` → PS-215 · `regla_aviso.configurar` → PS-216 · `limites.configurar` → PS-217 · `registro.ver` → PS-218 · `registro.reenviar` → PS-219 · `notificaciones.plataforma.administrar` → PS-06 · `notificaciones.exportar` → PS-20.
 
 Los nombres de **eventos** que aparecen en los módulos (por ejemplo `acceso.invitacion`, `compras.orden_por_aprobar`, `ayuda.caso_creado`) **no son permisos**: se rigen por el catálogo único de eventos `<módulo>.<entidad>_<hecho>` (D-038.5) que acuerdan Notificaciones e Integraciones.
@@ -387,6 +438,7 @@ Los nombres de **eventos** que aparecen en los módulos (por ejemplo `acceso.inv
 ## 16. Pendientes del registro
 
 - **Sin pendientes de clasificación (D-068, D-074).** Los 16 permisos de D-068 son sensibles (35 a 51); PS-234 `texto.redactar` (D-074.3) hace 52. PS-08 y PS-154 no son sensibles. PS-232 es el monto límite y la moneda base; PS-233 son los conteos de seguridad de plataforma; PS-106 `garantias.recibir_avisos` queda confirmado y los otros `recibir_avisos` (PS-81, PS-226, PS-229) siguen el mismo patrón (Administrador y Jefatura TI todo, Técnico propio).
+- **Ola G (D-081 a D-084, 2026-10-29):** PS-235 a PS-246 agregadas con los valores finales de D-084.6. Sensibles nuevos: PS-240 (n.º 53) y PS-242 (n.º 54), total **54**. PS-237 `asistente.ejecutar_acciones` queda **no sensible de forma provisional**; Seguridad lo confirma en el paso 4 de la sección 14. Siguiente número libre: PS-247.
 - **PS-23 y PS-230:** `precios.ver` es solo para todo y sensible; lo propio (Técnico y Solicitante) pasó a `precios.ver_propios` (PS-230), no sensible.
 - Los valores de las celdas de los módulos de Fase 2 y 3 son una propuesta mía (supuesto S-22 del documento funcional) hasta que cada escuadrón confirme las suyas; se resuelven en la revisión del Auditor Técnico (plan de correcciones, sección 4).
 - El nombre técnico definitivo de cada fila lo fija el Arquitecto en el catálogo del código; este registro fija el nombre funcional y el identificador PS-nn.

@@ -35,6 +35,7 @@ Las acciones de plataforma (PS-01 a PS-06) y la pausa de lo irreversible durante
 ### Resto de PS-01 a PS-06
 - PS-01 `empresa_crear/suspender/reactivar`: una persona con llave física y verificación reciente; registro obligatorio; crear exige contacto autorizado.
 - PS-04 `limite_plataforma_ajustar`: una persona; el aumento lleva `vence_en` y vuelve solo (CA-084); registro.
+- PS-240 `asistente_interruptor_cambiar` y `asistente_texto_libre_levantar` (ADR-22, D-086.4): una persona con llave física y verificación reciente. La primera escribe el interruptor general y el tope global en `limite_plataforma`; la segunda escribe la casilla de esa empresa fijando su contexto dentro de la función; las dos dejan registro.
 - PS-06 `correo_global_cambiar` (estado global del correo y del proveedor de envío): una persona; registro.
 - Incidente (procedimiento, Anexo A): `sesiones_revocar_alcance(alcance)` — una persona, una empresa o todas — y los enlaces vivos; `clave_api_suspender`; `suspension_reaplicar` (reaplica suspensiones tras una restauración). Cada una exige las condiciones de la regla común y deja registro.
 

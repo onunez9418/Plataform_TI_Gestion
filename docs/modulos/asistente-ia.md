@@ -1,9 +1,9 @@
 # Módulo: Asistente de IA (slug `asistente-ia`, sigla ASI)
 
-**Versión:** 0.1 (primera redacción) · **Fecha:** 29/10/2026 · **Autor:** Analista de Negocio
-**Base:** pedido del CEO (sección 1), `docs/documento-funcional.md` (en especial §16, §17, §18, §19, §20, §21 y §25), decisiones D-001, D-030, D-048, D-056 y D-065 a D-080 (`docs/equipo/decisiones.md`), `docs/registro-permisos.md` y los módulos `mesa-de-ayuda`, `portal-autoservicio`, `integraciones-api` y `notificaciones`.
-**Estado:** módulo aprobado por el Gerente de TI; esta es la propuesta funcional para revisión del equipo. **Cuándo:** **Fase 3, ola G (propuesta, ASI-S01)**, en tres entregas: ASI-A, ASI-B y ASI-C.
-**Convenciones:** [SUPUESTO] = propuesta de este módulo con su resultado en la sección 12. [PENDIENTE] = valor o dato que nadie ha definido; no se inventa y se pregunta. [ESCALAR AL CEO] = dinero, tema legal o algo irreversible. [LEGAL] = depende de la opinión de un abogado. Los permisos son los del registro único `docs/registro-permisos.md`; los **PS-235 a PS-240 de este módulo son propuestos** y el registro no se edita aquí (sección 14 del registro: el Gerente de TI los aprueba y el Analista asigna el número definitivo).
+**Versión:** 0.2 (ajustada a D-081 a D-086) · **Fecha:** 29/10/2026 · **Autor:** Analista de Negocio
+**Base:** pedido del CEO (sección 1), `docs/documento-funcional.md` (en especial §16, §17, §18, §19, §20, §21 y §25), decisiones D-001, D-030, D-048, D-056, D-065 a D-080 y **D-081 a D-086** (`docs/equipo/decisiones.md`), `docs/registro-permisos.md` y los módulos `mesa-de-ayuda`, `portal-autoservicio`, `integraciones-api` y `notificaciones`.
+**Estado:** alcance aceptado por el Gerente de TI; el **visto bueno técnico del texto** sigue pendiente de las revisiones de Seguridad, Cumplimiento, QA, Auditor Técnico, Arquitecto (ADR-21) y Diseñador. **Cuándo:** **Fase 3, ola G (D-081)**, en tres entregas: ASI-A (paso G-1), ASI-B (paso G-4) y ASI-C (paso G-5).
+**Convenciones:** [SUPUESTO] = propuesta de este módulo con su resultado en la sección 12. [PENDIENTE] = valor o dato que nadie ha definido; no se inventa y se pregunta. [ESCALAR AL CEO] = dinero, tema legal o algo irreversible. [LEGAL] = depende de la opinión de un abogado. Los permisos son los del registro único `docs/registro-permisos.md`: **PS-235 a PS-239 están en su sección 12A y PS-240 en su sección 3** (D-084); el Analista ya los asignó y el módulo no inventa otros.
 **Palabras:** en este módulo **"entrega"** (A, B, C) es cada parte que se construye y se demuestra al CEO, igual que ENT-A y ENT-B. La palabra **"Etapa"** queda para las Etapas 0 a 7 del núcleo (D-056.3).
 
 ## 1. Propósito, alcance y fase
@@ -12,15 +12,15 @@
 
 **Propósito.** Que cualquier persona que usa la plataforma pueda, desde un botón siempre visible abajo a la derecha, conversar en español con un asistente de inteligencia artificial que (1) le explica cómo se hace algo en la plataforma, (2) le contesta preguntas sobre lo que **ella misma ya puede ver**, (3) le deja listo un pedido o un caso para que lo revise y lo envíe, y (4) más adelante hace por ella acciones sencillas que ella confirma. El asistente **no sabe ni puede más que la persona que lo usa**: hereda su empresa activa y sus permisos, y nunca hace nada sin que ella lo confirme.
 
-**Fase y entregas.** Todo lo de este módulo queda fuera de la v1 y no se construye antes de que el CEO apruebe la Etapa 7, salvo decisión del Gerente de TI (D-056.2). Cada entrega termina con una demo que el CEO prueba y aprueba antes de empezar la siguiente (RN-ASI-040).
+**Fase y entregas (D-081).** Todo lo de este módulo queda fuera de la v1 y no se construye antes de que el CEO apruebe la Etapa 7, salvo decisión del Gerente de TI (D-056.2). Es la **ola G de la Fase 3**, después de la ola F, y se construye intercalada con el módulo de Microsoft (MSF) en este orden: **G-1 ASI-A, G-2 MSF-1, G-3 MSF-2, G-4 ASI-B, G-5 ASI-C**. Cada paso termina con una demo que el CEO prueba y aprueba antes de empezar el siguiente (RN-ASI-040). **Sin adelantos:** ningún paso se construye antes de aprobar la Etapa 7 ni fuera de ese orden, salvo decisión escrita del Gerente de TI. **Datos reales:** el módulo se construye y se demuestra con datos inventados; usar datos reales exige las respuestas legales L-17 a L-19 y que el CEO apruebe proveedor, contrato y tope (D-084 punto 4); esto **no frena** la salida de la v1.
 
-| Entrega | Qué es | Cuándo | Necesita |
-|---|---|---|---|
-| **ASI-A** | **Respondedor.** Ayuda sobre el uso de la plataforma y lectura, sin cambiar nada, de lo que la persona ya puede ver | Fase 3, ola G | Núcleo aprobado (Etapa 7); manual de usuario (RNF-016 del núcleo); NOT-completo (Fase 2, ola A) para las alertas de tope; AYU (Fase 2, ola C) para artículos y casos. Sin AYU activo, responde con el manual y los datos del núcleo |
-| **ASI-B** | **Borradores.** Deja precargado un caso de la mesa de ayuda o una solicitud; la persona lo revisa y lo envía con el botón normal de la pantalla | Fase 3, ola G | ASI-A aprobada; AYU (caso) o la orden de servicio en Creada de la v1; POR (Fase 3, ola D) para empleados |
-| **ASI-C** | **Acciones con confirmación.** Ejecuta, solo tras la confirmación expresa de la persona, acciones de un catálogo cerrado, respetando el doble control donde ya aplica | Fase 3, ola G | ASI-B aprobada; doble control único (Etapa 5); cada acción del catálogo aprobada una por una |
+| Entrega | Qué es | Cuándo | Necesita | Por qué en este lugar |
+|---|---|---|---|---|
+| **ASI-A** | **Respondedor.** Ayuda sobre el uso de la plataforma y lectura, sin cambiar nada, de lo que la persona ya puede ver | Fase 3, ola G, paso G-1 | Núcleo aprobado (Etapa 7); NOT-completo (Fase 2, ola A) para las alertas de tope; manual de usuario (RNF-016 del núcleo); AYU (Fase 2, ola C) para artículos y casos, si está activa. Sin AYU activo, responde con el manual y los datos del núcleo | Es lo que pidió el CEO y la que menos depende; conviene medir sus defensas y su costo antes de darle más poder |
+| **ASI-B** | **Borradores.** Deja precargado un caso de la mesa de ayuda o una solicitud; la persona lo revisa y lo envía con el botón normal de la pantalla | Fase 3, ola G, paso G-4 | ASI-A aprobada; AYU (caso) o la orden de servicio en Creada de la v1; POR (Fase 3, ola D) para empleados | Solo después de medir ASI-A en uso: instrucciones ocultas y consumo |
+| **ASI-C** | **Acciones con confirmación.** Ejecuta, solo tras la confirmación expresa de la persona, acciones de un catálogo cerrado, respetando el doble control donde ya aplica | Fase 3, ola G, paso G-5 | ASI-B aprobada; doble control único (Etapa 5); cada acción del catálogo aprobada una por una | Es lo que más riesgo tiene; va al final |
 
-**Preparaciones del núcleo (D-056.5).** Son baratas hoy y evitan rehacer después: la marca de origen "vía asistente" en la auditoría, filas nuevas en el cuadro único de topes, la lista única de acciones que nunca hace un programa o un asistente, y el validador común aplicable también a texto de salida (sección 9.2).
+**Preparaciones del núcleo aprobadas (D-081.4, D-056.5).** Son baratas hoy y evitan rehacer datos reales después. Son cinco y quedan en el documento funcional (RF-AUD-020, RF-CAT-030, RF-DAT-018, RN-025 y la nota de RS-42): (a) la marca de origen "vía asistente" en la auditoría, sin cuarto tipo de autor; (b) el campo "se gestiona en MDM" en la categoría (lo usa MSF); (c) el gancho síncrono de limpieza al anonimizar una Persona; (d) la lista única de acciones que nunca hace un programa o un asistente, en el registro de permisos; (e) el validador común de textos, que sirve también para texto de salida. Las filas nuevas del cuadro de topes, los requisitos de seguridad propios (RS-52) y las tablas entran con su módulo; **ninguna pantalla ni lógica del asistente antes de su ola** (riesgo #7).
 
 **Entra**
 1. Botón flotante abajo a la derecha y panel de conversación, en todas las pantallas autenticadas de una empresa con el módulo activo (accesible, por teclado, en celular).
@@ -50,7 +50,7 @@
 |---|---|
 | **Asistente de IA** | Programa de inteligencia artificial con el que la persona conversa por escrito. En pantalla se llama **"Asistente de IA"**, nunca "agente": en la mesa de ayuda "agente" es la persona de TI que atiende casos (glosario de AYU). |
 | **Modelo / proveedor de IA** | El servicio externo que genera las respuestas. La plataforma le envía un mínimo de datos (sección 4.4). |
-| **Botón flotante** | Círculo fijo abajo a la derecha que abre el panel del asistente. Distinto del botón "Pedir ayuda" (D-053 DS-01), que crea un caso para TI. |
+| **Botón flotante** | Círculo fijo abajo a la derecha que abre el panel del asistente. Distinto del botón "Pedir ayuda" (D-053 DS-01, aclarado en D-082), que sigue en la barra superior y es el único camino para crear un caso. |
 | **Panel** | Ventana de la conversación; en celular ocupa la pantalla. |
 | **Conversación** | Intercambio de mensajes de **una persona en una empresa** durante una sesión. No se guarda como historial (RN-ASI-013). |
 | **Entrega A / B / C** | Respondedor / Borradores / Acciones con confirmación (sección 1). |
@@ -69,25 +69,27 @@
 
 ## 3. Roles y permisos
 
-**El asistente no tiene permisos propios.** Cada lectura y cada acción exige el permiso que ya exigiría la pantalla, comprobado en el servidor en ese instante (RN-ASI-002). Los permisos de abajo son **compuertas adicionales**: permiten a un rol usar cada entrega, pero no dan acceso a ningún dato ni acción (RN-ASI-007). Alcance: **P** propio (la capacidad de usar el asistente es personal; los datos alcanzables los define el permiso de cada acto), **T** todo, **-** no. Todo rol nuevo parte sin permisos. Los módulos agregan filas; no cambian celdas del núcleo (D-037).
+**El asistente no tiene permisos propios.** Cada lectura y cada acción exige el permiso que ya exigiría la pantalla, comprobado en el servidor en ese instante (RN-ASI-002). Los permisos de abajo son **compuertas adicionales**: permiten a un rol usar cada entrega, pero no dan acceso a ningún dato ni acción (RN-ASI-007). Alcance: **T** todo, **-** no. Los PS-235, PS-236 y PS-237 tienen alcance **«todo»** y no «propio» (D-084.4): son compuertas que no dan datos, el alcance de los datos lo fija el permiso de cada acto, y con «propio» un Administrador sin Persona vinculada perdería el asistente (registro de permisos, sección 2, regla 2). Todo rol nuevo parte sin permisos. Los módulos agregan filas; no cambian celdas del núcleo (D-037).
 
-### 3.1 Permisos propuestos (PS-235 a PS-240, números provisionales)
+### 3.1 Permisos (PS-235 a PS-240, ya en el registro: secciones 12A y 3)
 
-| PS | Permiso | S | Controles | Adm. | Jef. TI | Téc. | Alm. | Sol. | S. lectura | Emp. (portal) | Cuándo |
+Valores finales de D-084.6. Cuándo = Fase 3, ola G (ASI-A, ASI-B o ASI-C según la fila).
+
+| PS | Permiso | S | Controles | Adm. | Jef. TI | Téc. | Alm. | Sol. | S. lectura | Emp. (portal) | Entrega |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| PS-235 | `asistente.usar` (conversar, hacer preguntas de ayuda y de lectura, valorar respuestas) | | A T | P | P | P | P | P | P | P (ver nota 1) | ASI-A |
-| PS-236 | `asistente.preparar_borradores` (exige además el permiso del acto, por ejemplo PS-138) | | A | P | P | P | P | P | - | P (servicios visibles) | ASI-B |
-| PS-237 | `asistente.ejecutar_acciones` (exige además el permiso de cada acción) | | A T | P | P | P | - | - | - | - | ASI-C |
-| PS-238 | `asistente.configurar` (entregas y acciones habilitadas, roles que lo usan, lectura del texto de casos, topes por usuario y por empresa dentro del tope global) | | R A | T | - | - | - | - | - | - | ASI-A |
+| PS-235 | `asistente.usar` (conversar, hacer preguntas de ayuda y de lectura, valorar respuestas) | | A T | T | T | T | T | T | T | T (ver nota 1) | ASI-A |
+| PS-236 | `asistente.preparar_borradores` (exige además el permiso del acto, por ejemplo PS-138) | | A | T | T | T | T | T | - | T (ver nota 1; solo un caso de ayuda) | ASI-B |
+| PS-237 | `asistente.ejecutar_acciones` (exige además el permiso de cada acción) | | A T | T | T | T | - | - | - | - | ASI-C |
+| PS-238 | `asistente.configurar` (entregas y acciones habilitadas, roles que lo usan, topes por usuario y por empresa dentro del tope global, y la casilla de texto libre de casos, que no puede activar: la levanta PS-240) | | R A | T | - | - | - | - | - | - | ASI-A |
 | PS-239 | `asistente.ver_uso` (consumo, topes y conteos; nunca conversaciones) | | A | T | T | - | - | - | - | - | ASI-A |
-| PS-240 | `plataforma.asistente_gestionar` (interruptor general, topes globales, conteos de uso por empresa sin contenido; solo del Administrador de plataforma, que tiene T) | S | 2F R A | - | - | - | - | - | - | - | ASI-A |
+| PS-240 | `plataforma.asistente_gestionar` (interruptor general, topes globales, conteos de uso por empresa sin contenido y levantar el bloqueo del texto libre de casos por empresa; solo del Administrador de plataforma, que tiene T) | S | 2F R A | - | - | - | - | - | - | - | ASI-A |
 
 **Lo que el módulo usa del registro (no se repite):** PS-09 `empresa.configurar_modulos` (activar o apagar el módulo en la empresa; sensible); PS-18 `auditoria.ver` y PS-19 `auditoria.ver_seguridad` (ver el rastro); PS-20 `datos.exportar` (el asistente nunca exporta, solo remite a la puerta única); PS-22 `datos_personales.ver`, PS-23 `precios.ver` y demás permisos de lectura; los PS-138 a PS-166 de AYU, PS-204 a PS-208 de POR y PS-211 de NOT para los actos de cada entrega.
 
 **Notas**
-1. **Empleado (portal).** La plantilla es de lista cerrada (D-037 fila 11). Agregar PS-235 y PS-236 a esa lista **cambia una decisión ya tomada**: la resuelve el Gerente de TI (sección 9.2). Mientras no se decida, el asistente no aparece en el portal. Si se acepta, el empleado solo consulta lo de la tabla 4.4 de `portal-autoservicio` y nunca recibe más campos (RN-ASI-005).
+1. **Empleado (portal) · D-083.** La plantilla es de lista cerrada (D-037 fila 11) y el Gerente de TI le sumó **solo PS-235 y PS-236**; nunca PS-237 (acciones) ni PS-238 a PS-240. Queda **apagado por defecto**: el Administrador debe incluir al rol Empleado en «roles que lo usan» (PS-238); mientras no lo haga, el asistente no aparece en el portal. El empleado solo recibe lo de la tabla 4.4 de `portal-autoservicio` y nunca más campos (RN-ASI-005, RN-ASI-041); como borrador solo prepara un **caso de ayuda**, no compras ni solicitudes de trabajo.
 2. **Solo lectura** puede preguntar y recibir ayuda, pero no prepara borradores ni ejecuta acciones: no tiene permisos de crear ni de cambiar.
-3. **PS-237 no es sensible** (no da ningún poder nuevo: cada acción exige su propio permiso, y los sensibles quedan fuera, RN-ASI-008). Seguridad lo confirma en el paso 4 de la sección 14 del registro. PS-240 es sensible como todo permiso de plataforma.
+3. **PS-237 no es sensible de forma provisional** (no da ningún poder nuevo: cada acción exige su propio permiso, y los sensibles quedan fuera, RN-ASI-008). Seguridad lo confirma en el paso 4 de la sección 14 del registro. **PS-240 es sensible** (el 53.º del registro) como todo permiso de plataforma.
 4. **Administrador de plataforma:** no usa el asistente y no ve conversaciones ni datos del negocio; solo el interruptor, los topes globales y conteos por empresa (RN-ASI-035).
 5. Quien tiene un permiso de acto pero no PS-235/236/237 sigue haciendo ese acto en la pantalla; solo pierde la comodidad del chat.
 
@@ -105,7 +107,7 @@
 
 ### 3.3 Lo que el asistente nunca hace (lista cerrada, no configurable)
 
-Aprobar, rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar, desactivar o anonimizar; crear o cambiar proveedores; ver claves de licencia o secretos; ver o exportar la auditoría; exportar o importar datos; administrar usuarios, roles, permisos o invitaciones; activar o usar las casillas del interruptor único de excepciones; configurar la empresa, el portal o el propio asistente; entregar equipos o firmar actas; ajustar stock o costos; redactar por seguridad; borrar; pedir o atender derechos de datos personales; crear claves de API o webhooks. Es la lista de `integraciones-api` (sección 3, notas) ampliada; deben mantenerse **iguales** en un solo lugar (sección 9.2). Agregar una acción permitida exige una decisión del Gerente de TI; sacarla de esta lista, una decisión nueva.
+La lista es **una sola** y vive en `docs/registro-permisos.md`, sección 12C (D-081.4d); este módulo la cita y no la repite. Resumen para leer este documento: aprobar y rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar, desactivar o anonimizar; proveedores; claves de licencia y secretos; auditoría; exportar o importar; usuarios, roles, permisos e invitaciones; casillas del interruptor único; configurar la empresa, el portal o el propio asistente; entregar equipos o firmar actas; ajustar stock o costos; redactar por seguridad; borrar; derechos de datos personales; claves de API y webhooks. Si el resumen y el registro difieren, **vale el registro**. Agregar una acción permitida exige una decisión del Gerente de TI; sacarla de la lista, una decisión nueva.
 
 ## 4. Requisitos
 
@@ -115,11 +117,11 @@ Aprobar, rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar, desa
 
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
-| RF-ASI-001 | En toda pantalla autenticada de una empresa con el módulo activo, la persona con PS-235 ve un **botón flotante abajo a la derecha** con el nombre accesible "Asistente de IA". | Fase 3, ola G (ASI-A) | CA-ASI-01, CA-ASI-02 |
+| RF-ASI-001 | En toda pantalla autenticada de una empresa con el módulo activo, la persona con PS-235 ve un **botón flotante abajo a la derecha** con el nombre accesible "Asistente de IA" (nunca "agente") y un icono distinto del de "Pedir ayuda" (D-082.2). Sin el módulo la pantalla queda exactamente como antes. | Fase 3, ola G (ASI-A) | CA-ASI-01, CA-ASI-02 |
 | RF-ASI-002 | El botón **no aparece** antes de entrar (acceso por invitación, D-001), en el aviso de privacidad del primer ingreso, en la consola de plataforma, en una sesión de soporte (PS-03), en vistas de impresión o PDF, con el módulo apagado, ni para quien no tiene PS-235. | ASI-A | CA-ASI-01, CA-ASI-02, CA-ASI-49 |
 | RF-ASI-003 | Accesibilidad y celular: se alcanza y se usa **solo con teclado**; el botón tiene nombre accesible; al abrir, el foco entra al campo de escritura; `Esc` cierra y devuelve el foco al botón; las respuestas nuevas se anuncian al lector de pantalla; contraste AA; objetivo táctil de 44 px; modo claro y oscuro; estados con texto además de color; a 360 px el panel ocupa la pantalla con un botón "Cerrar" claro (RNF-004 del núcleo). | ASI-A | CA-ASI-03 |
-| RF-ASI-004 | Abrir el panel no cambia de pantalla ni borra lo que la persona estaba escribiendo. La persona puede **ocultar el botón** (preferencia propia) y abrir el asistente desde el menú de usuario; el botón no puede tapar los botones de acción de la pantalla (Guardar, Confirmar) ni los avisos emergentes ni la barra inferior del celular. | ASI-A | CA-ASI-03 |
-| RF-ASI-005 | **Aviso de transparencia** en el primer uso (y cada vez que cambie su versión): es una inteligencia artificial y no una persona, puede equivocarse, qué se envía al proveedor, que no se usa para entrenar, que no escriba contraseñas ni datos personales innecesarios. Se registra versión y fecha de aceptación. Sin aceptar, no se procesa ninguna pregunta. [LEGAL: el texto final lo da L-03]. | ASI-A | CA-ASI-04 |
+| RF-ASI-004 | Abrir el panel no cambia de pantalla ni borra lo que la persona estaba escribiendo. La persona puede **ocultar el botón** (preferencia propia) y abrir el asistente desde el menú de usuario; el botón no puede tapar los botones de acción de la pantalla (Guardar, Confirmar) ni los avisos emergentes; **en el celular queda sobre la barra inferior** (D-082.4). | ASI-A | CA-ASI-03 |
+| RF-ASI-005 | **Aviso de transparencia** en el primer uso (y cada vez que cambie su versión): es una inteligencia artificial y no una persona, puede equivocarse, qué se envía al proveedor, que no se usa para entrenar, que no escriba contraseñas ni datos personales innecesarios. Hay **un texto propio para empleados del portal** (D-083.4). Se registra versión y fecha de aceptación. Sin aceptar, no se procesa ninguna pregunta. [LEGAL: los textos finales dependen de L-18]. | ASI-A | CA-ASI-04, CA-ASI-54 |
 | RF-ASI-006 | Cada respuesta se identifica como del asistente de IA y **cita su fuente** (artículo `KB-000007`, sección del manual o registro con código) o dice que no lo sabe y ofrece "Pedir ayuda". | ASI-A | CA-ASI-05, CA-ASI-27 |
 | RF-ASI-007 | La persona puede detener una respuesta, empezar otra conversación y valorar cada respuesta ("me sirvió / no me sirvió") sin que se guarde el texto. | ASI-A | CA-ASI-05 |
 
@@ -164,13 +166,14 @@ Aprobar, rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar, desa
 | ID | Requisito | Cuándo | CA |
 |---|---|---|---|
 | RF-ASI-029 | El módulo se **activa por empresa** (PS-09), apagado por defecto (D-037 fila 12). Apagado: el botón desaparece, las conversaciones abiertas se cierran, la API responde "no encontrado" y no se borra nada (no hay historial). | ASI-A | CA-ASI-02, CA-ASI-22 |
-| RF-ASI-030 | El Administrador (PS-238) elige **qué entregas** están habilitadas, **qué acciones** del catálogo, **qué roles** lo usan, y si el asistente puede leer el **texto libre de los casos** (apagado por defecto, RN-ASI-011). | ASI-A | CA-ASI-48 |
+| RF-ASI-030 | El Administrador (PS-238) elige **qué entregas** están habilitadas, **qué acciones** del catálogo y **qué roles** lo usan (el rol Empleado solo si lo incluye, D-083.2). La casilla del **texto libre de los casos** aparece **desactivada con la razón escrita** y el Administrador no puede activarla: la levanta el Administrador de plataforma (PS-240), empresa por empresa (RN-ASI-011). | ASI-A | CA-ASI-48, CA-ASI-55 |
 | RF-ASI-031 | **Interruptor general** (PS-240): apaga el asistente en todas las empresas al instante, con motivo, y queda en el registro de plataforma. Prevalece sobre la configuración de cada empresa. | ASI-A | CA-ASI-23 |
 | RF-ASI-032 | **Topes**: por usuario, por empresa (mensual, en dinero) y de la plataforma. Aviso al 80 % y al 100 % del tope de empresa. Al llegar al tope el asistente deja de procesar (no sigue consumiendo) y entra el modo sin IA. | ASI-A | CA-ASI-19, CA-ASI-20 |
 | RF-ASI-033 | Pantalla de **uso**: consumo del mes, porcentaje del tope y número de consultas por entrega y por rol; nunca conversaciones. | ASI-A | CA-ASI-50 |
 | RF-ASI-034 | **Modo sin IA**: si el proveedor no responde o se alcanzó un tope, el panel dice "El asistente no está disponible ahora" y ofrece buscador de ayuda (manual y artículos, PAN-AYU-14) y "Pedir ayuda". Nada de la plataforma deja de funcionar. | ASI-A | CA-ASI-21 |
 | RF-ASI-035 | Cambiar de proveedor, modelo o instrucciones internas **no cambia** permisos, datos que viajan ni auditoría, y exige pasar antes el conjunto de pruebas de instrucciones ocultas y de calidad. | ASI-A | CA-ASI-26 |
 | RF-ASI-049 | La conversación se **cierra** al vencer o cerrar la sesión, al cambiar de empresa, al apagarse el módulo o el interruptor, y al suspender o dar de baja a la persona (al instante). Un cambio de rol vale en la siguiente acción (S-05 del núcleo). | ASI-A | CA-ASI-10, CA-ASI-22, CA-ASI-24 |
+| RF-ASI-050 | **Una puerta, tres entradas (D-082).** «Pedir ayuda» sigue en la barra superior y es el **único camino para crear un caso o una solicitud de trabajo**: un solo formulario. El panel del asistente trae siempre un acceso fijo «Pedir ayuda» (al pie y en el modo sin IA) que abre **ese mismo formulario**. El asistente solo puede precargarlo (ASI-B); lo envía la persona con el botón normal. Si en la prueba de uso de la ola G la gente confunde los dos controles, el Gerente de TI puede pasar a **un único botón flotante «Ayuda» con dos pestañas** («Asistente de IA» y «Pedir ayuda») cuando el módulo esté activo; el Diseñador muestra ambas variantes en las muestras de la Fase 3. | ASI-A | CA-ASI-53 |
 
 **Privacidad, auditoría y seguridad**
 
@@ -179,7 +182,7 @@ Aprobar, rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar, desa
 | RF-ASI-036 | Al proveedor viaja **solo lo necesario** para esa pregunta, según la tabla 4.4. | ASI-A | CA-ASI-12, CA-ASI-14 |
 | RF-ASI-037 | **Entrada:** el validador común (RS-42) rechaza bloques de clave privada y patrones de claves; se **enmascaran** correos, teléfonos e IMEI escritos; no se ofrece subir archivos ni imágenes (D-022). | ASI-A | CA-ASI-15 |
 | RF-ASI-038 | **Sin entrenamiento:** el contrato y la configuración del proveedor impiden que use los datos para entrenar o mejorar modelos y exigen retención nula o mínima; la plataforma tampoco los usa. [LEGAL] | ASI-A | CA-ASI-25 |
-| RF-ASI-039 | **Sin historial:** el texto de la conversación no queda guardado después de la sesión [SUPUESTO ASI-S04]. | ASI-A | CA-ASI-17 |
+| RF-ASI-039 | **Sin historial:** el texto de la conversación no queda guardado después de la sesión; solo se guardan conteos y la valoración «me sirvió / no me sirvió» sin texto (confirmado, ASI-S04, D-086.2). | ASI-A | CA-ASI-17 |
 | RF-ASI-040 | **Auditoría** de cada consulta, propuesta, acción y rechazo, con referencias y sin texto (sección 6). | ASI-A | CA-ASI-16 |
 | RF-ASI-041 | Los intentos rechazados por permiso o por empresa ajena y las instrucciones sospechosas detectadas van al **registro de eventos de seguridad** (RF-AUD-010), con la empresa del actor y sin contenido. | ASI-A | CA-ASI-18 |
 | RF-ASI-042 | Las filas leídas por el asistente **suman** al umbral de lectura masiva auditada (5.000 filas por día, RF-AUD-005, D-061.6). El asistente no genera archivos. | ASI-A | CA-ASI-13 |
@@ -202,16 +205,16 @@ Aprobar, rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar, desa
 | RN-ASI-006 | **Tres mensajes.** El asistente usa "No encontrado", "No tiene permiso" y "No se puede por una regla" (RF-UX-007) y no confirma que algo exista si la persona no puede verlo. | CA-ASI-08, CA-ASI-10 |
 | RN-ASI-007 | **Las compuertas no amplían.** PS-235, PS-236 y PS-237 solo habilitan usar el asistente; no suman ningún permiso de lectura ni de acción. | CA-ASI-36, CA-ASI-47 |
 | RN-ASI-008 | **Lo sensible nunca se entrega**, aunque la persona tenga el permiso: lo que exige permiso sensible (S) o reautenticación (claves de licencia, auditoría, registro de envíos, encuestas con nombre, solicitudes de derechos, lectura de soporte) y los **casos restringidos**. El asistente no puede saltarse la segunda verificación y el rastro de cada uso que esos permisos exigen. | CA-ASI-14 |
-| RN-ASI-009 | **Personas por referencia.** Nombre, correo, área, puesto, jefe directo, código de empleado, teléfono, IMEI y número de línea (lista cerrada de la sección 18.2 del núcleo, más lo tratado como personal en L-09) no se envían al proveedor ni aparecen en una respuesta; se usa `PRS-0042` y el enlace a la ficha, donde el nombre se ve con PS-22. | CA-ASI-12 |
+| RN-ASI-009 | **Personas por referencia (confirmado, D-086.3).** Nombre, correo, área, puesto, jefe directo, código de empleado, teléfono, IMEI y número de línea (lista cerrada de la sección 18.2 del núcleo, más lo tratado como personal en L-09) no se envían al proveedor ni aparecen en una respuesta: el modelo nunca recibe nombres. Se usa `PRS-0042` y el enlace a la ficha, donde el nombre se ve con PS-22. También lo que la persona escribe en su pregunta pasa por el validador común antes de salir al proveedor (RF-ASI-037). | CA-ASI-12 |
 | RN-ASI-010 | **Mínimo necesario.** Solo los campos y registros que esa pregunta necesita, nunca registros "por si acaso", y un historial corto de la conversación. [PENDIENTE: cuánto contexto de la conversación se reenvía; lo fija el Arquitecto con el proveedor]. | CA-ASI-12 |
-| RN-ASI-011 | **Texto libre de casos.** Las descripciones y los comentarios públicos de los casos pueden contener datos personales escritos por alguien. El asistente los lee solo si el Administrador activa esa casilla (apagada por defecto hasta la opinión legal). Los **comentarios internos** (PS-140) no los lee en ninguna entrega hasta una decisión nueva. | CA-ASI-48 |
+| RN-ASI-011 | **Texto libre de casos (confirmado, D-086.4).** Las descripciones y los comentarios públicos de los casos pueden contener datos personales escritos por alguien. La casilla que permite al asistente leerlos viene **apagada** y aparece **desactivada con la razón escrita**; la levanta el Administrador de plataforma (PS-240, 2F, con motivo) **empresa por empresa**, solo después de que el CEO informe que L-19 fue contestada. Los **comentarios internos** (PS-140) y los **casos restringidos** quedan fuera de todas las entregas (RN-AYU-009 y RN-AYU-027) y la casilla no los alcanza. | CA-ASI-48, CA-ASI-55 |
 | RN-ASI-012 | **Sin entrenar.** Ni el proveedor ni la plataforma usan lo enviado, las preguntas o las respuestas para entrenar, ajustar o mejorar modelos. | CA-ASI-25 |
-| RN-ASI-013 | **Sin historial.** El texto de la conversación vive solo mientras dura la sesión de la persona y no se guarda en auditoría, registros técnicos, correos ni respaldos. Un historial persistente exige decisión nueva y opinión legal. | CA-ASI-17 |
+| RN-ASI-013 | **Sin historial (confirmado como regla inicial, D-086.2).** El texto de la conversación vive solo mientras dura la sesión de la persona y no se guarda en auditoría, registros técnicos, correos ni respaldos; se guardan solo conteos y la valoración sin texto. Un historial persistente sería una decisión nueva, con opinión legal y su plazo de retención. | CA-ASI-17 |
 | RN-ASI-014 | **Auditoría sin texto.** Se guardan quién, cuándo, empresa, tipo, entrega, referencias consultadas, cantidad de filas, resultado, conversación, versión de modelo e instrucciones; **no** la pregunta ni la respuesta ni valores personales (D-030). El **motivo** de una acción sí se guarda por valor (D-077) y se declara texto libre no anonimizable de forma garantizada. | CA-ASI-16 |
 | RN-ASI-015 | **Confirmación humana.** Nada que cree, cambie o elimine datos se ejecuta sin que la persona pulse "Confirmar" en la tarjeta. Un borrador no es un registro. | CA-ASI-34, CA-ASI-40 |
 | RN-ASI-016 | **Tarjeta del servidor.** La tarjeta se arma con los datos reales de la acción, no con texto escrito por el modelo; lo ejecutado es lo mostrado. | CA-ASI-42 |
 | RN-ASI-017 | **Un solo uso.** Una propuesta sirve una vez, para una persona, una empresa y una conversación, y vence. | CA-ASI-41 |
-| RN-ASI-018 | **Lista cerrada de lo que nunca hace** (sección 3.3), igual para todas las empresas. | CA-ASI-46 |
+| RN-ASI-018 | **Lista cerrada de lo que nunca hace** (sección 3.3: la lista única del registro de permisos, sección 12C), igual para todas las empresas. | CA-ASI-46 |
 | RN-ASI-019 | **El actor es la persona.** Para la separación de funciones (RN-010 y RN-017 del núcleo) lo que se crea o edita por el asistente cuenta como creado o editado por ella: quien lo preparó no lo aprueba. | CA-ASI-43 |
 | RN-ASI-020 | **Sin excepciones propias.** No hay casilla del asistente en el interruptor único (D-031.6, D-066); una casilla activa de la empresa no le da al asistente poder para aprobar. | CA-ASI-44 |
 | RN-ASI-021 | **Los datos no dan órdenes.** Todo texto que viene de los datos es contenido no confiable: se lee como información, se marca como tal y nunca se obedece. | CA-ASI-29 |
@@ -231,9 +234,10 @@ Aprobar, rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar, desa
 | RN-ASI-035 | **Plataforma y soporte.** El Administrador de plataforma y la sesión de soporte (PS-03) no usan el asistente ni ven conversaciones o datos del negocio por medio de él. | CA-ASI-49 |
 | RN-ASI-036 | **Datos de prueba.** Ninguna conversación real en pruebas (RS-40, RF-DAT-010); la integración continua usa un proveedor simulado que **registra lo que se le enviaría**; las pruebas con el proveedor real usan datos inventados. | CA-ASI-12, CA-ASI-33 |
 | RN-ASI-037 | **Reautenticación.** Si el permiso de la acción exige reautenticación reciente (D-048.2), la tarjeta la pide antes de ejecutar. | CA-ASI-45 |
-| RN-ASI-038 | **Origen.** Lo creado o cambiado por el asistente lleva la marca de origen "vía asistente" en la auditoría; el autor sigue siendo la membresía (los tres tipos de autor de RF-AUD-013 no cambian). | CA-ASI-34, CA-ASI-40 |
+| RN-ASI-038 | **Origen.** Lo creado o cambiado por el asistente lleva la marca de origen "vía asistente" en la auditoría (RF-AUD-020, preparación del núcleo de la Etapa 1); el autor sigue siendo la membresía (los tres tipos de autor de RF-AUD-013 no cambian). | CA-ASI-34, CA-ASI-40 |
 | RN-ASI-039 | **Personas cesadas o anonimizadas.** Se tratan por referencia como en todo el sistema; el asistente no genera pendientes de la persona ni bloquea cesar o anonimizar. | CA-ASI-16 |
-| RN-ASI-040 | **Una entrega a la vez.** ASI-B no empieza sin la demo de ASI-A aprobada por el CEO; ASI-C, sin la de ASI-B. | CA-ASI-33 |
+| RN-ASI-040 | **Una entrega a la vez, en el orden de la ola G (D-081).** El orden es ASI-A, MSF-1, MSF-2, ASI-B, ASI-C. ASI-B no empieza sin la demo de ASI-A aprobada por el CEO (y medida en uso: instrucciones ocultas y consumo); ASI-C, sin la de ASI-B. | CA-ASI-33 |
+| RN-ASI-041 | **Empleado del portal (D-083).** El asistente está **apagado por defecto** para el rol Empleado y aparece solo si el Administrador lo incluye en «roles que lo usan» (PS-238). El Empleado solo tiene PS-235 y PS-236. Sus respuestas traen únicamente los campos de la tabla 4.4 de `portal-autoservicio` (la prueba de campos de RNF-POR-008 se extiende a las respuestas del asistente) y su único borrador posible es un **caso de ayuda**, nunca una compra ni una solicitud de trabajo. Ve su propio aviso de transparencia (RF-ASI-005). | CA-ASI-54 |
 
 ### 4.3 Requisitos de calidad (RNF)
 
@@ -264,7 +268,7 @@ Aprobar, rechazar, recibir, dar de baja, anular, cerrar, reingresar, cesar, desa
 | Personas (nombre, correo, área, puesto, jefe, código de empleado) | **Nunca** (solo la referencia `PRS-0042` y el enlace a la ficha) | **Nunca** |
 | IMEI, número de línea, titular de dominio, contactos de proveedor | **Nunca** | **Nunca** |
 | Casos de AYU: código, estado, prioridad, fechas, asunto | Sí, los que PS-139 permite ver | Sí, enmascarado |
-| Casos de AYU: descripción y comentarios públicos (texto libre) | Solo si el Administrador activó la casilla (RN-ASI-011) | Sí, marcado como contenido no confiable y enmascarado |
+| Casos de AYU: descripción y comentarios públicos (texto libre) | Solo si la plataforma levantó el bloqueo de la casilla para esa empresa (PS-240, RN-ASI-011) | Sí, marcado como contenido no confiable y enmascarado |
 | Comentarios internos | **No en ninguna entrega** hasta decisión nueva | **Nunca** |
 | Casos restringidos de derechos de datos | **Nunca** | **Nunca** |
 | Claves de licencia, secretos, contraseñas, enlaces de acceso, sesiones | **Nunca** (ni enmascarados) | **Nunca** |
@@ -308,7 +312,7 @@ Un tope **de usuario** no cambia el estado de la empresa: solo detiene a esa per
 
 | Entidad | Campos principales (lenguaje simple) | Clave y unicidad |
 |---|---|---|
-| Configuración del asistente (por empresa) | empresa, activo, entregas habilitadas, acciones habilitadas, roles, casilla de texto libre de casos, tope por usuario, tope mensual de empresa (dinero y moneda), quién y cuándo cambió, versión | una por empresa |
+| Configuración del asistente (por empresa) | empresa, activo, entregas habilitadas, acciones habilitadas, roles (el Empleado solo si se incluye), casilla de texto libre de casos (bloqueada hasta que la plataforma la levanta, con quién, cuándo y motivo), tope por usuario, tope mensual de empresa (dinero y moneda), quién y cuándo cambió, versión | una por empresa |
 | Estado global (plataforma) | interruptor general, tope global, motivo, quién y cuándo | una fila; tabla global de la lista cerrada de tablas sin empresa (sección 9.2) |
 | Contadores de uso | empresa, membresía, periodo (mes con zona de la empresa), entrega, consultas, consumo del proveedor, rechazos por tope. **Sin texto** | una por empresa, membresía, periodo y entrega |
 | Propuesta | empresa, membresía, conversación, tipo, registro destino (código), parámetros validados, estado, vencimiento, versión del registro. Puede contener el texto que la persona pidió preparar | se elimina al terminar (RNF-ASI-011) |
@@ -325,7 +329,7 @@ Un tope **de usuario** no cambia el estado de la empresa: solo detiene a esa per
 | Dato | Finalidad | Quién lo ve | Plazo y rutina |
 |---|---|---|---|
 | Texto de la conversación (preguntas y respuestas) | Ayudar a la persona | Solo la propia persona, durante la sesión | Hasta que termina la sesión; se descarta. Texto libre no anonimizable de forma garantizada. Historial persistente: [PENDIENTE: decisión nueva y [LEGAL]] |
-| Copia del texto y de los datos enviados en el proveedor de IA | Generar la respuesta | Proveedor, bajo contrato | Retención nula o mínima y sin entrenamiento, según contrato **[LEGAL: L-07, L-08 y pregunta nueva de IA]**; se informa en el aviso de privacidad |
+| Copia del texto y de los datos enviados en el proveedor de IA | Generar la respuesta | Proveedor, bajo contrato | Retención nula o mínima y sin entrenamiento, según contrato **[LEGAL: L-07, L-08 y L-17]**; se informa en el aviso de privacidad. Lo ya enviado no se puede retirar del sistema del proveedor (I-05) |
 | Propuesta pendiente (borrador o acción con texto) | Que la persona confirme | La propia persona | Hasta confirmar, cancelar o vencer; luego se elimina |
 | Registro de consultas y acciones (referencias, sin texto) | Control y trazabilidad | Quien tiene PS-18 | Plazo de la auditoría (5 años, provisional, RF-DAT-002); referencia a la membresía, se anonimiza con ella |
 | Contadores de uso por usuario | Topes y costo | Quien tiene PS-239 | Mientras exista la membresía y 2 años tras la baja (como RF-DAT-003); se anonimiza con ella |
@@ -336,7 +340,7 @@ Un tope **de usuario** no cambia el estado de la empresa: solo detiene a esa per
 
 | N.º | Pantalla | Propósito | Rol principal |
 |---|---|---|---|
-| PAN-ASI-01 | Botón flotante y panel del asistente | Conversar, ver fuentes, abrir borradores, valorar | Todos con PS-235 |
+| PAN-ASI-01 | Botón flotante y panel del asistente | Conversar, ver fuentes, abrir borradores, valorar; acceso fijo «Pedir ayuda» al pie (RF-ASI-050). El Diseñador muestra también la variante B de D-082.5 (un botón «Ayuda» con dos pestañas) | Todos con PS-235 |
 | PAN-ASI-02 | Tarjeta de confirmación (componente dentro del panel) | Confirmar o cancelar una acción | Quien ejecuta (ASI-C) |
 | PAN-ASI-03 | Aviso del asistente (primer uso y cambio de versión) | Transparencia y aceptación | Todos con PS-235 |
 | PAN-ASI-04 | Configuración del asistente | Activar entregas, acciones, roles, casilla de texto libre, topes | Administrador |

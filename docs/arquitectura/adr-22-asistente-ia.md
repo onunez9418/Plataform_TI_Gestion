@@ -1,0 +1,113 @@
+# ADR-22 · Asistente de IA: dónde corre, qué recibe el modelo, filtrado en el servidor, defensas contra instrucciones ocultas y topes de uso
+
+**Estado:** Propuesto (nuevo, 2026-10-29) · contrastado con `docs/modulos/asistente-ia.md` v0.1 (29/10/2026) · **Decide:** Gerente de TI (revisan Seguridad y Cumplimiento; **el CEO aprueba el proveedor, el costo y el envío de datos**, E-ASI-01 a 03) · **Base:** D-001, D-030, D-036, D-043, D-048, D-053, D-054, D-061.1, D-077; ADR-02, 03, 04, 07, 10, 11, 13, 14, 16, 19, 20; RN-ASI-001 a 040, RF-ASI-001 a 049, IO-01 a IO-14
+
+## Contexto
+El CEO pidió un asistente de IA con un botón flotante, como el de otras plataformas de TI. El módulo lo define en tres entregas (A respondedor, B borradores, C acciones con confirmación) con un principio rector: **el asistente no sabe ni puede más que la persona que lo usa, y lo que no se envía no se puede filtrar** (principio 3). Un modelo de lenguaje no es una frontera de seguridad: puede obedecer una orden escondida en un dato. Por eso la seguridad de este ADR está en **qué ejecuta y qué envía el servidor**, no en lo que el modelo "decida" (RN-ASI-023). Este ADR fija la arquitectura; las cifras que el módulo dejó [PENDIENTE] para el Arquitecto se proponen aquí.
+
+## Opciones
+**Dónde corre el modelo:**
+1. **Un modelo alojado por nosotros.** Descartada para la v1: exige máquinas con aceleración o un servicio especializado, operación, parches y vigilancia, con un costo fijo alto frente a un uso incierto, sin ningún hecho que lo justifique hoy; los datos no saldrían de nuestra infraestructura, pero el módulo ya los reduce al mínimo antes de enviar.
+2. **Un servicio externo de IA, detrás de un puerto propio** (`ProveedorModelo`), como el correo (ADR-16). **Elegida.** Permite cambiar de proveedor sin tocar permisos, datos que viajan ni auditoría (RF-ASI-035, criterio 12 de la sección 12.1 del módulo).
+
+**Cómo obtiene datos el modelo:**
+1. **Dejar que el modelo escriba consultas a la base.** Descartada sin discusión: ninguna defensa de palabras sostiene eso.
+2. **Herramientas de lectura cerradas**, con parámetros estructurados, que el servidor ejecuta con la sesión y los permisos de la persona. **Elegida.**
+
+**Cómo se recupera la ayuda (manual y artículos):**
+1. Búsqueda vectorial con un servicio de incrustaciones. Descartada: obligaría a enviar los artículos de cada empresa a un tercero más y a sumar una extensión de base no aprobada.
+2. **Búsqueda de texto de la propia base** (las columnas `*_busq` normalizadas de ADR-06, con índice de trigramas), cinco fragmentos como máximo. **Elegida**, sin piezas nuevas.
+
+## Decisión
+
+### 1. Dónde corre y cómo está armado
+- **Todo el servidor del asistente corre en el despliegue `web`** (ADR-01), dentro de `modulos/asistente-ia/`; la interfaz recibe la respuesta en flujo. **No corre en la consola, ni en soporte, ni en el trabajador:** la consola no tiene la clave del proveedor (matriz de ADR-01), así que RN-ASI-035 (plataforma y soporte no lo usan) queda impuesto por la ausencia de credencial y no por una regla de pantalla. El botón no se renderiza en la consola ni en una sesión de soporte.
+- **Puerto `ProveedorModelo`** con tres implementaciones, como el correo: **simulada** (desarrollo y pruebas; nunca sale a internet; **registra lo que se le enviaría**, RN-ASI-036), **real** y la interfaz común. La clave del proveedor vive en el gestor de secretos (ADR-07, tipo `Secreto`) solo en `web`. Producción se niega a arrancar con el proveedor simulado activado, ni con la clave de relleno.
+- **Elección del proveedor y del modelo:** no se fija en este ADR. Se hace con los 12 criterios de la sección 12.1 del módulo en una **prueba corta con datos inventados** (nuevo, H-IA, fuera del prototipo previo a la Etapa 1) y con el conjunto de evaluación; la aprueban Seguridad y Cumplimiento y, por dinero y envío de datos, **el CEO** (E-ASI-03). Requisitos técnicos mínimos para entrar a la prueba: llamadas a herramientas con parámetros estructurados, respuesta en flujo, versión del modelo fijable, retención nula o mínima y sin entrenamiento con nuestros datos **por contrato y por configuración verificable**, un solo destino cifrado.
+- **Conexión saliente controlada (RF-ASI-047, RS-48):** un solo servidor de destino fijo, sin campos donde escribir direcciones, sin seguir redirecciones, tiempo máximo por llamada (propuesta: 60 segundos en total y 15 hasta el primer fragmento; se afina con el proveedor, RNF-ASI-007) y cancelación en cuanto el navegador se desconecta, para no seguir pagando.
+- **Nunca una transacción abierta mientras se espera al modelo.** Cada herramienta abre su propia `conEmpresa` corta (ADR-03); mientras el modelo piensa no hay transacción ni conexión de base retenida. Si no, el agotamiento del grupo de conexiones o `idle_in_transaction_session_timeout` romperían la plataforma entera por culpa del asistente.
+- **Sin estado en el servidor:** la conversación (RN-ASI-013, ASI-S04) no se guarda. El navegador conserva los mensajes de la sesión y los reenvía en cada turno; el servidor solo acepta mensajes de la persona y del asistente como **texto** (nunca resultados de herramientas ni propuestas), los recorta al contexto permitido y rearma todo lo demás en cada turno. Un historial manipulado por la propia persona solo la afecta a ella: no puede fabricar datos, permisos ni propuestas, porque las propuestas viven solo en el servidor. Así no hay nada que restaurar de un respaldo ni que anonimizar.
+
+### 2. Qué recibe el modelo (filtrado antes de enviar; RN-ASI-004 y 009)
+**Solo viaja lo que sale de tres fuentes, y todo pasa por el servidor:** (a) el texto que la persona escribió, tras el validador y el enmascarado de correos, teléfonos, IMEI y patrones de claves (RF-ASI-037); (b) fragmentos del manual y de los artículos que la persona puede leer; (c) resultados de herramientas **proyectados** a una lista de campos permitidos.
+
+- **Proyección declarada, una sola lista de sensibilidad.** Cada herramienta, al registrarse (ADR-14, `registro.ts`: "herramientas del asistente"), declara su permiso, sus parámetros (Zod), su función y su **proyección** de campos. Los campos usan el **mismo catálogo de sensibilidad de columnas que la puerta de exportación** (ADR-19): una columna marcada personal, secreta, restringida o de precio no puede estar en una proyección salvo las que permite la sección 4.4 del módulo. Una prueba de arquitectura recorre todas las proyecciones y falla si alguna incluye un campo marcado personal o secreto. **Personas: solo `PRS-0042`**, nunca nombre, correo, área, puesto, jefe, código de empleado, teléfono, IMEI ni número de línea; claves de licencia, secretos, auditoría, eventos de seguridad, registro de envíos, derechos de datos y casos restringidos **nunca** (RN-ASI-008). Los precios solo con `precios.ver`.
+- **Empresa y permisos al instante (RN-ASI-002, 003):** la herramienta se ejecuta con la **membresía** de la persona (el principal de ADR-10), dentro de `conEmpresa` con la empresa de la dirección (ADR-05). La empresa **no es un parámetro de ninguna herramienta**. Un identificador de otra empresa o de otra Persona devuelve "no encontrado" por la seguridad por fila y por el alcance "propio", y no se confirma que exista (RN-ASI-006). Las herramientas se ofrecen al modelo **filtradas por el permiso de la persona** y se vuelven a comprobar al ejecutarse (el modelo puede inventar un nombre de herramienta).
+- **Acotado (RN-ASI-026, valores iniciales propuestos, se ajustan en `TOPES`):** 20 filas como máximo por herramienta, 6 llamadas a herramientas por turno, 100 filas por turno; las filas leídas **suman** al umbral de lectura masiva auditada de 5.000 filas por día (ADR-11); mensaje de la persona de hasta 2.000 caracteres (IO-14); contexto reenviado de los últimos 6 turnos y hasta 8.000 caracteres (RN-ASI-010); fragmentos de ayuda: 5 de hasta 1.500 caracteres. Las listas largas se resuelven con el enlace "Abrir en la pantalla" (RF-ASI-011); el asistente no genera archivos ni exporta (ADR-19).
+- **Texto libre como contenido no confiable (RN-ASI-021):** descripciones y comentarios públicos de casos solo viajan si la casilla está levantada para esa empresa (apagada por defecto, RN-ASI-011; la levanta el Administrador de plataforma con PS-240 y motivo, **solo después de que el CEO informe que L-19 fue contestada**, D-086.4) y, cuando viajan, dentro del canal de **resultado de herramienta** marcado `no_confiable`, nunca mezclados con las instrucciones del sistema. Los comentarios internos no viajan nunca. Lo mismo vale para lo que llega de Microsoft (ADR-21): nombres de equipos y de cuentas los escribe un tercero.
+- **Nombres escritos a mano por la persona:** no se pueden enmascarar de forma fiable. Se evaluó (ASI-S05) enmascarar los nombres del directorio dentro del texto escrito y se **descarta**: obligaría al servidor a leer `persona_pii` en cada mensaje (justo lo que el asistente no debe tocar), no cubriría apodos ni errores de tipeo y daría una falsa sensación de garantía. Queda el aviso al escribir y la declaración en el aviso de privacidad; Cumplimiento puede pedir más.
+
+### 3. Defensas contra instrucciones ocultas (la seguridad está en los efectos)
+Una orden escondida en un dato (el campo de un activo, un artículo, un comentario, el nombre de un equipo de Intune, una celda de Excel) puede llegar al modelo y este puede obedecerla. Se asume que **a veces lo hará**. Lo que importa es qué puede lograr entonces. Controles estructurales, independientes de las palabras del modelo:
+
+| # | Control | Qué impide |
+|---|---|---|
+| 1 | **Herramientas solo de lectura en las entregas A y B**; en C, solo un catálogo cerrado de acciones y solo con tarjeta de confirmación | Que una orden oculta cambie datos |
+| 2 | **La lista cerrada de lo que nunca hace** (sección 3.3 del módulo) vive **en el servidor, en un único lugar compartido con la API de integraciones**, y rechaza también las llamadas directas al servicio (RF-ASI-027) | Aprobar, exportar, borrar, ver secretos, administrar usuarios, etc., aunque el modelo lo pida |
+| 3 | **Una propuesta (borrador o acción) solo nace si la persona la pidió en su mensaje** (RN-ASI-022): el servidor solo la crea cuando el turno de la persona la solicita explícitamente y no cuando un resultado de herramienta contiene la orden | Que un dato origine una acción |
+| 4 | **Propuestas en una tabla del servidor** (`asistente_propuesta`: empresa, membresía, sesión, conversación, tipo, parámetros validados, estado, vencimiento, versión del registro), de **un solo uso**, atadas a esa persona, esa empresa, esa sesión y esa conversación; la **tarjeta** se arma con los datos reales de la acción, no con texto del modelo (RN-ASI-016). Confirmar es una **petición propia** de la persona (clic en la tarjeta) con la comprobación de origen de ADR-05; escribir "sí" en el chat no confirma. Se ejecutan los mismos servicios, permisos, motivo, avisos y reautenticación que la pantalla, con actualización condicional (patrón 2 de ADR-15) | Que el modelo confirme por la persona o cambie los parámetros después |
+| 5 | **Doble control intacto:** el asistente nunca es la segunda persona; lo que prepara cuenta como creado o editado por la persona (RN-ASI-019, ADR-13); sin casillas propias | Burlar la separación de funciones |
+| 6 | **Salida solo texto.** El servidor analiza la respuesta del modelo y **elimina** imágenes, HTML y enlaces automáticos. Un enlace interno solo se admite si coincide con una ruta registrada de la empresa activa; un enlace externo solo si su dirección aparece **textualmente** en un fragmento recuperado en ese turno y, aun así, con aviso de salida en el panel y sin vista previa (RF-ASI-045). La política de contenido de ADR-01 (`img-src 'self' data:`, sin conexiones a terceros desde la página) lo repite en el navegador | Sacar datos a un tercero por una imagen o un enlace con datos en la dirección (IO-05) |
+| 7 | **Sin memoria compartida:** ninguna conversación ve otra; el asistente no guarda nada entre sesiones ni entre personas; el servidor reconstruye el contexto en cada turno | Que una instrucción plantada sobreviva o salte de una persona a otra |
+| 8 | **Todo dato citado sale de una consulta de ese turno** (RN-ASI-024): códigos, cifras y enlaces que el modelo agregue por su cuenta y no estén en un resultado se omiten (RF-ASI-010) | Respuestas inventadas y enlaces fabricados |
+| 9 | **Topes de herramientas, de filas y de tamaño** (sección 2) y **eventos de seguridad** para rechazos por permiso, empresa ajena o parámetros inválidos (RF-ASI-041), con la empresa del actor y sin contenido | Barridos de datos y su detección |
+| 10 | **Instrucciones del sistema con una marca de control (canario) aleatoria por turno**; si aparece en la respuesta se bloquea y se registra un evento (revela intento de extraer las instrucciones). Es una **alarma**, no una defensa | Detectar IO-10 |
+| 11 | **El texto de la persona puede intentar convencer al modelo (IO-10): no importa**: el modelo no tiene más permisos que la persona | "Actúa como administrador" |
+
+**La instrucción al modelo de "no obedecer los datos" se escribe y se prueba, pero no se cuenta como control.** Las pruebas miden **qué datos salieron y qué se ejecutó**, no las palabras (RN-ASI-023).
+
+### 4. Topes de uso y costo
+- **Tres niveles** (RF-ASI-032, RN-ASI-029): por **usuario** (consultas por minuto y por día, y una conversación en curso a la vez), por **empresa** (consumo mensual en dinero, mes calendario con la zona de la empresa) y de la **plataforma** (tope global, interruptor general). Los valores en dinero **los fija el CEO** (E-ASI-01); el módulo no se activa en producción hasta entonces.
+- **Reservar antes de llamar, liquidar después.** El tope de empresa es una **capacidad** (patrón 3 de ADR-15): una fila `asistente_consumo(empresa_id, mes, consumo_unidades)` con `UPDATE … SET consumo = consumo + $reserva WHERE consumo + $reserva <= tope RETURNING …`, de modo que diez conversaciones simultáneas no pasen el tope. Se reserva el costo máximo posible de la llamada (entrada más salida máxima) y, al terminar, se **liquida** con el consumo real que informa el proveedor (se devuelve la diferencia). Si la reserva falla, **no se llama al proveedor** y entra el modo sin IA. Alertas al 80 % y 100 % (eventos de la sección 8 del módulo) por el motor de Notificaciones.
+- **Conversión a dinero:** el consumo se mide en las unidades que cobra el proveedor y se convierte con una tabla de tarifas **versionada junto con la versión del modelo** (la versión del modelo se fija, RN-ASI-031); cambiar de modelo o de tarifa pasa por revisión. Cada consulta registra su consumo por empresa y usuario para conciliar con la factura (RNF-ASI-008); la tolerancia la fija DevOps.
+- **Ritmo por persona y por IP:** `limite_consumir` (ADR-16) con cubos propios en el cuadro `TOPES`. **Falla cerrada:** si el limitador o la tabla de consumo fallan, el asistente se niega (modo sin IA); el resto de la plataforma no se entera.
+- **Interruptor general y apagado por empresa:** el interruptor y el tope global viven en `limite_plataforma` (clave `asistente.interruptor_general` y `asistente.tope_global`), los cambia la consola con la función `asistente_interruptor_cambiar` (registro de plataforma, ADR-23) y `asistente_global_leer()` lo consulta en cada turno. Prevalece sobre el módulo apagado o activo de la empresa. Un cierre de sesión, un cambio de empresa, una suspensión o un apagado cortan la conversación en curso porque el servidor comprueba sesión, membresía y módulo en **cada** turno (`abrir_contexto`, ADR-05).
+- **Procesos periódicos** (cierre del mes, umbrales, limpieza de propuestas vencidas, resumen mensual): trabajos de la cola con las reglas de ADR-02 (idempotentes, por empresa, saltan suspendidas). Las propuestas vencidas se borran (RNF-ASI-011); plazo inicial propuesto: **10 minutos** (lo confirman el Gerente de TI y el Diseñador, módulo 12.4).
+
+### 5. Auditoría y registros
+- **Cada consulta, propuesta, acción ejecutada, rechazo y borrador abierto** deja una entrada de auditoría (ADR-11) con autor = la **membresía** y una **marca de origen** `vía asistente`: una columna `origen` en `auditoria` con la lista cerrada `('asistente')` y nula en el resto (los tres tipos de autor de empresa no cambian). Referencias consultadas, número de filas, resultado, identificador de conversación y **versión del modelo y de las instrucciones** (RN-ASI-031); **ni la pregunta ni la respuesta ni valores personales** (RN-ASI-014). El motivo de una acción, por valor (D-077).
+- **Registros técnicos (ADR-20):** solo identificadores, conteos de unidades, códigos y duraciones; **nunca** texto de preguntas, respuestas ni resultados de herramientas. Los errores del proveedor se normalizan (ADR-02).
+- **Aceptación del aviso** de transparencia por membresía y versión; valoraciones sin texto; todo con referencia a la membresía y se anonimiza con ella.
+- **Datos que viajan al proveedor:** una copia queda en su sistema bajo contrato (retención nula o mínima, sin entrenamiento). **Lo ya enviado no se puede retirar** (irreversible, I-05 del módulo): por eso el proveedor se elige por contrato y por configuración, y el módulo no se activa con datos reales antes de la opinión legal (E-ASI-02).
+
+### 6. Pendientes del módulo que este ADR cierra con una propuesta
+| Parámetro del módulo (12.4) | Propuesta de este ADR |
+|---|---|
+| Largo máximo de un mensaje | 2.000 caracteres |
+| Contexto reenviado | últimos 6 turnos, hasta 8.000 caracteres |
+| Filas máximas y ritmo | 20 por herramienta, 6 herramientas y 100 filas por turno; ritmo por persona en `TOPES` |
+| Plazo de una propuesta | 10 minutos (lo confirman el Gerente de TI y el Diseñador) |
+| Tiempo de respuesta | objetivo a fijar tras la prueba H-IA; el límite técnico es 15 s hasta el primer fragmento y 60 s en total |
+| Tolerancia de conciliación del consumo | DevOps, antes de activar en producción |
+| Valores en dinero de los topes | **CEO** (E-ASI-01); este ADR no pone cifras |
+
+## Consecuencias
+- **Costo variable del proveedor:** el módulo cobra por uso, sin cifra posible hoy. **[ESCALAR AL CEO]** ya está en el módulo (E-ASI-01: topes y quién paga; E-ASI-03: contrato). Este ADR agrega que el gasto máximo posible queda **acotado por construcción** (reserva antes de llamar, tope por empresa y global, interruptor), pero el valor del tope es decisión del CEO.
+- **Legal y datos:** un proveedor externo procesa texto de las empresas, quizá en otro país (E-ASI-02, L-17 a L-19). Los valores conservadores (sin historial, personas por referencia, texto libre de casos apagado) se mantienen hasta la opinión legal. **[ESCALAR AL CEO]**: elegir el proveedor y aprobar el contrato.
+- Una dependencia más: si el proveedor cae, el asistente pasa a modo sin IA y la plataforma sigue (RN-ASI-030).
+- El asistente es una **superficie nueva** de seguridad: casos IO-01 a IO-14 como suite fija, y cada módulo que registra una herramienta debe declarar su proyección.
+- La clave del proveedor es otro secreto de plataforma que rotar (ADR-07); vive solo en `web`.
+
+## Qué prueba lo valida
+- **Proveedor simulado "malicioso por diseño" (RN-ASI-036, CA-ASI-33):** un modelo falso que **obedece cualquier instrucción que vea** (cambiar de empresa, pedir una herramienta prohibida, nombrar una herramienta que no existe, intentar una acción de la lista cerrada, insertar imágenes y enlaces con datos, repetir sus instrucciones). Los casos IO-01 a IO-14 corren con él en cada cambio y exigen **0 datos fuera de permiso y 0 acciones sin confirmar** en lo enviado, en lo ejecutado, en la respuesta mostrada y en la auditoría. Si los controles estructurales fallan, esta prueba lo ve aunque el modelo real se portara bien; con el proveedor real y datos inventados se repite como complemento.
+- **Lo que viaja:** con nombres, correos, IMEI y claves "canario" cargados, el proveedor simulado registra cada envío y hay **0 apariciones** (RNF-ASI-004); la prueba de arquitectura de proyecciones falla ante un campo personal o secreto.
+- **Aislamiento:** por herramienta, con el rol `app_empresa`, dos empresas y dos Personas de la misma empresa: 100 intentos de pedir lo ajeno dan 100 "no encontrado" y 0 datos en la respuesta y en lo enviado (RNF-ASI-002).
+- **Tope:** diez conversaciones simultáneas no superan el tope de empresa (reserva); con `limite_consumir` roto el asistente se niega; con el proveedor caído la plataforma responde igual (RNF-ASI-006); el cierre de sesión o la suspensión corta la conversación en el turno siguiente.
+- **Propuestas:** doble clic ejecuta una vez; otra persona, otra empresa u otra sesión no puede usar una propuesta ajena; vencida o con el registro cambiado se rechaza; la tarjeta coincide con lo ejecutado.
+- **Consola y soporte:** el proceso `consola` no contiene la clave del proveedor; el botón no aparece en soporte.
+- **Registros:** una pregunta con un correo canario no aparece en el registro, la auditoría ni el monitor simulado.
+- **Conjunto de evaluación** de calidad (RF-ASI-048) antes de habilitar y tras cada cambio de modelo, instrucciones o manual; umbral por fijar con QA (módulo, [PENDIENTE]).
+
+## Qué cambió tras la revisión
+Este ADR es nuevo. Lo que decide y lo que corrige del módulo, para que el Analista lo contraste:
+| Punto | Decisión |
+|---|---|
+| RN-ASI-013 (sin historial) | El estado de la conversación lo guarda el navegador; el servidor no tiene estado de conversación. |
+| ASI-S05 (enmascarar nombres) | Descartado, con la razón de la sección 2. |
+| Sección 9.1, "estado global del asistente" | No hay tabla nueva: se usa `limite_plataforma` (ADR-04 fila 9). |
+| RF-AUD-013 | La marca "vía asistente" es la columna `origen` de la auditoría (ADR-11); los tipos de autor no cambian por el asistente. |
+| 12.4, pendientes del Arquitecto | Cerrados con propuestas (sección 6). |
+| D-086.4 (texto libre de casos) | La casilla la levanta el **Administrador de plataforma** (PS-240, 2F, con motivo), empresa por empresa, y no el Administrador de la empresa: función de plataforma `asistente_texto_libre_levantar` (ADR-04, ADR-23). |
+| D-083 (Empleado del portal) | Para el Empleado la proyección es la de la tabla 4.4 del portal y las herramientas se ofrecen con alcance "propio"; el asistente aparece solo si el Administrador incluyó al rol. |
+| D-084 (permisos) | El asistente conserva PS-235 a PS-240; Microsoft pasó a PS-241 a PS-246. |
+| E-ASI-01 a 03 | Se mantienen como **[ESCALAR AL CEO]** (dinero, legal, irreversible). |
