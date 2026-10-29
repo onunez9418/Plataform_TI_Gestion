@@ -2,6 +2,8 @@
 
 **Autor:** Gerente de TI · **Fecha:** 2026-10-29 · **Base:** D-117 (decisión del CEO: no se ofrece nada hasta tener la plataforma al 100 %), D-056 y D-081 (orden de módulos), D-064 (puerta de la Etapa 0), D-103 (ola G), D-115 y D-116 (entornos y empresa de demostración), `docs/documento-funcional.md` y los 19 módulos de `docs/modulos/`.
 **Para quién:** la Jefatura de Proyecto y, resumida, el CEO. La sección 8 está escrita para él.
+
+> **Enmienda (D-118 y D-119, 2026-10-29).** El CEO decidió «saltemos lo del abogado y terminemos la plataforma». (1) **El abogado y las respuestas legales no se gestionan ahora**: no bloquean construir; sí bloquean cargar datos reales, ofrecer a clientes y activar el texto libre del asistente, el borrado y la anonimización de personas y el envío de datos reales a proveedores externos (todo nace apagado y probado apagado). (2) **El ítem 4 del «100 %» (listo para datos reales) queda diferido**: hay dos hitos, **«Plataforma completa»** (la firma el CEO, datos de ejemplo) y **«Lista para datos reales»** (abogado, contratos, condiciones de D-117.6d). (3) **Tramo 0 y tramo 1 se solapan** por D-119: se puede programar con la «puerta mínima» (`puerta-etapa-0.md`); la **Versión local 0.1** (corte vertical que el CEO prueba hoy en su computadora) y el prototipo técnico de ADR son lo primero. Detalle en `plan-etapa-1.md`.
 **Reglas de lectura.** (1) **Sin fechas ni duraciones:** solo orden, dependencias y tamaño relativo. (2) **«Tramo»** es un paso de construcción que termina con una demo interna que el CEO aprueba; no se confunde con las «olas A a G» de D-056, que son grupos de módulos de las Fases 2 y 3 y aquí se mantienen con ese nombre. (3) **Tamaño (S, M, L, XL):** es mi **juicio** a partir de dos hechos medidos con Grep el 2026-10-29 (cuántas filas de requisitos cita cada etapa o módulo; una fila que nombra varias etapas cuenta en cada una, así que es aproximado) y de cuánto riesgo nuevo trae. **S** = menos de 20 requisitos y sin riesgo nuevo; **M** = de 20 a 60, o pocos pero con un punto delicado; **L** = más de 60, o varios puntos delicados; **XL** = más de 100, o riesgo alto sostenido. No es una promesa de duración: el tamaño real se mide al cerrar la Etapa 1 y se corrige aquí.
 
 ## 1. En pocas palabras (para el CEO)
@@ -17,7 +19,7 @@
 1. **Todo construido** según el documento funcional: v1, Fase 2, Fase 3 y ola G (asistente de IA, Microsoft Entra ID e Intune), incluida **la API** y **la empresa de demostración completa**.
 2. **Todo probado y revisado:** pruebas automáticas, restauración y vuelta atrás ensayadas, sin fallos graves abiertos; QA, Seguridad y los dos auditores conformes por escrito.
 3. **Toda la documentación al día,** incluido el plan para deshacer (vuelta atrás).
-4. **Listo para datos reales:** respuestas del abogado a las preguntas de prioridad A, aviso de privacidad, contratos con proveedores firmados, procedimiento de incidente ensayado.
+4. **Listo para datos reales — DIFERIDO por su decisión (D-118):** respuestas del abogado a las preguntas de prioridad A, aviso de privacidad, contratos con proveedores firmados, procedimiento de incidente ensayado. Es un hito aparte, «Lista para datos reales»; la plataforma puede estar **«completa»** sin estarlo.
 5. **Usted aprueba el hito.** Pasar a datos reales lo decide usted.
 
 **Sin incluir** (salvo que usted lo pida): instalaciones en la base o los servidores de un cliente y SQL Server (ADR-25), acciones remotas sobre equipos, archivos adjuntos y lo que el documento funcional marca como «no incluye».
@@ -121,16 +123,16 @@ La empresa de demostración toca a todos los módulos, porque cada función apag
 
 Todo lo de abajo es **dinero, legal, irreversible o algo que solo usted tiene**. Lo demás lo decide el equipo.
 
-**A. Lo que necesito ya (para cerrar la puerta de la Etapa 0, tramo 0):**
-1. **Tres documentos reales con los nombres de personas reemplazados:** una orden de compra, una orden de servicio y el Excel de inventario actual. Sin ellos trabajamos con datos de ejemplo declarados y la Etapa 0 no se cierra del todo (riesgo #6).
-2. **Un correo de la empresa** (no personal) que sea dueño de todas las cuentas, **y una segunda persona de suplente.** Es lo primero para abrir cuentas.
-3. **Aprobar el arranque de bajo costo** (planes gratuitos o muy baratos, con datos inventados) y el **servicio de correo**, cuando le traigamos los precios con fecha y enlace. Si algún servicio pidiera tarjeta, nos detenemos y le avisamos.
-4. **Un dominio o subdominio** de la empresa: lo necesita la prueba de entrega de correo de la puerta (condición 6). Si ya tiene uno, es un subdominio sin costo.
-5. **Aprobar el prototipo de pantallas** cuando haya pasado la prueba con 5 personas **de su empresa** (no clientes).
+**A. Lo que necesito ya (actualizado por D-118 y D-119: el abogado salió de esta lista; la versión local de hoy no necesita nada de esto salvo probarla):**
+1. **Tres documentos reales con los nombres de personas reemplazados:** una orden de compra, una orden de servicio y el Excel de inventario actual. Sin ellos trabajamos con datos de ejemplo declarados y hay riesgo de rehacer parte (riesgo #6). No frena programar; sí cerrar la Etapa 0.
+2. **Un correo de la empresa** (no personal) que sea dueño de todas las cuentas, **y una segunda persona de suplente.** Solo para entornos en la nube (no para la versión local).
+3. **Aprobar el arranque de bajo costo** en la nube y el **servicio de correo**, cuando le traigamos los precios con fecha y enlace. Se necesita cuando salgamos de la computadora local.
+4. **Un dominio o subdominio** de la empresa: solo lo pide la prueba de entrega de correo (condición 6), antes de la nube.
+5. **Probar la versión local** (hoy, con Docker Desktop) y, después, **aprobar el prototipo de pantallas** con la prueba de 5 personas **de su empresa** (no clientes).
 6. **País de cada empresa, si los precios incluyen impuestos y una cifra aproximada** de equipos, usuarios y órdenes por mes.
 
-**B. Mientras se construye (para no quedarnos esperando al final):**
-7. **Contratar a un abogado de protección de datos** que pueda atender una consulta el mismo día. Recomiendo hacerlo **mientras se construyen las Etapas 1 a 4**, porque sus respuestas (ocho de prioridad A, y después las de IA y Microsoft) son lo que más tiempo toma y no depende de nosotros. Es un gasto pequeño de honorarios.
+**B. Antes de datos reales y antes de ofrecer (diferido por D-118; no se pierde):**
+7. **Contratar a un abogado de protección de datos** que pueda atender una consulta el mismo día. **Por decisión del CEO no se gestiona ahora.** Es necesario antes de cargar datos reales, de ofrecer la plataforma y de activar el texto libre del asistente, el borrado o anonimización de personas y el envío de datos reales a proveedores externos. Sus respuestas (ocho de prioridad A, y después las de IA y Microsoft) son lo que más tarda, así que **cuanto más se espere, más se retrasa «Lista para datos reales»** (no la «Plataforma completa»). Un recordatorio, no una pregunta, al cerrar la Etapa 4.
 8. **Dos personas de su equipo para administrar la plataforma** y **dos custodios de las llaves de seguridad** (distintos de esos dos), antes de datos reales; y por cada empresa **un representante** a quien avisar si falla el correo.
 9. **Qué licencias de Microsoft tiene cada empresa** y si algún tipo de equipo lo administra otro sistema distinto de Intune. Solo antes de la ola G.
 10. **Si usa SAP** (solo antes de INT-2).

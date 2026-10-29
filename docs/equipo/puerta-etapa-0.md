@@ -2,8 +2,34 @@
 
 **Autor:** Gerente de TI · **Fecha:** 2026-10-29 (actualiza la edición del 2026-10-26, que sigue abajo como detalle de cada condición)
 **Base:** las 13 condiciones de D-064; `docs/revision-cruzada/ronda4-*.md` y `ronda5-seguridad-adr.md`; `docs/arquitectura/revision-datos.md`; las decisiones D-065 a D-101 de `docs/equipo/decisiones.md`; `docs/calidad/criterios-por-etapa.md`.
-**Regla:** no se escribe código de funcionalidades hasta que se cumplan las 13 condiciones. La opinión legal **no** es parte de la puerta (se exige antes de cargar datos reales).
+**Regla:** no se cierra la Etapa 0 ni se cargan datos reales hasta que se cumplan las 13 condiciones. **Desde D-119, para escribir código con datos inventados basta la «puerta mínima» de la sección siguiente.** La opinión legal **no** es parte de la puerta (se exige antes de cargar datos reales; diferida por D-118).
 **Cómo se midió:** cada estado tiene una prueba que se puede abrir o dice qué falta. Estados: **cumplida / parcial / pendiente / depende del CEO**.
+
+## Puerta mínima «arrancar a programar» (D-119, 2026-10-29)
+
+**Qué cambia:** por la decisión del CEO de construir la plataforma (D-118) y probar una versión local hoy, se separa **escribir código con datos inventados** de **cerrar la Etapa 0 / cargar datos reales**. Las 13 condiciones de D-064 **siguen completas** para lo segundo. Esto es una **excepción declarada**, no una reforma de la regla. La opinión legal sigue fuera de la puerta (D-118: diferida).
+
+| # | Condición de D-064 | ¿Se puede cumplir YA en local, sin el CEO? | Tratamiento para arrancar a programar |
+|---|---|---|---|
+| 1 | Documento v1.0 | Sí (Analista, verifican Auditor Técnico y QA) | **Riesgo declarado:** se programa sobre v0.3 y D-001 a D-119; cada paquete cita su requisito. Se cierra en paralelo |
+| 2 | 17 módulos corregidos | Sí | Solo hace falta el **núcleo** y los módulos de la etapa en curso; el resto se cierra antes de su etapa |
+| 3 | Cuatro vistos buenos sin Críticos ni Altos | Sí | Seguridad ya está «conforme» (ronda 4); QA y Auditor Técnico hacen una ronda corta sobre el núcleo, **en paralelo**; bloquea cerrar la Etapa 1, no arrancar |
+| 4 | Prototipo técnico | **Sí, es lo primero** (PostgreSQL 16 local y agrupador local) | **Primer trabajo de código.** El corte H1/H11 va dentro de la Versión local 0.1; H1 a H12 completos corren justo después (4 días y 1 de reserva). Sin cuentas ni dinero |
+| 5 | Proveedor de base y alojamiento aprobado | No: precios y cuenta del CEO | **Diferido** a «antes de cualquier entorno en la nube» |
+| 6 | Proveedor de correo y matriz de entrega | No: cuenta, dominio y dinero | **Diferido** igual. En local, el enlace de ingreso se muestra en pantalla (modo local con guarda) |
+| 7 | Pantallas aprobadas y prueba con 5 personas | Parcial (el CEO prueba la versión local) | **Riesgo declarado:** la prueba de 5 personas se hace sobre la versión local; las pantallas siguen el prototipo publicado |
+| 8 | Documentos reales | No: solo el CEO | **Riesgo declarado (#6):** datos de ejemplo declarados; posible retrabajo |
+| 9 | Cuentas a nombre de la empresa, suplente | No: solo el CEO | No hace falta en local; **antes de la nube y de datos reales** |
+| 10 | Llaves, `.env.example`, ramas protegidas, revisión automática | Sí (DevOps; el plan de pago de GitHub, si lo exigiera, es del CEO) | Mínimo: `.env` ignorado, sin secretos en el repositorio, `npm run verificar` en la integración continua |
+| 11 | Ensayo de vuelta atrás y restauración | Sí (copia y restauración de PostgreSQL local, con cronómetro) | Antes de cerrar la Etapa 1; no bloquea arrancar |
+| 12 | Plan de pruebas, datos de dos empresas, reloj fijable | Sí (QA y DevOps) | Generador de dos empresas y pruebas de aislamiento **antes de conectar pantallas a datos** |
+| 13 | Datos personales y procedimiento de incidente en borrador | Ya hecho como borrador | Sin cambio; abogado diferido (D-118) |
+
+**Puerta mínima (todo junto, sin excepción):** (a) solo datos inventados y solo en la rama de trabajo; (b) aislamiento entre empresas con seguridad por fila forzada y sus pruebas **en verde antes** de conectar cualquier pantalla a datos; (c) permisos comprobados en el servidor; (d) nada de claves ni contraseñas en el repositorio; (e) la estrategia de llaves aprobada por Seguridad (ya lo está) y `.env.example`; (f) el «modo local» no arranca fuera de la computadora local (prueba); (g) los interruptores legales nacen apagados y con prueba (D-118); (h) sin visto bueno de QA y de Seguridad, lo que se entregue al CEO se rotula «sin revisar»; (i) la Etapa 1 formal no se abre sin el prototipo de ADR aprobado y D-064 completa para cerrar la Etapa 0.
+
+**[ESCALAR AL CEO]** (una frase): programamos sin sus documentos reales ni la prueba de pantallas con 5 personas, y si más tarde no coinciden con lo que usted usa, se rehace parte del trabajo; su pedido de probar hoy lo da por aceptado, avísenos si no.
+
+**Qué depende del CEO (puntos 5, 6, 8, 9), sin cambio:** precios y cuentas de la nube, correo real, documentos reales, cuentas a nombre de la empresa con suplente. Ninguno bloquea la versión local.
 
 ## 0. Estado de hoy (2026-10-29)
 
