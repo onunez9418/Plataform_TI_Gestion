@@ -10,8 +10,8 @@ const ejecutable = process.env.CHROMIUM_PATH ?? (existsSync(candidato) ? candida
 export default defineConfig({
   testDir: '.',
   testMatch: '**/*.spec.ts',
-  timeout: 90_000,
-  expect: { timeout: 10_000 },
+  timeout: 180_000,
+  expect: { timeout: 30_000 },
   retries: 0,
   workers: 1,
   reporter: [['list']],

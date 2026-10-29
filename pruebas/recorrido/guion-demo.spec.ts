@@ -210,11 +210,11 @@ test('paso 6a · crea una categoría con campos propios (texto, número, lista, 
   await abrir(ceo, 'crear-categoria-abrir')
   await ceo.getByTestId('campo-nombre-categoria').fill(categoriaNombre)
   await ceo.getByTestId('campo-prefijo').fill(PREFIJO)
-  const campos: [string, string, string?][] = [['Modelo', 'Texto'], ['Páginas por minuto', 'Número'], ['Tipo de tinta', 'Lista de opciones', 'Tinta, Láser'], ['Con wifi', 'Sí o no']]
+  const campos: [string, string, string?][] = [['Modelo', 'texto'], ['Páginas por minuto', 'numero'], ['Tipo de tinta', 'lista', 'Tinta, Láser'], ['Con wifi', 'si_no']]
   for (const [i, [etiqueta, tipo, opciones]] of campos.entries()) {
     await ceo.getByTestId('campo-def-agregar').click()
     await ceo.getByTestId(`campo-def-${i}-etiqueta`).fill(etiqueta)
-    await ceo.getByTestId(`campo-def-${i}-tipo`).selectOption({ label: tipo })
+    await ceo.getByTestId(`campo-def-${i}-tipo`).selectOption(tipo)
     if (opciones) await ceo.getByTestId(`campo-def-${i}-opciones`).fill(opciones)
     if (i === 0) await ceo.getByTestId(`campo-def-${i}-obligatorio`).check()
   }
@@ -236,9 +236,8 @@ test('paso 6b · crea un SKU y ve PREFIJO-0001; el obligatorio vacío se rechaza
   await ceo.getByTestId('form-crear-sku-enviar').click()
   await expect(ceo.getByTestId('form-crear-sku')).toContainText(/obligatorio|Modelo/i)
   await expect(ceo.getByTestId('sku-creado-codigo')).toHaveCount(0)
-  // Con número incorrecto.
   await ceo.getByTestId('valor-modelo').fill('LJ-100')
-  await ceo.getByTestId('valor-paginas_por_minuto').fill('muchas')
+  // (El navegador mismo no deja escribir letras en un campo de número; el servidor lo rechaza igual: ver pruebas/permisos.)
   // Se captura la petición real de «crear SKU» para repetirla después sin permiso.
   ceo.on('request', (r) => {
     if (r.method() === 'POST' && r.headers()['next-action'] && !accionCrearSku) {
@@ -246,7 +245,6 @@ test('paso 6b · crea un SKU y ve PREFIJO-0001; el obligatorio vacío se rechaza
     }
   })
   await ceo.getByTestId('form-crear-sku-enviar').click()
-  await expect(ceo.getByTestId('form-crear-sku')).toContainText(/número/i)
   await ceo.getByTestId('valor-paginas_por_minuto').fill('25')
   accionCrearSku = null
   await ceo.getByTestId('form-crear-sku-enviar').click()
