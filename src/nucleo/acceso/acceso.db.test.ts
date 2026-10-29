@@ -127,7 +127,6 @@ describe.skipIf(!hayBaseDeDatos)('acceso con enlace, sesión en base y contexto'
   it('suspender la membresía corta el acceso en la petición siguiente', async () => {
     await ingresar(alfa.usuarios.consulta!.correo)
     await expect(obtenerContexto(alfa.slug)).resolves.toBeDefined()
-    await conGlobal(async () => undefined)
     const { conEmpresa } = await import('../aislamiento')
     await conEmpresa(alfa.id, (tx) => tx.consultar(`UPDATE membresia SET estado = 'suspendida' WHERE empresa_id = $1 AND usuario_id = $2`, [alfa.id, alfa.usuarios.consulta!.usuarioId]))
     await expect(obtenerContexto(alfa.slug)).rejects.toMatchObject({ codigo: 'SIN_ACCESO' })

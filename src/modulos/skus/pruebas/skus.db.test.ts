@@ -78,7 +78,7 @@ describe.skipIf(!hayBaseDeDatos)('maestro de SKU (con base real)', () => {
       .rejects.toMatchObject({ codigo: 'VALIDACION', campos: { ram_gb: expect.any(String), inventado: expect.any(String) } })
     await expect(crearSku(ctx, { categoriaId: lapAlfa, nombre: 'x', control: 'otro' as never, valores: { procesador: 'x' } }))
       .rejects.toMatchObject({ codigo: 'VALIDACION', campos: { nombre: expect.any(String), control: expect.any(String) } })
-    await expect(crearSku(ctx, { categoriaId: lapAlfa, nombre: 'Código raro', control: 'serie', codigo: 'a b;--', valores: { procesador: 'x' } }))
+    await expect(crearSku(contextoDe(alfa, 'admin'), { categoriaId: lapAlfa, nombre: 'Código raro', control: 'serie', codigo: 'a b;--', valores: { procesador: 'x' } }))
       .rejects.toMatchObject({ codigo: 'VALIDACION', campos: { codigo: expect.any(String) } })
   })
 
