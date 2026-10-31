@@ -3,6 +3,8 @@ import { cerrarConexiones, conGlobal } from '../aislamiento'
 import { crearEmpresaDePrueba, hayBaseDeDatos, type EmpresaPrueba } from '../permisos/pruebas/apoyo'
 import { COOKIE_NAVEGADOR, COOKIE_SESION, usarAlmacenDeCookies } from './cookies'
 import { canjearEnlace, cerrarSesion, misEmpresas, obtenerContexto, solicitarEnlace } from './index'
+import { reiniciarLimitesDeEnlaces } from './limite-intentos'
+import { usarLectorDeOrigen } from './origen'
 import { huellaDe } from './tokens'
 
 // Almacén de cookies de memoria: simula un navegador. `nuevoNavegador()` lo vacía.
@@ -21,9 +23,11 @@ describe.skipIf(!hayBaseDeDatos)('acceso con enlace, sesión en base y contexto'
   })
   beforeEach(() => {
     process.env.MODO_LOCAL = '1'
-    delete process.env.APP_URL
+    process.env.APP_URL = 'http://localhost:3000' // la guarda (H-SEG-L01) exige una APP_URL local
     delete process.env.ENTORNO
     nuevoNavegador()
+    reiniciarLimitesDeEnlaces()
+    usarLectorDeOrigen(null)
     usarAlmacenDeCookies({
       leer: (n) => jarra.get(n),
       escribir: (n, v) => void jarra.set(n, v),
@@ -31,7 +35,7 @@ describe.skipIf(!hayBaseDeDatos)('acceso con enlace, sesión en base y contexto'
     })
   })
   afterEach(() => { process.env.MODO_LOCAL = env0.MODO_LOCAL as string; if (env0.MODO_LOCAL === undefined) delete process.env.MODO_LOCAL })
-  afterAll(async () => { usarAlmacenDeCookies(null); await cerrarConexiones() })
+  afterAll(async () => { usarAlmacenDeCookies(null); usarLectorDeOrigen(null); await cerrarConexiones() })
 
   async function ingresar(correo: string): Promise<void> {
     const { enlaceLocal } = await solicitarEnlace(correo)
@@ -169,5 +173,57 @@ describe.skipIf(!hayBaseDeDatos)('acceso con enlace, sesión en base y contexto'
   it('las cookies de navegador se usan y se borran al entrar', async () => {
     await solicitarEnlace(alfa.usuarios.admin!.correo)
     expect(jarra.has(COOKIE_NAVEGADOR())).toBe(true)
+  })
+  it('H-SEG-L09: tras 5 pedidos del mismo correo el siguiente se rechaza, exista o no la cuenta, y el aviso no delata nada', async () => {
+    for (const correo of [alfa.usuarios.admin!.correo, 'nadie.existe@no-existe.local']) {
+      usarLectorDeOrigen(() => `ip-${correo}`)
+      for (let i = 0; i < 5; i++) await solicitarEnlace(correo)
+      await expect(solicitarEnlace(correo)).rejects.toMatchObject({ codigo: 'VALIDACION', mensaje: expect.stringContaining('demasiados enlaces') })
+    }
+    // Otro correo, desde otro origen, sigue pudiendo pedir.
+    usarLectorDeOrigen(() => 'ip-distinta')
+    await expect(solicitarEnlace(alfa.usuarios.tecnico!.correo)).resolves.toHaveProperty('enlaceLocal')
+  })
+
+  it('H-SEG-L09: los pedidos rechazados no crean filas de enlace en la base', async () => {
+    const correo = alfa.usuarios.jefa!.correo
+    const contar = () => conGlobal((tx) => tx.consultar<{ n: number }>(`SELECT count(*)::int AS n FROM enlace_ingreso WHERE usuario_id = $1`, [alfa.usuarios.jefa!.usuarioId]))
+    const antes = (await contar())[0]!.n
+    for (let i = 0; i < 5; i++) await solicitarEnlace(correo)
+    await expect(solicitarEnlace(correo)).rejects.toBeDefined()
+    expect((await contar())[0]!.n).toBe(antes + 5)
+  })
+
+  it('H-SEG-L09: entrar con un enlace nuevo cierra la sesión que este navegador ya tenía', async () => {
+    await ingresar(alfa.usuarios.admin!.correo)
+    const sesionVieja = jarra.get(COOKIE_SESION()) as string
+    await expect(obtenerContexto(alfa.slug)).resolves.toBeDefined()
+
+    await ingresar(alfa.usuarios.tecnico!.correo)
+    const sesionNueva = jarra.get(COOKIE_SESION()) as string
+    expect(sesionNueva).not.toBe(sesionVieja)
+    await expect(obtenerContexto(alfa.slug)).resolves.toMatchObject({ usuarioId: alfa.usuarios.tecnico!.usuarioId })
+
+    // Quien hubiera copiado la cookie anterior ya no entra.
+    jarra.set(COOKIE_SESION(), sesionVieja)
+    await expect(obtenerContexto(alfa.slug)).rejects.toMatchObject({ codigo: 'SIN_ACCESO' })
+    const filas = await conGlobal((tx) => tx.consultar<{ revocada_en: string | null }>(`SELECT revocada_en FROM sesion WHERE huella = $1`, [huellaDe(sesionVieja)]))
+    expect(filas[0]!.revocada_en).not.toBeNull()
+  })
+
+  it('H-SEG-L09: un enlace inválido NO cierra la sesión que ya había', async () => {
+    await ingresar(alfa.usuarios.admin!.correo)
+    const { enlaceLocal } = await solicitarEnlace('nadie@no-existe.local')
+    await expect(canjearEnlace(tokenDe(enlaceLocal))).rejects.toMatchObject({ codigo: 'ENLACE_INVALIDO' })
+    await expect(obtenerContexto(alfa.slug)).resolves.toBeDefined()
+  })
+
+  it('H-SEG-L09: la sesión de otro navegador del mismo usuario sigue viva (solo se cierra la de este navegador)', async () => {
+    await ingresar(alfa.usuarios.tecnico!.correo)
+    const otroNavegador = new Map(jarra)
+    nuevoNavegador()
+    await ingresar(alfa.usuarios.tecnico!.correo)
+    jarra = otroNavegador
+    await expect(obtenerContexto(alfa.slug)).resolves.toMatchObject({ usuarioId: alfa.usuarios.tecnico!.usuarioId })
   })
 })
