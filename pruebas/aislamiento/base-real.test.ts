@@ -242,7 +242,8 @@ describe('caso 4 · UPDATE y DELETE sobre filas ajenas afectan 0 filas', () => {
       })
     const antes = await contar(E.beta)
     await simulando(c, E.alfa, async () => {
-      for (const t of tablas.filter((x) => x.borrable)) await c.query(`DELETE FROM ${t.tabla}`)
+      // (orden_linea solo se borra en borrador: su regla puede rechazar el intento; no importa, solo se mira que Beta no cambie)
+      for (const t of tablas.filter((x) => x.borrable)) await intentar(c, `DELETE FROM ${t.tabla}`)
     })
     expect(await contar(E.beta)).toEqual(antes)
   })

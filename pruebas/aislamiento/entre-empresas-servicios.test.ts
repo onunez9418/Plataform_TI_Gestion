@@ -91,11 +91,11 @@ describe('A usa identificadores de B en cada servicio: no existe, y B no cambia'
       ['enviarAAprobacion(B)', () => enviarAAprobacion(tecA, ordenB)],
       ['aprobarOrden(B)', () => aprobarOrden(jefaA, ordenB)],
       ['rechazarOrden(B)', () => rechazarOrden(jefaA, { id: ordenB, motivo: 'intruso' })],
-      ['recibirOrden(B)', () => recibirOrden(tecA, { ordenId: ordenB, ubicacionId: dA.ubicacionA, lineas: [{ lineaId: lineaB, cantidad: 1, series: ['I-1'] }] })],
+      ['recibirOrden(B)', () => recibirOrden(adminA(), { ordenId: ordenB, ubicacionId: dA.ubicacionA, lineas: [{ lineaId: lineaB, cantidad: 1, series: ['I-1'] }] })],
       ['crearOrden: proveedor de B', () => crearOrden(tecA, { proveedorId: dB.proveedor, lineas: [{ skuId: dA.skuSerie.id, cantidad: 1, precioUnitario: 1 }] })],
       ['crearOrden: sku de B', () => crearOrden(tecA, { proveedorId: dA.proveedor, lineas: [{ skuId: dB.skuSerie.id, cantidad: 1, precioUnitario: 1 }] })],
-      ['recibirOrden de A con línea de B', () => recibirOrden(tecA, { ordenId: ordenA, ubicacionId: dA.ubicacionA, lineas: [{ lineaId: lineaB, cantidad: 1, series: ['I-2'] }] })],
-      ['recibirOrden de A con ubicación de B', () => recibirOrden(tecA, { ordenId: ordenA, ubicacionId: dB.ubicacionA, lineas: [{ lineaId: lineaB, cantidad: 1, series: ['I-3'] }] })],
+      ['recibirOrden de A con línea de B', () => recibirOrden(adminA(), { ordenId: ordenA, ubicacionId: dA.ubicacionA, lineas: [{ lineaId: lineaB, cantidad: 1, series: ['I-2'] }] })],
+      ['recibirOrden de A con ubicación de B', () => recibirOrden(adminA(), { ordenId: ordenA, ubicacionId: dB.ubicacionA, lineas: [{ lineaId: lineaB, cantidad: 1, series: ['I-3'] }] })],
     ]
     for (const [nombre, f] of llamadas) {
       const c = await codigo(f())

@@ -13,6 +13,7 @@ let d: Datos
 const tecnico = () => contextoDe(e, 'tecnico') // prepara y recibe
 const admin = () => contextoDe(e, 'admin')
 const jefa = () => contextoDe(e, 'jefa') // aprueba
+const recibidor = () => admin() // recibe: una tercera persona (quien prepara o aprueba no puede recibir, RF-OC-023/024)
 
 const codigo = async (p: Promise<unknown>) => {
   try {
@@ -85,7 +86,7 @@ describe('estados de la orden', () => {
     await enviarAAprobacion(tecnico(), otra.id)
     await rechazarOrden(jefa(), { id: otra.id, motivo: 'Precio fuera de presupuesto' })
     expect(await codigo(aprobarOrden(jefa(), otra.id))).toBe('CONFLICTO')
-    expect(await codigo(recibirOrden(tecnico(), { ordenId: otra.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: otra.lineas[0]!.id, cantidad: 1, series: ['X-1'] }] }))).toBe('CONFLICTO')
+    expect(await codigo(recibirOrden(recibidor(), { ordenId: otra.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: otra.lineas[0]!.id, cantidad: 1, series: ['X-1'] }] }))).toBe('CONFLICTO')
   })
 
   it('rechazar exige motivo (vacío, solo espacios o enorme se rechazan)', async () => {
@@ -98,9 +99,9 @@ describe('estados de la orden', () => {
   it('no se recibe una orden en borrador ni por aprobar', async () => {
     const o = await crearOrden(tecnico(), { proveedorId: d.proveedor, lineas: [{ skuId: d.skuSerie.id, cantidad: 1, precioUnitario: 1 }] })
     const entrada = { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: o.lineas[0]!.id, cantidad: 1, series: ['Q-1'] }] }
-    expect(await codigo(recibirOrden(tecnico(), entrada))).toBe('CONFLICTO')
+    expect(await codigo(recibirOrden(recibidor(), entrada))).toBe('CONFLICTO')
     await enviarAAprobacion(tecnico(), o.id)
-    expect(await codigo(recibirOrden(tecnico(), entrada))).toBe('CONFLICTO')
+    expect(await codigo(recibirOrden(recibidor(), entrada))).toBe('CONFLICTO')
   })
 
   it('datos inválidos al crear: sin líneas, cantidad 0, negativa, decimal, NaN, precio negativo, SKU repetido', async () => {
@@ -116,13 +117,13 @@ describe('recepción parcial y luego total (CA-033)', () => {
   it('10 pedidas: se reciben 4 con 4 series (orden «recibida en parte»), luego las 6 restantes (orden «recibida»); nacen 10 activos', async () => {
     const o = await ordenAprobada(10)
     const linea = o.lineas[0]!.id
-    const r1 = await recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 4, series: series('PAR', 4) }] })
+    const r1 = await recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 4, series: series('PAR', 4) }] })
     expect(r1).toMatchObject({ activosCreados: 4, estadoOrden: 'recibida_parcial' })
     const medio = await obtenerOrden(tecnico(), o.id)
     expect(medio.lineas[0]).toMatchObject({ cantidadRecibida: 4, pendiente: 6 })
     expect(medio.recepciones).toHaveLength(1)
 
-    const r2 = await recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionB, lineas: [{ lineaId: linea, cantidad: 6, series: series('PAR', 10).slice(4) }] })
+    const r2 = await recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionB, lineas: [{ lineaId: linea, cantidad: 6, series: series('PAR', 10).slice(4) }] })
     expect(r2).toMatchObject({ activosCreados: 6, estadoOrden: 'recibida' })
     const fin = await obtenerOrden(tecnico(), o.id)
     expect(fin.estado).toBe('recibida')
@@ -136,15 +137,15 @@ describe('recepción parcial y luego total (CA-033)', () => {
     expect(activos.filter((a) => a.ubicacionId === d.ubicacionB)).toHaveLength(6)
 
     // Una orden cerrada ya no recibe nada más.
-    expect(await codigo(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 1, series: ['PAR-999'] }] }))).toBe('CONFLICTO')
+    expect(await codigo(recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 1, series: ['PAR-999'] }] }))).toBe('CONFLICTO')
   })
 
   it('línea por cantidad: suma al saldo de la ubicación, en dos entregas', async () => {
     const antes = (await listarExistencias(tecnico())).find((x) => x.skuId === d.skuCantidad.id && x.ubicacionId === d.ubicacionA)?.cantidad ?? 0
     const o = await ordenAprobada(1, 30)
     const lin = o.lineas.find((l) => l.skuId === d.skuCantidad.id)!
-    await recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: lin.id, cantidad: 12 }] })
-    await recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: lin.id, cantidad: 18 }] })
+    await recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: lin.id, cantidad: 12 }] })
+    await recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: lin.id, cantidad: 18 }] })
     const despues = (await listarExistencias(tecnico())).find((x) => x.skuId === d.skuCantidad.id && x.ubicacionId === d.ubicacionA)!.cantidad
     expect(despues - antes).toBe(30)
   })
@@ -155,9 +156,9 @@ describe('recibir más de lo pedido, series mal puestas', () => {
     const o = await ordenAprobada(5)
     const linea = o.lineas[0]!.id
     const antes = (await listarActivos(tecnico(), { skuId: d.skuSerie.id })).length
-    expect(await codigo(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 6, series: series('EXC', 6) }] }))).toBe('VALIDACION')
-    await recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 3, series: series('EXC', 3) }] })
-    expect(await codigo(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 3, series: series('EXD', 3) }] }))).toBe('VALIDACION')
+    expect(await codigo(recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 6, series: series('EXC', 6) }] }))).toBe('VALIDACION')
+    await recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 3, series: series('EXC', 3) }] })
+    expect(await codigo(recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 3, series: series('EXD', 3) }] }))).toBe('VALIDACION')
     expect((await listarActivos(tecnico(), { skuId: d.skuSerie.id })).length - antes).toBe(3)
     expect((await obtenerOrden(tecnico(), o.id)).lineas[0]).toMatchObject({ cantidadRecibida: 3, pendiente: 2 })
   })
@@ -167,20 +168,20 @@ describe('recibir más de lo pedido, series mal puestas', () => {
     const otra = await ordenAprobada(5)
     const linea = o.lineas[0]!.id
     for (const l of [{ lineaId: linea, cantidad: -1, series: ['R-1'] }, { lineaId: linea, cantidad: 1.5, series: ['R-1', 'R-2'] }, { lineaId: linea, cantidad: '2' as unknown as number, series: ['R-1', 'R-2'] }, { lineaId: otra.lineas[0]!.id, cantidad: 1, series: ['R-1'] }]) {
-      expect(await codigo(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [l] })), JSON.stringify(l)).toBe('VALIDACION')
+      expect(await codigo(recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [l] })), JSON.stringify(l)).toBe('VALIDACION')
     }
-    expect(await codigo(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 0 }] }))).toBe('VALIDACION')
+    expect(await codigo(recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 0 }] }))).toBe('VALIDACION')
   })
 
   it('series: faltan, sobran, vacías, repetidas entre sí o ya registradas en el inventario → se rechaza todo y se dice cuál', async () => {
     const o = await ordenAprobada(4)
     const linea = o.lineas[0]!.id
-    const recibir = (s: string[], n = s.length) => recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: n, series: s }] })
+    const recibir = (s: string[], n = s.length) => recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: n, series: s }] })
     expect(await codigo(recibir(['S-1'], 2))).toBe('VALIDACION') // falta una
     expect(await codigo(recibir(['S-1', 'S-2', 'S-3'], 2))).toBe('VALIDACION') // sobra una
     expect(await codigo(recibir(['S-1', ' '], 2))).toBe('VALIDACION') // vacía
     expect(await codigo(recibir(['S-1', 's-1']))).toBe('DUPLICADO') // repetida (mayúsculas)
-    await recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 1, series: ['YA-EXISTE'] }] })
+    await recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 1, series: ['YA-EXISTE'] }] })
     const err = await recibir(['NUEVA-1', 'ya-existe']).catch((x) => x)
     expect(err.codigo).toBe('DUPLICADO')
     expect(err.mensaje).toMatch(/ya-existe/i)
@@ -191,7 +192,7 @@ describe('recibir más de lo pedido, series mal puestas', () => {
   it('un SKU por cantidad no admite series en la recepción', async () => {
     const o = await ordenAprobada(1, 5)
     const lin = o.lineas.find((l) => l.skuId === d.skuCantidad.id)!
-    expect(await codigo(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: lin.id, cantidad: 2, series: ['SN-1', 'SN-2'] }] }))).toBe('VALIDACION')
+    expect(await codigo(recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: lin.id, cantidad: 2, series: ['SN-1', 'SN-2'] }] }))).toBe('VALIDACION')
   })
 })
 
@@ -199,7 +200,7 @@ describe('simultaneidad (dos personas a la vez)', () => {
   it('dos recepciones de 6 sobre una línea de 10 al mismo tiempo: gana una, la otra se rechaza, nunca se pasa de 10', async () => {
     const o = await ordenAprobada(10)
     const linea = o.lineas[0]!.id
-    const intento = (pref: string) => recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 6, series: series(pref, 6) }] })
+    const intento = (pref: string) => recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: linea, cantidad: 6, series: series(pref, 6) }] })
     const resultados = await Promise.allSettled([intento('SIM-A'), intento('SIM-B')])
     expect(resultados.filter((r) => r.status === 'fulfilled')).toHaveLength(1)
     const final = await obtenerOrden(tecnico(), o.id)
@@ -219,7 +220,7 @@ describe('simultaneidad (dos personas a la vez)', () => {
   it('la misma serie registrada a la vez en dos recepciones distintas: una sola gana', async () => {
     const a = await ordenAprobada(1)
     const b = await ordenAprobada(1)
-    const intento = (o: typeof a) => recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: o.lineas[0]!.id, cantidad: 1, series: ['MISMA-SERIE'] }] })
+    const intento = (o: typeof a) => recibirOrden(recibidor(), { ordenId: o.id, ubicacionId: d.ubicacionA, lineas: [{ lineaId: o.lineas[0]!.id, cantidad: 1, series: ['MISMA-SERIE'] }] })
     const r = await Promise.allSettled([intento(a), intento(b)])
     expect(r.filter((x) => x.status === 'fulfilled')).toHaveLength(1)
     expect((await listarActivos(tecnico(), { texto: 'MISMA-SERIE' })).filter((x) => x.serie === 'MISMA-SERIE')).toHaveLength(1)
