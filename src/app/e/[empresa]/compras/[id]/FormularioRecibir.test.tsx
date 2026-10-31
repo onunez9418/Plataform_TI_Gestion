@@ -4,7 +4,11 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { FormularioRecibir } from './FormularioRecibir'
 
-afterEach(cleanup)
+import { navegador } from '@/componentes/ui/recarga'
+const recargarPagina = vi.spyOn(navegador, 'recargar').mockImplementation(() => {})
+import { MensajeGuardadoVisor } from '@/componentes/ui/MensajeGuardadoVisor'
+
+afterEach(() => { cleanup(); sessionStorage.clear(); recargarPagina.mockClear() })
 
 const lineas = [
   { id: 'l1', skuCodigo: 'LAP-0001', skuNombre: 'Laptop', control: 'serie' as const, pendiente: 3 },
@@ -47,6 +51,8 @@ describe('FormularioRecibir', () => {
     expect(JSON.parse(String(d.get('series_l1')))).toEqual(['A-1', 'A-2'])
     expect(d.get('cantidad_l2')).toBe('5')
     expect(d.get('ubicacionId')).toBe('u1')
+    await waitFor(() => expect(recargarPagina).toHaveBeenCalledTimes(1))
+    render(<MensajeGuardadoVisor />)
     await waitFor(() => expect(screen.getByTestId('recepcion-ok')).toBeTruthy())
   })
 
@@ -56,6 +62,8 @@ describe('FormularioRecibir', () => {
     await userEvent.selectOptions(screen.getByTestId('campo-ubicacion'), 'u1')
     fireEvent.change(screen.getByTestId('cantidad-MON-0001'), { target: { value: '1' } })
     await userEvent.click(screen.getByTestId('form-recibir-enviar'))
+    await waitFor(() => expect(recargarPagina).toHaveBeenCalledTimes(1))
+    render(<MensajeGuardadoVisor />)
     await waitFor(() => expect(screen.getByTestId('recepcion-avisos').textContent).toContain('La serie A-1 ya existe en otro artículo.'))
   })
 })

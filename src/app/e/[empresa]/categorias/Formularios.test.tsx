@@ -4,7 +4,11 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { FormularioCategoria } from './Formularios'
 
-afterEach(cleanup)
+import { navegador } from '@/componentes/ui/recarga'
+const recargarPagina = vi.spyOn(navegador, 'recargar').mockImplementation(() => {})
+import { MensajeGuardadoVisor } from '@/componentes/ui/MensajeGuardadoVisor'
+
+afterEach(() => { cleanup(); sessionStorage.clear(); recargarPagina.mockClear() })
 
 describe('FormularioCategoria', () => {
   it('permite armar una categoría «Impresoras» con campos propios de varios tipos', async () => {

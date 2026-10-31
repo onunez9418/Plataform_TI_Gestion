@@ -4,7 +4,11 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { FormularioSku, type CategoriaParaSku } from './FormularioSku'
 
-afterEach(cleanup)
+import { navegador } from '@/componentes/ui/recarga'
+const recargarPagina = vi.spyOn(navegador, 'recargar').mockImplementation(() => {})
+import { MensajeGuardadoVisor } from '@/componentes/ui/MensajeGuardadoVisor'
+
+afterEach(() => { cleanup(); sessionStorage.clear(); recargarPagina.mockClear() })
 
 const categorias: CategoriaParaSku[] = [
   {
@@ -66,6 +70,8 @@ describe('FormularioSku', () => {
     expect(datos.get('categoriaId')).toBe('c-lap')
     expect(datos.get('control')).toBe('serie')
     expect(JSON.parse(String(datos.get('valores')))).toEqual({ procesador: 'i7', ram_gb: 16, garantia: true, disco: 'SSD' })
+    await waitFor(() => expect(recargarPagina).toHaveBeenCalledTimes(1))
+    render(<MensajeGuardadoVisor />)
     await waitFor(() => expect(screen.getByTestId('sku-creado-codigo').textContent).toBe('LAP-0002'))
   })
 

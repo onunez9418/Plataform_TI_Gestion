@@ -43,6 +43,7 @@ export function FormularioOrden({ empresa, proveedores, skus, accion }: Props) {
       enviar="Guardar como borrador"
       testid="form-orden"
       limpiar={false}
+      recargar={false}
       alExito={(d) => {
         const id = (d as { id?: string } | undefined)?.id
         if (id) router.push(`/e/${empresa}/compras/${id}`)

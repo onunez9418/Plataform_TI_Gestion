@@ -7,6 +7,8 @@ const empujar = vi.fn()
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: empujar, refresh: vi.fn() }) }))
 
 import { FormularioOrden } from './FormularioOrden'
+import { navegador } from '@/componentes/ui/recarga'
+const recargarPagina = vi.spyOn(navegador, 'recargar').mockImplementation(() => {})
 
 afterEach(() => { cleanup(); empujar.mockReset() })
 
@@ -36,6 +38,7 @@ describe('FormularioOrden', () => {
       { skuId: 's2', cantidad: 1, precioUnitario: 800 },
     ])
     await waitFor(() => expect(empujar).toHaveBeenCalledWith('/e/alfa/compras/o1'))
+    expect(recargarPagina).not.toHaveBeenCalled()
   })
 
   it('no envía una línea incompleta y dice qué falta', async () => {

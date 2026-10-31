@@ -8,6 +8,7 @@ import { Barra } from '@/componentes/estructura/Barra'
 import { Menu } from '@/componentes/estructura/Menu'
 import { VeloMenu } from '@/componentes/estructura/BotonMenuMovil'
 import { Aviso } from '@/componentes/ui/Piezas'
+import { MensajeGuardadoVisor } from '@/componentes/ui/MensajeGuardadoVisor'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -47,6 +48,7 @@ export default async function LayoutEmpresa({ children, params }: { children: Re
       <div className="cuerpo">
         <Menu empresa={empresa} permisos={Array.from(cargado.ctx.permisos)} />
         <main id="contenido" className="principal" tabIndex={-1}>
+          <MensajeGuardadoVisor />
           {children}
         </main>
       </div>

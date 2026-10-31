@@ -12,7 +12,7 @@ export default async function PaginaEnlace({ searchParams }: { searchParams: Pro
       {token ? (
         <div className="tarjeta">
           <p>Pulse el botón para entrar. El enlace sirve una sola vez y vence pronto.</p>
-          <Formulario accion={canjear} enviar="Entrar" testid="form-canjear" testidEnviar="boton-entrar" limpiar={false}>
+          <Formulario accion={canjear} enviar="Entrar" testid="form-canjear" testidEnviar="boton-entrar" limpiar={false} recargar={false}>
             <input type="hidden" name="token" value={token} />
           </Formulario>
         </div>

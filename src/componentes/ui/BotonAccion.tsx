@@ -3,7 +3,7 @@
 // Si el servidor la rechaza, muestra su mensaje tal cual debajo del botón.
 import { useState, useTransition } from 'react'
 import type { ResultadoAccion } from './tipos-accion'
-import { useRefrescar } from './refrescar'
+import { recargarConMensaje } from './recarga'
 
 type Props = {
   accion: () => Promise<ResultadoAccion<unknown>>
@@ -12,12 +12,13 @@ type Props = {
   clase?: string
   /** Pide confirmar antes de ejecutar (para acciones que no se deshacen fácil). */
   confirmar?: string
+  /** Mensaje que se muestra al terminar bien (la pantalla se recarga para mostrar lo nuevo). */
+  exito?: string
 }
 
-export function BotonAccion({ accion, texto, testid, clase = 'btn chico', confirmar }: Props) {
+export function BotonAccion({ accion, texto, testid, clase = 'btn chico', confirmar, exito }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [enCurso, iniciar] = useTransition()
-  const refrescar = useRefrescar()
 
   function alPulsar() {
     if (confirmar && !window.confirm(confirmar)) return
@@ -26,7 +27,7 @@ export function BotonAccion({ accion, texto, testid, clase = 'btn chico', confir
       try {
         const r = await accion()
         if (!r.ok) setError(r.error.mensaje)
-        else refrescar()
+        else recargarConMensaje(exito ? { texto: exito } : null)
       } catch (e) {
         if (e && typeof e === 'object' && 'digest' in e && String((e as { digest: unknown }).digest).startsWith('NEXT_')) throw e
         setError('No se pudo completar la acción. Intente de nuevo.')

@@ -4,7 +4,7 @@
 import { createContext, useCallback, useContext, useRef, useState, useTransition, type ReactNode } from 'react'
 import type { ResultadoAccion } from './tipos-accion'
 import { Aviso } from './Piezas'
-import { useRefrescar } from './refrescar'
+import { recargarConMensaje, type MensajeGuardado } from './recarga'
 
 type Ctx = {
   errores: Record<string, string>
@@ -24,8 +24,15 @@ type Props = {
   testid?: string
   /** Identificador propio del botón de enviar (por defecto «{testid}-enviar»). */
   testidEnviar?: string
-  /** Texto que se muestra al salir bien. */
+  /** Texto que se muestra al salir bien (después de recargar la pantalla). */
   exito?: string
+  /** Mensaje más completo según lo que devolvió el servidor; si se da, reemplaza a `exito`. */
+  mensajeExito?: (datos: unknown) => MensajeGuardado
+  /**
+   * Al salir bien, la pantalla se recarga completa para que las listas muestren lo nuevo (por defecto sí).
+   * Se apaga solo en formularios que no cambian listas (pedir el enlace de ingreso) o que navegan a otra pantalla.
+   */
+  recargar?: boolean
   /** Vaciar el formulario al salir bien (por defecto sí). */
   limpiar?: boolean
   /** Se llama con los datos devueltos cuando salió bien (por ejemplo, para mostrar un enlace). */
@@ -35,13 +42,12 @@ type Props = {
   extra?: ReactNode
 }
 
-export function Formulario({ accion, children, enviar, testid, testidEnviar, exito, limpiar = true, alExito, deshabilitado, extra }: Props) {
+export function Formulario({ accion, children, enviar, testid, testidEnviar, exito, mensajeExito, recargar = true, limpiar = true, alExito, deshabilitado, extra }: Props) {
   const [errores, setErrores] = useState<Record<string, string>>({})
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null)
-  const [mensajeExito, setMensajeExito] = useState<string | null>(null)
+  const [exitoLocal, setExitoLocal] = useState<string | null>(null)
   const [enCurso, iniciar] = useTransition()
   const ref = useRef<HTMLFormElement>(null)
-  const refrescar = useRefrescar()
 
   const poner = useCallback((nombre: string, mensaje: string | null) => {
     setErrores((previo) => {
@@ -56,7 +62,7 @@ export function Formulario({ accion, children, enviar, testid, testidEnviar, exi
     evento.preventDefault()
     const formulario = evento.currentTarget
     setErrorGeneral(null)
-    setMensajeExito(null)
+    setExitoLocal(null)
 
     // Validación inmediata: campos obligatorios vacíos, sin ir al servidor.
     const locales: Record<string, string> = {}
@@ -77,10 +83,10 @@ export function Formulario({ accion, children, enviar, testid, testidEnviar, exi
       try {
         const r = await accion(datos)
         if (r.ok) {
-          if (exito) setMensajeExito(exito)
           if (limpiar) ref.current?.reset()
-          refrescar()
           alExito?.(r.datos)
+          if (recargar) recargarConMensaje(mensajeExito ? mensajeExito(r.datos) : exito ? { texto: exito } : null)
+          else if (exito) setExitoLocal(exito)
         } else {
           setErrores(r.error.campos ?? {})
           setErrorGeneral(r.error.mensaje)
@@ -101,9 +107,9 @@ export function Formulario({ accion, children, enviar, testid, testidEnviar, exi
             <p className="sin-margen">{errorGeneral}</p>
           </Aviso>
         ) : null}
-        {mensajeExito ? (
+        {exitoLocal ? (
           <Aviso tipo="exito" testid="exito-formulario">
-            <p className="sin-margen">{mensajeExito}</p>
+            <p className="sin-margen">{exitoLocal}</p>
           </Aviso>
         ) : null}
         {children}

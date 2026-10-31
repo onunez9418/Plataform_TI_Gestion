@@ -99,7 +99,7 @@ export default async function FichaOrden({ params }: { params: Promise<{ empresa
         <section className="tarjeta" style={{ marginTop: 'var(--e4)' }} aria-labelledby="t-enviar">
           <h2 id="t-enviar">Enviar a aprobación</h2>
           <p className="suave">Cuando la envíe, otra persona con permiso de aprobar deberá revisarla.</p>
-          <BotonAccion texto="Enviar a aprobación" clase="btn primario" testid="enviar-aprobacion" accion={enviar.bind(null, empresa, id)} />
+          <BotonAccion texto="Enviar a aprobación" exito="Orden enviada a aprobación." clase="btn primario" testid="enviar-aprobacion" accion={enviar.bind(null, empresa, id)} />
         </section>
       ) : null}
 
@@ -111,9 +111,9 @@ export default async function FichaOrden({ params }: { params: Promise<{ empresa
           </Aviso>
           <div className="rejilla dos">
             <div>
-              <BotonAccion texto="Aprobar la orden" clase="btn primario" testid="aprobar-orden" accion={aprobar.bind(null, empresa, id)} />
+              <BotonAccion texto="Aprobar la orden" exito="Orden aprobada." clase="btn primario" testid="aprobar-orden" accion={aprobar.bind(null, empresa, id)} />
             </div>
-            <Formulario accion={rechazar.bind(null, empresa, id)} enviar="Rechazar la orden" testid="form-rechazar" limpiar={false}>
+            <Formulario accion={rechazar.bind(null, empresa, id)} enviar="Rechazar la orden" testid="form-rechazar" exito="Orden rechazada." limpiar={false}>
               <Campo nombre="motivo" etiqueta="Motivo del rechazo" tipo="textarea" filas={3} requerido testid="campo-motivo" />
             </Formulario>
           </div>

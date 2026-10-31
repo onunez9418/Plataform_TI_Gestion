@@ -71,6 +71,7 @@ export default async function PaginaUsuarios({ params }: { params: Promise<{ emp
                       {puedeSuspender && u.estado === 'activo' ? (
                         <BotonAccion
                           texto="Suspender"
+                          exito="Usuario suspendido."
                           clase="btn chico peligro-suave"
                           testid={`suspender-${u.correo}`}
                           confirmar={`¿Suspender a ${u.nombre}? No podrá entrar hasta que se le vuelva a dar acceso.`}

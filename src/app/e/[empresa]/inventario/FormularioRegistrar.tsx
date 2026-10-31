@@ -15,33 +15,20 @@ type Props = {
 
 export function FormularioRegistrar({ skus, ubicaciones, accion }: Props) {
   const [skuId, setSkuId] = useState('')
-  const [version, setVersion] = useState(0)
-  const [aviso, setAviso] = useState<string | null>(null)
-  const [avisos, setAvisos] = useState<string[]>([])
   const sku = skus.find((s) => s.id === skuId)
 
   return (
     <Formulario
-      key={version}
       accion={accion}
       enviar="Registrar"
       testid="form-registrar"
-      alExito={(d) => {
-        setAviso('Registrado. Ya aparece en la lista.')
-        setAvisos((d as { avisos?: string[] } | undefined)?.avisos ?? [])
-        setSkuId('')
-        setVersion((v) => v + 1)
-      }}
+      mensajeExito={(d) => ({
+        texto: 'Registrado. Ya aparece en la lista.',
+        testid: 'registrado-ok',
+        detalles: (d as { avisos?: string[] } | undefined)?.avisos,
+        testidDetalles: 'registrado-avisos',
+      })}
     >
-      {aviso ? <div className="aviso exito" role="status" data-testid="registrado-ok"><div className="cuerpo-aviso">{aviso}</div></div> : null}
-      {aviso && avisos.length > 0 ? (
-        <div className="aviso atencion" role="status" data-testid="registrado-avisos">
-          <div className="cuerpo-aviso">
-            <strong>Para tener en cuenta</strong>
-            <ul style={{ margin: 0, paddingLeft: 'var(--e4)' }}>{avisos.map((a, i) => <li key={i}>{a}</li>)}</ul>
-          </div>
-        </div>
-      ) : null}
       <div className="fila-form">
         <Campo
           nombre="skuId"
@@ -51,7 +38,7 @@ export function FormularioRegistrar({ skus, ubicaciones, accion }: Props) {
           vacio="Elija un artículo"
           opciones={skus.map((s) => ({ valor: s.id, etiqueta: `${s.codigo} · ${s.nombre} (${s.control === 'serie' ? 'por serie' : 'por cantidad'})` }))}
           testid="campo-sku"
-          alCambiar={(v) => { setSkuId(v); setAviso(null); setAvisos([]) }}
+          alCambiar={(v) => setSkuId(v)}
         />
         <Campo
           nombre="ubicacionId"

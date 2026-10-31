@@ -16,32 +16,19 @@ type Props = {
 
 export function FormularioRecibir({ lineas, ubicaciones, accion }: Props) {
   const [cantidades, setCantidades] = useState<Record<string, string>>({})
-  const [hecho, setHecho] = useState(false)
-  const [avisos, setAvisos] = useState<string[]>([])
-  const [version, setVersion] = useState(0)
 
   return (
     <Formulario
-      key={version}
       accion={accion}
       enviar="Confirmar la recepción"
       testid="form-recibir"
-      alExito={(d) => {
-        setHecho(true)
-        setAvisos((d as { avisos?: string[] } | undefined)?.avisos ?? [])
-        setCantidades({})
-        setVersion((v) => v + 1)
-      }}
+      mensajeExito={(d) => ({
+        texto: 'Recepción registrada. Los equipos ya aparecen en el inventario.',
+        testid: 'recepcion-ok',
+        detalles: (d as { avisos?: string[] } | undefined)?.avisos,
+        testidDetalles: 'recepcion-avisos',
+      })}
     >
-      {hecho ? <div className="aviso exito" role="status" data-testid="recepcion-ok"><div className="cuerpo-aviso">Recepción registrada. Los equipos ya aparecen en el inventario.</div></div> : null}
-      {hecho && avisos.length > 0 ? (
-        <div className="aviso atencion" role="status" data-testid="recepcion-avisos">
-          <div className="cuerpo-aviso">
-            <strong>Para tener en cuenta</strong>
-            <ul style={{ margin: 0, paddingLeft: 'var(--e4)' }}>{avisos.map((a, i) => <li key={i}>{a}</li>)}</ul>
-          </div>
-        </div>
-      ) : null}
       <Campo
         nombre="ubicacionId"
         etiqueta="Dónde queda lo que llegó"

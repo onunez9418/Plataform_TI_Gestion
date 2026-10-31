@@ -16,6 +16,7 @@ export function FormularioEntrar({ correoInicial }: { correoInicial?: string }) 
         testid="form-entrar"
         testidEnviar="boton-pedir-enlace"
         limpiar={false}
+        recargar={false}
         alExito={(d) => setRespuesta((d as DatosPedirEnlace) ?? {})}
       >
         <Campo nombre="correo" etiqueta="Su correo" tipo="email" requerido valorInicial={correoInicial} testid="campo-correo" placeholder="ceo@demo.local" />

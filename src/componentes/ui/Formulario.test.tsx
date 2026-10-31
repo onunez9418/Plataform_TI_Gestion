@@ -5,7 +5,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Campo, Formulario } from './Formulario'
 import type { ResultadoAccion } from './tipos-accion'
 
-afterEach(cleanup)
+import { navegador } from '@/componentes/ui/recarga'
+const recargarPagina = vi.spyOn(navegador, 'recargar').mockImplementation(() => {})
+import { MensajeGuardadoVisor } from '@/componentes/ui/MensajeGuardadoVisor'
+
+afterEach(() => { cleanup(); sessionStorage.clear(); recargarPagina.mockClear() })
 
 function armar(accion: (d: FormData) => Promise<ResultadoAccion<unknown>>) {
   render(
@@ -31,7 +35,10 @@ describe('Formulario', () => {
     armar(accion)
     await userEvent.type(screen.getByTestId('campo-nombre'), 'Ana')
     await userEvent.click(screen.getByTestId('f-enviar'))
-    await waitFor(() => expect(screen.getByTestId('exito-formulario')).toBeTruthy())
+    await waitFor(() => expect(recargarPagina).toHaveBeenCalledTimes(1))
+    // el éxito se muestra después de recargar: el visor lo toma de lo que dejó el formulario
+    render(<MensajeGuardadoVisor />)
+    await waitFor(() => expect(screen.getByTestId('exito-formulario').textContent).toBe('Guardado.'))
     expect(accion).toHaveBeenCalledTimes(1)
     expect(accion.mock.calls[0][0].get('nombre')).toBe('Ana')
   })
@@ -79,5 +86,22 @@ describe('Formulario', () => {
     await userEvent.click(screen.getByTestId('campo-nombre'))
     await userEvent.click(screen.getByTestId('campo-correo'))
     expect(screen.getByTestId('campo-nombre-error').textContent).toBe('Este dato es obligatorio.')
+  })
+
+  it('un error del servidor NO recarga la pantalla', async () => {
+    const accion = vi.fn(async () => ({ ok: false as const, error: { mensaje: 'No se pudo' } }))
+    armar(accion)
+    await userEvent.type(screen.getByTestId('campo-nombre'), 'Ana')
+    await userEvent.click(screen.getByTestId('f-enviar'))
+    await waitFor(() => expect(screen.getByTestId('error-formulario')).toBeTruthy())
+    expect(recargarPagina).not.toHaveBeenCalled()
+  })
+
+  it('un formulario con recargar apagado muestra el éxito en su lugar', async () => {
+    const accion = vi.fn(async (_d: FormData) => ({ ok: true as const, datos: null }))
+    render(<Formulario accion={accion} enviar="Pedir" testid="g" exito="Listo." recargar={false}><Campo nombre="a" etiqueta="A" testid="a" /></Formulario>)
+    await userEvent.click(screen.getByTestId('g-enviar'))
+    await waitFor(() => expect(screen.getByTestId('exito-formulario').textContent).toBe('Listo.'))
+    expect(recargarPagina).not.toHaveBeenCalled()
   })
 })

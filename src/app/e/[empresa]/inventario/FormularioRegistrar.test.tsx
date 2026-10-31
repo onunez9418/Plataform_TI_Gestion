@@ -4,7 +4,11 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { FormularioRegistrar } from './FormularioRegistrar'
 
-afterEach(cleanup)
+import { navegador } from '@/componentes/ui/recarga'
+const recargarPagina = vi.spyOn(navegador, 'recargar').mockImplementation(() => {})
+import { MensajeGuardadoVisor } from '@/componentes/ui/MensajeGuardadoVisor'
+
+afterEach(() => { cleanup(); sessionStorage.clear(); recargarPagina.mockClear() })
 
 const skus = [
   { id: 's1', codigo: 'LAP-0001', nombre: 'Laptop', control: 'serie' as const },
@@ -40,6 +44,8 @@ describe('FormularioRegistrar', () => {
     expect(d.get('skuId')).toBe('s1')
     expect(d.get('ubicacionId')).toBe('u1')
     expect(JSON.parse(String(d.get('series')))).toEqual(['SN-2001', 'SN-2002', 'SN-2003'])
+    await waitFor(() => expect(recargarPagina).toHaveBeenCalledTimes(1))
+    render(<MensajeGuardadoVisor />)
     await waitFor(() => expect(screen.getByTestId('registrado-ok')).toBeTruthy())
   })
 
@@ -58,6 +64,8 @@ describe('FormularioRegistrar', () => {
     await userEvent.selectOptions(screen.getByTestId('campo-ubicacion'), 'u1')
     fireEvent.change(screen.getByTestId('series-texto'), { target: { value: 'SN-9' } })
     await userEvent.click(screen.getByTestId('form-registrar-enviar'))
+    await waitFor(() => expect(recargarPagina).toHaveBeenCalledTimes(1))
+    render(<MensajeGuardadoVisor />)
     await waitFor(() => expect(screen.getByTestId('registrado-avisos').textContent).toContain('La serie SN-9 ya existe en otro artículo (MON-0001).'))
     expect(screen.getByTestId('registrado-ok')).toBeTruthy()
   })

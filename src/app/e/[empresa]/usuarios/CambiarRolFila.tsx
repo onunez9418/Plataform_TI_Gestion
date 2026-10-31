@@ -23,7 +23,7 @@ export function CambiarRolFila({ usuarioId, clave, rolActual, roles, accion, eti
           <option key={r.id} value={r.id}>{r.nombre}</option>
         ))}
       </select>
-      <BotonAccion texto="Cambiar rol" accion={() => accion(usuarioId, rol)} testid={`cambiar-rol-${clave}`} />
+      <BotonAccion texto="Cambiar rol" exito="Rol cambiado." accion={() => accion(usuarioId, rol)} testid={`cambiar-rol-${clave}`} />
     </span>
   )
 }

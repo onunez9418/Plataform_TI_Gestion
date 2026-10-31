@@ -5,7 +5,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Formulario } from './Formulario'
 import { CapturaSeries } from './CapturaSeries'
 
-afterEach(cleanup)
+import { navegador } from '@/componentes/ui/recarga'
+const recargarPagina = vi.spyOn(navegador, 'recargar').mockImplementation(() => {})
+import { MensajeGuardadoVisor } from '@/componentes/ui/MensajeGuardadoVisor'
+
+afterEach(() => { cleanup(); sessionStorage.clear(); recargarPagina.mockClear() })
 
 function armar(accion = vi.fn(async (_d: FormData) => ({ ok: true as const, datos: null }))) {
   render(

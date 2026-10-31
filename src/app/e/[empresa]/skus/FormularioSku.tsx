@@ -33,8 +33,6 @@ function convertir(tipo: CampoDeCategoria['tipo'], crudo: string): unknown {
 export function FormularioSku({ categorias, puedeCodigoPropio, accion }: Props) {
   const [categoriaId, setCategoriaId] = useState('')
   const [valores, setValores] = useState<Record<string, unknown>>({})
-  const [creado, setCreado] = useState<string | null>(null)
-  const [version, setVersion] = useState(0)
   const categoria = categorias.find((c) => c.id === categoriaId)
 
   function poner(campo: CampoDeCategoria, crudo: string) {
@@ -49,22 +47,16 @@ export function FormularioSku({ categorias, puedeCodigoPropio, accion }: Props) 
 
   return (
     <Formulario
-      key={version}
       accion={accion}
       enviar="Crear SKU"
       testid="form-crear-sku"
-      alExito={(d) => {
-        setCreado((d as { codigo?: string } | undefined)?.codigo ?? null)
-        setCategoriaId('')
-        setValores({})
-        setVersion((v) => v + 1)
+      mensajeExito={(d) => {
+        const codigo = (d as { codigo?: string } | undefined)?.codigo
+        return codigo
+          ? { texto: 'SKU creado con el código', testid: 'sku-creado', destacado: { texto: codigo, testid: 'sku-creado-codigo' } }
+          : { texto: 'SKU creado.', testid: 'sku-creado' }
       }}
     >
-      {creado ? (
-        <div className="aviso exito" role="status" data-testid="sku-creado">
-          <div className="cuerpo-aviso">SKU creado con el código <strong className="cod" data-testid="sku-creado-codigo">{creado}</strong>.</div>
-        </div>
-      ) : null}
       <div className="fila-form">
         <Campo
           nombre="categoriaId"
