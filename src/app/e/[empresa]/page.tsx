@@ -29,7 +29,7 @@ export default async function Panel({ params }: { params: Promise<{ empresa: str
 
   return (
     <>
-      <CabeceraPantalla titulo="Panel" descripcion={`Empresa activa: ${nombreEmpresa}. Elija por dónde empezar.`} />
+      <CabeceraPantalla titulo="Panel" descripcion={`Empresa activa: ${nombreEmpresa}${nombreEmpresa.endsWith('.') ? '' : '.'} Elija por dónde empezar.`} />
       {accesos.length === 0 ? (
         <p className="suave" data-testid="panel-sin-accesos">Su rol no tiene secciones disponibles. Pida a un administrador que se las asigne.</p>
       ) : (

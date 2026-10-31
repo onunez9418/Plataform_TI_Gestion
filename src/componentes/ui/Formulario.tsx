@@ -33,6 +33,8 @@ type Props = {
    * Se apaga solo en formularios que no cambian listas (pedir el enlace de ingreso) o que navegan a otra pantalla.
    */
   recargar?: boolean
+  /** Título del aviso cuando el servidor rechaza (por defecto «No se pudo guardar»). */
+  tituloError?: string
   /** Vaciar el formulario al salir bien (por defecto sí). */
   limpiar?: boolean
   /** Se llama con los datos devueltos cuando salió bien (por ejemplo, para mostrar un enlace). */
@@ -42,7 +44,7 @@ type Props = {
   extra?: ReactNode
 }
 
-export function Formulario({ accion, children, enviar, testid, testidEnviar, exito, mensajeExito, recargar = true, limpiar = true, alExito, deshabilitado, extra }: Props) {
+export function Formulario({ accion, children, enviar, testid, testidEnviar, exito, mensajeExito, recargar = true, tituloError = 'No se pudo guardar', limpiar = true, alExito, deshabilitado, extra }: Props) {
   const [errores, setErrores] = useState<Record<string, string>>({})
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null)
   const [exitoLocal, setExitoLocal] = useState<string | null>(null)
@@ -103,7 +105,7 @@ export function Formulario({ accion, children, enviar, testid, testidEnviar, exi
     <ContextoErrores.Provider value={{ errores, poner }}>
       <form ref={ref} onSubmit={alEnviar} noValidate data-testid={testid}>
         {errorGeneral ? (
-          <Aviso tipo="alerta" titulo="No se pudo guardar" testid="error-formulario">
+          <Aviso tipo="alerta" titulo={tituloError} testid="error-formulario">
             <p className="sin-margen">{errorGeneral}</p>
           </Aviso>
         ) : null}

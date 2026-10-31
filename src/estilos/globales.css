@@ -472,6 +472,8 @@ dl { margin: 0; }
   .barra .marca .texto-marca { display: none; }
   .empresa-activa { flex: 1 1 auto; min-width: 0; max-width: none; padding: 0 var(--e2); }
   .barra-fin { flex: none; }
+  .barra-fin [data-testid="usuario-actual"] { display: none; }
+  .barra select.empresa-sel { max-width: none; width: 100%; min-width: 0; }
   .btn { white-space: normal; text-align: center; }
   .btn-con-razon { max-width: 100%; }
   .btn-barra .etq { display: none; }

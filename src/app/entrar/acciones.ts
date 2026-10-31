@@ -9,6 +9,9 @@ export type DatosPedirEnlace = { ruta?: string }
 export async function pedirEnlace(datos: FormData): Promise<ResultadoAccion<DatosPedirEnlace>> {
   const correo = texto(datos, 'correo')
   if (!correo) return { ok: false, error: { codigo: 'VALIDACION', mensaje: 'Escriba su correo.', campos: { correo: 'Este dato es obligatorio.' } } }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+    return { ok: false, error: { codigo: 'VALIDACION', mensaje: 'Escriba el correo completo, por ejemplo ceo@demo.local.', campos: { correo: 'Escriba el correo completo, por ejemplo ceo@demo.local.' } } }
+  }
   return ejecutar(async () => {
     const r = await solicitarEnlace(correo)
     return { ruta: r.enlaceLocal ? rutaDeEnlace(r.enlaceLocal) : undefined }

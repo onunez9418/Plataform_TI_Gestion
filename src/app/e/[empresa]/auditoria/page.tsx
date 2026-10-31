@@ -2,18 +2,11 @@ import Link from 'next/link'
 import { listarAuditoria } from '@/nucleo/auditoria'
 import { cargarContexto, cargarDatos } from '@/app/_lib/sesion'
 import { fechaHora } from '@/app/_lib/formato'
+import { ENTIDADES, lineasDeDetalle, textoDeAccion, textoDeEntidad } from '@/app/_lib/auditoria-texto'
 import { CabeceraPantalla, ErrorDePantalla, Vacio } from '@/componentes/ui/Piezas'
 
 export const dynamic = 'force-dynamic'
 const MAXIMO_FILAS = 200
-
-function valorLegible(v: unknown): string {
-  if (v === null || v === undefined) return '-'
-  if (typeof v === 'string') return v
-  if (typeof v === 'boolean') return v ? 'Sí' : 'No'
-  if (typeof v === 'number') return String(v)
-  return JSON.stringify(v)
-}
 
 export default async function PaginaAuditoria({ params, searchParams }: { params: Promise<{ empresa: string }>; searchParams: Promise<{ entidad?: string; desde?: string; hasta?: string }> }) {
   const { empresa } = await params
@@ -33,7 +26,10 @@ export default async function PaginaAuditoria({ params, searchParams }: { params
       <form method="get" className="barra-herr" role="search" aria-label="Filtrar la auditoría" data-testid="filtro-auditoria">
         <div className="campo">
           <label htmlFor="a-entidad">Tipo de dato</label>
-          <input id="a-entidad" type="text" name="entidad" defaultValue={entidad ?? ''} placeholder="sku, rol, usuario..." data-testid="filtro-entidad" />
+          <select id="a-entidad" name="entidad" defaultValue={entidad ?? ''} data-testid="filtro-entidad">
+            <option value="">Todos</option>
+            {Object.entries(ENTIDADES).map(([clave, nombre]) => <option key={clave} value={clave}>{nombre}</option>)}
+          </select>
         </div>
         <div className="campo">
           <label htmlFor="a-desde">Desde</label>
@@ -57,17 +53,17 @@ export default async function PaginaAuditoria({ params, searchParams }: { params
               <thead><tr><th>Cuándo</th><th>Quién</th><th>Qué hizo</th><th>Sobre</th><th>Detalle</th></tr></thead>
               <tbody>
                 {visibles.map((r) => {
-                  const cambios = Object.entries(r.cambios ?? {})
+                  const detalle = lineasDeDetalle(r.cambios)
                   return (
-                    <tr key={r.id} data-testid="fila-auditoria">
+                    <tr key={r.id} data-testid="fila-auditoria" data-accion={r.accion}>
                       <td data-label="Cuándo">{fechaHora(r.creadoEn)}</td>
                       <td data-label="Quién">{r.autorNombre ?? 'Sistema'}</td>
-                      <td data-label="Qué hizo" className="cod">{r.accion}</td>
-                      <td data-label="Sobre">{r.entidadTipo}</td>
+                      <td data-label="Qué hizo">{textoDeAccion(r.accion)}</td>
+                      <td data-label="Sobre">{textoDeEntidad(r.entidadTipo)}</td>
                       <td data-label="Detalle">
-                        {cambios.length === 0 && !r.motivo ? '-' : (
+                        {detalle.length === 0 && !r.motivo ? '-' : (
                           <ul style={{ margin: 0, paddingLeft: 'var(--e4)', textAlign: 'left' }}>
-                            {cambios.map(([k, v]) => <li key={k}>{k}: {valorLegible(v)}</li>)}
+                            {detalle.map((l, i) => <li key={i}>{l}</li>)}
                             {r.motivo ? <li>Motivo: {r.motivo}</li> : null}
                           </ul>
                         )}

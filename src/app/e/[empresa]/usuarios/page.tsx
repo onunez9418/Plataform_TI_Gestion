@@ -5,7 +5,7 @@ import { fecha } from '@/app/_lib/formato'
 import { P } from '@/componentes/estructura/permisos'
 import { BotonAccion } from '@/componentes/ui/BotonAccion'
 import { CabeceraPantalla, Crear, ErrorDePantalla, Etiqueta, Vacio } from '@/componentes/ui/Piezas'
-import { cambiarRolDe, invitar, suspenderA } from './acciones'
+import { cambiarRolDe, invitar, reactivarA, suspenderA } from './acciones'
 import { CambiarRolFila } from './CambiarRolFila'
 import { FormularioInvitar } from './FormularioInvitar'
 
@@ -76,6 +76,15 @@ export default async function PaginaUsuarios({ params }: { params: Promise<{ emp
                           testid={`suspender-${u.correo}`}
                           confirmar={`¿Suspender a ${u.nombre}? No podrá entrar hasta que se le vuelva a dar acceso.`}
                           accion={suspenderA.bind(null, empresa, u.usuarioId)}
+                        />
+                      ) : null}
+                      {puedeSuspender && u.estado !== 'activo' ? (
+                        <BotonAccion
+                          texto="Reactivar"
+                          exito="Usuario reactivado."
+                          clase="btn chico"
+                          testid={`reactivar-${u.correo}`}
+                          accion={reactivarA.bind(null, empresa, u.usuarioId)}
                         />
                       ) : null}
                     </div>

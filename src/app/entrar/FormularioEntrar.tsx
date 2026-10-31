@@ -17,6 +17,7 @@ export function FormularioEntrar({ correoInicial }: { correoInicial?: string }) 
         testidEnviar="boton-pedir-enlace"
         limpiar={false}
         recargar={false}
+        tituloError="No se pudo entrar"
         alExito={(d) => setRespuesta((d as DatosPedirEnlace) ?? {})}
       >
         <Campo nombre="correo" etiqueta="Su correo" tipo="email" requerido valorInicial={correoInicial} testid="campo-correo" placeholder="ceo@demo.local" />
@@ -25,9 +26,12 @@ export function FormularioEntrar({ correoInicial }: { correoInicial?: string }) 
       {respuesta ? (
         respuesta.ruta ? (
           <div style={{ marginTop: 'var(--e4)' }}>
-            <Aviso tipo="exito" titulo="Su enlace de ingreso está listo" testid="aviso-enlace">
+            <Aviso tipo="exito" titulo="Enlace de ingreso generado" testid="aviso-enlace">
               <p>
                 En la versión local no se envía correo: el enlace aparece aquí. Ábralo y pulse el botón «Entrar».
+              </p>
+              <p className="chica">
+                Si escribió mal el correo, el enlace no servirá: compruebe que sea uno de los de la pantalla de inicio o el de una persona invitada.
               </p>
               <p>
                 <Link className="btn primario" href={respuesta.ruta} data-testid="enlace-ingreso">Abrir mi enlace</Link>
