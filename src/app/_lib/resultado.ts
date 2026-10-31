@@ -11,9 +11,28 @@ function esControlDeNext(e: unknown): boolean {
   return typeof e === 'object' && e !== null && 'digest' in e && String((e as { digest: unknown }).digest).startsWith('NEXT_')
 }
 
+/** Código corto para que la persona lo lea a TI y TI lo encuentre en el registro del servidor. */
+function codigoCorto(): string {
+  const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  const bytes = globalThis.crypto.getRandomValues(new Uint8Array(4))
+  return Array.from(bytes, (b) => letras[b % letras.length]).join('')
+}
+
+/**
+ * Registra en el servidor un error inesperado, sin datos personales: solo el código corto,
+ * el tipo de error y su código técnico. Nunca el mensaje (puede traer valores) ni el formulario.
+ */
+function registrarInesperado(e: unknown, codigo: string): void {
+  const tipo = e instanceof Error ? e.name : typeof e
+  const tecnico = typeof e === 'object' && e !== null && 'code' in e ? String((e as { code: unknown }).code).slice(0, 40) : undefined
+  console.error(`[error-inesperado ${codigo}] tipo=${tipo}${tecnico ? ` codigo-tecnico=${tecnico}` : ''}`)
+}
+
 export function aErrorPantalla(e: unknown): ErrorPantallaDatos {
   if (esErrorNegocio(e)) return { codigo: String(e.codigo), mensaje: e.mensaje, campos: e.campos }
-  return { codigo: 'INESPERADO', mensaje: 'Ocurrió un problema inesperado. Intente de nuevo; si sigue igual, avise a TI.' }
+  const codigo = codigoCorto()
+  registrarInesperado(e, codigo)
+  return { codigo: 'INESPERADO', mensaje: `Algo salió mal (código ${codigo}). Intente de nuevo; si sigue igual, avise a TI con ese código.` }
 }
 
 export async function ejecutar<T>(trabajo: () => Promise<T>): Promise<ResultadoAccion<T>> {

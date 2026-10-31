@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { aErrorPantalla, ejecutar, marcado, numero, texto } from './resultado'
 
 function datos(o: Record<string, string>) {
@@ -38,8 +38,29 @@ describe('ejecutar', () => {
     expect(!r.ok && r.error.campos).toEqual({ codigo: 'Ya existe ese código' })
   })
   it('un fallo inesperado no revela detalles', () => {
-    const e = aErrorPantalla(new Error('connection refused 10.0.0.5'))
+    const espia = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const e = aErrorPantalla(new Error('connection refused 10.0.0.5 ana@alfa.local'))
     expect(e.mensaje).not.toContain('10.0.0.5')
+    espia.mockRestore()
+  })
+  it('un fallo inesperado se registra con un código corto y sin datos personales', () => {
+    const espia = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const e = aErrorPantalla(Object.assign(new Error('valor ana@alfa.local duplicado'), { code: '23505' }))
+    const codigo = /código ([A-Z0-9]{4})\)/.exec(e.mensaje)?.[1]
+    expect(codigo).toBeDefined()
+    expect(e.mensaje).toMatch(/^Algo salió mal \(código [A-Z0-9]{4}\)/)
+    expect(espia).toHaveBeenCalledTimes(1)
+    const registro = String(espia.mock.calls[0]?.join(' '))
+    expect(registro).toContain(codigo!)
+    expect(registro).toContain('23505')
+    expect(registro).not.toContain('ana@alfa.local')
+    espia.mockRestore()
+  })
+  it('un error de negocio no se registra como inesperado', () => {
+    const espia = vi.spyOn(console, 'error').mockImplementation(() => {})
+    aErrorPantalla({ codigo: 'SIN_PERMISO', mensaje: 'No tiene permiso.' })
+    expect(espia).not.toHaveBeenCalled()
+    espia.mockRestore()
   })
   it('deja pasar las redirecciones de Next', async () => {
     await expect(ejecutar(async () => { throw Object.assign(new Error('x'), { digest: 'NEXT_REDIRECT;/x' }) })).rejects.toBeDefined()
