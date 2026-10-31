@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 # Levanta una PostgreSQL 16 TEMPORAL y privada para las pruebas de QA (no toca la del equipo).
-#   Uso:  sh pruebas/preparar-base.sh [carpeta]     (por defecto /tmp/qa-pg)
+#   Uso:  bash pruebas/preparar-base.sh [carpeta]     (por defecto /tmp/qa-pg). Necesita bash (usa /dev/tcp para buscar un puerto libre).
 # Crea: clúster en <carpeta>/datos, puerto libre desde 54360, base "plataforma", los cuatro roles con
 # contraseñas ALEATORIAS (se escriben solo en <carpeta>/entorno.env, fuera del repositorio), aplica las
 # migraciones de prisma/migrations y carga la semilla. Para usar luego:  . <carpeta>/entorno.env
-# Para apagarla:  sh pruebas/preparar-base.sh <carpeta> detener
+# Para apagarla:  bash pruebas/preparar-base.sh <carpeta> detener
 set -eu
 RAIZ="$(cd "$(dirname "$0")/.." && pwd)"
 DIR="${1:-/tmp/qa-pg}"

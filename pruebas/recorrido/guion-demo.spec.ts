@@ -17,12 +17,29 @@ async function ingresar(page: Page, correo: string) {
   await page.getByTestId('boton-entrar').click()
   await page.waitForURL(/\/empresas|\/e\/[a-z]/)
 }
+/** Abre el desplegable del formulario solo si está cerrado (un clic en uno abierto lo cerraría). */
 async function abrir(page: Page, abrirId: string) {
-  await page.getByTestId(abrirId).click()
+  const resumen = page.getByTestId(abrirId)
+  const abierto = await resumen.evaluate((e) => Boolean(e.closest('details')?.open))
+  if (!abierto) await resumen.click()
 }
 const ir = async (page: Page, ruta: string) => {
   await page.goto(ruta)
   await expect(page.getByTestId('franja-local')).toBeVisible()
+}
+/**
+ * Espera una fila de la lista. Si no aparece sola (defecto DEF-FRO-01: lista obsoleta tras registrar) lo anota en el
+ * informe de la prueba, recarga la página y sigue, para poder probar el resto del guion. La prueba específica del
+ * defecto es defecto-lista-obsoleta.spec.ts.
+ */
+async function verFila(page: Page, testid: string) {
+  try {
+    await expect(page.getByTestId(testid)).toBeVisible({ timeout: 4000 })
+  } catch {
+    test.info().annotations.push({ type: 'DEF-FRO-01', description: `la lista no mostró «${testid}» hasta recargar` })
+    await page.reload()
+    await expect(page.getByTestId(testid)).toBeVisible()
+  }
 }
 const filaConTexto = (page: Page, texto: string | RegExp) => page.locator('tr', { hasText: texto })
 
@@ -122,7 +139,7 @@ test('paso 4a · crea el rol «Solo lectura» e invita a un usuario con ese rol'
     await ceo.getByTestId(`permiso-nuevo-${p}`).check()
   }
   await ceo.getByTestId('form-crear-rol-enviar').click()
-  await expect(ceo.getByTestId(`rol-${NOMBRE_ROL}`)).toBeVisible()
+  await verFila(ceo, `rol-${NOMBRE_ROL}`)
 
   await ir(ceo, '/e/alfa/usuarios')
   await abrir(ceo, 'crear-usuario-abrir')
@@ -302,19 +319,17 @@ test('paso 6d · el servidor rechaza «crear SKU» de quien no tiene permiso, au
 test('paso 7a · registra 3 equipos con series, mira el resumen y rechaza una serie repetida', async () => {
   await ir(ceo, '/e/alfa/inventario')
   await abrir(ceo, 'crear-activos-abrir')
-  await ceo.getByTestId('campo-sku').selectOption({ label: new RegExp(skuAuto) as never }).catch(async () => {
-    const op = await ceo.getByTestId('campo-sku').locator('option', { hasText: skuAuto }).getAttribute('value')
-    await ceo.getByTestId('campo-sku').selectOption(op!)
-  })
+  const valorSku = await ceo.getByTestId('campo-sku').locator('option', { hasText: skuAuto }).getAttribute('value')
+  await ceo.getByTestId('campo-sku').selectOption(valorSku!)
   await ceo.getByTestId('campo-ubicacion').selectOption({ index: 1 })
   await ceo.getByTestId('series-texto').fill(`${serieBase}-1\n${serieBase}-2\n${serieBase}-3`)
   await expect(ceo.getByTestId('series-resumen')).toContainText('3')
   await ceo.getByTestId('form-registrar-enviar').click()
   await expect(ceo.getByTestId('registrado-ok')).toBeVisible()
-  for (const n of [1, 2, 3]) await expect(ceo.getByTestId(`fila-activo-${skuAuto}-${serieBase}-${n}`)).toBeVisible()
+  for (const n of [1, 2, 3]) await verFila(ceo, `fila-activo-${skuAuto}-${serieBase}-${n}`)
 
   // Serie repetida en el mismo SKU (en minúsculas): se rechaza y no se crea nada.
-  await abrir(ceo, 'crear-activos-abrir').catch(() => undefined)
+  await abrir(ceo, 'crear-activos-abrir')
   const op = await ceo.getByTestId('campo-sku').locator('option', { hasText: skuAuto }).getAttribute('value')
   await ceo.getByTestId('campo-sku').selectOption(op!)
   await ceo.getByTestId('campo-ubicacion').selectOption({ index: 1 })
@@ -366,7 +381,7 @@ test('paso 9 · orden de compra: el CEO la prepara y no puede aprobarla; la Jefa
   await ceo.getByTestId('linea-0-sku').selectOption(op!)
   await ceo.getByTestId('linea-0-cantidad').fill('3')
   await ceo.getByTestId('linea-0-precio').fill('1200')
-  await expect(ceo.getByTestId('total-orden')).toContainText('3.600')
+  await expect(ceo.getByTestId('total-orden')).toContainText(/3[.,]600/)
   await ceo.getByTestId('form-orden-enviar').click()
   await ceo.waitForURL(/\/compras\/[0-9a-f-]{36}/)
   const urlOrden = ceo.url()
