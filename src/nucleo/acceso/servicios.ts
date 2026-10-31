@@ -6,6 +6,8 @@ import {
 } from './constantes'
 import { borrarCookie, COOKIE_NAVEGADOR, COOKIE_SESION, escribirCookie, leerCookie } from './cookies'
 import { crearEnlaceIngreso, enlaceSenuelo } from './emitir'
+import { registrarPedidoDeEnlace } from './limite-intentos'
+import { leerOrigen } from './origen'
 import { exigirSesion } from './sesion'
 import { generarToken, huellaDe, TOKEN_VALIDO } from './tokens'
 import type { EmpresaResumen, ResultadoCanjear, ResultadoSolicitarEnlace } from './tipos'
@@ -21,6 +23,9 @@ export async function solicitarEnlace(correo: string): Promise<ResultadoSolicita
   const limpio = (correo ?? '').trim().toLowerCase()
   if (!CORREO_VALIDO.test(limpio)) throw validacion('Escriba un correo válido.', { correo: 'Escriba un correo válido.' })
   if (!modoLocalActivo()) return {}
+
+  // H-SEG-L09: límite por correo y por origen; cuenta igual si el correo existe o no.
+  registrarPedidoDeEnlace(limpio, await leerOrigen())
 
   // El enlace queda atado al navegador que lo pidió (cookie `nav`, ADR-08).
   let navegador = await leerCookie(COOKIE_NAVEGADOR())
@@ -45,6 +50,9 @@ export async function canjearEnlace(token: string): Promise<ResultadoCanjear> {
   const navegador = await leerCookie(COOKIE_NAVEGADOR())
   const huellaNavegador = navegador && TOKEN_VALIDO.test(navegador) ? huellaDe(navegador) : null
   const tokenSesion = generarToken()
+  // Sesión que este navegador ya tenía (si tenía): al entrar con un enlace nuevo se cierra (H-SEG-L09).
+  const sesionAnterior = await leerCookie(COOKIE_SESION())
+  const huellaSesionAnterior = sesionAnterior && TOKEN_VALIDO.test(sesionAnterior) ? huellaDe(sesionAnterior) : null
 
   const empresas = await conGlobal(async (tx) => {
     // Una sola sentencia: comprueba que vale, que es del navegador correcto y lo gasta.
@@ -64,6 +72,9 @@ export async function canjearEnlace(token: string): Promise<ResultadoCanjear> {
     const usuarioId = gastado[0]?.usuario_id
     if (!usuarioId) throw enlaceInvalido()
 
+    if (huellaSesionAnterior) {
+      await tx.consultar(`UPDATE sesion SET revocada_en = now() WHERE huella = $1 AND revocada_en IS NULL`, [huellaSesionAnterior])
+    }
     await tx.consultar(
       `INSERT INTO sesion (usuario_id, huella, expira_en, ultima_actividad_en)
        VALUES ($1, $2, now() + make_interval(hours => $3), now())`,
