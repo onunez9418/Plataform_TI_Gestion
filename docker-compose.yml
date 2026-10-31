@@ -40,6 +40,11 @@ services:
       PLATFORM_DATABASE_URL: postgres://app_plataforma:${PG_PASS_APP_PLATAFORMA}@db:5432/plataforma
       MIGRATION_DATABASE_URL: postgres://migraciones:${PG_PASS_MIGRACIONES}@db:5432/plataforma
       AUDIT_READER_DATABASE_URL: postgres://lector_auditoria:${PG_PASS_LECTOR_AUDITORIA}@db:5432/plataforma
+      # SOLO PARA LA VERSION LOCAL DE PRUEBA: el CEO no recibe correo y repite pedidos de enlace de ingreso,
+      # asi que el limite normal (5 por correo y 20 por origen cada 10 minutos) lo bloquearia en la demo.
+      # En produccion estas dos variables NO se ponen: rigen los valores seguros por omision.
+      LIMITE_ENLACES_POR_CORREO: "1000"
+      LIMITE_ENLACES_POR_ORIGEN: "1000"
     # Solo esta computadora puede abrir la aplicación (no la red local).
     ports:
       - "127.0.0.1:3000:3000"

@@ -66,7 +66,10 @@ Para empezar, entre con **`ceo@demo.local`**: podrá cambiar entre las empresas 
 4. Cree una categoría con campos propios (por ejemplo «Impresoras») y un artículo con código automático; luego cambie el código a mano.
 5. Registre equipos con número de serie, asígnelos a una persona y devuélvalos.
 6. Mire la pantalla de **Auditoría**: quedó escrito quién hizo cada cosa.
-7. Si ya está disponible: cree una orden de compra; verá que **usted mismo no puede aprobarla**, la aprueba otra persona y luego se recibe.
+7. **Compras (tres personas distintas).** Por separación de funciones, quien **prepara** una orden de compra no puede **aprobarla** ni **recibirla**, y quien la aprueba tampoco la recibe. Para probarlo entre con un enlace en pantalla (sin contraseña) con cada usuario:
+   - **Alfa:** `tecnico@alfa.local` **prepara** la orden, `jefa@alfa.local` la **aprueba** y `ceo@demo.local` la **recibe** (al recibir se crean los equipos).
+   - **Beta:** `tecnico@beta.local` **prepara**, `admin@beta.local` **aprueba** y `ceo@demo.local` **recibe**.
+   - Si la misma persona intenta aprobar o recibir lo que ella preparó, el sistema se lo impide **a propósito**: no es un error, es la regla.
 
 *Puede equivocarse y probar sin miedo: todo se puede borrar y volver a empezar (ver el Paso 8).*
 
