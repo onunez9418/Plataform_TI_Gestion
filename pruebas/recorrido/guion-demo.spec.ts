@@ -406,30 +406,45 @@ test('paso 9 · orden de compra: el CEO la prepara y no puede aprobarla; la Jefa
   await expect(jefa.getByTestId('estado-orden-aprobada')).toBeVisible()
   await cj.close()
 
-  // Recepción parcial: 2 de 3, con series. Nacen los activos.
+  // Quien la preparó (el CEO) tampoco puede recibirla: el servidor lo impide con un mensaje claro (RF-OC-024).
   await ceo.goto(urlOrden)
   await expect(ceo.getByTestId('estado-orden-aprobada')).toBeVisible()
   await ceo.getByTestId('campo-ubicacion').selectOption({ index: 1 })
   await ceo.getByTestId('cantidad-LAP-0001').fill('2')
-  await ceo.getByTestId('series-LAP-0001-texto').fill(`OC${S}-1\nOC${S}-2`)
+  await ceo.getByTestId('series-LAP-0001-texto').fill(`OC${S}-X1\nOC${S}-X2`)
   await ceo.getByTestId('form-recibir-enviar').click()
-  await expect(ceo.getByTestId('recepcion-ok')).toBeVisible()
-  await expect(ceo.getByTestId('estado-orden-recibida_parcial')).toBeVisible()
+  await expect(ceo.getByTestId('form-recibir')).toContainText(/no puede recibirla|otra persona/i)
+  await expect(ceo.getByTestId('estado-orden-aprobada')).toBeVisible()
+
+  // Una tercera persona (el Técnico) recibe en dos tandas. Nacen los activos.
+  const ct = await browser.newContext()
+  const tec = await ct.newPage()
+  await ingresar(tec, 'tecnico@alfa.local')
+  if (/\/empresas/.test(tec.url())) await tec.getByTestId('empresa-alfa').click()
+  await tec.goto(urlOrden)
+  await expect(tec.getByTestId('estado-orden-aprobada')).toBeVisible()
+  await expect(tec.getByTestId('aprobar-orden')).toHaveCount(0) // el Técnico no aprueba
+  const recibir = async (cantidad: number, series: string[]) => {
+    await tec.getByTestId('campo-ubicacion').selectOption({ index: 1 })
+    await tec.getByTestId('cantidad-LAP-0001').fill(String(cantidad))
+    await tec.getByTestId('series-LAP-0001-texto').fill(series.join('\n'))
+    await tec.getByTestId('form-recibir-enviar').click()
+  }
+  await recibir(2, [`OC${S}-1`, `OC${S}-2`])
+  await verFila(tec, 'estado-orden-recibida_parcial')
 
   // Intenta recibir de más (quedaba 1): rechazado, sigue parcial.
-  await ceo.getByTestId('cantidad-LAP-0001').fill('2')
-  await ceo.getByTestId('series-LAP-0001-texto').fill(`OC${S}-3\nOC${S}-4`)
-  await ceo.getByTestId('form-recibir-enviar').click()
-  await expect(ceo.getByTestId('form-recibir')).toContainText(/queda|pendiente|supera|pidieron/i)
-  await expect(ceo.getByTestId('estado-orden-recibida_parcial')).toBeVisible()
+  await recibir(2, [`OC${S}-3`, `OC${S}-4`])
+  await expect(tec.getByTestId('form-recibir')).toContainText(/queda|pendiente|supera|pidieron/i)
+  await expect(tec.getByTestId('estado-orden-recibida_parcial')).toBeVisible()
 
   // Recibe la última.
-  await ceo.getByTestId('cantidad-LAP-0001').fill('1')
-  await ceo.getByTestId('series-LAP-0001-texto').fill(`OC${S}-3`)
-  await ceo.getByTestId('form-recibir-enviar').click()
-  await expect(ceo.getByTestId('estado-orden-recibida')).toBeVisible()
-  await ir(ceo, '/e/alfa/inventario')
-  for (const n of [1, 2, 3]) await expect(ceo.getByTestId(`fila-activo-LAP-0001-OC${S}-${n}`)).toBeVisible()
+  await recibir(1, [`OC${S}-3`])
+  await verFila(tec, 'estado-orden-recibida')
+  await ir(tec, '/e/alfa/inventario')
+  for (const n of [1, 2, 3]) await expect(tec.getByTestId(`fila-activo-LAP-0001-OC${S}-${n}`)).toBeVisible()
+  await expect(tec.getByTestId(`fila-activo-LAP-0001-OC${S}-X1`)).toHaveCount(0)
+  await ct.close()
 })
 
 test('cierre · cerrar sesión corta el acceso: volver atrás ya no muestra datos', async () => {
