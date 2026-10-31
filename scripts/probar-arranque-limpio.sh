@@ -12,12 +12,23 @@ RAMA=""; SANDBOX=0
 for a in "$@"; do case "$a" in --sandbox) SANDBOX=1;; *) RAMA="$a";; esac; done
 ORIGEN=$(cd "$(dirname "$0")/.." && pwd)
 [ -n "$RAMA" ] || RAMA=$(git -C "$ORIGEN" rev-parse --abbrev-ref HEAD)
+# Una sola prueba a la vez en esta maquina: comparten el puerto 3000 y el motor de Docker. Si dos corren juntas,
+# una borra los contenedores de la otra y los resultados no sirven (ocurrio el 30/10 por la noche).
+CERROJO=${TMPDIR:-/tmp}/plataforma-arranque-limpio.lock
+if ! mkdir "$CERROJO" 2>/dev/null; then
+  OTRO=$(cat "$CERROJO/pid" 2>/dev/null || echo "")
+  if [ -n "$OTRO" ] && kill -0 "$OTRO" 2>/dev/null; then echo "Hay otra prueba de arranque en curso (proceso $OTRO). Espere a que termine."; exit 3; fi
+  rm -rf "$CERROJO"; mkdir "$CERROJO" || exit 3
+fi
+echo $$ > "$CERROJO/pid"
+# Nombre de proyecto propio: la limpieza final nunca toca los contenedores de otra persona.
+COMPOSE_PROJECT_NAME="plataforma-limpio-$$"; export COMPOSE_PROJECT_NAME
 TMP=$(mktemp -d)
 DEST="$TMP/limpio"
 FALLAS=0
 ok()   { echo "[OK]    $1"; }
 falla(){ echo "[FALLA] $1"; FALLAS=$((FALLAS + 1)); }
-limpiar() { (cd "$DEST" 2>/dev/null && docker compose -f docker-compose.yml $OVER down -v >/dev/null 2>&1); rm -rf "$TMP"; }
+limpiar() { (cd "$DEST" 2>/dev/null && docker compose -f docker-compose.yml $OVER down -v >/dev/null 2>&1); rm -rf "$TMP" "$CERROJO"; }
 trap limpiar EXIT
 
 echo "== Arranque desde cero · rama $RAMA · $(date -u '+%Y-%m-%d %H:%M UTC') =="
