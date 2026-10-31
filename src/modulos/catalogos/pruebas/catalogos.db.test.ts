@@ -89,4 +89,22 @@ describe.skipIf(!hayBaseDeDatos)('catálogos: ubicaciones, proveedores y persona
     const aud = (await listarAuditoria(ctx, { entidad: 'proveedor' })).filter((a) => a.entidadId === p.id)
     expect(aud.map((a) => a.accion).sort()).toEqual(['proveedor.crear', 'proveedor.editar'])
   })
+
+  it('H-CUM-02: el contacto del proveedor no va a la auditoría con su valor, solo que cambió', async () => {
+    const ctx = contextoDe(alfa, 'admin')
+    const p = await crearProveedor(ctx, { nombre: 'Prov Con Contacto', contacto: 'Ana Ejemplo ana.contacto@prov.local' })
+    await editarProveedor(ctx, { id: p.id, contacto: 'Beto Ejemplo beto.contacto@prov.local', nombre: 'Prov Con Contacto SAC' })
+    const aud = (await listarAuditoria(ctx, { entidad: 'proveedor' })).filter((a) => a.entidadId === p.id)
+    expect(aud).toHaveLength(2)
+    const texto = JSON.stringify(aud)
+    expect(texto).not.toContain('ana.contacto')
+    expect(texto).not.toContain('beto.contacto')
+    expect(texto).not.toContain('Ana Ejemplo')
+    const crear = aud.find((a) => a.accion === 'proveedor.crear')
+    expect(crear?.cambios).toMatchObject({ nombre: 'Prov Con Contacto', contacto: 'cambió' })
+    const editar = aud.find((a) => a.accion === 'proveedor.editar')
+    expect(editar?.cambios).toMatchObject({ contacto: 'cambió', nombre: { antes: 'Prov Con Contacto', despues: 'Prov Con Contacto SAC' } })
+    // El dato en sí sí se guarda y se muestra en el catálogo, que es su lugar.
+    expect((await listarProveedores(ctx)).find((x) => x.id === p.id)?.contacto).toBe('Beto Ejemplo beto.contacto@prov.local')
+  })
 })

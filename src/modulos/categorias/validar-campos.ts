@@ -49,6 +49,9 @@ const fechaReal = (t: string): boolean => {
   return f.getUTCFullYear() === a && f.getUTCMonth() === mes - 1 && f.getUTCDate() === d
 }
 
+/** Un valor «simple» (texto o número). Listas y objetos no son ni lo uno ni lo otro: String([16]) daría «16» y String({}) «[object Object]». */
+const esTextoONumero = (v: unknown): v is string | number => typeof v === 'string' || (typeof v === 'number' && Number.isFinite(v))
+
 const vacio = (v: unknown): boolean => v === undefined || v === null || (typeof v === 'string' && v.trim() === '')
 
 /**
@@ -73,24 +76,28 @@ export function validarValores(definiciones: readonly CampoDef[], valores: unkno
     }
     switch (d.tipo) {
       case 'texto': {
+        if (!esTextoONumero(crudo)) { errores[d.clave] = `«${d.etiqueta}» debe ser un texto.`; break }
         const t = String(crudo).trim()
         if (t.length > MAX_TEXTO) errores[d.clave] = `«${d.etiqueta}» admite hasta ${MAX_TEXTO} caracteres.`
         else salida[d.clave] = t
         break
       }
       case 'numero': {
+        if (!esTextoONumero(crudo)) { errores[d.clave] = `«${d.etiqueta}» debe ser un número.`; break }
         const n = typeof crudo === 'number' ? crudo : /^-?\d+([.,]\d+)?$/.test(String(crudo).trim()) ? Number(String(crudo).trim().replace(',', '.')) : NaN
         if (!Number.isFinite(n) || Math.abs(n) > 1e12) errores[d.clave] = `«${d.etiqueta}» debe ser un número.`
         else salida[d.clave] = n
         break
       }
       case 'fecha': {
-        const t = String(crudo).trim()
+        if (typeof crudo !== 'string') { errores[d.clave] = `«${d.etiqueta}» debe ser una fecha válida (AAAA-MM-DD).`; break }
+        const t = crudo.trim()
         if (!fechaReal(t)) errores[d.clave] = `«${d.etiqueta}» debe ser una fecha válida (AAAA-MM-DD).`
         else salida[d.clave] = t
         break
       }
       case 'lista': {
+        if (!esTextoONumero(crudo)) { errores[d.clave] = `«${d.etiqueta}»: elija una de las opciones de la lista.`; break }
         const t = String(crudo).trim()
         if (!(d.opciones ?? []).includes(t)) errores[d.clave] = `«${d.etiqueta}»: elija una de las opciones de la lista.`
         else salida[d.clave] = t

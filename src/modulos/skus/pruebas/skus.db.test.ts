@@ -1,9 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { cerrarConexiones } from '../../../nucleo/aislamiento'
+import { cerrarConexiones, conEmpresa } from '../../../nucleo/aislamiento'
 import { listarAuditoria } from '../../../nucleo/auditoria'
 import { contextoDe, crearEmpresaDePrueba, hayBaseDeDatos, type EmpresaPrueba } from '../../../nucleo/permisos/pruebas/apoyo'
 import { crearCategoria, type CampoDef } from '../../categorias'
 import { crearSku, listarSkus, obtenerSku } from '../index'
+import { MAX_INTENTOS_CODIGO } from '../servicios/skus'
 
 const CAMPOS: CampoDef[] = [
   { clave: 'procesador', etiqueta: 'Procesador', tipo: 'texto', obligatorio: true },
@@ -54,6 +55,36 @@ describe.skipIf(!hayBaseDeDatos)('maestro de SKU (con base real)', () => {
     await crearSku(admin, { categoriaId: lapAlfa, nombre: 'Ocupa el 3', control: 'serie', codigo: 'LAP-0003', valores: { procesador: 'x' } })
     const auto = await crearSku(admin, { categoriaId: lapAlfa, nombre: 'Automático', control: 'serie', valores: { procesador: 'x' } })
     expect(auto.codigo).toBe('LAP-0004')
+  })
+
+  it('DEF-SKU-01: el código automático salta más de 10 códigos propios seguidos, y avisa con claridad si pasa el tope de seguridad', async () => {
+    const admin = contextoDe(alfa, 'admin')
+    const ocupar = (prefijo: string, cuantos: number, categoriaId: string) => conEmpresa(alfa.id, (tx) => tx.ejecutar(
+      `INSERT INTO sku (empresa_id, categoria_id, codigo, codigo_propio, nombre, control)
+       SELECT $1, $2, $3 || '-' || lpad(n::text, 4, '0'), true, 'Propio ' || n, 'cantidad' FROM generate_series(1, $4::int) n`,
+      [alfa.id, categoriaId, prefijo, cuantos]))
+    // 25 ocupados seguidos: el automático los salta.
+    const salta = (await crearCategoria(admin, { nombre: 'Salta muchos', prefijo: 'SAL', campos: [] })).id
+    await ocupar('SAL', 25, salta)
+    expect((await crearSku(admin, { categoriaId: salta, nombre: 'Automático', control: 'cantidad', valores: {} })).codigo).toBe('SAL-0026')
+    // Justo en el límite: con (tope - 1) ocupados todavía alcanza el último intento.
+    const limite = (await crearCategoria(admin, { nombre: 'En el límite', prefijo: 'LIM', campos: [] })).id
+    await ocupar('LIM', MAX_INTENTOS_CODIGO - 1, limite)
+    expect((await crearSku(admin, { categoriaId: limite, nombre: 'Último intento', control: 'cantidad', valores: {} })).codigo).toBe(`LIM-${MAX_INTENTOS_CODIGO}`)
+    // Pasado el tope: error claro, sin crear nada.
+    const tope = (await crearCategoria(admin, { nombre: 'Pasa el tope', prefijo: 'TOP', campos: [] })).id
+    await ocupar('TOP', MAX_INTENTOS_CODIGO, tope)
+    await expect(crearSku(admin, { categoriaId: tope, nombre: 'No cabe', control: 'cantidad', valores: {} }))
+      .rejects.toMatchObject({ codigo: 'CONFLICTO', mensaje: expect.stringContaining('código propio') })
+    expect(await listarSkus(admin, { texto: 'No cabe' })).toEqual([])
+  })
+
+  it('DEF-CAM-01: un campo número recibido como lista o un texto recibido como objeto se rechaza con VALIDACION', async () => {
+    const ctx = contextoDe(alfa, 'tecnico')
+    await expect(crearSku(ctx, { categoriaId: lapAlfa, nombre: 'RAM lista', control: 'serie', valores: { procesador: 'x', ram_gb: [16] } }))
+      .rejects.toMatchObject({ codigo: 'VALIDACION', campos: { ram_gb: expect.any(String) } })
+    await expect(crearSku(ctx, { categoriaId: lapAlfa, nombre: 'Procesador objeto', control: 'serie', valores: { procesador: { a: 1 } } }))
+      .rejects.toMatchObject({ codigo: 'VALIDACION', campos: { procesador: expect.any(String) } })
   })
 
   it('sin skus.codigo_propio no se puede sobrescribir (SIN_PERMISO), pero el automático sí', async () => {

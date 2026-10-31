@@ -8,7 +8,8 @@ import { categoriaConCampos, validarValores } from '../../categorias'
 import * as repo from '../repos/skus'
 import type { EntradaCrearSku, EntradaListarSkus, Sku } from '../tipos'
 
-const MAX_INTENTOS_CODIGO = 10
+// Tope de seguridad para saltar códigos propios ya ocupados (RF-SKU-005: el automático salta los ocupados, sin un tope bajo).
+export const MAX_INTENTOS_CODIGO = 1000
 const CODIGO_PROPIO_VALIDO = /^[A-Z0-9][A-Z0-9._-]{1,38}$/
 const MENSAJE_CODIGO_REPETIDO = 'Ya existe un SKU con ese código en la empresa.'
 
@@ -90,7 +91,7 @@ export const crearSku = definirServicio<EntradaCrearSku, Sku>(
         throw e
       }
     }
-    throw conflicto('No se pudo asignar un código automático. Escriba un código propio o intente de nuevo.')
+    throw conflicto(`No se pudo asignar un código automático: los siguientes ${MAX_INTENTOS_CODIGO} números de ${categoria.prefijo} ya están ocupados por códigos propios. Escriba un código propio o pida revisar los códigos de esa categoría.`)
   },
 )
 

@@ -67,6 +67,18 @@ export async function aprobaciones(tx: Tx, empresaId: string, ordenId: string): 
   return f.map((x) => ({ decision: x.decision, aprobadorNombre: x.aprobador_nombre, motivo: x.motivo, creadoEn: iso(x.creado_en) }))
 }
 
+/** Usuarios que aprobaron la orden (para la separación de funciones: quien aprobó no la recibe). */
+export async function usuariosQueAprobaron(tx: Tx, empresaId: string, ordenId: string): Promise<string[]> {
+  const f = await tx.consultar<{ usuario_id: string }>(
+    `SELECT DISTINCT m.usuario_id
+       FROM orden_aprobacion a
+       JOIN membresia m ON m.empresa_id = a.empresa_id AND m.id = a.aprobador_membresia_id
+      WHERE a.empresa_id = $1 AND a.orden_id = $2 AND a.decision = 'aprobada'`,
+    [empresaId, ordenId],
+  )
+  return f.map((x) => x.usuario_id)
+}
+
 export async function recepciones(tx: Tx, empresaId: string, ordenId: string): Promise<RecepcionOrden[]> {
   const cab = await tx.consultar<{ id: string; numero: string; ubicacion_nombre: string; recibida_por_nombre: string | null; creado_en: Date | string }>(
     `SELECT r.id, r.numero, ub.nombre AS ubicacion_nombre, u.nombre AS recibida_por_nombre, r.creado_en

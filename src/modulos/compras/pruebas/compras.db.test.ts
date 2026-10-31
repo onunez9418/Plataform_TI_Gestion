@@ -43,6 +43,8 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
   const tecnico = () => contextoDe(alfa, 'tecnico') // prepara y recibe
   const jefa = () => contextoDe(alfa, 'jefa') // aprueba
   const admin = () => contextoDe(alfa, 'admin') // tiene todo, incluida la aprobación
+  // Quien recibe es una TERCERA persona: ni quien preparó (Técnico) ni quien aprobó (Jefatura). Es el CEO de ejemplo (Administrador).
+  const receptor = () => contextoDe(alfa, 'admin')
 
   const nuevaOrden = (lineas = [{ skuId: a.skuSerie, cantidad: 3, precioUnitario: 2500 }, { skuId: a.skuCantidad, cantidad: 10, precioUnitario: 400.5 }]) =>
     crearOrden(tecnico(), { proveedorId: a.proveedor, lineas })
@@ -121,10 +123,13 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
       await expect(rechazarOrden(jefa(), { id: o.id, motivo: '  ' })).rejects.toMatchObject({ codigo: 'VALIDACION', campos: { motivo: expect.any(String) } })
       const r = await rechazarOrden(jefa(), { id: o.id, motivo: 'Precio fuera de presupuesto' })
       expect(r).toMatchObject({ estado: 'rechazada', aprobaciones: [{ decision: 'rechazada', motivo: 'Precio fuera de presupuesto' }] })
-      const aud = await listarAuditoria(admin(), { entidad: 'orden_compra' })
-      expect(aud.find((x) => x.accion === 'orden_compra.rechazar' && x.entidadId === o.id)?.motivo).toBe('Precio fuera de presupuesto')
+      // H-CUM-02: el motivo (texto libre) queda en la orden, no en la auditoría.
+      const aud = (await listarAuditoria(admin(), { entidad: 'orden_compra' })).find((x) => x.accion === 'orden_compra.rechazar' && x.entidadId === o.id)
+      expect(aud).toBeDefined()
+      expect(aud?.motivo ?? null).toBeNull()
+      expect(JSON.stringify(aud)).not.toContain('Precio fuera de presupuesto')
       await expect(aprobarOrden(jefa(), o.id)).rejects.toMatchObject({ codigo: 'CONFLICTO' })
-      await expect(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: o.lineas[0]!.id, cantidad: 1, series: ['R1'] }] })).rejects.toMatchObject({ codigo: 'CONFLICTO' })
+      await expect(recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: o.lineas[0]!.id, cantidad: 1, series: ['R1'] }] })).rejects.toMatchObject({ codigo: 'CONFLICTO' })
     })
   })
 
@@ -132,7 +137,7 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
     it('recepción parcial: nacen los activos con su serie y el saldo; luego se completa y la orden queda recibida', async () => {
       const o = await aprobada()
       const [lSerie, lCant] = [o.lineas.find((l) => l.skuCodigo === 'LAP-0001')!, o.lineas.find((l) => l.skuCodigo === 'MON-0001')!]
-      const r1 = await recibirOrden(tecnico(), {
+      const r1 = await recibirOrden(receptor(), {
         ordenId: o.id, ubicacionId: a.ubic,
         lineas: [{ lineaId: lSerie.id, cantidad: 2, series: ['OC-A1', 'OC-A2'] }, { lineaId: lCant.id, cantidad: 4 }],
       })
@@ -149,7 +154,7 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
       expect(parcial.lineas.map((l) => [l.skuCodigo, l.cantidadRecibida, l.pendiente])).toEqual([['LAP-0001', 2, 1], ['MON-0001', 4, 6]])
       expect(parcial.recepciones).toHaveLength(1)
 
-      const r2 = await recibirOrden(tecnico(), {
+      const r2 = await recibirOrden(receptor(), {
         ordenId: o.id, ubicacionId: a.ubic,
         lineas: [{ lineaId: lSerie.id, cantidad: 1, series: ['OC-A3'] }, { lineaId: lCant.id, cantidad: 6 }],
       })
@@ -158,7 +163,7 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
       expect(fin.estado).toBe('recibida')
       expect(fin.recepciones.map((r) => r.numero)).toHaveLength(2)
       expect(fin.lineas.every((l) => l.pendiente === 0)).toBe(true)
-      await expect(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lCant.id, cantidad: 1 }] })).rejects.toMatchObject({ codigo: 'CONFLICTO' })
+      await expect(recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lCant.id, cantidad: 1 }] })).rejects.toMatchObject({ codigo: 'CONFLICTO' })
       expect((await listarExistencias(tecnico())).find((x) => x.skuCodigo === 'MON-0001')?.cantidad).toBe(10)
     })
 
@@ -166,7 +171,7 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
       const o = await aprobada()
       const lCant = o.lineas.find((l) => l.skuCodigo === 'MON-0001')!
       const antes = (await listarExistencias(tecnico())).find((x) => x.skuCodigo === 'MON-0001')?.cantidad ?? 0
-      await expect(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lCant.id, cantidad: 11 }] }))
+      await expect(recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lCant.id, cantidad: 11 }] }))
         .rejects.toMatchObject({ codigo: 'VALIDACION', mensaje: expect.stringContaining('quedan 10') })
       expect((await listarExistencias(tecnico())).find((x) => x.skuCodigo === 'MON-0001')?.cantidad ?? 0).toBe(antes)
       expect((await obtenerOrden(tecnico(), o.id)).estado).toBe('aprobada')
@@ -185,14 +190,14 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
     it('series: deben ser tantas como la cantidad; si una ya existe se dice cuál y no se guarda nada', async () => {
       const o = await aprobada()
       const lSerie = o.lineas.find((l) => l.skuCodigo === 'LAP-0001')!
-      await expect(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lSerie.id, cantidad: 2, series: ['S-ONLY'] }] }))
+      await expect(recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lSerie.id, cantidad: 2, series: ['S-ONLY'] }] }))
         .rejects.toMatchObject({ codigo: 'VALIDACION', mensaje: expect.stringContaining('escriba 2 series') })
-      await expect(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lSerie.id, cantidad: 1 }] }))
+      await expect(recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lSerie.id, cantidad: 1 }] }))
         .rejects.toMatchObject({ codigo: 'VALIDACION' })
-      await recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lSerie.id, cantidad: 1, series: ['DUP-1'] }] })
+      await recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: lSerie.id, cantidad: 1, series: ['DUP-1'] }] })
       const o2 = await aprobada()
       const l2 = o2.lineas.find((l) => l.skuCodigo === 'LAP-0001')!
-      await expect(recibirOrden(tecnico(), { ordenId: o2.id, ubicacionId: a.ubic, lineas: [{ lineaId: l2.id, cantidad: 2, series: ['NUEVA-1', 'dup-1'] }] }))
+      await expect(recibirOrden(receptor(), { ordenId: o2.id, ubicacionId: a.ubic, lineas: [{ lineaId: l2.id, cantidad: 2, series: ['NUEVA-1', 'dup-1'] }] }))
         .rejects.toMatchObject({ codigo: 'DUPLICADO', mensaje: expect.stringContaining('DUP-1') })
       expect(await listarActivos(tecnico(), { texto: 'NUEVA-1' })).toEqual([])
       expect((await obtenerOrden(tecnico(), o2.id)).estado).toBe('aprobada')
@@ -203,18 +208,18 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
       const o = await aprobada()
       const otra = await aprobada()
       const l = o.lineas[0]!
-      await expect(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubicInactiva, lineas: [{ lineaId: l.id, cantidad: 1, series: ['V1'] }] })).rejects.toMatchObject({ codigo: 'VALIDACION' })
-      await expect(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: otra.lineas[0]!.id, cantidad: 1, series: ['V2'] }] })).rejects.toMatchObject({ codigo: 'VALIDACION' })
-      await expect(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [] })).rejects.toMatchObject({ codigo: 'VALIDACION', campos: { lineas: expect.any(String) } })
-      await expect(recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: l.id, cantidad: -1 }] })).rejects.toMatchObject({ codigo: 'VALIDACION' })
+      await expect(recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubicInactiva, lineas: [{ lineaId: l.id, cantidad: 1, series: ['V1'] }] })).rejects.toMatchObject({ codigo: 'VALIDACION' })
+      await expect(recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: otra.lineas[0]!.id, cantidad: 1, series: ['V2'] }] })).rejects.toMatchObject({ codigo: 'VALIDACION' })
+      await expect(recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [] })).rejects.toMatchObject({ codigo: 'VALIDACION', campos: { lineas: expect.any(String) } })
+      await expect(recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: l.id, cantidad: -1 }] })).rejects.toMatchObject({ codigo: 'VALIDACION' })
     })
 
     it('dos recepciones a la vez de lo mismo: entre las dos no superan lo pedido', async () => {
       const o = await aprobada()
       const l = o.lineas.find((x) => x.skuCodigo === 'MON-0001')!
       const r = await Promise.allSettled([
-        recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: l.id, cantidad: 7 }] }),
-        recibirOrden(tecnico(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: l.id, cantidad: 7 }] }),
+        recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: l.id, cantidad: 7 }] }),
+        recibirOrden(receptor(), { ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: l.id, cantidad: 7 }] }),
       ])
       expect(r.filter((x) => x.status === 'fulfilled')).toHaveLength(1)
       const final = await obtenerOrden(tecnico(), o.id)
@@ -234,6 +239,55 @@ describe.skipIf(!hayBaseDeDatos)('compras (con base real)', () => {
       await expect(recibirOrden(tecnico(), { ordenId: ob.id, ubicacionId: a.ubic, lineas: [{ lineaId: ob.lineas[0]!.id, cantidad: 1, series: ['Q1'] }] })).rejects.toMatchObject({ codigo: 'NO_ENCONTRADO' })
       await expect(crearOrden(tecnico(), { proveedorId: b.proveedor, lineas: [{ skuId: a.skuSerie, cantidad: 1, precioUnitario: 1 }] })).rejects.toMatchObject({ codigo: 'NO_ENCONTRADO' })
       await expect(crearOrden(tecnico(), { proveedorId: a.proveedor, lineas: [{ skuId: b.skuSerie, cantidad: 1, precioUnitario: 1 }] })).rejects.toMatchObject({ codigo: 'NO_ENCONTRADO' })
+    })
+  })
+
+  describe('separación de funciones (RF-OC-022 a 025, CA-012, CA-013): vale para todos los roles', () => {
+    const lineaUno = () => [{ skuId: a.skuSerie, cantidad: 2, precioUnitario: 1 }]
+    const porAprobar = async (quien: 'admin' | 'tecnico') => {
+      const o = await crearOrden(contextoDe(alfa, quien), { proveedorId: a.proveedor, lineas: lineaUno() })
+      await enviarAAprobacion(contextoDe(alfa, quien), o.id)
+      return o
+    }
+    const recepcion = (o: { id: string; lineas: { id: string }[] }, serie: string) =>
+      ({ ordenId: o.id, ubicacionId: a.ubic, lineas: [{ lineaId: o.lineas[0]!.id, cantidad: 1, series: [serie] }] })
+
+    it('quien preparó una orden no la aprueba ni la rechaza, aunque sea Administrador; la orden queda como estaba', async () => {
+      const o = await porAprobar('admin')
+      await expect(aprobarOrden(admin(), o.id)).rejects.toMatchObject({ codigo: 'SEPARACION_FUNCIONES' })
+      await expect(rechazarOrden(admin(), { id: o.id, motivo: 'Me arrepentí' }))
+        .rejects.toMatchObject({ codigo: 'SEPARACION_FUNCIONES', mensaje: expect.stringContaining('no puede rechazarla') })
+      const despues = await obtenerOrden(admin(), o.id)
+      expect(despues.estado).toBe('por_aprobar')
+      expect(despues.aprobaciones).toEqual([])
+      // Otra persona con permiso sí puede rechazarla.
+      expect((await rechazarOrden(jefa(), { id: o.id, motivo: 'No hace falta' })).estado).toBe('rechazada')
+    })
+
+    it('quien aprobó una orden no la recibe, aunque sea Administrador y tenga el permiso', async () => {
+      const o = await porAprobar('tecnico')
+      const aprobada = await aprobarOrden(admin(), o.id) // el Administrador aprueba lo que preparó el Técnico
+      await expect(recibirOrden(admin(), recepcion(aprobada, 'AP-REC-1')))
+        .rejects.toMatchObject({ codigo: 'SEPARACION_FUNCIONES', mensaje: 'Quien preparó o aprobó esta orden no puede recibirla: pídale a otra persona.' })
+      expect((await obtenerOrden(jefa(), o.id)).estado).toBe('aprobada')
+      expect((await listarActivos(admin(), { texto: 'AP-REC-1' }))).toEqual([])
+    })
+
+    it('quien preparó una orden no la recibe, aunque sea Administrador', async () => {
+      const o = await porAprobar('admin')
+      const aprobada = await aprobarOrden(jefa(), o.id)
+      await expect(recibirOrden(admin(), recepcion(aprobada, 'PREP-ADM-1'))).rejects.toMatchObject({ codigo: 'SEPARACION_FUNCIONES' })
+      await expect(recibirOrden(tecnico(), recepcion(aprobada, 'PREP-ADM-2')).then(() => 'recibió')).resolves.toBe('recibió') // una tercera persona sí
+    })
+
+    it('guion de la demo con tres personas: prepara el Técnico, aprueba la Jefatura, recibe el Administrador', async () => {
+      const o = await nuevaOrden()
+      await enviarAAprobacion(tecnico(), o.id)
+      const ap = await aprobarOrden(jefa(), o.id)
+      await expect(recibirOrden(tecnico(), recepcion(ap, 'TRES-1'))).rejects.toMatchObject({ codigo: 'SEPARACION_FUNCIONES' })
+      await expect(recibirOrden(jefa(), recepcion(ap, 'TRES-1'))).rejects.toMatchObject({ codigo: 'SIN_PERMISO' }) // la Jefatura aprueba, no recibe
+      const r = await recibirOrden(receptor(), recepcion(ap, 'TRES-1'))
+      expect(r).toMatchObject({ estadoOrden: 'recibida_parcial', activosCreados: 1 })
     })
   })
 

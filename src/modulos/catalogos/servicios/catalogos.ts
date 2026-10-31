@@ -1,5 +1,5 @@
 import { conEmpresa } from '../../../nucleo/aislamiento'
-import { registrarAuditoria } from '../../../nucleo/auditoria'
+import { MARCA_CAMPO_PERSONAL, registrarAuditoria } from '../../../nucleo/auditoria'
 import { duplicado, esViolacionUnica, noEncontrado } from '../../../nucleo/errores'
 import { definirServicio } from '../../../nucleo/permisos'
 import { esId, type Contexto } from '../../../nucleo/tipos-comunes'
@@ -20,6 +20,15 @@ type Fabrica<T> = {
   articulo: string
   mapear: (f: T) => T
   duplicado: { campo: string; mensaje: string }
+  /** Campos de texto libre que pueden traer datos de personas: la auditoría solo dice que «cambió», no el valor (D-030). */
+  sensibles?: readonly string[]
+}
+
+/** Quita de lo que va a la auditoría el valor de los campos sensibles de la entidad. */
+function paraAuditoria(f: { sensibles?: readonly string[] }, cambios: Record<string, unknown>): Record<string, unknown> {
+  const sensibles = f.sensibles ?? []
+  return Object.fromEntries(Object.entries(cambios).map(([campo, v]) =>
+    [campo, sensibles.includes(campo) && v !== null && v !== undefined ? MARCA_CAMPO_PERSONAL : v]))
 }
 
 /** Crear: inserta, audita y traduce el índice único a DUPLICADO. */
@@ -27,7 +36,7 @@ async function crear<T extends { id: string }>(ctx: Contexto, f: Fabrica<T>, val
   try {
     return await conEmpresa(ctx.empresaId, async (tx) => {
       const fila = f.mapear(await repo.insertar<T>(tx, f.tabla, ctx.empresaId, valores))
-      await registrarAuditoria(tx, ctx, { accion: `${f.entidad}.crear`, entidadTipo: f.entidad, entidadId: fila.id, cambios: valores })
+      await registrarAuditoria(tx, ctx, { accion: `${f.entidad}.crear`, entidadTipo: f.entidad, entidadId: fila.id, cambios: paraAuditoria(f, valores) })
       return fila
     })
   } catch (e) {
@@ -49,7 +58,7 @@ async function editar<T extends { id: string }>(ctx: Contexto, f: Fabrica<T>, id
       for (const campo of Object.keys(limpios)) {
         const a = (antes as Record<string, unknown>)[campo]
         const d = (despues as Record<string, unknown>)[campo]
-        if (a !== d) cambios[campo] = { antes: a, despues: d }
+        if (a !== d) cambios[campo] = f.sensibles?.includes(campo) ? MARCA_CAMPO_PERSONAL : { antes: a, despues: d }
       }
       if (Object.keys(cambios).length > 0) {
         await registrarAuditoria(tx, ctx, { accion: `${f.entidad}.editar`, entidadTipo: f.entidad, entidadId: id, cambios })
@@ -98,6 +107,7 @@ export const editarUbicacion = definirServicio<EntradaEditarUbicacion, Ubicacion
 const fProv: Fabrica<Proveedor> = {
   tabla: 'proveedor', entidad: 'proveedor', articulo: 'El proveedor', mapear: prov,
   duplicado: { campo: 'documento', mensaje: 'Ya existe un proveedor con ese documento.' },
+  sensibles: ['contacto'],
 }
 
 export const listarProveedores = definirServicio<void, Proveedor[]>(

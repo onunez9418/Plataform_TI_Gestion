@@ -48,6 +48,17 @@ describe('normalizarDefinicion', () => {
     expect(claveDesdeEtiqueta('Año / Modelo')).toBe('ano_modelo')
     expect(claveDesdeEtiqueta('3D')).toBe('c_3d')
   })
+  it('DEF-CAM-01: un número no llega como lista ni un texto como objeto o lista', () => {
+    const e1 = captura(() => validarValores(defs, { procesador: 'x', ram_gb: [16] }))
+    expect(e1).toMatchObject({ codigo: 'VALIDACION', campos: { ram_gb: expect.stringContaining('número') } })
+    const e2 = captura(() => validarValores(defs, { procesador: { a: 1 } }))
+    expect(e2).toMatchObject({ codigo: 'VALIDACION', campos: { procesador: expect.stringContaining('texto') } })
+    expect(captura(() => validarValores(defs, { procesador: ['a', 'b'] }))).toMatchObject({ codigo: 'VALIDACION' })
+    expect(captura(() => validarValores(defs, { procesador: 'x', ram_gb: { valueOf: 1 } }))).toMatchObject({ codigo: 'VALIDACION' })
+    expect(captura(() => validarValores(defs, { procesador: 'x', fecha_compra: ['2025-02-28'] }))).toMatchObject({ codigo: 'VALIDACION' })
+    expect(captura(() => validarValores(defs, { procesador: 'x', disco: ['SSD'] }))).toMatchObject({ codigo: 'VALIDACION' })
+    expect(captura(() => validarValores(defs, { procesador: 'x', ram_gb: Number.NaN }))).toMatchObject({ codigo: 'VALIDACION' })
+  })
   it('limpia las opciones de una lista y exige al menos una', () => {
     const errores: Record<string, string> = {}
     const c = normalizarDefinicion({ clave: '', etiqueta: 'Disco', tipo: 'lista', opciones: [' SSD ', 'SSD', '', 'HDD'], obligatorio: 1 as unknown as boolean }, errores)

@@ -32,6 +32,9 @@ function traducirReglaDeBase(e: unknown): never {
   throw e
 }
 
+const MENSAJE_PREPARO_NO_RECHAZA = 'Quien preparó la orden no puede rechazarla. Pídale a otra persona con permiso que lo haga.'
+const MENSAJE_NO_RECIBE = 'Quien preparó o aprobó esta orden no puede recibirla: pídale a otra persona.'
+
 async function ordenBloqueada(tx: Tx, ctx: Contexto, id: string) {
   const orden = await repo.obtenerResumen(tx, ctx.empresaId, id, true)
   if (!orden) throw noEncontrado('La orden de compra')
@@ -158,11 +161,14 @@ export const rechazarOrden = definirServicio<EntradaRechazarOrden, Orden>(
     if (motivo.length > MAX_MOTIVO) throw validacion(`El motivo admite hasta ${MAX_MOTIVO} caracteres.`, { motivo: 'El motivo es demasiado largo.' })
     return conEmpresa(ctx.empresaId, async (tx) => {
       const orden = await ordenBloqueada(tx, ctx, entrada.id)
+      // RF-OC-022: nadie aprueba ni rechaza una orden que él preparó, sea cual sea su rol.
+      if (orden.preparadaPorUsuarioId === ctx.usuarioId) throw separacionFunciones(MENSAJE_PREPARO_NO_RECHAZA)
       if (orden.estado !== 'por_aprobar') throw conflicto(`La orden ${orden.numero} está ${ETIQUETA_ESTADO[orden.estado]}: solo se rechaza una orden que está por aprobar.`)
       await repo.insertarAprobacion(tx, ctx.empresaId, entrada.id, ctx.membresiaId, 'rechazada', motivo)
       await repo.cambiarEstado(tx, ctx.empresaId, entrada.id, 'rechazada')
       await registrarAuditoria(tx, ctx, {
-        accion: 'orden_compra.rechazar', entidadTipo: 'orden_compra', entidadId: entrada.id, cambios: { numero: orden.numero }, motivo,
+        accion: 'orden_compra.rechazar', entidadTipo: 'orden_compra', entidadId: entrada.id, cambios: { numero: orden.numero },
+        // El motivo (texto libre) queda solo en la propia orden (orden_aprobacion.motivo), no en la auditoría (D-030, H-CUM-02).
       })
       return leerOrden(tx, ctx, entrada.id)
     })
@@ -188,6 +194,10 @@ export const recibirOrden = definirServicio<EntradaRecibirOrden, ResultadoRecepc
 
     return conEmpresa(ctx.empresaId, async (tx) => {
       const orden = await ordenBloqueada(tx, ctx, entrada.ordenId)
+      // RF-OC-023/024/025: quien preparó o aprobó la orden no la recibe; vale para todos los roles, también el Administrador.
+      if (orden.preparadaPorUsuarioId === ctx.usuarioId || (await repo.usuariosQueAprobaron(tx, ctx.empresaId, orden.id)).includes(ctx.usuarioId)) {
+        throw separacionFunciones(MENSAJE_NO_RECIBE)
+      }
       if (orden.estado !== 'aprobada' && orden.estado !== 'recibida_parcial') {
         throw conflicto(`La orden ${orden.numero} está ${ETIQUETA_ESTADO[orden.estado]}: solo se recibe una orden aprobada que aún tenga pendientes.`)
       }
