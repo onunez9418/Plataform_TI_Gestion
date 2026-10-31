@@ -61,7 +61,7 @@ Para empezar, entre con **`ceo@demo.local`**: podrá cambiar entre las empresas 
 
 ## Paso 7. Qué probar (el recorrido sugerido)
 1. Entre como `ceo@demo.local` y cambie de Alfa a Beta.
-2. En Alfa, cree un rol llamado «Solo lectura», invite a un usuario con ese rol y entre con él: no podrá crear nada.
+2. En Alfa, cree un rol llamado «Solo lectura», invite a un usuario con ese rol y entre con él: no podrá crear nada. **Al invitar, use siempre un correo inventado que termine en `.local`** (por ejemplo `prueba@alfa.local`). No escriba correos de personas reales: esta versión es solo para datos inventados.
 3. Compare el equipo `LAP-0001` de Alfa con el `LAP-0001` de Beta: son distintos.
 4. Cree una categoría con campos propios (por ejemplo «Impresoras») y un artículo con código automático; luego cambie el código a mano.
 5. Registre equipos con número de serie, asígnelos a una persona y devuélvalos.
