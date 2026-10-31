@@ -14,5 +14,8 @@ export default defineConfig({
     testTimeout: 120_000,
     hookTimeout: 120_000,
     fileParallelism: false,
+    // El límite de pedidos de enlace (H-SEG-L09) frenaría las pruebas que piden muchos enlaces del mismo correo;
+    // el límite real se prueba aparte en pruebas/acceso/limite-enlaces.test.ts con sus valores normales.
+    env: { LIMITE_ENLACES_POR_CORREO: '100000', LIMITE_ENLACES_POR_ORIGEN: '100000' },
   },
 });
