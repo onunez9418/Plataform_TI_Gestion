@@ -95,7 +95,7 @@ function valor(v: unknown): string {
   if (v === null || v === undefined || v === '') return '-'
   if (typeof v === 'boolean') return v ? 'Sí' : 'No'
   if (typeof v === 'number') return String(v)
-  if (typeof v === 'string') return v
+  if (typeof v === 'string') return /^[a-z]+(_[a-z]+)+$/.test(v) ? v.replace(/_/g, ' ') : v
   if (Array.isArray(v)) {
     if (v.every((x) => typeof x === 'string' || typeof x === 'number')) return v.join(', ')
     return `${v.length}`
