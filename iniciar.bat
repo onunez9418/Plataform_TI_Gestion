@@ -46,6 +46,20 @@ goto esperar_docker
 :docker_listo
 echo [OK] Docker esta listo.
 
+rem --- 2b. Docker debe estar en modo "contenedores de Linux" (casi siempre ya lo esta) ---
+set "OSDOCKER="
+for /f "delims=" %%o in ('docker info --format "{{.OSType}}" 2^>nul') do set "OSDOCKER=%%o"
+if /i "%OSDOCKER%"=="windows" (
+  echo.
+  echo [X] Docker Desktop esta en modo "contenedores de Windows" y la plataforma necesita el de Linux.
+  echo     Haga clic derecho en el icono de Docker ^(ballena, junto al reloj^) y elija
+  echo     "Switch to Linux containers..." Espere a que diga "Engine running" y vuelva a
+  echo     hacer doble clic en iniciar.bat.
+  echo.
+  pause
+  exit /b 1
+)
+
 rem --- 3. Contrasenas (solo la primera vez) ---
 if not exist ".env" (
   echo Creando las contrasenas de esta computadora ^(solo la primera vez^)...
@@ -67,9 +81,13 @@ if errorlevel 1 (
   echo.
   netstat -ano | findstr /R /C:":3000 .*LISTENING" >nul 2>&1
   if not errorlevel 1 (
-    echo [X] El puerto 3000 de esta computadora ya esta ocupado por otro programa.
-    echo     Cierre los programas que tenga abiertos para desarrollo, espere un minuto y vuelva
-    echo     a hacer doble clic en iniciar.bat. Si sigue igual, envie una foto de esta ventana.
+    echo [X] El puerto 3000 ya esta en uso por otro programa de esta computadora.
+    echo     No es un problema de internet ni de Docker: la plataforma necesita ese "puerto"
+    echo     ^(una especie de puerta^) y otro programa ya lo esta usando.
+    echo     Que hacer: 1^) cierre los programas que tenga abiertos para desarrollo o servidores
+    echo     locales; 2^) si no sabe cual es, reinicie la computadora y haga doble clic en
+    echo     iniciar.bat ANTES de abrir otros programas; 3^) si sigue igual, tome una foto de
+    echo     esta ventana y enviela a la Jefatura de Proyecto.
     echo.
     pause
     exit /b 1
@@ -93,7 +111,7 @@ if errorlevel 1 (
   docker compose logs --tail 25 app
   echo ----------------------------------------------------------------
   echo     Tome una foto de esta ventana y enviela a la Jefatura de Proyecto.
-  echo     Si el mensaje habla del puerto 3000, cierre el programa que lo usa y reintente.
+  echo     Si el mensaje habla del puerto 3000 ^(ya en uso^), cierre el programa que lo usa y reintente.
   echo.
   pause
   exit /b 1

@@ -19,7 +19,7 @@
 Docker Desktop es el programa que "enciende" la plataforma dentro de su computadora sin ensuciarla. Es gratuito para uso personal y de prueba.
 
 1. Entre a **https://www.docker.com/products/docker-desktop/** y pulse **«Download for Windows»**.
-2. Abra el archivo descargado (`Docker Desktop Installer.exe`) y acepte todo lo que pregunte. Si pregunta por **WSL 2**, déjelo marcado.
+2. Abra el archivo descargado (`Docker Desktop Installer.exe`) y acepte todo lo que pregunte. Si pregunta por **WSL 2**, déjelo marcado (es una parte de Windows que Docker usa por dentro; no tiene que hacer nada con ella).
 3. Al terminar, si le pide **reiniciar la computadora**, reiníciela.
 4. Si le pide crear una cuenta o iniciar sesión, puede elegir **«Skip»** (omitir). No la necesita.
 
@@ -27,14 +27,14 @@ Docker Desktop es el programa que "enciende" la plataforma dentro de su computad
 1. Abra **Docker Desktop** desde el menú Inicio.
 2. Espere hasta que, abajo a la izquierda, diga **«Engine running»** (o «Docker Desktop is running») en verde. Puede tardar 1 o 2 minutos.
 3. **Déjelo abierto** mientras prueba la plataforma.
+4. Docker debe estar en modo **«contenedores de Linux»** (es lo normal). Si `iniciar.bat` le avisa que está en «contenedores de Windows», haga clic derecho en el icono de Docker (la ballena, junto al reloj) y elija **«Switch to Linux containers…»**.
 
 *Si Docker le dice que falta activar la «virtualización» o «WSL 2», vea «Problema 1» más abajo.*
 
-## Paso 3. Descargar la plataforma
-1. Abra el enlace del repositorio que le envió la Jefatura de Proyecto. (Si la Jefatura le envió directamente un archivo ZIP, salte al punto 3.)
-2. Pulse el botón verde **«Code»** y luego **«Download ZIP»**. Asegúrese de estar en la versión (rama) que la Jefatura le indicó.
-3. Cuando termine, busque el archivo ZIP en «Descargas», haga clic derecho y elija **«Extraer todo…»** y luego **«Extraer»**. (No lo abra "dentro" del ZIP: tiene que extraerlo.)
-4. Se creará una carpeta. Entre en ella: debe ver, entre otros, los archivos `iniciar.bat` y `detener.bat`.
+## Paso 3. Recibir la plataforma
+1. La Jefatura de Proyecto le entrega directamente un archivo **ZIP** llamado `Plataforma-TI-version-local-0.1.zip` (por correo o por el medio que acordaron). Descárguelo. *(Alternativa, solo si la Jefatura se lo indica: entrar al enlace del repositorio de GitHub, pulsar el botón verde **«Code»** y luego **«Download ZIP»**, asegurándose de estar en la rama que la Jefatura indique.)*
+2. Cuando termine, busque el archivo ZIP en «Descargas», haga clic derecho y elija **«Extraer todo…»** y luego **«Extraer»**. (No lo abra "dentro" del ZIP: tiene que extraerlo.)
+3. Se creará una carpeta. Entre en ella: debe ver, entre otros, los archivos `iniciar.bat` y `detener.bat`.
 
 ## Paso 4. Encender la plataforma
 1. Haga **doble clic en `iniciar.bat`**.
@@ -74,18 +74,23 @@ Para empezar, entre con **`ceo@demo.local`**: podrá cambiar entre las empresas 
 - **Apagar** (guarda lo que hizo): doble clic en **`detener.bat`**. Para volver a encender, de nuevo `iniciar.bat` (esta vez tarda 1 o 2 minutos).
 - **Empezar de nuevo** (borra todo lo que usted creó y deja solo los datos de ejemplo): doble clic en **`reiniciar-datos.bat`**. Le pedirá escribir la palabra **BORRAR** para confirmar.
 - Cerrar la ventana negra no apaga la plataforma; para apagarla use `detener.bat`.
+- **No borre el archivo `.env`** que aparece en la carpeta (se crea solo la primera vez): si lo borra, la plataforma no podrá entrar a sus datos; en ese caso use `reiniciar-datos.bat`.
+- Cuando termine de probar y quiera quitar todo de su computadora, avise a la Jefatura de Proyecto y le indicará cómo.
 
 ---
 
-## Si algo falla (tres problemas típicos)
+## Si algo falla (cuatro problemas típicos)
 
 **Problema 1. Docker no abre o dice que falta «virtualización» / «WSL 2».**
 Su computadora necesita tener activada una función llamada *virtualización*. En muchos equipos ya viene activa. Si Docker se lo pide: (a) reinicie la computadora y vuelva a abrir Docker Desktop; (b) si sigue igual, escriba «activar características de Windows» en el menú Inicio y marque **«Plataforma de máquina virtual»** y **«Subsistema de Windows para Linux»**, acepte y reinicie; (c) si todavía no funciona, puede que haya que activarla en la configuración de arranque del equipo (BIOS): **no la toque solo, avise a la Jefatura de Proyecto**.
 
-**Problema 2. La ventana dice que la plataforma «no respondió a tiempo» o que el puerto 3000 está ocupado.**
-Otro programa puede estar usando el mismo espacio. Cierre programas que haya abierto para desarrollo, espere un minuto y vuelva a hacer doble clic en `iniciar.bat`. Si sigue, haga una **foto o captura de la ventana** y envíela.
+**Problema 2. La ventana dice «El puerto 3000 ya está en uso por otro programa».**
+La plataforma necesita el «puerto» 3000 (una especie de puerta de su computadora) y otro programa ya lo está usando. No es un problema de internet ni de Docker. Qué hacer: (a) cierre los programas que tenga abiertos para desarrollo o servidores locales; (b) si no sabe cuál es, reinicie la computadora y haga doble clic en `iniciar.bat` **antes** de abrir otros programas; (c) si sigue igual, haga una **foto o captura de la ventana** y envíela.
 
-**Problema 3. Se queda mucho tiempo descargando o dice que no pudo descargar.**
+**Problema 3. La ventana dice que la plataforma «no respondió a tiempo».**
+Espere un minuto y vuelva a hacer doble clic en `iniciar.bat`; la segunda vez suele tardar mucho menos. Si sigue igual, haga una **foto o captura de la ventana** (incluye los últimos mensajes) y envíela.
+
+**Problema 4. Se queda mucho tiempo descargando o dice que no pudo descargar.**
 Revise que tenga internet y que Docker Desktop siga abierto; vuelva a hacer doble clic en `iniciar.bat` (retoma desde donde quedó). La primera vez puede tardar bastante si el internet es lento.
 
 **Cómo avisarnos:** envíe a la **Jefatura de Proyecto** una **captura de pantalla de la ventana negra** y diga en qué paso estaba. No hace falta que entienda lo que dice: nosotros sí.

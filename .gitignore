@@ -147,3 +147,6 @@ __pycache__/
 
 # --- Base local privada de "npm run local" (scripts/local.mjs) ----------------
 .local/
+
+# --- ZIP de entrega al CEO (scripts/crear-zip-entrega.sh) ----------------------
+entrega/
