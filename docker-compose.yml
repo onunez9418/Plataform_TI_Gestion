@@ -19,7 +19,9 @@ services:
       - ./scripts/db-init:/docker-entrypoint-initdb.d:ro
     # Sin "ports": la base solo se alcanza desde la red interna de Docker.
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d plataforma"]
+      # Por red (-h 127.0.0.1) y no por el socket: durante la primera preparación Postgres levanta un servidor
+      # temporal solo por socket; si se comprobara por ahí, la app arrancaría antes de tiempo.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d plataforma"]
       interval: 3s
       timeout: 3s
       retries: 30

@@ -21,15 +21,17 @@ async function consultar(sql) {
 
 const orden = process.argv[2];
 if (orden === 'esperar') {
-  for (let i = 0; i < 60; i++) {
+  let ultimoError = '';
+  for (let i = 0; i < 90; i++) {
     try {
       await consultar('select 1');
       process.exit(0);
-    } catch {
+    } catch (e) {
+      ultimoError = e instanceof Error ? e.message : String(e);
       await new Promise((r) => setTimeout(r, 2000));
     }
   }
-  console.error('La base de datos no respondió en 2 minutos.');
+  console.error('La base de datos no respondió en 3 minutos. Último error: ' + ultimoError);
   process.exit(1);
 } else if (orden === 'vacia') {
   const filas = await consultar(
