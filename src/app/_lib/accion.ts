@@ -13,6 +13,10 @@ export async function enEmpresa<T>(
   refrescar: readonly string[] = [],
 ): Promise<ResultadoAccion<T>> {
   const r = await ejecutar(async () => trabajo(await obtenerContexto(empresa)))
-  if (r.ok) for (const ruta of refrescar) revalidatePath(`/e/${empresa}${ruta}`)
+  if (r.ok) {
+    for (const ruta of refrescar) revalidatePath(`/e/${empresa}${ruta}`)
+    // Y todo lo de la empresa (contadores, listas relacionadas): una sola fuente de verdad después de guardar.
+    revalidatePath(`/e/${empresa}`, 'layout')
+  }
   return r
 }

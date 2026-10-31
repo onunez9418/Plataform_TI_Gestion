@@ -4,6 +4,7 @@
 import { createContext, useCallback, useContext, useRef, useState, useTransition, type ReactNode } from 'react'
 import type { ResultadoAccion } from './tipos-accion'
 import { Aviso } from './Piezas'
+import { useRefrescar } from './refrescar'
 
 type Ctx = {
   errores: Record<string, string>
@@ -40,6 +41,7 @@ export function Formulario({ accion, children, enviar, testid, testidEnviar, exi
   const [mensajeExito, setMensajeExito] = useState<string | null>(null)
   const [enCurso, iniciar] = useTransition()
   const ref = useRef<HTMLFormElement>(null)
+  const refrescar = useRefrescar()
 
   const poner = useCallback((nombre: string, mensaje: string | null) => {
     setErrores((previo) => {
@@ -77,6 +79,7 @@ export function Formulario({ accion, children, enviar, testid, testidEnviar, exi
         if (r.ok) {
           if (exito) setMensajeExito(exito)
           if (limpiar) ref.current?.reset()
+          refrescar()
           alExito?.(r.datos)
         } else {
           setErrores(r.error.campos ?? {})

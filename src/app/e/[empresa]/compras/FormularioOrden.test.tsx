@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const empujar = vi.fn()
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push: empujar }) }))
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: empujar, refresh: vi.fn() }) }))
 
 import { FormularioOrden } from './FormularioOrden'
 
