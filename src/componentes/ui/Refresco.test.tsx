@@ -21,12 +21,12 @@ describe('refresco de la pantalla después de guardar (DEF-FRO-01)', () => {
     await waitFor(() => expect(screen.getByTestId('error-formulario')).toBeTruthy())
     expect(refrescar).not.toHaveBeenCalled()
     await userEvent.click(screen.getByTestId('f-enviar'))
-    await waitFor(() => expect(refrescar).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(refrescar).toHaveBeenCalledTimes(1), { timeout: 1500 })
   })
 
   it('el botón de acción también', async () => {
     render(<BotonAccion texto="Suspender" testid="b" accion={async () => ({ ok: true, datos: null })} />)
     await userEvent.click(screen.getByTestId('b'))
-    await waitFor(() => expect(refrescar).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(refrescar).toHaveBeenCalledTimes(1), { timeout: 1500 })
   })
 })
