@@ -65,6 +65,15 @@ echo.
 docker compose up -d --build
 if errorlevel 1 (
   echo.
+  netstat -ano | findstr /R /C:":3000 .*LISTENING" >nul 2>&1
+  if not errorlevel 1 (
+    echo [X] El puerto 3000 de esta computadora ya esta ocupado por otro programa.
+    echo     Cierre los programas que tenga abiertos para desarrollo, espere un minuto y vuelva
+    echo     a hacer doble clic en iniciar.bat. Si sigue igual, envie una foto de esta ventana.
+    echo.
+    pause
+    exit /b 1
+  )
   echo [X] No se pudo preparar la plataforma. Revise que Docker Desktop siga abierto y que haya
   echo     conexion a internet ^(la primera vez descarga componentes^). Si sigue igual, tome una
   echo     foto de esta ventana y enviela a la Jefatura de Proyecto.
