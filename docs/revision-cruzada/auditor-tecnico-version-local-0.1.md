@@ -13,6 +13,8 @@
 
 **Lo que no bloquea pero hay que decirle al CEO:** la lista de la sección 6 (en especial, que las reglas «quien aprueba/prepara no recibe» no están hechas).
 
+**Actualización posterior (mensaje de Frontend, declarado, no verificado por mí):** Frontend informa que sobre un build limpio de HEAD el guion completo pasa 18 de 18, con dos ajustes que son de la prueba y no de la pantalla: (1) en el paso 6b, desde el commit `192a3f2` la pantalla se recarga completa tras guardar, así que hay que llenar «páginas por minuto» antes del primer clic y hacer un solo clic; (2) en el paso 8 la auditoría ahora muestra frases en español y la clave técnica va en `data-accion`, por lo que la prueba debe buscar `[data-accion="sku.crear"]`. Esto es coherente con lo que dice QA (error de la prueba en 7a). Mi auditoría corresponde al commit `836d1ce`; los commits posteriores no los revisé. Condición vigente: repetir el recorrido completo y el arranque con Docker sobre el commit final.
+
 ## 1. Cómo audité (hechos)
 
 - Leí: `CLAUDE.md`, `plan-etapa-1.md` (A.2, A.6, A.8), D-118/D-119, `LEEME-PROBAR.md`, `iniciar.bat`, `detener.bat`, `reiniciar-datos.bat`, `docker-compose.yml`, `Dockerfile`, `.dockerignore`, `.gitattributes`, `scripts/entrada-contenedor.sh`, `scripts/db-init/*`, `scripts/*.ps1`; y el código de `src/nucleo/{aislamiento,permisos,acceso,auditoria,contadores,configuracion}`, los servicios y repos de compras, inventario, skus, usuarios y roles, las acciones de pantalla, el middleware y las pruebas citadas abajo.
